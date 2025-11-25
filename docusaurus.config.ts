@@ -89,7 +89,7 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/collabdt',
+          href: 'https://github.com/collabdt/docs',
           label: 'GitHub',
           position: 'right',
         },
