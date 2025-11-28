@@ -24,12 +24,12 @@
   --radius: 0.5rem;
 
   /* CDT brand colors */
-  --cdt-blue: #73cee2;
+  --cdt-blue: #ef9161;
   --cdt-blue-secondary: #96c0d5;
   --primary-highlight: #ef9161;
 
   /* Docusaurus overrides */
-  --ifm-color-primary: #73cee2;
+  --ifm-color-primary: #ef9161;
   --ifm-color-primary-dark: #5fc6dc;
   --ifm-color-primary-darker: #52c2d9;
   --ifm-font-family-base: 'Roboto', system-ui, sans-serif;
@@ -51,7 +51,7 @@
   --ring: 0 0% 83.1%;
 
   --ifm-background-color: hsl(0 0% 3.9%);
-  --ifm-color-primary: #73cee2;
+  --ifm-color-primary: #ef9161;
 }
 
 .navbar__link[href*="/docs"],
