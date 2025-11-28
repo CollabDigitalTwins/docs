@@ -93,6 +93,11 @@ const config: Config = {
           label: 'GitHub',
           position: 'right',
         },
+        {
+          href: 'https://collabdt.org/home',
+          label: 'Home',
+          position: 'right',
+        },
       ],
     },
     footer: {
