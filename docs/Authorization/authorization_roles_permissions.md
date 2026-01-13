@@ -21,7 +21,7 @@ ex)
 	  { "action": "read", "subject": "Building" },
 	  { "action": "update", "subject": "Building" }
 	]
-	```
+```
 
 ### Fields:
 - **action**: What the user can do (read, create, update, delete, etc.)
@@ -62,3 +62,4 @@ The same permissions can be used to hide UI elements:
 ```
 
 This improves UX but cannot replace API enforcement.
+
