@@ -15,7 +15,6 @@ This allows users to have **different roles in different organizations**.
 ## Prisma:
 Roles are represented with the Role entity. The UserRole entity joins a user to a role within an organization.
 Permissions are stored as JSON on each role
-ex) 
 ```json
 	[
 	  { "action": "read", "subject": "Building" },
@@ -62,4 +61,5 @@ The same permissions can be used to hide UI elements:
 ```
 
 This improves UX but cannot replace API enforcement.
+
 
