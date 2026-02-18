@@ -50,17 +50,16 @@ docs/
 
 Example:
 ```typescript
-// Good: Complete and working
-import { useAbility } from '@/contexts/AbilityContext';
+import { useState } from 'react';
 
-export function ProtectedButton() {
-  const ability = useAbility();
-  
-  if (!ability.can('create', 'Building')) {
-    return null;
-  }
-  
-  return <button>Create Building</button>;
+//Function description
+export function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+      Count: {count}
+      <button onClick={() => setCount(count + 1)}>
+    );
 }
 ```
 
