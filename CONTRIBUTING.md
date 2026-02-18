@@ -54,11 +54,11 @@ import { useState } from 'react';
 
 //Function description
 export function Counter() {
-  const [count, setCount] = useState(0);
+    const [count, setCount] = useState(0);
 
-  return (
-      Count: {count}
-      <button onClick={() => setCount(count + 1)}>
+    return (
+        Count: {count}
+        <button onClick={() => setCount(count + 1)}>
     );
 }
 ```
