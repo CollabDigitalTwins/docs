@@ -83,7 +83,7 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'baseSidebar',
           position: 'left',
           label: 'Docs',
         },
