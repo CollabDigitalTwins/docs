@@ -18,3 +18,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Claude Code / AI session files
+CLAUDE.md
+HANDOFF.md
+BUILD_REVIEW.md
+/specs
+*.design.md
+*-design.md
+AI_RULES.md
+PLAN.md
+PRD.md
+ARCHITECTURE.md
