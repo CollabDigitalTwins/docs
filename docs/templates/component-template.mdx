@@ -1,0 +1,51 @@
+---
+title: ComponentName
+description: One-line description of what this component does.
+category: components
+status: draft
+last_updated: YYYY-MM-DD
+---
+
+# ComponentName
+
+Brief description of the component — what it does, where it appears in the UI, and when you'd reach for it.
+
+## Usage
+
+```tsx
+import { ComponentName } from '@/components/path/to/ComponentName';
+
+<ComponentName
+  propOne="value"
+  propTwo={true}
+/>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `propOne` | `string` | Yes | — | <!-- description --> |
+| `propTwo` | `boolean` | No | `false` | <!-- description --> |
+
+## Behaviour
+
+<!-- Describe interactive behaviour, state transitions, loading states, and error states. -->
+
+## Design Decisions
+
+<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
+
+## Permissions
+
+<!-- If gated by CASL, note the required action/subject pair. Remove this section if not applicable. -->
+
+```tsx
+{ability.can("action", "Subject") && <ComponentName />}
+```
+
+## Related
+
+- <!-- Related components -->
+- <!-- Relevant API route if data-fetching -->
+- <!-- Relevant hook -->

@@ -1,0 +1,63 @@
+---
+title: ResourceContext
+description: One-line description of what state this context manages.
+category: state-management
+status: draft
+last_updated: YYYY-MM-DD
+---
+
+# ResourceContext
+
+Brief description of what slice of app state this context owns, which features depend on it, and where it sits in the provider tree (see [App Providers](./overview.md)).
+
+## State Shape
+
+```ts
+interface ResourceState {
+  // Auto-populated from context.ts
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `fieldOne` | `string` | <!-- description --> |
+| `fieldTwo` | `boolean` | <!-- description --> |
+
+## Actions
+
+| Action | Signature | Description |
+|--------|-----------|-------------|
+| `setFieldOne` | `(value: string) => void` | <!-- description --> |
+
+## Usage
+
+Access this context via its hook — never consume the context object directly.
+
+```tsx
+import { useResource } from '@/store/Resource/context';
+
+function MyComponent() {
+  const { fieldOne, setFieldOne } = useResource();
+}
+```
+
+## Provider Setup
+
+This context is mounted via `CombineProviders` in `app-providers.tsx`. No manual wrapping needed.
+
+```tsx
+// Already included in AppProvider
+<ResourceProvider>
+  {children}
+</ResourceProvider>
+```
+
+## Design Decisions
+
+<!-- TODO: Why does this state live in context rather than local state or SWR cache? Note cross-component dependencies or performance considerations. -->
+
+## Related
+
+- [App Providers Overview](./overview.md)
+- <!-- Components that consume this context -->
+- <!-- Related hooks if context feeds into the SWR layer -->
