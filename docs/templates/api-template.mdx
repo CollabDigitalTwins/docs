@@ -1,0 +1,70 @@
+---
+title: /api/resource
+description: One-line description of what this route group handles.
+category: api
+status: draft
+last_updated: YYYY-MM-DD
+---
+
+# /api/resource
+
+Brief description of what this route group covers and which domain entity it operates on.
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/resource` | <!-- description --> |
+| `POST` | `/api/resource/create` | <!-- description --> |
+| `PUT` | `/api/resource/[id]` | <!-- description --> |
+| `DELETE` | `/api/resource/[id]` | <!-- description --> |
+
+---
+
+## GET `/api/resource`
+
+<!-- Brief description of what this endpoint returns. -->
+
+### Authentication
+
+Requires permission: `{ action: "read", subject: "Resource" }`
+
+See [Roles & Permissions](../authorization/roles-permissions.md) for details.
+
+### Query Parameters
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `orgId` | `string` | Yes | <!-- description --> |
+
+### Response
+
+```json
+{
+  "data": []
+}
+```
+
+| Status | Meaning |
+|--------|---------|
+| `200` | Success |
+| `401` | Unauthenticated |
+| `403` | Insufficient permissions |
+
+### Notes
+
+<!-- TODO: Edge cases, business logic, or constraints not obvious from the code. -->
+
+---
+
+## POST `/api/resource/create`
+
+<!-- TODO: Fill in request body schema, response shape, and any notes. -->
+
+---
+
+## Related
+
+- <!-- Corresponding hook -->
+- <!-- Relevant data model -->
+- <!-- Relevant component if UI-facing -->

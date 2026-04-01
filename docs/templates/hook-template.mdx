@@ -1,0 +1,70 @@
+---
+title: useResource hooks
+description: One-line description of what these hooks manage.
+category: hooks
+status: draft
+last_updated: YYYY-MM-DD
+---
+
+# useResource hooks
+
+Brief description of what data domain these hooks cover, where in the app they're used, and the underlying fetching strategy (SWR, mutation, etc.).
+
+## Hooks
+
+| Hook | Description |
+|------|-------------|
+| `useResource` | <!-- description --> |
+| `useCreateResource` | <!-- description --> |
+
+---
+
+## `useResource`
+
+<!-- Brief description — what it fetches and what it returns. -->
+
+### Signature
+
+```ts
+function useResource(params: ResourceParams): UseResourceReturn
+```
+
+### Parameters
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `orgId` | `string` | Yes | <!-- description --> |
+
+### Returns
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `data` | `Resource[]` | <!-- description --> |
+| `isLoading` | `boolean` | SWR loading state |
+| `error` | `Error \| undefined` | SWR error state |
+
+### Example
+
+```tsx
+const { data: resources, isLoading } = useResource({ orgId });
+
+if (isLoading) return <Skeleton />;
+```
+
+### Notes
+
+<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
+
+---
+
+## `useCreateResource`
+
+<!-- TODO: Fill in mutation behaviour, optimistic updates if any, and error handling. -->
+
+---
+
+## Related
+
+- <!-- Corresponding API route -->
+- <!-- Components that use these hooks -->
+- <!-- Relevant data model -->
