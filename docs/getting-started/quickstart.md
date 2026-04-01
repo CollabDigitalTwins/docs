@@ -57,9 +57,10 @@ Access from the left sidebar:
 
 ## Next Steps
 
-- Explore the [Architecture Overview](../concepts/architecture.md) to understand how components work together
-- Read the [API Reference](../api/overview.md) for backend integration
-- Check out [Component Guides](../guides/components.md) for frontend development
+- Explore the [Architecture Overview](/docs/architecture/overview) to understand how components work together
+- Browse the [Concepts](/docs/concepts/digital-twins) section to learn about digital twins, BIM, and GIS
+- Read the [API Reference](/docs/api-reference/authentication) for backend integration
+- Check out the [Guides](/docs/guides/map-viewer) for working with CDT's viewers
 - [Contribute](https://github.com/collabdt/core?tab=contributing-ov-file#contributing-to-collab-digital-twins) to the project
 
 **Need Help?** Join our community on [GitHub Discussions](https://github.com/collabdt/core/discussions) or reach out via our [contact form](https://collabdt.org/home#contact).

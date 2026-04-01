@@ -9,11 +9,10 @@ The app uses a **role-based access control (RBAC)** system. We use:
 - UI-side enforcement
 
 ## Organization-scoped authorization:
-Permissions are NOT global to a user. A user has permissions within an organization.
-This allows users to have **different roles in different organizations**. 
+Permissions are NOT global to a user. A user has 1 role, which has permissions within an organization.
 
 ## Prisma:
-Roles are represented with the Role entity. The UserRole entity joins a user to a role within an organization.
+Roles are represented with the Role entity. Each User has a foreign key referencing a role within an organization.
 Permissions are stored as JSON on each role
 ```json
 	[
@@ -61,5 +60,7 @@ The same permissions can be used to hide UI elements:
 ```
 
 This improves UX but cannot replace API enforcement.
+
+
 
 
