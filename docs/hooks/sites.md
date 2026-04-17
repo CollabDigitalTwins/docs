@@ -58,10 +58,6 @@ if (isError) return <ErrorMessage />;
 return <SiteList sites={sites} />;
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## `useSite`
@@ -217,6 +213,5 @@ After deletion, the hook revalidates both the sites list and buildings list (sin
 
 ## Related
 
-- [API: Sites](/docs/api/sites)
 - [Data Model: Site](/docs/data-model/site)
 - [Hooks: Buildings](/docs/hooks/buildings)
