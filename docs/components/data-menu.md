@@ -65,12 +65,36 @@ import { ViewerNames } from '@/types';
 - Switching selected item ID resets the active tab in detail views
 
 ## Design Decisions
+ 
+DataMenu is intentionally an orchestration-only component — it manages state, wires context, and handles layout, but delegates all entity-specific logic to focused sub-components and utilities. This makes it easier to extend: adding a new viewer type only requires touching the relevant utility or sub-component rather than editing the core file.
+ 
+- **`viewerConfig.ts`** — viewer-specific metadata (icon, i18n title key, DataTypes value) lives in a static config map. Adding a new viewer means adding one entry here.
+- **`useViewerData`** — all per-viewer data selection, search, and filter logic is encapsulated in this hook, keeping DataMenu agnostic to how each viewer's data is shaped.
+- **`DetailHeader`** — entity title rendering is isolated here. Each entity type follows the same `name || fallback` pattern, and new entities add one small sub-component.
+- **`DetailActions`** — button logic, label resolution, and all CASL permission checks live here. DataMenu passes behaviour via callbacks and keeps state ownership to itself.
+The key tradeoff: `DetailActions` has a wide props interface because it needs both selected items (for labels and MoreOptions) and callbacks (to trigger upstream state changes). Lifting this state into context was considered but rejected to keep the permissions and edit flow easy to trace.
 
-<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
+---
 
 ## Permissions
 
-<!-- If gated by CASL, note the required action/subject pair. Remove this section if not applicable. -->
+DataMenu itself does not gate rendering on any CASL ability check — it always renders for any authenticated user. Permission enforcement happens at the action level inside child components:
+
+| Action | Subject | Where enforced |
+|--------|---------|----------------|
+| `create` | `Building` | `HeaderButtons` → Add Building button |
+| `create` | `User` | `HeaderButtons` → Add User button |
+| `read` | `Building` | `HeaderButtons` → View All on Map, Compare |
+| `read` | `Site` | `HeaderButtons` → View All on Map, Compare |
+| `update` | `Building` | `DetailActions` → Edit Details button |
+| `update` | `Site` | `DetailActions` → Edit Details button |
+| `update` | `Infrastructure` | `DetailActions` → Edit Details button |
+| `update` | `File` | `DetailActions` → Edit Details button |
+| `update` | `Role` | `DetailActions` → Edit/Save buttons (users) |
+| `delete` | `User` | `DetailActions` → via `MoreOptions` |
+| `update` | `Site` | `MoreOptions` → Delete Site |
+
+If you are adding a new viewer with edit/create actions, the pattern is: add the `ability.can()` check inside `DetailActions` for the edit/save buttons, and inside `HeaderButtons` for any creation entry point.
 
 ## Related
 
