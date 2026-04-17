@@ -55,10 +55,6 @@ const [siteName, setSiteName] = useState('')
 - Sets the temporary site as selected and switches view to detail mode
 - Shows error toast if name is empty
 
-### Notes
-
-<!-- TODO: Edge cases, business logic, or constraints not obvious from the code. -->
-
 ---
 
 ## AssociatedBuildingsTable
@@ -104,10 +100,6 @@ import AssociatedBuildingsTable from '@/core/components/viewers/Data/siteDetails
   setEditing={setIsEditing}
 />
 ```
-
-### Notes
-
-<!-- TODO: Edge cases, business logic, or constraints not obvious from the code. -->
 
 ---
 
@@ -156,10 +148,6 @@ Input controls are disabled when user lacks `{ action: "update", subject: "Site"
   getEnumType={getEnumType}
 />
 ```
-
-### Notes
-
-<!-- TODO: Edge cases, business logic, or constraints not obvious from the code. -->
 
 ---
 
@@ -214,10 +202,6 @@ const detailsRef = useRef<SiteDetailsRef>(null)
 // Save from parent
 await detailsRef.current?.saveChanges()
 ```
-
-### Notes
-
-<!-- TODO: Edge cases, business logic, or constraints not obvious from the code. -->
 
 ---
 
