@@ -62,16 +62,23 @@ jobs:
           # If response starts with '[' it's a directory, '{' is a single file
           if echo "$RESPONSE" | grep -q '^\['; then
             echo "Detected: directory — fetching all .ts/.tsx files"
+
+            # Write URLs to a temp file to avoid subshell scoping issue with pipes
             echo "$RESPONSE" | \
               grep -o '"download_url":"[^"]*"' | \
               grep -E '\.(ts|tsx)"' | \
-              sed 's/"download_url":"//;s/"//' | \
-              while read url; do
-                echo "Fetching file: $url"
-                echo "// FILE: $url" >> /tmp/source_input.txt
-                curl -s -H "Authorization: token $SOURCE_TOKEN" "$url" >> /tmp/source_input.txt
-                echo "" >> /tmp/source_input.txt
-              done
+              sed 's/"download_url":"//;s/"//' > /tmp/url_list.txt
+
+            echo "URLs found:"
+            cat /tmp/url_list.txt
+
+            while IFS= read -r url; do
+              echo "Fetching: $url"
+              echo "// FILE: $url" >> /tmp/source_input.txt
+              curl -s -H "Authorization: token $SOURCE_TOKEN" "$url" >> /tmp/source_input.txt
+              echo "" >> /tmp/source_input.txt
+            done < /tmp/url_list.txt
+
           else
             echo "Detected: single file"
             curl -s -H "Authorization: token $SOURCE_TOKEN" \
@@ -91,13 +98,14 @@ jobs:
           SOURCE_REPO: ${{ secrets.SOURCE_REPO_NAME }}
         run: |
           CHANGED_FILES='${{ toJson(github.event.client_payload.changed_files) }}'
-          echo "$CHANGED_FILES" | jq -r '.[]' | while read file; do
+          echo "$CHANGED_FILES" | jq -r '.[]' > /tmp/changed_files.txt
+          while IFS= read -r file; do
             echo "// FILE: $file" >> /tmp/source_input.txt
             curl -s -H "Authorization: token $SOURCE_TOKEN" \
               "https://raw.githubusercontent.com/$SOURCE_ORG/$SOURCE_REPO/main/$file" \
               >> /tmp/source_input.txt
             echo "" >> /tmp/source_input.txt
-          done
+          done < /tmp/changed_files.txt
 
       - name: Check for @docs-skip flag
         run: |
