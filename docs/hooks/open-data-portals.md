@@ -66,10 +66,6 @@ return (
 );
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## `useOpenDataPortalById`
@@ -107,10 +103,6 @@ const { openDataPortal, isLoading } = useOpenDataPortalById(selectedPortalId);
 
 if (!openDataPortal) return null;
 ```
-
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
 
 ---
 
@@ -270,6 +262,5 @@ function useOpenDataPortalsByName(name: string | null): {
 
 ## Related
 
-- [API Adapter ports](/docs/architecture/ports/apiAdapter)
 - [OpenDataPortal data model](/docs/data-model/open-data-portal)
 - [DatasetGroup type](/docs/data-model/dataset-group)
