@@ -58,9 +58,6 @@ return (
 );
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
 
 ---
 
@@ -164,6 +161,5 @@ On successful creation, revalidates the `["sensorTypes"]` list cache key.
 
 ## Related
 
-- [API: /api/sensor-types](/docs/api/sensor-types)
 - [Data Model: SensorType](/docs/data-model/sensor-type)
 - [Hooks: Provider](/docs/hooks/provider)
