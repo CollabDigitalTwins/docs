@@ -218,6 +218,5 @@ On successful creation, the hook revalidates the `["buildings"]` cache key.
 
 ## Related
 
-- [API: /api/buildings](/docs/api/buildings)
 - [Data Model: Building](/docs/data-model/building)
 - [Hooks: useFiles](/docs/hooks/files) (referenced in revalidation)
