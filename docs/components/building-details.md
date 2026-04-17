@@ -60,9 +60,6 @@ await detailsRef.current?.saveChanges();
 - **Loading/error states**: Uses `handleApiError` to surface hook errors as toasts. Shows a loading spinner in `TabSidebar` when files are loading.
 - **Optimistic updates**: After save, `selectedItem` is updated locally with the API response before SWR revalidates.
 
-## Design Decisions
-
-<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
 
 ## Permissions
 
