@@ -60,9 +60,9 @@ jobs:
 
             # Use 'path' field instead of 'download_url' (works for private repos)
             echo "$RESPONSE" | \
-              grep -o '"path":"[^"]*"' | \
-              grep -E '\.(ts|tsx)"' | \
-              sed 's/"path":"//;s/"//' > /tmp/path_list.txt
+              grep -o '"path":[[:space:]]*"[^"]*"' | \
+              sed -E 's/"path":[[:space:]]*"([^"]*)"/\1/' | \
+              grep -E '\.tsx?$' > /tmp/path_list.txt
 
             echo "Paths found:"
             cat /tmp/path_list.txt
