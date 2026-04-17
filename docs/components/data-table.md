@@ -64,9 +64,6 @@ const columns: ColumnDef<Building>[] = [
 - **Sticky header**: Table header remains visible when scrolling within the table container.
 - **Column metadata**: Columns can define `meta.columnClasses` for custom styling.
 
-## Design Decisions
-
-<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
 
 ## Permissions
 
