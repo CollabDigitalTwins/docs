@@ -60,9 +60,6 @@ await detailsRef.current?.saveChanges();
 - **Loading states**: The submit button shows a spinner while the request is in flight.
 - **Error states**: Validation errors and API failures surface via `toast.error`.
 
-## Design Decisions
-
-<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
 
 ## Permissions
 
