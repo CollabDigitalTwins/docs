@@ -60,9 +60,6 @@ const handleRename = async () => {
 };
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
 
 On successful update, the hook invalidates both the `["organization", id]` cache key and, if the name changed, the `["organizationByName", name]` key.
 
@@ -147,7 +144,6 @@ return (
 
 ## Related
 
-- [API: Organizations](/docs/api/organizations)
 - [Data Model: Organization](/docs/data-model/organization)
 - [Data Model: Role](/docs/data-model/role)
 - [Hooks Provider](/docs/hooks/provider)
