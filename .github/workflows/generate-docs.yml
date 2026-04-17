@@ -1,7 +1,6 @@
 name: Generate Docs
 
 on:
-  # Manual trigger — specify a single file or directory to document
   workflow_dispatch:
     inputs:
       source_path:
@@ -21,8 +20,6 @@ on:
         description: 'Output path in docs repo (e.g. docs/hooks/buildings.md)'
         required: true
 
-  # Auto trigger — runs when a PR is merged into main on the source repo
-  # Requires a webhook or cross-repo dispatch (see README)
   repository_dispatch:
     types: [source-updated]
 
@@ -42,7 +39,6 @@ jobs:
       - name: Install dependencies
         run: npm install @anthropic-ai/sdk
 
-      # For manual dispatch: fetch the specified path
       - name: Fetch source file(s) from source repo
         if: github.event_name == 'workflow_dispatch'
         env:
@@ -57,39 +53,43 @@ jobs:
           TREE_URL="https://api.github.com/repos/$SOURCE_ORG/$SOURCE_REPO/contents/$SOURCE_PATH"
           RESPONSE=$(curl -s -H "Authorization: token $SOURCE_TOKEN" "$TREE_URL")
 
-          echo "GitHub API response preview: ${RESPONSE:0:200}"
+          echo "GitHub API response preview: ${RESPONSE:0:300}"
 
-          # If response starts with '[' it's a directory, '{' is a single file
           if echo "$RESPONSE" | grep -q '^\['; then
             echo "Detected: directory — fetching all .ts/.tsx files"
 
-            # Write URLs to a temp file to avoid subshell scoping issue with pipes
+            # Use 'path' field instead of 'download_url' (works for private repos)
             echo "$RESPONSE" | \
-              grep -o '"download_url":"[^"]*"' | \
+              grep -o '"path":"[^"]*"' | \
               grep -E '\.(ts|tsx)"' | \
-              sed 's/"download_url":"//;s/"//' > /tmp/url_list.txt
+              sed 's/"path":"//;s/"//' > /tmp/path_list.txt
 
-            echo "URLs found:"
-            cat /tmp/url_list.txt
+            echo "Paths found:"
+            cat /tmp/path_list.txt
 
-            while IFS= read -r url; do
-              echo "Fetching: $url"
-              echo "// FILE: $url" >> /tmp/source_input.txt
-              curl -s -H "Authorization: token $SOURCE_TOKEN" "$url" >> /tmp/source_input.txt
+            while IFS= read -r filepath; do
+              echo "Fetching: $filepath"
+              echo "// FILE: $filepath" >> /tmp/source_input.txt
+              curl -s \
+                -H "Authorization: token $SOURCE_TOKEN" \
+                -H "Accept: application/vnd.github.raw" \
+                "https://api.github.com/repos/$SOURCE_ORG/$SOURCE_REPO/contents/$filepath" \
+                >> /tmp/source_input.txt
               echo "" >> /tmp/source_input.txt
-            done < /tmp/url_list.txt
+            done < /tmp/path_list.txt
 
           else
             echo "Detected: single file"
-            curl -s -H "Authorization: token $SOURCE_TOKEN" \
-              "https://raw.githubusercontent.com/$SOURCE_ORG/$SOURCE_REPO/main/$SOURCE_PATH" \
+            curl -s \
+              -H "Authorization: token $SOURCE_TOKEN" \
+              -H "Accept: application/vnd.github.raw" \
+              "https://api.github.com/repos/$SOURCE_ORG/$SOURCE_REPO/contents/$SOURCE_PATH" \
               -o /tmp/source_input.txt
           fi
 
           echo "--- source_input.txt preview ---"
           head -20 /tmp/source_input.txt || echo "File is empty or missing"
 
-      # For auto trigger: fetch changed files from the dispatch payload
       - name: Fetch changed source files
         if: github.event_name == 'repository_dispatch'
         env:
@@ -101,8 +101,10 @@ jobs:
           echo "$CHANGED_FILES" | jq -r '.[]' > /tmp/changed_files.txt
           while IFS= read -r file; do
             echo "// FILE: $file" >> /tmp/source_input.txt
-            curl -s -H "Authorization: token $SOURCE_TOKEN" \
-              "https://raw.githubusercontent.com/$SOURCE_ORG/$SOURCE_REPO/main/$file" \
+            curl -s \
+              -H "Authorization: token $SOURCE_TOKEN" \
+              -H "Accept: application/vnd.github.raw" \
+              "https://api.github.com/repos/$SOURCE_ORG/$SOURCE_REPO/contents/$file" \
               >> /tmp/source_input.txt
             echo "" >> /tmp/source_input.txt
           done < /tmp/changed_files.txt
