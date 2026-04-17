@@ -58,10 +58,6 @@ if (isLoading) return <Skeleton />;
 return <SensorList sensors={sensors} />;
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## `useSensor`
@@ -167,10 +163,6 @@ function useSensorsByBuilding(buildingId: number | null): {
 const { sensors, isLoading } = useSensorsByBuilding(selectedBuildingId);
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## `useSensorsByAuthor`
@@ -206,10 +198,6 @@ function useSensorsByAuthor(authorId: number | null): {
 ```tsx
 const { sensors, isLoading } = useSensorsByAuthor(currentUserId);
 ```
-
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
 
 ---
 
@@ -256,14 +244,9 @@ const handleCreate = async () => {
 };
 ```
 
-### Notes
-
-<!-- TODO: Fill in mutation behaviour, optimistic updates if any, and error handling. -->
-
 ---
 
 ## Related
 
-- [API Adapter](/docs/architecture/api-adapter) <!-- TODO: Update path when adapter docs exist -->
 - [Sensor data model](/docs/data-model/sensor)
 - [Building hooks](/docs/hooks/buildings)
