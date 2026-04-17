@@ -39,7 +39,17 @@ import { AppSidebarContent } from '@/components/AppSidebarContent';
 
 ## Design Decisions
 
-<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
+AppSidebarContent is responsible for navigation and organization context — it controls which viewers are available, who can see them, and dispatches the viewer change when a user clicks a menu item.
+
+Menu items are defined as three static arrays (`viewerItems`, `datasetItems`, `managementItems`) rather than one flat list. This grouping maps directly to the three sidebar sections rendered in the UI, and makes it easy to add, remove, or reorder items within a section without affecting the others. Commented-out items (Land, Users, Feedback) are intentionally left in place as placeholders for features that are partially implemented or pending — removing them entirely would lose the context of where they belong.
+
+Viewer availability is controlled by `appContent` on the Organization model. If `appContent` is empty, all viewers are shown; otherwise the list is filtered to only what the organization has enabled. This filtering happens at the item level via `.filter(item => appContent.includes(item.id))` so the sidebar automatically reflects each organization's configuration without any additional logic.
+
+Role-based visibility is handled via the `accessibleTo` field on `MenuItem` and the `canRenderItem` callback, which checks the current user's role against the allowed roles for each item. This is intentionally separate from CASL — it controls whether a nav item is visible at all, while CASL controls what actions are available once inside a viewer.
+
+The `handleChangeViewer` function is exported so it can be called from other parts of the app (e.g. map interactions, HeaderButtons) that need to trigger a viewer change without going through the sidebar directly. It always resets selected item, site, file, and view state to prevent stale detail views carrying over between viewers.
+
+Collapsed/expanded state drives label visibility and layout adjustments throughout. On mobile, the sheet open state is treated as expanded so labels render correctly when the drawer is visible — this is handled by the `isCollapsed` derived value rather than reading `sidebarState` directly.
 
 ## Permissions
 
