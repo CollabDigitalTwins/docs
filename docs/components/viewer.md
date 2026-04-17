@@ -35,12 +35,20 @@ import { Viewer } from '@/components/Viewer';
 - **Sidebar trigger**: Displays `SidebarTrigger` only for map, BIM, and point cloud viewers.
 
 ## Design Decisions
-
-<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
+ 
+Viewer is the top-level routing and layout component for the platform — it owns the relationship between the URL (`?viewer=`) and the active viewer state in context, and decides which viewer component to render.
+ 
+The core design choice is a **two-way sync between URL and context** rather than treating one as the single source of truth. This is necessary because viewer changes can come from two directions — direct URL navigation (browser back/forward, shared links) and in-app actions (sidebar, HeaderButtons). A `isUpdatingRef` flag prevents the two `useEffect`s from triggering each other in a loop when one initiates a change.
+ 
+The MapViewer is always mounted but hidden via `display: none` when not active. This is intentional — MapLibre is expensive to initialise and tear down, so keeping it mounted preserves map state (position, loaded layers, datasets) when the user switches to another viewer and back. All other viewers mount and unmount normally.
+ 
+`appContent` on the Organization model controls which viewers are available for a given instance. If the URL contains a viewer that isn't in `appContent`, Viewer silently falls back to the map and updates the URL — so viewer availability is enforced at the routing level rather than inside each individual viewer component.
+ 
+The `isMounted` flag ensures the URL-to-context sync only runs after the initial mount, avoiding a race condition where the URL and context briefly disagree on first load.
 
 ## Permissions
 
-<!-- Not applicable — viewer switching is controlled by organization.appContent, not CASL permissions. -->
+No permissions are necessary here.
 
 ## Related
 
