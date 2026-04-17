@@ -54,10 +54,6 @@ if (isError) return <ErrorMessage />;
 return <InfrastructureList items={infrastructures} />;
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## `useInfrastructure`
@@ -98,10 +94,6 @@ const handleSave = async (changes: Partial<Infrastructure>) => {
 };
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## `useCreateInfrastructure`
@@ -137,10 +129,6 @@ const handleCreate = async (data: Partial<Infrastructure>) => {
   router.push(`/infrastructures/${created.id}`);
 };
 ```
-
-### Notes
-
-<!-- TODO: Fill in mutation behaviour, optimistic updates if any, and error handling. -->
 
 ---
 
@@ -181,14 +169,9 @@ const handleDelete = async (id: number) => {
 };
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## Related
 
-- [API: Infrastructure routes](/docs/api/infrastructures)
 - [Data model: Infrastructure](/docs/data-model/infrastructure)
 - [Hooks provider](/docs/hooks/provider)
