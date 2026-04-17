@@ -560,10 +560,6 @@ deleteInfrastructure(id: number): Promise<Infrastructure>
 
 ---
 
-## Notes
-
-<!-- TODO: Document adapter implementations (REST adapter, mock adapter), dependency injection pattern, and error handling conventions. -->
-
 ---
 
 ## Related
