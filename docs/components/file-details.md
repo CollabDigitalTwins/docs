@@ -45,9 +45,6 @@ import { Dialog } from '@/core/components/ui/';
 - **3D exception**: When `disableDialogFor3D` is true, 3D/BIM files render directly in the card without dialog interaction
 - **Fallback**: Unknown file types display a generic "No preview available" message with a file icon
 
-## Design Decisions
-
-<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
 
 ## Related
 
