@@ -37,11 +37,15 @@ import { ViewerNames } from '@/types';
 
 ## Design Decisions
 
-<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
+Toolbar is intentionally a thin, stateless component — it receives the active viewer and renders the appropriate tool set, nothing more. All tool definitions and their behaviour live in viewer-specific files (`mapTools`, `bimToolbar`, `pointcloudToolbarTools`) rather than in Toolbar itself, so adding or changing tools for a viewer never requires touching this component.
+
+The toolbar only renders for viewers that have tools (`map`, `bim`, `pointcloud`). Data viewers like Buildings, Sites, and Files return `null` — their actions live in `HeaderButtons` and `DetailActions` instead. This is a deliberate separation: spatial viewers need persistent, floating tool access; data viewers do not.
+
+The toolbar is positioned fixed at the bottom-center of the screen and sits above the viewer content via `z-10`. `pointer-events-none` is set on the container so the toolbar doesn't block map interaction in the areas between buttons — `pointer-events-auto` is restored on individual buttons inside `ToolbarButton`.
 
 ## Permissions
 
-<!-- Not applicable — no CASL permission checks in this component. -->
+No CASL permission checks in this component.
 
 ## Related
 
