@@ -57,10 +57,6 @@ if (isLoading) return <Skeleton />;
 return <FileList files={files} />;
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## `useFile`
@@ -138,10 +134,6 @@ function useFilesByBuildingId(buildingId: number, tag?: string): UseFilesReturn
 const { files, isLoading } = useFilesByBuildingId(building.id, "floorplan");
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## `useFilesBySiteId`
@@ -174,10 +166,6 @@ function useFilesBySiteId(siteId: number, tag?: string): UseFilesReturn
 ```tsx
 const { files } = useFilesBySiteId(site.id);
 ```
-
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
 
 ---
 
@@ -380,7 +368,6 @@ Attempts blob download via fetch for presigned URLs, with automatic fallback to 
 
 ## Related
 
-- [API: /api/files](/docs/api/files)
 - [Data model: DbFile](/docs/data-model/file)
 - [Hooks: useBuildings](/docs/hooks/buildings)
 - [Hooks: useSites](/docs/hooks/sites)
