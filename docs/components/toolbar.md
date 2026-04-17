@@ -50,7 +50,7 @@ No CASL permission checks in this component.
 ## Related
 
 - [ToolbarButton](/docs/components/ui/toolbar-button) — Renders individual tool buttons
-- [Menubar](/docs/components/ui/menubar) — Container component for the toolbar
+- [Menubar](https://ui.shadcn.com/docs/components/radix/menubar) — Container component for the toolbar
 - [SubmenuProvider](/docs/components/toolbar-submenu) — Context provider for submenu state
 - [mapToolbarTools](/docs/viewers/map/tools) — Tool definitions for the map viewer
 - [bimToolbarTools](/docs/viewers/bim/tools) — Tool definitions for the BIM viewer
