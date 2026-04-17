@@ -62,7 +62,6 @@ return (
 
 ### Notes
 
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
 
 ---
 
@@ -107,8 +106,6 @@ const handleRename = async (name: string) => {
 };
 ```
 
-### Notes
-
 On successful update, the hook revalidates `["building", id]`, `["buildings"]`, and `["filesByBuilding", id, ""]` cache keys.
 
 ---
@@ -143,10 +140,6 @@ function useBuildingsByOsm(osmId: number | null): UseBuildingsByOsmReturn
 const { buildings, isLoading } = useBuildingsByOsm(selectedOsmId);
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
-
 ---
 
 ## `useBuildingOsmIds`
@@ -178,10 +171,6 @@ const { osmIds, isLoading } = useBuildingOsmIds();
 
 // Use to highlight buildings on map that exist in the database
 ```
-
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
 
 ---
 
