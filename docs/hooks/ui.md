@@ -61,5 +61,4 @@ function Header() {
 
 ## Related
 
-- <!-- TODO: Components that use this hook (e.g., navigation, sidebar components) -->
-- <!-- TODO: Other responsive utilities if they exist -->
+- [Components: Sidebar](/docs/components/sidebar)
