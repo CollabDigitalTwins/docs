@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       source_path:
-        description: 'Path in source repo to document (e.g. src/app/api/buildings or src/components/Toolbar.tsx)'
+        description: 'Path in source repo to document (e.g. src/core/hooks/buildings or src/core/hooks/buildings/buildings.ts)'
         required: true
       doc_type:
         description: 'Template to use'
@@ -18,7 +18,7 @@ on:
           - context
           - concept
       output_path:
-        description: 'Output path in docs repo (e.g. docs/api/buildings.md)'
+        description: 'Output path in docs repo (e.g. docs/hooks/buildings.md)'
         required: true
 
   # Auto trigger — runs when a PR is merged into main on the source repo
@@ -52,28 +52,35 @@ jobs:
         run: |
           SOURCE_PATH="${{ github.event.inputs.source_path }}"
 
-          # Check if path is a directory or single file by attempting to fetch as tree
+          echo "Fetching: $SOURCE_PATH from $SOURCE_ORG/$SOURCE_REPO"
+
           TREE_URL="https://api.github.com/repos/$SOURCE_ORG/$SOURCE_REPO/contents/$SOURCE_PATH"
           RESPONSE=$(curl -s -H "Authorization: token $SOURCE_TOKEN" "$TREE_URL")
 
-          # If response is an array, it's a directory — fetch all .ts/.tsx files
-          if echo "$RESPONSE" | grep -q '"type":"file"'; then
-            # Single file
-            curl -s -H "Authorization: token $SOURCE_TOKEN" \
-              "https://raw.githubusercontent.com/$SOURCE_ORG/$SOURCE_REPO/main/$SOURCE_PATH" \
-              -o /tmp/source_input.txt
-          else
-            # Directory — concatenate all .ts/.tsx files
+          echo "GitHub API response preview: ${RESPONSE:0:200}"
+
+          # If response starts with '[' it's a directory, '{' is a single file
+          if echo "$RESPONSE" | grep -q '^\['; then
+            echo "Detected: directory — fetching all .ts/.tsx files"
             echo "$RESPONSE" | \
               grep -o '"download_url":"[^"]*"' | \
               grep -E '\.(ts|tsx)"' | \
               sed 's/"download_url":"//;s/"//' | \
               while read url; do
+                echo "Fetching file: $url"
                 echo "// FILE: $url" >> /tmp/source_input.txt
                 curl -s -H "Authorization: token $SOURCE_TOKEN" "$url" >> /tmp/source_input.txt
                 echo "" >> /tmp/source_input.txt
               done
+          else
+            echo "Detected: single file"
+            curl -s -H "Authorization: token $SOURCE_TOKEN" \
+              "https://raw.githubusercontent.com/$SOURCE_ORG/$SOURCE_REPO/main/$SOURCE_PATH" \
+              -o /tmp/source_input.txt
           fi
+
+          echo "--- source_input.txt preview ---"
+          head -20 /tmp/source_input.txt || echo "File is empty or missing"
 
       # For auto trigger: fetch changed files from the dispatch payload
       - name: Fetch changed source files
