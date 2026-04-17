@@ -56,9 +56,6 @@ if (isError) return <ErrorMessage />;
 return <UserTable users={users} />;
 ```
 
-### Notes
-
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
 
 ---
 
@@ -281,7 +278,6 @@ if (success) {
 
 ## Related
 
-- [API: /api/users](/docs/api/users)
 - [Data model: User](/docs/data-model/user)
 - [Data model: Role](/docs/data-model/role)
 - [Hook provider](/docs/hooks/provider)
