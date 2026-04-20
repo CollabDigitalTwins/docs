@@ -174,3 +174,37 @@ export const NextAuthLogo: LogoComp = ({ size = 28 }) => (
     </defs>
   </svg>
 );
+
+/* ── Browser logos (asset-backed) ─────────────────────── */
+export const FirefoxLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/firefox.svg" alt="Firefox" style={assetLogoStyle(size)} />
+);
+
+export const ChromeLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/chrome.svg" alt="Chrome" style={assetLogoStyle(size)} />
+);
+
+export const EdgeLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/edge.svg" alt="Edge" style={assetLogoStyle(size)} />
+);
+
+export const OperaLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/opera.svg" alt="Opera" style={assetLogoStyle(size)} />
+);
+
+export const SafariLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/safari.svg" alt="Safari" style={assetLogoStyle(size)} />
+);
+
+/* ── File-format logos (asset-backed) ─────────────────── */
+export const IfcLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/ifc.svg" alt="IFC" style={assetLogoStyle(size)} />
+);
+
+export const GltfLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/GlTF_logo.svg" alt="glTF" style={assetLogoStyle(size)} />
+);
+
+export const DxfLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/dxf-file-icon.svg" alt="DXF" style={assetLogoStyle(size)} />
+);
