@@ -162,7 +162,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────
-   Right side — mock docs visual
+   Right side — platform architecture preview
    ───────────────────────────────────────────────────────── */
 
 .heroVisual {
@@ -186,125 +186,70 @@
 .heroVisualCard {
   position: relative;
   z-index: 1;
+  display: block;
   width: 100%;
   height: 100%;
   border-radius: 14px;
   overflow: hidden;
-  background: var(--hp-low);
   border: 1px solid var(--hp-outline-variant);
+  background: var(--hp-low);
   box-shadow:
     0 20px 60px -20px rgba(0, 0, 0, 0.25),
     0 8px 24px -12px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-/* Toolbar */
-.heroVisualToolbar {
-  height: 36px;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0 0.9rem;
-  background: var(--hp-mid);
-  border-bottom: 1px solid var(--hp-outline-variant);
+.heroVisualCard:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  border-color: var(--hp-primary-container);
+  box-shadow:
+    0 28px 80px -24px color-mix(in srgb, var(--hp-primary-container) 35%, rgba(0,0,0,0.3)),
+    0 10px 28px -14px rgba(0, 0, 0, 0.2);
 }
 
-.heroDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--hp-outline-variant);
-}
-
-.heroDot:nth-child(1) { background: color-mix(in srgb, var(--hp-primary-container) 70%, transparent); }
-.heroDot:nth-child(2) { background: color-mix(in srgb, var(--hp-primary-fixed) 70%, transparent); }
-.heroDot:nth-child(3) { background: var(--hp-outline-variant); }
-
-.heroSearchPill {
-  margin-left: auto;
-  padding: 0.2rem 0.9rem;
-  border-radius: 999px;
-  background: var(--hp-surface);
-  border: 1px solid var(--hp-outline-variant);
-  color: var(--hp-on-surface-variant);
-  font-family: 'Geist', sans-serif;
-  font-size: 0.7rem;
-}
-
-/* Body */
-.heroVisualBody {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  min-height: 0;
-}
-
-.heroSidebar {
-  padding: 1rem 0.75rem;
-  border-right: 1px solid var(--hp-outline-variant);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background: var(--hp-lowest);
-}
-
-.heroSidebarItem {
-  height: 10px;
-  border-radius: 4px;
-  background: var(--hp-mid);
-  width: 85%;
-}
-
-.heroSidebarItem:nth-child(2) { width: 70%; }
-.heroSidebarItem:nth-child(4) { width: 60%; }
-.heroSidebarItem:nth-child(5) { width: 78%; }
-
-.heroSidebarItemActive {
-  background: color-mix(in srgb, var(--hp-primary-container) 30%, transparent);
-  box-shadow: inset 2px 0 0 var(--hp-primary-container);
-}
-
-.heroContent {
-  padding: 1.5rem 1.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-}
-
-.heroContentHeading {
-  width: 55%;
-  height: 18px;
-  border-radius: 6px;
-  background: var(--hp-on-surface);
-  opacity: 0.85;
-  margin-bottom: 0.4rem;
-}
-
-.heroContentLine {
+/* Architecture sketch — pure SVG scales to fit the card */
+.heroSketch {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--hp-high);
+  height: 100%;
+  display: block;
+  pointer-events: none;
 }
 
-.heroContentLineShort { width: 65%; }
-.heroContentLineMed { width: 80%; }
-
-.heroContentCode {
-  margin: 0.4rem 0;
-  padding: 0.75rem 0.9rem;
-  border-radius: 8px;
-  background: var(--hp-lowest);
-  border: 1px solid var(--hp-outline-variant);
+/* Gradient overlay with CTA */
+.heroVisualOverlay {
+  position: absolute;
+  inset: 0;
   display: flex;
-  gap: 0.4rem;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1.25rem;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    color-mix(in srgb, var(--hp-lowest) 70%, transparent) 75%,
+    var(--hp-lowest) 100%
+  );
+  pointer-events: none;
 }
 
-.heroCodeDot {
-  width: 8px;
-  height: 8px;
+.heroVisualCta {
+  font-family: 'Geist', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.55rem 1rem;
   border-radius: 999px;
+  background: var(--hp-primary-container);
+  color: var(--hp-on-primary-ctr);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--hp-primary-container) 40%, transparent);
+  transition: transform 0.2s ease;
+}
+
+.heroVisualCard:hover .heroVisualCta {
+  transform: translateY(-2px);
 }
 
 /* ── Mobile ──────────────────────────────────────────── */
@@ -322,8 +267,5 @@
   .ctaButton,
   .ctaSecondary {
     flex: 1;
-  }
-  .heroVisualBody {
-    grid-template-columns: 100px 1fr;
   }
 }
