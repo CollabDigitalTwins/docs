@@ -21,6 +21,7 @@ import {
   DxfLogo,
   EdgeLogo,
   FirefoxLogo,
+  FullhostLogo,
   GltfLogo,
   IfcLogo,
   MapLibreLogo,
@@ -111,6 +112,7 @@ const Postgres_ = adaptLogo(PostgresLogo);
 const PostGIS_ = adaptLogo(PostGisLogo);
 const MinIO_ = adaptLogo(MinioLogo);
 const Docker_ = adaptLogo(DockerLogo);
+const Fullhost_ = adaptLogo(FullhostLogo);
 const GLTF_ = adaptLogo(GltfLogo);
 const DXF_ = adaptLogo(DxfLogo);
 const IFC_ = adaptLogo(IfcLogo);
@@ -258,31 +260,41 @@ export const DEFAULT_LAYERS: Layer[] = [
       id: 'cloud', title: 'Cloud Infrastructure',
       subtitle: `Containers ${DOT} Self-hosted ${DOT} Reproducible deployments`,
       kind: 'core', wide: true, Icon: CloudIcon,
-      tech: [{ Logo: Docker_, n: 'Docker' }],
+      tech: [{ Logo: Docker_, n: 'Docker' }, { Logo: Fullhost_, n: 'Fullhost' }],
     }],
   },
 ];
 
 export const DEFAULT_EDGES: Edge[] = [
-  { from: 'user', to: 'frontend', kind: 'core' },
-  { from: 'frontend', to: 'gateway', kind: 'core' },
-  { from: 'frontend', to: 'geo_svc', kind: 'map', style: 'dashed' },
-  { from: 'frontend', to: 'files_svc', kind: 'unstruct', style: 'dashed' },
-  { from: 'opendata_svc', to: 'gateway', kind: 'open', style: 'dashed' },
-  { from: 'opendata_svc', to: 'ext_open', kind: 'open', style: 'dashed' },
-  { from: 'gateway', to: 'core_api', kind: 'core' },
-  { from: 'gateway', to: 'auth_svc', kind: 'core' },
-  { from: 'gateway', to: 'geo_svc', kind: 'map' },
+  // ── Primary flow — user down through the stack ─────────
+  { from: 'user',     to: 'frontend', kind: 'core' },
+  { from: 'frontend', to: 'gateway',  kind: 'core' },
+
+  // API Gateway fans out to the four backend services
+  { from: 'gateway', to: 'core_api',  kind: 'core' },
+  { from: 'gateway', to: 'auth_svc',  kind: 'core' },
+  { from: 'gateway', to: 'geo_svc',   kind: 'map' },
   { from: 'gateway', to: 'files_svc', kind: 'unstruct' },
-  { from: 'core_api', to: 'db', kind: 'core' },
-  { from: 'auth_svc', to: 'db', kind: 'core' },
-  { from: 'geo_svc', to: 'spatial_db', kind: 'map' },
-  { from: 'files_svc', to: 'objstore', kind: 'unstruct' },
-  { from: 'opendata_svc', to: 'db', kind: 'open', style: 'dashed' },
-  { from: 'ext_open', to: 'cloud', kind: 'core', style: 'dashed' },
-  { from: 'db', to: 'cloud', kind: 'core', style: 'dashed' },
-  { from: 'objstore', to: 'cloud', kind: 'core', style: 'dashed' },
-  { from: 'spatial_db', to: 'cloud', kind: 'core', style: 'dashed' },
+
+  // Backend → Data storage (one-to-one)
+  { from: 'core_api',  to: 'db',         kind: 'core' },
+  { from: 'auth_svc',  to: 'db',         kind: 'core' },
+  { from: 'geo_svc',   to: 'spatial_db', kind: 'map' },
+  { from: 'files_svc', to: 'objstore',   kind: 'unstruct' },
+
+  // ── Direct / optional reverse flows ────────────────────
+  // Backend services push domain data back up to Frontend modules
+  // (Auth → Auth module, Geo → Map module, Files → 3D Graphics module)
+  { from: 'auth_svc',  to: 'frontend', kind: 'core',     style: 'dashed' },
+  { from: 'geo_svc',   to: 'frontend', kind: 'map',      style: 'dashed' },
+  { from: 'files_svc', to: 'frontend', kind: 'unstruct', style: 'dashed' },
+
+  // ── Open-data loop (yellow) ────────────────────────────
+  // External Open Data Service pulls from upstream sources, feeds the
+  // gateway, and seeds the primary database.
+  { from: 'ext_open',     to: 'opendata_svc', kind: 'open' },
+  { from: 'opendata_svc', to: 'gateway',      kind: 'open' },
+  { from: 'opendata_svc', to: 'db',           kind: 'open', style: 'dashed' },
 ];
 
 /* ── THEME TOKENS ──────────────────────────────────────────────
