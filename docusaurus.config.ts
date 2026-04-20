@@ -1,5 +1,5 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Documentation',
   tagline: 'Explore our guides and examples to integrate with the CDT Platform',
-  favicon: 'img/cdt-logo.svg',
+  favicon: 'img/cdt-logo-stroke.svg',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -73,13 +73,13 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     colorMode: {
-      respectPrefersColorScheme: true,
+      respectPrefersColorScheme: false,
     },
     navbar: {
-      title: 'Collab Digital Twins Docs',
+      title: 'CDT Docs',
       logo: {
-        alt: 'My Site Logo',
-        src: 'img/cdt-logo.svg',
+        alt: 'Collab Digital Twins',
+        src: 'img/cdt-logo-stroke.svg',
       },
       items: [
         {
@@ -140,7 +140,9 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Collab Digital Twins. Built with Docusaurus.`,
+      copyright: ` ${new Date().getFullYear()} 
+      Collab Digital Twins. All rights reserved.
+      Stewarded by a Canadian not-for-profit organization for long-term public benefit. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

@@ -1,32 +1,271 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
+/* ─────────────────────────────────────────────────────────
+   Docs homepage hero — sovereign style (mirrors HeroSection)
+   ───────────────────────────────────────────────────────── */
 
 .heroBanner {
-  padding: 4rem 0;
-  text-align: center;
   position: relative;
   overflow: hidden;
+  background: var(--hp-surface);
+  padding: 6rem 0 5rem;
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
+/* ── Hero layout ─────────────────────────────────────── */
+.heroInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
   }
 }
 
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+/* ── Badge ───────────────────────────────────────────── */
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--hp-primary-container) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hp-primary-container) 30%, transparent);
+  font-family: 'Geist', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hp-primary-container);
+}
+
+.heroBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--hp-primary-container);
+  animation: heroPulse 2s ease-in-out infinite;
+}
+
+@keyframes heroPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+/* ── Title ───────────────────────────────────────────── */
+.heroTitle {
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--hp-on-surface);
+  margin: 0;
+}
+
+.heroGradient {
+  background: linear-gradient(
+    135deg,
+    var(--hp-primary-container) 0%,
+    var(--hp-primary-fixed) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.heroSubtitle {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--hp-on-surface-variant);
+  max-width: 28rem;
+  margin: 0;
+}
+
+/* ── CTAs ────────────────────────────────────────────── */
 .buttons {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
 }
 
 .ctaButton {
-  background-color: var(--primary-highlight);
-  transition: background 0.2s;
-  border:none
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.75rem;
+  border-radius: 8px;
+  background: var(--hp-primary-container);
+  color: var(--hp-on-primary-ctr);
+  font-family: 'Geist', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
+
 .ctaButton:hover {
-  background-color: #fb923c;
+  background: var(--hp-primary);
+  color: var(--hp-on-primary-ctr);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--hp-primary-container) 40%, transparent);
+}
+
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.75rem;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--hp-on-surface);
+  font-family: 'Geist', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid var(--hp-outline-variant);
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  text-decoration: none;
+}
+
+.ctaSecondary:hover {
+  background: var(--hp-mid);
+  border-color: var(--hp-outline);
+  color: var(--hp-on-surface);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+/* ─────────────────────────────────────────────────────────
+   Right side — platform architecture preview
+   ───────────────────────────────────────────────────────── */
+
+.heroVisual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+}
+
+.heroVisualGlow {
+  position: absolute;
+  inset: -10% -8% -8% -10%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--hp-primary-container) 30%, transparent) 0%,
+    transparent 70%
+  );
+  filter: blur(40px);
+  z-index: 0;
+}
+
+.heroVisualCard {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--hp-outline-variant);
+  background: var(--hp-low);
+  box-shadow:
+    0 20px 60px -20px rgba(0, 0, 0, 0.25),
+    0 8px 24px -12px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.heroVisualCard:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  border-color: var(--hp-primary-container);
+  box-shadow:
+    0 28px 80px -24px color-mix(in srgb, var(--hp-primary-container) 35%, rgba(0,0,0,0.3)),
+    0 10px 28px -14px rgba(0, 0, 0, 0.2);
+}
+
+/* Architecture sketch — pure SVG scales to fit the card */
+.heroSketch {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* Gradient overlay with CTA */
+.heroVisualOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1.25rem;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    color-mix(in srgb, var(--hp-lowest) 70%, transparent) 75%,
+    var(--hp-lowest) 100%
+  );
+  pointer-events: none;
+}
+
+.heroVisualCta {
+  font-family: 'Geist', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  background: var(--hp-primary-container);
+  color: var(--hp-on-primary-ctr);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--hp-primary-container) 40%, transparent);
+  transition: transform 0.2s ease;
+}
+
+.heroVisualCard:hover .heroVisualCta {
+  transform: translateY(-2px);
+}
+
+/* ── Mobile ──────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .heroBanner {
+    min-height: auto;
+    padding: 5rem 0 4rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .buttons {
+    width: 100%;
+  }
+  .ctaButton,
+  .ctaSecondary {
+    flex: 1;
+  }
 }

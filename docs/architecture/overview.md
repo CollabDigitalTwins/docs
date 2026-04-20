@@ -2,6 +2,8 @@
 sidebar_position: 1
 ---
 
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
 # Architecture Overview
 
 How CDT's frontend, backend, and data layers connect to form a collaborative digital twin platform.
@@ -12,46 +14,14 @@ CDT is a full-stack Next.js 15 application that combines three specialized visua
 
 ## High-Level Architecture
 
-```mermaid
-graph TD
-  subgraph Browser["Browser"]
-    ML["MapLibre GL — 2D/3D maps"]
-    TOC["That Open Company — BIM / IFC viewer"]
-    PC["Potree — point cloud viewer"]
-    UI["React 19 UI — Radix + Tailwind"]
-  end
+Hover any node to highlight its connections. Toggle flow categories in the legend to focus on a single data path.
 
-  subgraph Next["Next.js 15 Application"]
-    SSR["SSR + React Server Components"]
-    API["API Routes — 62 endpoints"]
-    Auth["NextAuth v5 — credentials + OAuth"]
-    CASL["CASL — role-based permissions"]
-    Intl["next-intl — i18n (En / Fr / Es)"]
-  end
-
-  subgraph Data["Data Layer"]
-    PG["PostgreSQL — Prisma ORM"]
-    MN["MinIO / S3 — file storage"]
-    Martin["Martin — PostGIS vector tiles"]
-  end
-
-  subgraph External["External Services"]
-    CKAN["CKAN — open data portals"]
-    ReCAPTCHA["Google reCAPTCHA v3"]
-    Geo["Geocode Earth — geocoding"]
-    NRCan["NRCan — elevation / hillshade tiles"]
-  end
-
-  Browser -->|"fetch / SWR"| Next
-  Next -->|"Prisma client"| PG
-  Next -->|"AWS S3 SDK"| MN
-  Next -->|"proxy"| CKAN
-  Next -->|"proxy"| NRCan
-  Browser -->|"vector tile requests"| Martin
-  Martin --> PG
-  Browser -->|"token validation"| ReCAPTCHA
-  Browser -->|"geocoding"| Geo
-```
+<BrowserOnly>
+  {() => {
+    const PlatformArchitecture = require('@site/src/components/PlatformArchitecture').default;
+    return <PlatformArchitecture />;
+  }}
+</BrowserOnly>
 
 ## Frontend
 

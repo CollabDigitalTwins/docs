@@ -1,71 +1,60 @@
-import type {ReactNode} from 'react';
-import clsx from 'clsx';
-import Heading from '@theme/Heading';
+import type { ReactNode } from 'react';
 import styles from './styles.module.css';
-
-type FeatureItem = {
-  title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
-  description: ReactNode;
-};
-
-const FeatureList: FeatureItem[] = [
-  {
-    title: 'Open Source',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
-    description: (
-      <>
-        Free, open-source technologies built with and for the community.
-        Foster trust through transparent, collaborative development.
-      </>
-    ),
-  },
-  {
-    title: 'Accessible',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-    description: (
-      <>
-        Empower everyone with intuitive, user-friendly
-        tools that work directly in the browser.
-      </>
-    ),
-  },
-  {
-    title: 'Open Standards',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    description: (
-      <>
-        Eliminate proprietary barriers and promote interoperability 
-        through open standards and non-proprietary formats.
-      </>
-    ),
-  },
-];
-
-function Feature({title, Svg, description}: FeatureItem) {
-  return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
-      </div>
-    </div>
-  );
-}
+import { CAPABILITIES } from './capabilities';
+import { TECH_STACK } from './techStack';
+import { Marquee, CapabilityCard, TechChip } from './Marquee';
 
 export default function HomepageFeatures(): ReactNode {
+  const capabilitiesRepeated = [...CAPABILITIES, ...CAPABILITIES, ...CAPABILITIES];
+  const techRepeated = [...TECH_STACK, ...TECH_STACK, ...TECH_STACK];
+
   return (
-    <section className={styles.features}>
-      <div className="container">
-        <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
+    <>
+      {/* ── Core capabilities — marquee carousel (left) ────────── */}
+      <section className={styles.carousel}>
+        <div className={styles.carouselHeader}>
+          <div className={styles.sectionLabel}>What's inside</div>
         </div>
-      </div>
-    </section>
+        <Marquee direction="left" edgeFadeClass="fadeLow">
+          {capabilitiesRepeated.map((item, i) => (
+            <CapabilityCard key={`${item.title}-${i}`} {...item} />
+          ))}
+        </Marquee>
+      </section>
+
+      {/* ── Mission — Level 1 surface ──────────────────────────── */}
+      <section className={styles.mission}>
+        <div className={styles.missionInner}>
+          <div className={styles.missionGrid}>
+            <div className={styles.missionLeft}>
+              <div className={styles.sectionLabel}>Documentation</div>
+              <h2 className={styles.missionTitle}>
+                Everything you need to{' '}
+                <span className={styles.missionHighlight}>build</span> with CDT
+              </h2>
+            </div>
+            <div className={styles.missionRight}>
+              <p className={styles.missionDesc}>
+                These docs cover the platform architecture, APIs, and workflows
+                for visualizing multi-scale geospatial data and BIM models —
+                all in the browser, on open standards.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Tech Stack — 100% Open Source (right) ──────────────── */}
+      <section className={styles.techStack}>
+        <div className={styles.carouselHeader}>
+          <div className={styles.sectionLabel}>100% Open Source Stack</div>
+        </div>
+        <Marquee direction="right" edgeFadeClass="fadeSurface">
+          {techRepeated.map((item, i) => (
+            <TechChip key={`${item.name}-${i}`} {...item} />
+          ))}
+        </Marquee>
+      </section>
+    </>
   );
 }

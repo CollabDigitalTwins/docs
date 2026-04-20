@@ -1,11 +1,295 @@
-.features {
-  display: flex;
-  align-items: center;
-  padding: 2rem 0;
-  width: 100%;
+/* ─────────────────────────────────────────────────────────
+   HomepageFeatures — mirrors AboutSection (sovereign style)
+   ───────────────────────────────────────────────────────── */
+
+/* ── Shared section-label kicker ─────────────────────── */
+.sectionLabel {
+  display: inline-block;
+  font-family: 'Geist', sans-serif;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hp-primary-container);
 }
 
-.featureSvg {
-  height: 200px;
-  width: 200px;
+/* ── Mission section (Level 1 surface) ───────────────── */
+.mission {
+  padding: 6rem 0;
+  background: var(--hp-surface);
+  position: relative;
+}
+
+.missionInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.missionGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .missionGrid {
+    grid-template-columns: 5fr 7fr;
+    gap: 5rem;
+  }
+  .missionRight {
+    padding-top: 3rem;
+  }
+}
+
+.missionLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.missionTitle {
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--hp-on-surface);
+  margin: 0;
+}
+
+.missionHighlight {
+  color: var(--hp-primary-container);
+}
+
+.missionDesc {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--hp-on-surface-variant);
+  margin: 0;
+}
+
+/* ── Carousel section (Level 2 surface) ──────────────── */
+.carousel {
+  padding: 5rem 0;
+  background: var(--hp-low);
+  overflow: hidden;
+  position: relative;
+}
+
+.carouselHeader {
+  max-width: 1200px;
+  margin: 0 auto 2.5rem;
+  padding: 0 1.5rem;
+}
+
+.marqueeViewport {
+  position: relative;
+  overflow: hidden;
+  /* Vertical padding lets hover-lifted cards breathe without the
+     overflow: hidden clipping their top border. */
+  padding: 0.5rem 0;
+}
+
+.fadeLeft,
+.fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(90deg, var(--hp-low) 0%, transparent 100%);
+}
+
+.fadeRight {
+  right: 0;
+  background: linear-gradient(270deg, var(--hp-low) 0%, transparent 100%);
+}
+
+.marqueeTrack {
+  display: flex;
+  gap: 1.25rem;
+  width: max-content;
+  animation: marqueeScroll 60s linear infinite;
+}
+
+.marqueeTrack:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(-100% / 3)); }
+}
+
+/* ── Feature card (tonal link) ───────────────────────── */
+.card {
+  flex-shrink: 0;
+  width: 340px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  border-radius: 12px;
+  background: var(--hp-mid);
+  border: 1px solid var(--hp-outline-variant);
+  color: inherit;
+  text-decoration: none !important;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover,
+.card:focus-visible,
+.card:hover *,
+.card:focus-visible * {
+  text-decoration: none !important;
+}
+
+.card:hover,
+.card:focus-visible {
+  background: var(--hp-high);
+  border-color: var(--hp-primary-container);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px -10px color-mix(in srgb, var(--hp-primary-container) 50%, transparent);
+  outline: none;
+}
+
+.cardIcon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--hp-primary-container) 14%, transparent);
+  color: var(--hp-primary-container);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--hp-on-surface);
+  margin: 0;
+}
+
+.cardDesc {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--hp-on-surface-variant);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Tech stack — reverse marquee (logo chips, left → right)
+   ───────────────────────────────────────────────────────── */
+.techStack {
+  padding: 4rem 0 5rem;
+  background: var(--hp-surface);
+  overflow: hidden;
+  position: relative;
+}
+
+.fadeLeftLight,
+.fadeRightLight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.fadeLeftLight {
+  left: 0;
+  background: linear-gradient(90deg, var(--hp-surface) 0%, transparent 100%);
+}
+
+.fadeRightLight {
+  right: 0;
+  background: linear-gradient(270deg, var(--hp-surface) 0%, transparent 100%);
+}
+
+.marqueeTrackReverse {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  animation: marqueeScrollReverse 50s linear infinite;
+}
+
+.marqueeTrackReverse:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScrollReverse {
+  0%   { transform: translateX(calc(-100% / 3)); }
+  100% { transform: translateX(0); }
+}
+
+/* ── Tech chip (logo + name, external link) ──────────── */
+.techChip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1.4rem;
+  border-radius: 14px;
+  background: var(--hp-low);
+  border: 1px solid var(--hp-outline-variant);
+  color: inherit;
+  text-decoration: none !important;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.techChip:hover,
+.techChip:focus-visible,
+.techChip:hover *,
+.techChip:focus-visible * {
+  text-decoration: none !important;
+}
+
+.techChip:hover,
+.techChip:focus-visible {
+  background: var(--hp-mid);
+  border-color: var(--hp-primary-container);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px -8px color-mix(in srgb, var(--hp-primary-container) 50%, transparent);
+  outline: none;
+}
+
+.techLogo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #ffffff;
+  flex-shrink: 0;
+  color: var(--hp-on-surface);
+}
+
+.techName {
+  font-family: 'Geist', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--hp-on-surface);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
 }

@@ -1,68 +1,310 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * CDT Docs — "Sovereign Architect" design system
+ * Mirrors the homepage tokens from sovereign-tokens.css
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300..700&display=swap');
 
-/* You can override the default Infima variables here. */
+/* ── Light mode (default) ─────────────────────────────── */
 :root {
-  /* Shadcn variables */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 3.9%;
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 0 0% 96.1%;
-  --secondary-foreground: 0 0% 9%;
-  --muted: 0 0% 96.1%;
-  --muted-foreground: 0 0% 45.1%;
-  --accent: 0 0% 96.1%;
-  --accent-foreground: 0 0% 9%;
-  --border: 0 0% 89.8%;
-  --ring: 0 0% 3.9%;
-  --radius: 0.5rem;
+  /* Sovereign palette */
+  --hp-lowest:             #f5f2ef;
+  --hp-surface:            #faf9f7;
+  --hp-low:                #f0edea;
+  --hp-mid:                #e8e4e0;
+  --hp-high:               #ddd8d4;
+  --hp-highest:            #d0cac5;
 
-  /* CDT brand colors */
-  --cdt-blue: #ef9161;
-  --cdt-blue-secondary: #96c0d5;
-  --primary-highlight: #ef9161;
+  --hp-primary:            #d4673a;
+  --hp-primary-container:  #c05520;
+  --hp-primary-fixed:      #f5d0b8;
+  --hp-on-primary-ctr:     #ffffff;
 
-  /* Docusaurus overrides */
-  --ifm-color-primary: #ef9161;
-  --ifm-color-primary-dark: #5fc6dc;
-  --ifm-color-primary-darker: #52c2d9;
-  --ifm-font-family-base: 'Roboto', system-ui, sans-serif;
-  --ifm-background-color: #ffffff;
+  --hp-on-surface:         #1a1816;
+  --hp-on-surface-variant: #5a524c;
+  --hp-outline:            #8a7e78;
+  --hp-outline-variant:    #c4bbb5;
+
+  /* Infima overrides — light */
+  --ifm-color-primary:           #c05520;
+  --ifm-color-primary-dark:      #a84a1b;
+  --ifm-color-primary-darker:    #9e4419;
+  --ifm-color-primary-darkest:   #823814;
+  --ifm-color-primary-light:     #d86025;
+  --ifm-color-primary-lighter:   #dc672b;
+  --ifm-color-primary-lightest:  #e37a42;
+
+  --ifm-background-color:        var(--hp-surface);
+  --ifm-background-surface-color: var(--hp-low);
+  --ifm-font-color-base:         var(--hp-on-surface);
+  --ifm-font-color-secondary:    var(--hp-on-surface-variant);
+
+  --ifm-font-family-base:        'Geist', system-ui, sans-serif;
+  --ifm-font-family-monospace:   'Geist Mono', ui-monospace, monospace;
+  --ifm-heading-font-family:     'Geist', system-ui, sans-serif;
+  --ifm-font-weight-base:        400;
+
+  --ifm-navbar-background-color: rgba(250, 249, 247, 0.85);
+  --ifm-navbar-shadow:           0 1px 0 var(--hp-outline-variant);
+  --ifm-navbar-link-color:       var(--hp-on-surface-variant);
+  --ifm-navbar-link-hover-color: var(--hp-on-surface);
+
+  --ifm-footer-background-color: var(--hp-lowest);
+  --ifm-footer-color:            var(--hp-on-surface-variant);
+  --ifm-footer-link-color:       var(--hp-on-surface-variant);
+  --ifm-footer-link-hover-color: var(--hp-on-surface);
+  --ifm-footer-title-color:      var(--hp-on-surface);
+
+  --ifm-toc-border-color:        var(--hp-outline-variant);
+  --ifm-hr-border-color:         var(--hp-outline-variant);
+  --ifm-menu-color:              var(--hp-on-surface-variant);
+  --ifm-menu-color-active:       var(--hp-primary-container);
+  --ifm-sidebar-border-color:    var(--hp-outline-variant);
+
+  --ifm-code-background:         var(--hp-low);
+  --ifm-code-color:              var(--hp-primary-container);
+  --ifm-code-font-size:          90%;
+  --ifm-pre-background:          var(--hp-lowest);
+  --ifm-pre-border-radius:       8px;
+
+  --ifm-border-radius:           8px;
+  --ifm-global-radius:           8px;
+  --ifm-card-border-radius:      12px;
 }
 
+/* ── Dark mode ────────────────────────────────────────── */
 [data-theme='dark'] {
-  --background: 0 0% 3.9%;
-  --foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 9%;
-  --secondary: 0 0% 14.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 14.9%;
-  --muted-foreground: 0 0% 63.9%;
-  --accent: 0 0% 14.9%;
-  --accent-foreground: 0 0% 98%;
-  --border: 0 0% 14.9%;
-  --ring: 0 0% 83.1%;
+  --hp-lowest:             #0e0e0e;
+  --hp-surface:            #131313;
+  --hp-low:                #1c1b1b;
+  --hp-mid:                #201f1f;
+  --hp-high:               #2a2a2a;
+  --hp-highest:            #353534;
 
-  --ifm-background-color: hsl(0 0% 3.9%);
-  --ifm-color-primary: #ef9161;
+  --hp-primary:            #ffb692;
+  --hp-primary-container:  #ef9161;
+  --hp-primary-fixed:      #ffdbcb;
+  --hp-on-primary-ctr:     #6a2a01;
+
+  --hp-on-surface:         #e5e2e1;
+  --hp-on-surface-variant: #dac1b7;
+  --hp-outline:            #a28c83;
+  --hp-outline-variant:    #54433b;
+
+  /* Infima overrides — dark */
+  --ifm-color-primary:           #ef9161;
+  --ifm-color-primary-dark:      #eb7d47;
+  --ifm-color-primary-darker:    #e9743a;
+  --ifm-color-primary-darkest:   #d45e21;
+  --ifm-color-primary-light:     #f3a57b;
+  --ifm-color-primary-lighter:   #f5ae88;
+  --ifm-color-primary-lightest:  #f9c8aa;
+
+  --ifm-background-color:        var(--hp-surface);
+  --ifm-background-surface-color: var(--hp-low);
+  --ifm-font-color-base:         var(--hp-on-surface);
+  --ifm-font-color-secondary:    var(--hp-on-surface-variant);
+
+  --ifm-navbar-background-color: rgba(19, 19, 19, 0.85);
+  --ifm-navbar-shadow:           0 1px 0 var(--hp-outline-variant);
+  --ifm-navbar-link-color:       var(--hp-on-surface-variant);
+  --ifm-navbar-link-hover-color: var(--hp-on-surface);
+
+  --ifm-footer-background-color: var(--hp-lowest);
+  --ifm-footer-color:            var(--hp-on-surface-variant);
+  --ifm-footer-link-color:       var(--hp-on-surface-variant);
+  --ifm-footer-link-hover-color: var(--hp-on-surface);
+  --ifm-footer-title-color:      var(--hp-on-surface);
+
+  --ifm-toc-border-color:        var(--hp-outline-variant);
+  --ifm-hr-border-color:         var(--hp-outline-variant);
+  --ifm-menu-color:              var(--hp-on-surface-variant);
+  --ifm-menu-color-active:       var(--hp-primary-container);
+
+  --ifm-code-background:         var(--hp-low);
+  --ifm-code-color:              var(--hp-primary);
+  --ifm-pre-background:          var(--hp-lowest);
 }
 
-.navbar__link[href*="/docs"],
-.navbar__link[href*="/blog"] {
-  /*  */
+/* ── Typography ───────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--hp-on-surface);
 }
 
+h1 { letter-spacing: -0.03em; }
+
+/* ── Navbar ───────────────────────────────────────────── */
 .navbar {
-  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hp-outline-variant);
 }
 
-.card-hover:hover {
-  box-shadow: var(--shadow-md)
+.navbar__title {
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  color: var(--hp-on-surface);
 }
+
+.navbar__link {
+  font-family: 'Geist', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.15s ease;
+}
+
+.navbar__link--active {
+  color: var(--hp-primary-container) !important;
+  font-weight: 700;
+}
+
+/* ── Sidebar ──────────────────────────────────────────── */
+.menu__link {
+  font-family: 'Geist', sans-serif;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.menu__link--active {
+  color: var(--hp-primary-container) !important;
+  background: color-mix(in srgb, var(--hp-primary-container) 10%, transparent) !important;
+  font-weight: 600;
+}
+
+.menu__caret::before {
+  border-color: var(--hp-outline);
+}
+
+/* ── Content area ─────────────────────────────────────── */
+article {
+  color: var(--hp-on-surface);
+}
+
+article p {
+  color: var(--hp-on-surface-variant);
+  line-height: 1.75;
+}
+
+article a {
+  color: var(--hp-primary-container);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--hp-primary-container) 40%, transparent);
+  transition: border-color 0.15s;
+}
+
+article a:hover {
+  border-bottom-color: var(--hp-primary-container);
+}
+
+/* ── Code blocks ──────────────────────────────────────── */
+code {
+  font-size: 0.875em;
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+pre {
+  border: 1px solid var(--hp-outline-variant);
+}
+
+/* ── Footer ───────────────────────────────────────────── */
+.footer {
+  border-top: 1px solid var(--hp-outline-variant);
+}
+
+.footer__title {
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hp-on-surface);
+}
+
+.footer__link-item {
+  font-size: 0.875rem;
+  transition: color 0.15s;
+}
+
+.footer__copyright {
+  font-size: 0.75rem;
+  color: var(--hp-outline);
+  margin-top: 2rem;
+  border-top: 1px solid var(--hp-outline-variant);
+  padding-top: 1.5rem;
+}
+
+/* ── Table of contents ────────────────────────────────── */
+.table-of-contents__link {
+  font-size: 0.8rem;
+  color: var(--hp-on-surface-variant);
+  transition: color 0.15s;
+}
+
+.table-of-contents__link--active,
+.table-of-contents__link:hover {
+  color: var(--hp-primary-container);
+}
+
+/* ── Admonitions ──────────────────────────────────────── */
+.alert {
+  border-radius: 8px;
+  border-left-width: 3px;
+}
+
+/* ── Breadcrumbs ──────────────────────────────────────── */
+.breadcrumbs__item--active .breadcrumbs__link {
+  color: var(--hp-on-surface);
+  font-weight: 600;
+}
+
+.breadcrumbs__link {
+  color: var(--hp-outline);
+  font-size: 0.85rem;
+}
+
+/* ── Pagination ───────────────────────────────────────── */
+.pagination-nav__link {
+  border-color: var(--hp-outline-variant);
+  border-radius: 8px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--hp-primary-container);
+  background: color-mix(in srgb, var(--hp-primary-container) 6%, transparent);
+}
+
+.pagination-nav__sublabel {
+  color: var(--hp-outline);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pagination-nav__label {
+  color: var(--hp-on-surface);
+  font-weight: 600;
+}
+
+/* ── Search ───────────────────────────────────────────── */
+.DocSearch-Button {
+  border-radius: 8px !important;
+  background: var(--hp-low) !important;
+  border: 1px solid var(--hp-outline-variant) !important;
+}
+
+/* ── Scrollbar (optional, webkit only) ───────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--hp-outline-variant);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--hp-outline); }
