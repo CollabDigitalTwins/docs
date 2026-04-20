@@ -87,6 +87,11 @@ export const DockerLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/docker-mark-deep-blue.svg" alt="Docker" style={assetLogoStyle(size)} />
 );
 
+/* Fullhost */
+export const FullhostLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/fg-logo.svg" alt="Fullhost" style={assetLogoStyle(size)} />
+);
+
 /* MapLibre */
 export const MapLibreLogo: LogoComp = ({ size = 28 }) => (
   <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden>
