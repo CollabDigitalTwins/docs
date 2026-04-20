@@ -31,7 +31,7 @@ export const CAPABILITIES: Capability[] = [
     title: 'Open Standards',
     description:
       'Built on CityGML, IFC, and OGC APIs. No proprietary lock-in — your data stays yours.',
-    href: '/docs/concepts',
+    href: '/docs/concepts/open-standards',
   },
   {
     Icon: UsersIcon,
