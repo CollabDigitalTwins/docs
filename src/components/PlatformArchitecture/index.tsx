@@ -15,18 +15,26 @@ import React, {
 import {
   type LogoComp,
   CaslLogo,
+  ChromeLogo,
   DeckLogo,
   DockerLogo,
+  DxfLogo,
+  EdgeLogo,
+  FirefoxLogo,
+  GltfLogo,
+  IfcLogo,
   MapLibreLogo,
   MinioLogo,
   NextAuthLogo,
   NextLogo,
   NodeLogo,
+  OperaLogo,
   PostGisLogo,
   PostgresLogo,
   PotreeLogo,
   PrismaLogo,
   ReactLogo,
+  SafariLogo,
   TailwindLogo,
   ThreeLogo,
   TsLogo,
@@ -84,6 +92,11 @@ const Shadcn_: FC<{ s?: number; fg?: string }> = ({ s = 18, fg = 'currentColor' 
 const NextAuth_ = adaptLogo(NextAuthLogo);
 const Prisma_ = adaptLogo(PrismaLogo);
 const CASL_ = adaptLogo(CaslLogo);
+const Firefox_ = adaptLogo(FirefoxLogo);
+const Chrome_ = adaptLogo(ChromeLogo);
+const Edge_ = adaptLogo(EdgeLogo);
+const Opera_ = adaptLogo(OperaLogo);
+const Safari_ = adaptLogo(SafariLogo);
 const MapLibre_ = adaptLogo(MapLibreLogo);
 const Deck_ = adaptLogo(DeckLogo);
 const Three_ = adaptLogo(ThreeLogo);
@@ -98,17 +111,21 @@ const Postgres_ = adaptLogo(PostgresLogo);
 const PostGIS_ = adaptLogo(PostGisLogo);
 const MinIO_ = adaptLogo(MinioLogo);
 const Docker_ = adaptLogo(DockerLogo);
-const LabelIcon = (text: string): FC<{ s?: number; fg?: string }> =>
-  ({ s = 18, fg = 'currentColor' }) => (
-    <svg width={s} height={s} viewBox="0 0 32 32" aria-label={text}>
-      <rect x="3" y="8" width="26" height="16" rx="2" fill="none" stroke={fg} strokeWidth="1.4" />
-      <text x="16" y="20" textAnchor="middle" fontFamily="Geist Mono" fontSize="9" fontWeight="700" fill={fg}>{text}</text>
-    </svg>
-  );
-const GLTF_ = LabelIcon('glTF');
-const DXF_ = LabelIcon('DXF');
-const IFC_ = LabelIcon('IFC');
-const LAS_ = LabelIcon('LAS');
+const GLTF_ = adaptLogo(GltfLogo);
+const DXF_ = adaptLogo(DxfLogo);
+const IFC_ = adaptLogo(IfcLogo);
+// LAS / LAZ → shared cloud glyph (point-cloud data)
+const PointCloudFormatIcon: FC<{ s?: number; fg?: string }> = ({ s = 18, fg = 'currentColor' }) => (
+  <svg width={s} height={s} viewBox="0 0 32 32" aria-hidden>
+    <path
+      d="M10 24 C5 24 3 20 3 17 C3 13 7 11 10 12 C11 7 16 5 20 7 C23 4 29 5 30 10 C34 10 37 13 37 17 C37 21 33 24 29 24 Z"
+      fill="none" stroke={fg} strokeWidth="1.8" strokeLinejoin="round"
+      transform="translate(-3 -2) scale(0.9)"
+    />
+  </svg>
+);
+const LAS_ = PointCloudFormatIcon;
+const LAZ_ = PointCloudFormatIcon;
 
 /* ── Node kind icons ───────────────────────────────────── */
 const UserIcon: FC<{ s?: number; fg?: string }> = ({ s = 18, fg = 'currentColor' }) => (
@@ -186,7 +203,13 @@ export const DEFAULT_LAYERS: Layer[] = [
       id: 'user', title: 'User',
       subtitle: `Browser ${DOT} Desktop ${DOT} Mobile ${DOT} Tablet`,
       kind: 'core', wide: true, Icon: UserIcon,
-      tech: [{ n: 'Chrome' }, { n: 'Firefox' }, { n: 'Safari' }, { n: 'Edge' }],
+      tech: [
+        { Logo: Firefox_, n: 'Firefox' },
+        { Logo: Chrome_, n: 'Chrome' },
+        { Logo: Edge_, n: 'Edge' },
+        { Logo: Opera_, n: 'Opera' },
+        { Logo: Safari_, n: 'Safari' },
+      ],
     }],
   },
   {
@@ -217,7 +240,7 @@ export const DEFAULT_LAYERS: Layer[] = [
       { id: 'core_api', title: 'Core API', subtitle: `Business logic ${DOT} CRUD ${DOT} Assets`, kind: 'core', Icon: BoxIcon, tech: [{ Logo: Node_, n: 'Node.js' }] },
       { id: 'auth_svc', title: 'Authentication', subtitle: `Tokens ${DOT} Permissions ${DOT} Sessions`, kind: 'core', Icon: ShieldIcon, tech: [{ Logo: NextAuth_, n: 'NextAuth.js' }, { Logo: CASL_, n: 'CASL' }] },
       { id: 'geo_svc', title: 'Geospatial Service', subtitle: `Tile generation ${DOT} Spatial ops`, kind: 'map', Icon: MapIcon, tech: [{ Logo: Martin_, n: 'Martin' }] },
-      { id: 'files_svc', title: 'Unstructured Files', subtitle: `Large file processing ${DOT} Conversion`, kind: 'unstruct', Icon: FilesIcon, tech: [{ Logo: GLTF_, n: 'glTF' }, { Logo: DXF_, n: 'DXF' }, { Logo: IFC_, n: 'IFC' }, { Logo: LAS_, n: 'LAS' }] },
+      { id: 'files_svc', title: 'Unstructured Files', subtitle: `Large file processing ${DOT} Conversion`, kind: 'unstruct', Icon: FilesIcon, tech: [{ Logo: GLTF_, n: 'glTF' }, { Logo: DXF_, n: 'DXF' }, { Logo: IFC_, n: 'IFC' }, { Logo: LAS_, n: 'LAS' }, { Logo: LAZ_, n: 'LAZ' }] },
     ],
   },
   {
@@ -333,7 +356,7 @@ function buildRoundedOrthogonal(pts: { x: number; y: number }[], r: number): str
 const kindVar = (k: FlowKind) => `var(--c-${k})`;
 const kindSoft = (k: FlowKind) => `var(--c-${k}-soft)`;
 const kindName = (k: FlowKind) =>
-  ({ open: 'Open Data', map: 'Map Data', unstruct: 'Unstructured', core: 'Core' }[k]);
+  ({ open: 'Open', map: 'Map', unstruct: 'Files', core: 'Core' }[k]);
 
 /* ── SUBCOMPONENTS ─────────────────────────────────────── */
 const LogoChip: FC<{ Logo?: FC<any>; label: string; size?: number }> = ({ Logo, label, size = 14 }) => (
@@ -392,7 +415,15 @@ const NodeCard: FC<{
         ...hlStyle,
       }}
     >
-      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, borderRadius: '10px 0 0 10px', background: kindVar(node.kind), opacity: 0.9 }} />
+      <div style={{
+        position: 'absolute',
+        left: -1, top: -1, bottom: -1,
+        width: 5,
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
+        background: kindVar(node.kind),
+        opacity: 0.95,
+      }} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
         {node.Icon && (
           <span style={{
@@ -452,43 +483,129 @@ const EdgeOverlay: FC<{
     const cr = c.getBoundingClientRect();
     setSize({ w: cr.width, h: cr.height });
 
-    const infos = edges.map(e => {
-      const a = nodeRefs.current[e.from], b = nodeRefs.current[e.to];
-      if (!a || !b) return null;
-      return { e, ar: a.getBoundingClientRect(), br: b.getBoundingClientRect() };
-    }).filter(Boolean) as Array<{ e: Edge; ar: DOMRect; br: DOMRect }>;
-
-    const groups = new Map<string, typeof infos>();
-    infos.forEach(info => {
-      const k = `${Math.round(info.ar.bottom)}_${Math.round(info.br.top)}`;
-      if (!groups.has(k)) groups.set(k, []);
-      groups.get(k)!.push(info);
+    // Resolve each edge to node rects
+    type Info = { e: Edge; ar: DOMRect; br: DOMRect; idx: number };
+    const infos: Info[] = [];
+    edges.forEach((e, idx) => {
+      const a = nodeRefs.current[e.from];
+      const b = nodeRefs.current[e.to];
+      if (a && b) infos.push({ e, ar: a.getBoundingClientRect(), br: b.getBoundingClientRect(), idx });
     });
+
+    // ── Group edges by corridor ───────────────────────────
+    // A corridor is the vertical strip between two layer bands.
+    // Edges in the same corridor share lanes without overlap.
+    type Corridor = { top: number; bottom: number; items: Info[] };
+    const corridors = new Map<string, Corridor>();
+
+    infos.forEach(info => {
+      const { ar, br } = info;
+      const goingDown = br.top >= ar.bottom;
+      const top = goingDown ? ar.bottom : br.bottom;
+      const bottom = goingDown ? br.top : ar.top;
+      // Quantize so rows with near-identical y values group together
+      const key = `${Math.round(top / 4)}_${Math.round(bottom / 4)}_${goingDown ? 'd' : 'u'}`;
+      let c = corridors.get(key);
+      if (!c) {
+        c = { top, bottom, items: [] };
+        corridors.set(key, c);
+      }
+      c.items.push(info);
+    });
+
+    // Lanes are horizontal "rails" spaced evenly inside the corridor,
+    // clamped away from the layer edges by a safety margin.
+    const LANE_MARGIN = 14;
+    const MIN_LANE_STEP = 8;
+    const ARROW_INSET = 5; // stop path before target border so marker head sits outside
+    // A "skip corridor" spans more than one layer — its height far exceeds
+    // the typical adjacent-layer gap. Detect it by comparing to the smallest
+    // corridor height (a good proxy for "one-layer-gap"): if a corridor is
+    // ≥ 1.8× the minimum, treat it as a skip and push lanes toward the edges
+    // so turn-corners don't land on intermediate layers' node rows.
+    const corridorHeights = Array.from(corridors.values())
+      .map(c => Math.max(0, c.bottom - c.top));
+    const minCorridorH = corridorHeights.length
+      ? Math.min(...corridorHeights.filter(h => h > 0))
+      : 0;
+    const isSkipCorridor = (h: number) =>
+      minCorridorH > 0 && h >= minCorridorH * 1.8;
 
     const out: Array<Edge & { d: string; id: string }> = [];
-    groups.forEach(arr => {
-      arr.sort((x, y) =>
-        (x.ar.left + x.ar.width / 2) - (y.ar.left + y.ar.width / 2));
-      const n = arr.length;
-      arr.forEach((info, i) => {
-        const { e, ar, br } = info;
-        const below = br.top > ar.bottom;
-        const ax = ar.left + ar.width / 2 - cr.left;
-        const ay = (below ? ar.bottom : ar.top) - cr.top;
-        const bx = br.left + br.width / 2 - cr.left;
-        const by = (below ? br.top : br.bottom) - cr.top;
-        const gap = Math.abs(by - ay);
-        const mid = (ay + by) / 2;
-        const spread = Math.min(gap * 0.6, 10 * (n - 1));
-        const laneStep = n > 1 ? spread / (n - 1) : 0;
-        const lane = mid - spread / 2 + i * laneStep;
-        const d = ax === bx
+
+    corridors.forEach(corridor => {
+      const { top, bottom, items } = corridor;
+      const corridorHeight = Math.max(0, bottom - top);
+      const skip = isSkipCorridor(corridorHeight);
+      const usable = Math.max(0, corridorHeight - LANE_MARGIN * 2);
+
+      const sorted = [...items].sort((x, y) => {
+        const axDiff = (x.ar.left + x.ar.width / 2) - (y.ar.left + y.ar.width / 2);
+        if (Math.abs(axDiff) > 0.5) return axDiff;
+        return (x.br.left + x.br.width / 2) - (y.br.left + y.br.width / 2);
+      });
+
+      // Anchor-offset side-step for edges sharing both source-x and target-x
+      const stKey = (info: Info) =>
+        `${Math.round((info.ar.left + info.ar.width / 2) / 2)}_${Math.round((info.br.left + info.br.width / 2) / 2)}`;
+      const conflictGroups = new Map<string, Info[]>();
+      sorted.forEach(info => {
+        const k = stKey(info);
+        if (!conflictGroups.has(k)) conflictGroups.set(k, []);
+        conflictGroups.get(k)!.push(info);
+      });
+      const offsetByIdx = new Map<number, { sx: number; tx: number }>();
+      conflictGroups.forEach(group => {
+        const n = group.length;
+        if (n <= 1) return;
+        group.forEach((info, i) => {
+          const srcRange = Math.min(info.ar.width * 0.6, (n - 1) * 12);
+          const tgtRange = Math.min(info.br.width * 0.6, (n - 1) * 12);
+          const sx = (i - (n - 1) / 2) * (srcRange / (n - 1 || 1));
+          const tx = (i - (n - 1) / 2) * (tgtRange / (n - 1 || 1));
+          offsetByIdx.set(info.idx, { sx, tx });
+        });
+      });
+
+      const n = sorted.length;
+      const laneY = (i: number) => {
+        // Skip corridors: place the lane close to the NEAR edge (just past the
+        // source) so the turn-corner sits inside the first inter-layer gap,
+        // and the long vertical segment runs through subsequent gaps without
+        // another corner landing on intermediate node rows.
+        if (skip) {
+          // Use top edge for downward flows, bottom edge for upward flows.
+          // Each edge in the group gets a small fan offset so they don't stack.
+          const goingDown = items[0].br.top >= items[0].ar.bottom;
+          const baseLane = goingDown ? top + LANE_MARGIN : bottom - LANE_MARGIN;
+          const fan = (i - (n - 1) / 2) * MIN_LANE_STEP;
+          return baseLane + (goingDown ? fan : -fan);
+        }
+        if (n <= 1) return (top + bottom) / 2;
+        const stepCap = Math.max(MIN_LANE_STEP, usable / Math.max(1, n - 1));
+        const spread = Math.min(usable, stepCap * (n - 1));
+        const start = (top + bottom) / 2 - spread / 2;
+        return start + i * (spread / (n - 1));
+      };
+
+      sorted.forEach((info, i) => {
+        const { e, ar, br, idx } = info;
+        const goingDown = br.top >= ar.bottom;
+        const offset = offsetByIdx.get(idx) ?? { sx: 0, tx: 0 };
+        const ax = ar.left + ar.width / 2 + offset.sx - cr.left;
+        const ay = (goingDown ? ar.bottom : ar.top) - cr.top;
+        const bx = br.left + br.width / 2 + offset.tx - cr.left;
+        const rawBy = (goingDown ? br.top : br.bottom) - cr.top;
+        const by = rawBy + (goingDown ? -ARROW_INSET : ARROW_INSET);
+        const lane = laneY(i);
+        const d = Math.abs(ax - bx) < 0.5
           ? `M ${ax} ${ay} L ${bx} ${by}`
           : buildRoundedOrthogonal(
-            [{ x: ax, y: ay }, { x: ax, y: lane }, { x: bx, y: lane }, { x: bx, y: by }], 8);
-        out.push({ ...e, d, id: `${e.from}__${e.to}__${i}` });
+              [{ x: ax, y: ay }, { x: ax, y: lane }, { x: bx, y: lane }, { x: bx, y: by }], 8);
+        out.push({ ...e, d, id: `${e.from}__${e.to}__${idx}` });
       });
     });
+
     setPaths(out);
   }, [edges, containerRef, nodeRefs]);
 
@@ -513,8 +630,8 @@ const EdgeOverlay: FC<{
       style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, overflow: 'visible' }}>
       <defs>
         {(['open', 'map', 'unstruct', 'core'] as FlowKind[]).map(k => (
-          <marker key={k} id={`arr-${k}`} viewBox="0 0 10 10" refX="8" refY="5"
-            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <marker key={k} id={`arr-${k}`} viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="5" markerHeight="5" orient="auto">
             <path d="M 0 0 L 10 5 L 0 10 z" fill={kindVar(k)} />
           </marker>
         ))}
