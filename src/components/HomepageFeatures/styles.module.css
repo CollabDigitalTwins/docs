@@ -197,13 +197,40 @@
 }
 
 /* ─────────────────────────────────────────────────────────
-   Tech stack — reverse marquee (logo chips, left → right)
+   Tech stack — responsive grid of logo chips
    ───────────────────────────────────────────────────────── */
 .techStack {
   padding: 4rem 0 5rem;
   background: var(--hp-surface);
-  overflow: hidden;
   position: relative;
+}
+
+.techStackInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.techStackHeader {
+  margin-bottom: 2.5rem;
+}
+
+.techGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .techGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .techGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 .fadeLeftLight,
@@ -244,8 +271,7 @@
 
 /* ── Tech chip (logo + name, external link) ──────────── */
 .techChip {
-  flex-shrink: 0;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.9rem;
   padding: 0.9rem 1.4rem;

@@ -6,7 +6,6 @@ import { Marquee, CapabilityCard, TechChip } from './Marquee';
 
 export default function HomepageFeatures(): ReactNode {
   const capabilitiesRepeated = [...CAPABILITIES, ...CAPABILITIES, ...CAPABILITIES];
-  const techRepeated = [...TECH_STACK, ...TECH_STACK, ...TECH_STACK];
 
   return (
     <>
@@ -44,16 +43,18 @@ export default function HomepageFeatures(): ReactNode {
         </div>
       </section>
 
-      {/* ── Tech Stack — 100% Open Source (right) ──────────────── */}
+      {/* ── Tech Stack — 100% Open Source (grid) ───────────────── */}
       <section className={styles.techStack}>
-        <div className={styles.carouselHeader}>
-          <div className={styles.sectionLabel}>100% Open Source Stack</div>
+        <div className={styles.techStackInner}>
+          <div className={styles.techStackHeader}>
+            <div className={styles.sectionLabel}>100% Open Source Stack</div>
+          </div>
+          <div className={styles.techGrid}>
+            {TECH_STACK.map((item) => (
+              <TechChip key={item.name} {...item} />
+            ))}
+          </div>
         </div>
-        <Marquee direction="right" edgeFadeClass="fadeSurface">
-          {techRepeated.map((item, i) => (
-            <TechChip key={`${item.name}-${i}`} {...item} />
-          ))}
-        </Marquee>
       </section>
     </>
   );
