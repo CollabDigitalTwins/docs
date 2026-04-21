@@ -9,7 +9,7 @@
  */
 
 import React, {
-  useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback,
+  useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, useId,
   type CSSProperties, type FC,
 } from 'react';
 import {
@@ -59,7 +59,16 @@ export interface Node {
   tech?: TechChip[];
 }
 export interface Layer { id: string; label: string; note?: string; nodes: Node[]; }
-export interface Edge { from: string; to: string; kind: FlowKind; style?: 'solid' | 'dashed'; }
+export interface Edge {
+  from: string;
+  to: string;
+  kind: FlowKind;
+  style?: 'solid' | 'dashed';
+  bidir?: boolean;
+  /** Fractional position of the L's horizontal segment along the corridor.
+   *  0 = at source edge, 0.5 = middle (default), 1 = at target edge. */
+  corner?: number;
+}
 
 export interface PlatformArchitectureProps {
   /** Override detected theme. If omitted, follows html[data-theme]. */
@@ -248,7 +257,6 @@ export const DEFAULT_LAYERS: Layer[] = [
   {
     id: 'data', label: 'DATA STORAGE', note: 'Source of truth',
     nodes: [
-      { id: 'ext_open', title: 'External Open Data', subtitle: `Open Ottawa ${DOT} Open Toronto ${DOT} StatsCan`, kind: 'open', Icon: GlobeIcon, tech: [{ n: 'HTTPS feeds' }] },
       { id: 'db', title: 'Database', subtitle: `Users ${DOT} Metadata ${DOT} Auth`, kind: 'core', Icon: StackIcon, tech: [{ Logo: Postgres_, n: 'PostgreSQL' }, { Logo: Prisma_, n: 'Prisma' }] },
       { id: 'objstore', title: 'Object Store', subtitle: `BIM ${DOT} Point clouds ${DOT} Video ${DOT} CSV`, kind: 'unstruct', Icon: BoxIcon, tech: [{ Logo: MinIO_, n: 'MinIO' }] },
       { id: 'spatial_db', title: 'Spatial Database', subtitle: `Geometry ${DOT} Raster ${DOT} Indexes`, kind: 'map', Icon: StackIcon, tech: [{ Logo: PostGIS_, n: 'PostGIS' }] },
@@ -266,35 +274,30 @@ export const DEFAULT_LAYERS: Layer[] = [
 ];
 
 export const DEFAULT_EDGES: Edge[] = [
-  // ── Primary flow — user down through the stack ─────────
+  // Primary top-down flow
   { from: 'user',     to: 'frontend', kind: 'core' },
   { from: 'frontend', to: 'gateway',  kind: 'core' },
 
-  // API Gateway fans out to the four backend services
+  // Gateway fans out to backend services
   { from: 'gateway', to: 'core_api',  kind: 'core' },
   { from: 'gateway', to: 'auth_svc',  kind: 'core' },
-  { from: 'gateway', to: 'geo_svc',   kind: 'map' },
+  { from: 'gateway', to: 'geo_svc',   kind: 'map',  corner: 0.25 },
   { from: 'gateway', to: 'files_svc', kind: 'unstruct' },
 
   // Backend → Data storage (one-to-one)
   { from: 'core_api',  to: 'db',         kind: 'core' },
-  { from: 'auth_svc',  to: 'db',         kind: 'core' },
+  { from: 'auth_svc',  to: 'db',         kind: 'core', corner: 0.75 },
   { from: 'geo_svc',   to: 'spatial_db', kind: 'map' },
   { from: 'files_svc', to: 'objstore',   kind: 'unstruct' },
 
-  // ── Direct / optional reverse flows ────────────────────
-  // Backend services push domain data back up to Frontend modules
-  // (Auth → Auth module, Geo → Map module, Files → 3D Graphics module)
-  { from: 'auth_svc',  to: 'frontend', kind: 'core',     style: 'dashed' },
-  { from: 'geo_svc',   to: 'frontend', kind: 'map',      style: 'dashed' },
-  { from: 'files_svc', to: 'frontend', kind: 'unstruct', style: 'dashed' },
+  // External Open Data service bridges the frontend with the geospatial backend
+  { from: 'opendata_svc', to: 'frontend', kind: 'open' },
+  { from: 'opendata_svc', to: 'geo_svc',  kind: 'open' },
 
-  // ── Open-data loop (yellow) ────────────────────────────
-  // External Open Data Service pulls from upstream sources, feeds the
-  // gateway, and seeds the primary database.
-  { from: 'ext_open',     to: 'opendata_svc', kind: 'open' },
-  { from: 'opendata_svc', to: 'gateway',      kind: 'open' },
-  { from: 'opendata_svc', to: 'db',           kind: 'open', style: 'dashed' },
+  // Data layer sits on Cloud (substrate for everything above)
+  { from: 'db',         to: 'cloud', kind: 'core',     bidir: false },
+  { from: 'objstore',   to: 'cloud', kind: 'unstruct', bidir: false },
+  { from: 'spatial_db', to: 'cloud', kind: 'map',      bidir: false },
 ];
 
 /* ── THEME TOKENS ──────────────────────────────────────────────
@@ -480,12 +483,21 @@ const NodeCard: FC<{
   );
 };
 
+/* ── EDGE OVERLAY — simple orthogonal router ───────────────
+   One routing model for every edge:
+     source anchor (top or bottom) → vertical drop to mid-y between
+     source and target → horizontal slide → target anchor (top or bottom).
+   Fan-out: source anchors distribute across source's top/bottom edge,
+   biased toward each target's x. Fan-in: target anchors cluster at
+   target center. No side rails, no skip/gutter routing.              */
 const EdgeOverlay: FC<{
   nodeRefs: React.MutableRefObject<Record<string, HTMLDivElement | null>>;
   edges: Edge[];
   containerRef: React.RefObject<HTMLDivElement | null>;
   hoveredNode: string | null;
 }> = ({ nodeRefs, edges, containerRef, hoveredNode }) => {
+  const idPrefix = useId().replace(/[^a-zA-Z0-9_-]/g, 'm');
+  const mid = (k: FlowKind) => `${idPrefix}-arr-${k}`;
   const [paths, setPaths] = useState<Array<Edge & { d: string; id: string }>>([]);
   const [size, setSize] = useState({ w: 0, h: 0 });
 
@@ -495,140 +507,220 @@ const EdgeOverlay: FC<{
     const cr = c.getBoundingClientRect();
     setSize({ w: cr.width, h: cr.height });
 
-    // Resolve each edge to node rects
-    type Info = { e: Edge; ar: DOMRect; br: DOMRect; idx: number };
+    const ARROW_INSET = 8;
+    const CORNER_R = 6;
+    const MIN_SEP = 16;
+    const STRAIGHT_TOL = 12;
+    const OBSTRUCTION_PAD = 10; // clearance around obstruction rects
+
+    /* 1. Gather edges, compute direction. */
+    type Info = { e: Edge; idx: number; ar: DOMRect; br: DOMRect; goingDown: boolean };
     const infos: Info[] = [];
     edges.forEach((e, idx) => {
       const a = nodeRefs.current[e.from];
       const b = nodeRefs.current[e.to];
-      if (a && b) infos.push({ e, ar: a.getBoundingClientRect(), br: b.getBoundingClientRect(), idx });
+      if (!a || !b) return;
+      const ar = a.getBoundingClientRect();
+      const br = b.getBoundingClientRect();
+      const goingDown = br.top >= ar.bottom;
+      infos.push({ e, idx, ar, br, goingDown });
     });
 
-    // ── Group edges by corridor ───────────────────────────
-    // A corridor is the vertical strip between two layer bands.
-    // Edges in the same corridor share lanes without overlap.
-    type Corridor = { top: number; bottom: number; items: Info[] };
-    const corridors = new Map<string, Corridor>();
+    /* Snapshot every node rect so edges can dodge unrelated cards. */
+    const allRects: Array<{ id: string; r: DOMRect }> = [];
+    Object.entries(nodeRefs.current).forEach(([id, el]) => {
+      if (el) allRects.push({ id, r: el.getBoundingClientRect() });
+    });
 
+    /* 2. Group by source / target to distribute anchors. */
+    const outMap = new Map<string, Info[]>();
+    const inMap = new Map<string, Info[]>();
+    infos.forEach(info => {
+      if (!outMap.has(info.e.from)) outMap.set(info.e.from, []);
+      if (!inMap.has(info.e.to)) inMap.set(info.e.to, []);
+      outMap.get(info.e.from)!.push(info);
+      inMap.get(info.e.to)!.push(info);
+    });
+
+    const anchors: Record<string, number> = {};
+
+    /* OUT anchors: fan-out on source's edge, biased toward target x. */
+    outMap.forEach(list => {
+      const nr = list[0].ar;
+      const pad = Math.min(24, nr.width * 0.14);
+      const minX = nr.left + pad;
+      const maxX = nr.right - pad;
+      const sorted = [...list].sort((a, b) =>
+        (a.br.left + a.br.width / 2) - (b.br.left + b.br.width / 2));
+      const tentative = sorted.map(info =>
+        Math.max(minX, Math.min(maxX, info.br.left + info.br.width / 2))
+      );
+      // De-collide left→right, then right→left.
+      const pos = [...tentative];
+      for (let i = 1; i < pos.length; i++)
+        if (pos[i] - pos[i - 1] < MIN_SEP) pos[i] = pos[i - 1] + MIN_SEP;
+      for (let i = pos.length - 2; i >= 0; i--)
+        if (pos[i + 1] - pos[i] < MIN_SEP) pos[i] = pos[i + 1] - MIN_SEP;
+      sorted.forEach((info, i) => {
+        anchors[`${info.idx}_out`] = Math.max(minX, Math.min(maxX, pos[i]));
+      });
+    });
+
+    /* IN anchors: cluster at target center. */
+    inMap.forEach(list => {
+      const nr = list[0].br;
+      const cx = nr.left + nr.width / 2;
+      const n = list.length;
+      const spread = n === 1 ? 0
+        : n === 2 ? Math.min(18, nr.width * 0.12)
+        : n === 3 ? Math.min(30, nr.width * 0.22)
+        : Math.min(nr.width / 2 - 22, nr.width * 0.34);
+      const sorted = [...list].sort((a, b) =>
+        (a.ar.left + a.ar.width / 2) - (b.ar.left + b.ar.width / 2));
+      sorted.forEach((info, i) => {
+        const t = n === 1 ? 0 : (i / (n - 1)) * 2 - 1;
+        anchors[`${info.idx}_in`] = cx + t * spread;
+      });
+    });
+
+    /* 2b. Snap-to-straight: for each edge, if the source and target x-ranges
+       overlap, align both anchors to a shared x inside that overlap so the
+       edge renders as a single vertical line with no bend. This runs per
+       edge so a source can still fan multiple straight lines to different
+       targets (e.g. opendata_svc → frontend + opendata_svc → geo_svc). */
     infos.forEach(info => {
       const { ar, br } = info;
-      const goingDown = br.top >= ar.bottom;
-      const top = goingDown ? ar.bottom : br.bottom;
-      const bottom = goingDown ? br.top : ar.top;
-      // Quantize so rows with near-identical y values group together
-      const key = `${Math.round(top / 4)}_${Math.round(bottom / 4)}_${goingDown ? 'd' : 'u'}`;
-      let c = corridors.get(key);
-      if (!c) {
-        c = { top, bottom, items: [] };
-        corridors.set(key, c);
-      }
-      c.items.push(info);
+      const aPad = Math.min(24, ar.width * 0.14);
+      const bPad = Math.min(24, br.width * 0.14);
+      const lo = Math.max(ar.left + aPad, br.left + bPad);
+      const hi = Math.min(ar.right - aPad, br.right - bPad);
+      if (lo > hi) return; // no overlap — must bend
+
+      // Prefer a shared x close to the target's center (so fan-in still
+      // clusters nicely on the target), clamped into the overlap window.
+      const targetCx = br.left + br.width / 2;
+      const sourceCx = ar.left + ar.width / 2;
+      const preferred = (sourceCx + targetCx) / 2;
+      const shared = Math.max(lo, Math.min(hi, preferred));
+      anchors[`${info.idx}_out`] = shared;
+      anchors[`${info.idx}_in`] = shared;
     });
 
-    // Lanes are horizontal "rails" spaced evenly inside the corridor,
-    // clamped away from the layer edges by a safety margin.
-    const LANE_MARGIN = 14;
-    const MIN_LANE_STEP = 8;
-    const ARROW_INSET = 5; // stop path before target border so marker head sits outside
-    // A "skip corridor" spans more than one layer — its height far exceeds
-    // the typical adjacent-layer gap. Detect it by comparing to the smallest
-    // corridor height (a good proxy for "one-layer-gap"): if a corridor is
-    // ≥ 1.8× the minimum, treat it as a skip and push lanes toward the edges
-    // so turn-corners don't land on intermediate layers' node rows.
-    const corridorHeights = Array.from(corridors.values())
-      .map(c => Math.max(0, c.bottom - c.top));
-    const minCorridorH = corridorHeights.length
-      ? Math.min(...corridorHeights.filter(h => h > 0))
-      : 0;
-    const isSkipCorridor = (h: number) =>
-      minCorridorH > 0 && h >= minCorridorH * 1.8;
-
+    /* 3. Build every path with the same 3-segment orthogonal L.
+       The corner (horizontal segment) must NEVER overlap a node rect.
+       Strategy: scan candidate y-values and pick the one that does NOT
+       intersect any unrelated node, preferring something close to the
+       naive midpoint between source.bottom and target.top. */
     const out: Array<Edge & { d: string; id: string }> = [];
 
-    corridors.forEach(corridor => {
-      const { top, bottom, items } = corridor;
-      const corridorHeight = Math.max(0, bottom - top);
-      const skip = isSkipCorridor(corridorHeight);
-      const usable = Math.max(0, corridorHeight - LANE_MARGIN * 2);
+    // For the full container (local coords), for any given y, we can ask:
+    // which node rects straddle this y? If any unrelated node does AND its
+    // x-range overlaps the edge's horizontal segment, this y is blocked.
+    const toLocal = (r: DOMRect) => ({
+      left: r.left - cr.left,
+      right: r.right - cr.left,
+      top: r.top - cr.top,
+      bottom: r.bottom - cr.top,
+    });
+    const localRects = allRects.map(({ id, r }) => ({ id, ...toLocal(r) }));
 
-      const sorted = [...items].sort((x, y) => {
-        const axDiff = (x.ar.left + x.ar.width / 2) - (y.ar.left + y.ar.width / 2);
-        if (Math.abs(axDiff) > 0.5) return axDiff;
-        return (x.br.left + x.br.width / 2) - (y.br.left + y.br.width / 2);
-      });
+    infos.forEach(info => {
+      const sx = anchors[`${info.idx}_out`] - cr.left;
+      const ex = anchors[`${info.idx}_in`] - cr.left;
+      const sy = (info.goingDown ? info.ar.bottom : info.ar.top) - cr.top;
+      const eyRaw = (info.goingDown ? info.br.top : info.br.bottom) - cr.top;
+      const dir = info.goingDown ? 1 : -1;
+      const ey = eyRaw - dir * ARROW_INSET;
 
-      // Anchor-offset side-step for edges sharing both source-x and target-x
-      const stKey = (info: Info) =>
-        `${Math.round((info.ar.left + info.ar.width / 2) / 2)}_${Math.round((info.br.left + info.br.width / 2) / 2)}`;
-      const conflictGroups = new Map<string, Info[]>();
-      sorted.forEach(info => {
-        const k = stKey(info);
-        if (!conflictGroups.has(k)) conflictGroups.set(k, []);
-        conflictGroups.get(k)!.push(info);
-      });
-      const offsetByIdx = new Map<number, { sx: number; tx: number }>();
-      conflictGroups.forEach(group => {
-        const n = group.length;
-        if (n <= 1) return;
-        group.forEach((info, i) => {
-          const srcRange = Math.min(info.ar.width * 0.6, (n - 1) * 12);
-          const tgtRange = Math.min(info.br.width * 0.6, (n - 1) * 12);
-          const sx = (i - (n - 1) / 2) * (srcRange / (n - 1 || 1));
-          const tx = (i - (n - 1) / 2) * (tgtRange / (n - 1 || 1));
-          offsetByIdx.set(info.idx, { sx, tx });
+      // Short-circuit: truly vertical → single straight line.
+      if (Math.abs(sx - ex) < STRAIGHT_TOL) {
+        out.push({
+          ...info.e,
+          d: `M ${sx} ${sy} L ${sx} ${ey}`,
+          id: `${info.e.from}__${info.e.to}__${info.idx}`,
         });
-      });
+        return;
+      }
 
-      const n = sorted.length;
-      const laneY = (i: number) => {
-        // Skip corridors: place the lane close to the NEAR edge (just past the
-        // source) so the turn-corner sits inside the first inter-layer gap,
-        // and the long vertical segment runs through subsequent gaps without
-        // another corner landing on intermediate node rows.
-        if (skip) {
-          // Use top edge for downward flows, bottom edge for upward flows.
-          // Each edge in the group gets a small fan offset so they don't stack.
-          const goingDown = items[0].br.top >= items[0].ar.bottom;
-          const baseLane = goingDown ? top + LANE_MARGIN : bottom - LANE_MARGIN;
-          const fan = (i - (n - 1) / 2) * MIN_LANE_STEP;
-          return baseLane + (goingDown ? fan : -fan);
+      const corridorTop = Math.min(sy, eyRaw);
+      const corridorBot = Math.max(sy, eyRaw);
+      const hLo = Math.min(sx, ex);
+      const hHi = Math.max(sx, ex);
+
+      // A y-value is blocked if some unrelated node's rect (extended by
+      // OBSTRUCTION_PAD) contains y AND its x-range overlaps [hLo, hHi].
+      const yBlocked = (y: number): boolean => {
+        for (const r of localRects) {
+          if (r.id === info.e.from || r.id === info.e.to) continue;
+          if (y < r.top - OBSTRUCTION_PAD || y > r.bottom + OBSTRUCTION_PAD) continue;
+          if (r.right <= hLo || r.left >= hHi) continue;
+          return true;
         }
-        if (n <= 1) return (top + bottom) / 2;
-        const stepCap = Math.max(MIN_LANE_STEP, usable / Math.max(1, n - 1));
-        const spread = Math.min(usable, stepCap * (n - 1));
-        const start = (top + bottom) / 2 - spread / 2;
-        return start + i * (spread / (n - 1));
+        return false;
       };
 
-      sorted.forEach((info, i) => {
-        const { e, ar, br, idx } = info;
-        const goingDown = br.top >= ar.bottom;
-        const offset = offsetByIdx.get(idx) ?? { sx: 0, tx: 0 };
-        const ax = ar.left + ar.width / 2 + offset.sx - cr.left;
-        const ay = (goingDown ? ar.bottom : ar.top) - cr.top;
-        const bx = br.left + br.width / 2 + offset.tx - cr.left;
-        const rawBy = (goingDown ? br.top : br.bottom) - cr.top;
-        const by = rawBy + (goingDown ? -ARROW_INSET : ARROW_INSET);
-        const lane = laneY(i);
-        const d = Math.abs(ax - bx) < 0.5
-          ? `M ${ax} ${ay} L ${bx} ${by}`
-          : buildRoundedOrthogonal(
-              [{ x: ax, y: ay }, { x: ax, y: lane }, { x: bx, y: lane }, { x: bx, y: by }], 8);
-        out.push({ ...e, d, id: `${e.from}__${e.to}__${idx}` });
+      // Collect every candidate y: naive midpoint + just-above-top /
+      // just-below-bottom of every obstruction in the corridor. Then pick
+      // the nearest to the naive midpoint that's NOT blocked.
+      // Per-edge `corner` prop lets a caller bias the fractional position
+      // along the corridor (0 = near source, 0.5 = middle, 1 = near target).
+      const cornerFrac = typeof info.e.corner === 'number'
+        ? Math.max(0, Math.min(1, info.e.corner))
+        : 0.5;
+      const naive = info.goingDown
+        ? corridorTop + (corridorBot - corridorTop) * cornerFrac
+        : corridorBot - (corridorBot - corridorTop) * cornerFrac;
+      const candidates = new Set<number>([naive]);
+      for (const r of localRects) {
+        if (r.id === info.e.from || r.id === info.e.to) continue;
+        // Only consider rects actually in (or near) the corridor.
+        if (r.bottom < corridorTop - 2 || r.top > corridorBot + 2) continue;
+        if (r.right <= hLo || r.left >= hHi) continue;
+        candidates.add(r.top - OBSTRUCTION_PAD);
+        candidates.add(r.bottom + OBSTRUCTION_PAD);
+      }
+
+      let midY = naive;
+      const valid = [...candidates]
+        .filter(y => y > corridorTop + 2 && y < corridorBot - 2)
+        .filter(y => !yBlocked(y));
+      if (valid.length > 0) {
+        if (typeof info.e.corner === 'number') {
+          // Explicit corner: honour it — pick the unblocked candidate
+          // nearest the requested fractional position.
+          valid.sort((a, b) => Math.abs(a - naive) - Math.abs(b - naive));
+        } else if (info.goingDown) {
+          valid.sort((a, b) => b - a);   // largest first → near target-top
+        } else {
+          valid.sort((a, b) => a - b);   // smallest first → near target-bottom
+        }
+        midY = valid[0];
+      }
+      // If nothing's free, midY stays at naive (gracefully degrade).
+
+      out.push({
+        ...info.e,
+        d: buildRoundedOrthogonal([
+          { x: sx, y: sy },
+          { x: sx, y: midY },
+          { x: ex, y: midY },
+          { x: ex, y: ey },
+        ], CORNER_R),
+        id: `${info.e.from}__${info.e.to}__${info.idx}`,
       });
     });
 
     setPaths(out);
-  }, [edges, containerRef, nodeRefs]);
+  }, [edges, nodeRefs, containerRef]);
 
   useLayoutEffect(() => { recalc(); }, [recalc]);
   useEffect(() => {
     recalc();
-    const ro = new ResizeObserver(recalc);
+    const ro = new ResizeObserver(() => recalc());
     if (containerRef.current) ro.observe(containerRef.current);
     Object.values(nodeRefs.current).forEach(n => { if (n) ro.observe(n); });
-    const mo = new MutationObserver(recalc);
-    if (containerRef.current) mo.observe(containerRef.current, { subtree: true, childList: true, attributes: true });
+    const mo = new MutationObserver(() => recalc());
+    if (containerRef.current) mo.observe(containerRef.current, { subtree: true, childList: true });
     const onW = () => recalc();
     window.addEventListener('resize', onW);
     return () => { ro.disconnect(); mo.disconnect(); window.removeEventListener('resize', onW); };
@@ -642,22 +734,31 @@ const EdgeOverlay: FC<{
       style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, overflow: 'visible' }}>
       <defs>
         {(['open', 'map', 'unstruct', 'core'] as FlowKind[]).map(k => (
-          <marker key={k} id={`arr-${k}`} viewBox="0 0 10 10" refX="9" refY="5"
-            markerWidth="5" markerHeight="5" orient="auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill={kindVar(k)} />
-          </marker>
+          <React.Fragment key={k}>
+            <marker id={mid(k)} viewBox="0 0 10 10" refX="9" refY="5"
+              markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill={kindVar(k)} />
+            </marker>
+            <marker id={`${mid(k)}-s`} viewBox="0 0 10 10" refX="1" refY="5"
+              markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M 10 0 L 0 5 L 10 10 z" fill={kindVar(k)} />
+            </marker>
+          </React.Fragment>
         ))}
       </defs>
       {paths.map(p => {
         const rel = isRel(p);
         const stroke = kindVar(p.kind);
-        const opacity = anyHover ? (rel ? 1 : 0.15) : (p.kind === 'core' ? 0.65 : 0.9);
+        const opacity = anyHover ? (rel ? 1 : 0.18) : (p.kind === 'core' ? 0.7 : 0.92);
         const width = rel ? 2.4 : 1.6;
+        // Bidirectional markers by default; set bidir:false on an edge to opt out.
+        const bidir = p.bidir !== false;
         return (
           <path key={p.id} d={p.d} fill="none" stroke={stroke} strokeWidth={width}
             strokeDasharray={p.style === 'dashed' ? '5 4' : undefined}
             opacity={opacity}
-            markerEnd={`url(#arr-${p.kind})`}
+            markerEnd={`url(#${mid(p.kind)})`}
+            markerStart={bidir ? `url(#${mid(p.kind)}-s)` : undefined}
             style={{ transition: 'opacity .15s, stroke-width .15s' }} />
         );
       })}
