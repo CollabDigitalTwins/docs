@@ -2,7 +2,7 @@ import type { LogoComp } from './logos';
 import {
   NextLogo, ReactLogo, TsLogo, TailwindLogo, NodeLogo,
   NextAuthLogo, PrismaLogo, PostgresLogo, PostGisLogo, MinioLogo,
-  MapLibreLogo, DeckLogo, ThreeLogo, PotreeLogo, DockerLogo,
+  MapLibreLogo, MartinLogo, DeckLogo, ThreeLogo, PotreeLogo, DockerLogo,
 } from './logos';
 
 export type Tech = {
@@ -23,6 +23,7 @@ export const TECH_STACK: Tech[] = [
   { name: 'PostGIS',    Logo: PostGisLogo,  href: 'https://postgis.net' },
   { name: 'MinIO',      Logo: MinioLogo,    href: 'https://min.io' },
   { name: 'MapLibre',   Logo: MapLibreLogo, href: 'https://maplibre.org' },
+  { name: 'Martin',     Logo: MartinLogo,   href: 'https://maplibre.org/martin/' },
   { name: 'deck.gl',    Logo: DeckLogo,     href: 'https://deck.gl' },
   { name: 'three.js',   Logo: ThreeLogo,    href: 'https://threejs.org' },
   { name: 'Potree',     Logo: PotreeLogo,   href: 'https://github.com/potree/potree' },

@@ -113,6 +113,11 @@ export const ThreeLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/three-logo.svg" alt="three.js" style={assetLogoStyle(size)} />
 );
 
+/* Martin — MapLibre vector tile server */
+export const MartinLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/martin-logo.svg" alt="Martin" style={assetLogoStyle(size)} />
+);
+
 /* Potree */
 export const PotreeLogo: LogoComp = ({ size = 28 }) => {
   const dots = Array.from({ length: 28 }).map((_, i) => {
