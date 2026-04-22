@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import styles from './styles.module.css';
 import { CAPABILITIES } from './capabilities';
-import { TECH_STACK } from './techStack';
-import { Marquee, CapabilityCard, TechChip } from './Marquee';
+import { Marquee, CapabilityCard } from './Marquee';
+import { TechConstellation } from './Constellation';
 
 export default function HomepageFeatures(): ReactNode {
   const capabilitiesRepeated = [...CAPABILITIES, ...CAPABILITIES, ...CAPABILITIES];
@@ -43,17 +43,13 @@ export default function HomepageFeatures(): ReactNode {
         </div>
       </section>
 
-      {/* ── Tech Stack — 100% Open Source (grid) ───────────────── */}
+      {/* ── Tech Stack — 100% Open Source (constellation) ──────── */}
       <section className={styles.techStack}>
         <div className={styles.techStackInner}>
           <div className={styles.techStackHeader}>
-            <div className={styles.sectionLabel}>100% Open Source Stack</div>
+            <div className={styles.sectionLabel}>100% Open Source Stack : All connected to provide the best developer experience</div>
           </div>
-          <div className={styles.techGrid}>
-            {TECH_STACK.map((item) => (
-              <TechChip key={item.name} {...item} />
-            ))}
-          </div>
+          <TechConstellation />
         </div>
       </section>
     </>

@@ -25,6 +25,7 @@ import {
   SafariLogo,
   TailwindLogo,
   ThreeLogo,
+  TocLogo,
   TsLogo,
 } from '../../HomepageFeatures/logos';
 import {
@@ -54,6 +55,7 @@ export const Safari_   = adaptLogo(SafariLogo);
 export const MapLibre_ = adaptLogo(MapLibreLogo);
 export const Deck_     = adaptLogo(DeckLogo);
 export const Three_    = adaptLogo(ThreeLogo);
+export const TOC_      = adaptLogo(TocLogo);
 export const Potree_   = adaptLogo(PotreeLogo);
 export const Postgres_ = adaptLogo(PostgresLogo);
 export const PostGIS_  = adaptLogo(PostGisLogo);

@@ -5,7 +5,7 @@ import {
 } from './kindIcons';
 import {
   Node_, Next_, React_, TS_, Tailwind_, Shadcn_, NextAuth_,
-  MapLibre_, Deck_, Three_, Potree_, Martin_,
+  MapLibre_, Deck_, Three_, TOC_, Potree_, Martin_,
   Postgres_, PostGIS_, MinIO_, Docker_, Prisma_, CASL_,
   Firefox_, Chrome_, Edge_, Opera_, Safari_,
   Fullhost_, GLTF_, DXF_, IFC_, LAS_, LAZ_,
@@ -44,7 +44,7 @@ export const DEFAULT_LAYERS: Layer[] = [
         { name: 'UI / UX', items: [{ Logo: Tailwind_, n: 'Tailwind' }, { Logo: Shadcn_, n: 'shadcn/ui' }] },
         { name: 'Auth', items: [{ Logo: NextAuth_, n: 'NextAuth.js' }] },
         { name: 'Map', items: [{ Logo: MapLibre_, n: 'MapLibre' }, { Logo: Deck_, n: 'deck.gl' }] },
-        { name: '3D Graphics', items: [{ Logo: Three_, n: 'three.js' }, { Logo: Potree_, n: 'Potree' }] },
+        { name: '3D Graphics / BIM / PC', items: [{ Logo: Three_, n: 'three.js' }, { Logo: TOC_, n: 'TOC' }, { Logo: Potree_, n: 'Potree' }] },
       ],
     }],
   },

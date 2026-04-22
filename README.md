@@ -19,8 +19,7 @@ Communication is such an important aspect of good design. No matter how brillian
 </div>
 
 This repository provides essential documentation to use and co-develop the CDT platform.
-Don't hesitate to let us know if something is not clear and needs further description.
-Write us at info@collabdt.org
+Contact us to [info@collabdt.org](mailto:info@collabdt.org) for more information.
 
 # Website
 

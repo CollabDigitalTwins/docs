@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 import type { Capability } from './capabilities';
-import type { Tech } from './techStack';
 
 type Direction = 'left' | 'right';
 
@@ -53,19 +52,3 @@ export function CapabilityCard({ Icon, title, description, href }: Capability): 
   );
 }
 
-/* ── Tech chip (external link) ─────────────────────────── */
-export function TechChip({ name, Logo, href }: Tech): ReactNode {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.techChip}
-    >
-      <span className={styles.techLogo}>
-        <Logo />
-      </span>
-      <span className={styles.techName}>{name}</span>
-    </a>
-  );
-}
