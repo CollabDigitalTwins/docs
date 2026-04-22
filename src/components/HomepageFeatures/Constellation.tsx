@@ -1,9 +1,11 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState, type CSSProperties, type ReactNode } from 'react';
 import styles from './styles.module.css';
 import { TECH_STACK, TECH_EDGES, type TechId } from './techStack';
 
 const VB_W = 1200;
 const VB_H = 360;
+const M_VB_W = 600;
+const M_VB_H = 850;
 
 export function TechConstellation(): ReactNode {
   const [hovered, setHovered] = useState<TechId | null>(null);
@@ -34,12 +36,11 @@ export function TechConstellation(): ReactNode {
   return (
     <div
       className={styles.constellation}
-      style={{ aspectRatio: `${VB_W} / ${VB_H}` }}
       data-active={hovered ? 'true' : 'false'}
     >
-      {/* Edge layer — SVG lines behind the nodes */}
+      {/* Desktop edge layer */}
       <svg
-        className={styles.constellationEdges}
+        className={`${styles.constellationEdges} ${styles.constellationEdgesDesktop}`}
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         preserveAspectRatio="none"
         aria-hidden="true"
@@ -57,7 +58,7 @@ export function TechConstellation(): ReactNode {
           const active = edgeIsHighlighted(a, b);
           return (
             <line
-              key={`${a}-${b}`}
+              key={`d-${a}-${b}`}
               x1={na.x}
               y1={na.y}
               x2={nb.x}
@@ -68,7 +69,39 @@ export function TechConstellation(): ReactNode {
         })}
       </svg>
 
-      {/* Node layer — absolutely positioned HTML anchors */}
+      {/* Mobile edge layer (taller viewBox, uses mx/my) */}
+      <svg
+        className={`${styles.constellationEdges} ${styles.constellationEdgesMobile}`}
+        viewBox={`0 0 ${M_VB_W} ${M_VB_H}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="edge-gradient-mobile" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="var(--constellation-accent)" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="var(--constellation-accent)" stopOpacity="0.15" />
+          </linearGradient>
+        </defs>
+        {TECH_EDGES.map(([a, b]) => {
+          const na = byId.get(a);
+          const nb = byId.get(b);
+          if (!na || !nb) return null;
+          const active = edgeIsHighlighted(a, b);
+          return (
+            <line
+              key={`m-${a}-${b}`}
+              x1={na.mx}
+              y1={na.my}
+              x2={nb.mx}
+              y2={nb.my}
+              stroke="url(#edge-gradient-mobile)"
+              className={`${styles.constellationEdge} ${active ? styles.constellationEdgeActive : ''}`}
+            />
+          );
+        })}
+      </svg>
+
+      {/* Node layer — positions come from CSS vars, swapped by media query */}
       {TECH_STACK.map((t) => {
         const active = hovered === t.id;
         const highlighted = isHighlighted(t.id);
@@ -80,6 +113,13 @@ export function TechConstellation(): ReactNode {
           dimmed && styles.nodeDimmed,
         ].filter(Boolean).join(' ');
 
+        const nodeStyle = {
+          '--node-x': `${(t.x / VB_W) * 100}%`,
+          '--node-y': `${(t.y / VB_H) * 100}%`,
+          '--node-mx': `${(t.mx / M_VB_W) * 100}%`,
+          '--node-my': `${(t.my / M_VB_H) * 100}%`,
+        } as CSSProperties;
+
         return (
           <a
             key={t.id}
@@ -87,10 +127,7 @@ export function TechConstellation(): ReactNode {
             target="_blank"
             rel="noopener noreferrer"
             className={classes}
-            style={{
-              left: `${(t.x / VB_W) * 100}%`,
-              top: `${(t.y / VB_H) * 100}%`,
-            }}
+            style={nodeStyle}
             onMouseEnter={() => setHovered(t.id)}
             onMouseLeave={() => setHovered(null)}
             onFocus={() => setHovered(t.id)}

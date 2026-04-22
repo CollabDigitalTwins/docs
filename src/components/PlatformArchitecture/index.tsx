@@ -32,6 +32,7 @@ import { DEFAULT_LAYERS, DEFAULT_EDGES } from './src/data';
 import { LayerRow } from './src/LayerRow';
 import { EdgeOverlay } from './src/EdgeOverlay';
 import { Legend } from './src/Legend';
+import PlatformArchitectureMobile from './PlatformArchitectureMobile';
 
 export type {
   FlowKind, Theme, TechChip, Module, Node, Layer, Edge,
@@ -39,7 +40,21 @@ export type {
 } from './src/types';
 export { DEFAULT_LAYERS, DEFAULT_EDGES } from './src/data';
 
-const PlatformArchitecture: FC<PlatformArchitectureProps> = ({
+const MOBILE_BREAKPOINT = 768;
+
+function useIsMobile(): boolean {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+  return isMobile;
+}
+
+const PlatformArchitectureDesktop: FC<PlatformArchitectureProps> = ({
   theme: themeProp,
   layers = DEFAULT_LAYERS,
   edges = DEFAULT_EDGES,
@@ -156,6 +171,14 @@ const PlatformArchitecture: FC<PlatformArchitectureProps> = ({
       </section>
     </div>
   );
+};
+
+const PlatformArchitecture: FC<PlatformArchitectureProps> = (props) => {
+  const isMobile = useIsMobile();
+  if (isMobile && !props.preview) {
+    return <PlatformArchitectureMobile {...props} />;
+  }
+  return <PlatformArchitectureDesktop {...props} />;
 };
 
 export default PlatformArchitecture;
