@@ -14,14 +14,14 @@ const config: Config = {
       tagName: 'meta',
       attributes: {
         property: 'og:image',
-        content: 'https://docs.collabdt.org/img/cdt.png',
+        content: 'https://docs.collabdt.org/img/cdt-og_card.png',
       },
     },
     {
       tagName: 'meta',
       attributes: {
         name: 'twitter:image',
-        content: 'https://docs.collabdt.org/img/cdt.png',
+        content: 'https://docs.collabdt.org/img/cdt-og_card.png',
       },
     },
     {
@@ -95,7 +95,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/cdt.png',
+    image: 'img/cdt-og_card.png',
     colorMode: {
       respectPrefersColorScheme: false,
     },
