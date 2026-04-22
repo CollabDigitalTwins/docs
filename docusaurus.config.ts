@@ -6,8 +6,32 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Documentation',
-  tagline: 'Explore our guides and examples to integrate with the CDT Platform',
+  tagline: 'Guides, documents, and examples to integrate with Collab Digital Twins’ platform.',
   favicon: 'img/cdt-logo-stroke.svg',
+
+  headTags: [
+    {
+      tagName: 'meta',
+      attributes: {
+        property: 'og:image',
+        content: 'https://docs.collabdt.org/img/cdt.png',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:image',
+        content: 'https://docs.collabdt.org/img/cdt.png',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:card',
+        content: 'summary_large_image',
+      },
+    },
+  ],
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -71,7 +95,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/cdt.png',
     colorMode: {
       respectPrefersColorScheme: false,
     },

@@ -42,13 +42,13 @@ function ArchitectureSketch() {
 
   // Flow-kind colors (identical to PlatformArchitecture)
   const C = {
-    open:     '#EF9161',
-    map:      '#7FC4C4',
+    open: '#EF9161',
+    map: '#7FC4C4',
     unstruct: '#B79CE0',
-    core:     'var(--hp-on-surface-variant)',
-    stroke:   'var(--hp-outline-variant)',
-    panel:    'var(--hp-mid)',
-    accent:   'var(--hp-primary-container)',
+    core: 'var(--hp-on-surface-variant)',
+    stroke: 'var(--hp-outline-variant)',
+    panel: 'var(--hp-mid)',
+    accent: 'var(--hp-primary-container)',
   };
 
   type Kind = 'open' | 'map' | 'unstruct' | 'core';
@@ -166,14 +166,14 @@ function ArchitectureSketch() {
       {/* Open-data API → Gateway (open, dashed) */}
       <Edge ax={xs[0]} ay={ys.api} bx={cx - NODE_R} by={ys.api} kind="open" dashed delay={0.6} />
       {/* API → Backend core services */}
-      <Edge ax={cx} ay={ys.api + NODE_R} bx={xs[0]} by={ys.backend - NODE_R} kind="core"     delay={0.9} />
-      <Edge ax={cx} ay={ys.api + NODE_R} bx={xs[1]} by={ys.backend - NODE_R} kind="core"     delay={1.1} />
-      <Edge ax={cx} ay={ys.api + NODE_R} bx={xs[2]} by={ys.backend - NODE_R} kind="map"      delay={1.3} />
+      <Edge ax={cx} ay={ys.api + NODE_R} bx={xs[0]} by={ys.backend - NODE_R} kind="core" delay={0.9} />
+      <Edge ax={cx} ay={ys.api + NODE_R} bx={xs[1]} by={ys.backend - NODE_R} kind="core" delay={1.1} />
+      <Edge ax={cx} ay={ys.api + NODE_R} bx={xs[2]} by={ys.backend - NODE_R} kind="map" delay={1.3} />
       <Edge ax={cx} ay={ys.api + NODE_R} bx={xs[3]} by={ys.backend - NODE_R} kind="unstruct" delay={1.5} />
       {/* Backend → Data storage */}
-      <Edge ax={xs[0]} ay={ys.backend + NODE_R} bx={xs[1]} by={ys.data - NODE_R} kind="core"     delay={1.7} />
-      <Edge ax={xs[1]} ay={ys.backend + NODE_R} bx={xs[1]} by={ys.data - NODE_R} kind="core"     delay={1.8} />
-      <Edge ax={xs[2]} ay={ys.backend + NODE_R} bx={xs[2]} by={ys.data - NODE_R} kind="map"      delay={1.9} />
+      <Edge ax={xs[0]} ay={ys.backend + NODE_R} bx={xs[1]} by={ys.data - NODE_R} kind="core" delay={1.7} />
+      <Edge ax={xs[1]} ay={ys.backend + NODE_R} bx={xs[1]} by={ys.data - NODE_R} kind="core" delay={1.8} />
+      <Edge ax={xs[2]} ay={ys.backend + NODE_R} bx={xs[2]} by={ys.data - NODE_R} kind="map" delay={1.9} />
       <Edge ax={xs[3]} ay={ys.backend + NODE_R} bx={xs[3]} by={ys.data - NODE_R} kind="unstruct" delay={2.0} />
       {/* Data → Infra (deployment, all dashed core) */}
       <Edge ax={xs[0]} ay={ys.data + NODE_R} bx={cx} by={ys.infra - 18} kind="core" dashed delay={2.3} />
@@ -305,9 +305,10 @@ function HomepageHeader() {
             </div>
 
             <h1 className={styles.heroTitle}>
-              <span className={styles.heroGradient}>Build</span>
+              <span className={styles.heroGradient}>Explore</span>
               <br />
-              with CDT
+              <small>the CDT Platform</small>
+
             </h1>
 
             <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
