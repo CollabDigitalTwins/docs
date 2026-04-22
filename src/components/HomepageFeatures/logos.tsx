@@ -118,6 +118,16 @@ export const MartinLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/martin-logo.svg" alt="Martin" style={assetLogoStyle(size)} />
 );
 
+/* shadcn/ui */
+export const ShadcnLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/shadcn-ui-seeklogo.svg" alt="shadcn/ui" style={assetLogoStyle(size)} />
+);
+
+/* That Open Engine */
+export const TocLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/toc-logo.svg" alt="That Open Engine" style={assetLogoStyle(size)} />
+);
+
 /* Potree */
 export const PotreeLogo: LogoComp = ({ size = 28 }) => {
   const dots = Array.from({ length: 28 }).map((_, i) => {
