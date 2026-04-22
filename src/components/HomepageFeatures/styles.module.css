@@ -13,6 +13,16 @@
   color: var(--hp-primary-container);
 }
 
+/* Inline emphasis inside a section label — flips to the opposite of the theme
+   background (black in light mode, white in dark mode). */
+.sectionLabelContrast {
+  color: #000;
+}
+
+[data-theme='dark'] .sectionLabelContrast {
+  color: #fff;
+}
+
 /* ── Mission section (Level 1 surface) ───────────────── */
 .mission {
   padding: 6rem 0;

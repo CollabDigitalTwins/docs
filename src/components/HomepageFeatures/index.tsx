@@ -47,7 +47,7 @@ export default function HomepageFeatures(): ReactNode {
       <section className={styles.techStack}>
         <div className={styles.techStackInner}>
           <div className={styles.techStackHeader}>
-            <div className={styles.sectionLabel}>100% Open Source Stack : All connected to provide the best developer experience</div>
+            <div className={styles.sectionLabel}>100% Open Source Stack : <span className={styles.sectionLabelContrast}>All connected to provide the best user and developer experience</span></div>
           </div>
           <TechConstellation />
         </div>
