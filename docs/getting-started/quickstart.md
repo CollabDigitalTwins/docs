@@ -1,6 +1,6 @@
 # Quickstart
 
-Get up and running with Canada's Digital Twin in under 10 minutes.
+Get up and running with the CDT platform in under 10 minutes.
 
 ## Quick Setup
 
@@ -14,7 +14,7 @@ Once the development server is running, navigate to `http://localhost:3000` to a
 
 The platform opens to the Map Viewer by default, where you can:
 
-- **Navigate the map** — Pan, zoom, and explore geospatial data across Canada
+- **Navigate the map** — Pan, zoom, and explore geospatial data
 - **Search locations** — Use the search bar in the top left to find geocoded locations
 - **View building footprints** — Zoom in and click on building footprints to see details
 - **Add datasets** — Click the database icon in the bottom toolbar to open the Datasets panel

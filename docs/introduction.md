@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introduction
 
-Canada's Digital Twin (CDT) is a web-based platform for the visualization of and interaction with multi-scale geospatial information systems, open data, and BIM models.
+The Collab Digital Twins platform (CDT) is a web-based platform for the visualization of and interaction with multi-scale geospatial information systems, open data, and BIM models.
 
 ## Overview
 
