@@ -202,6 +202,16 @@ article a:hover {
   border-bottom-color: var(--hp-primary-container);
 }
 
+article a.button {
+  color: #ffffff;
+  border-bottom: none;
+}
+
+article a.button:hover {
+  color: #ffffff;
+  border-bottom: none;
+}
+
 /* ── Code blocks ──────────────────────────────────────── */
 code {
   font-size: 0.875em;
