@@ -4,50 +4,72 @@ sidebar_position: 3
 
 # GIS & Map Data
 
-How CDT captures, renders, and analyzes geographic data to give your digital twin a sense of place.
+**Geographic Information Systems (GIS)** are systems for capturing, storing, analyzing, and visualizing geographic data. A GIS is a smart map that understands *what* things are, not just *where* — a building footprint is not just a polygon, it is a record linked to ownership data, floor counts, energy usage, zoning classification, and more.
 
-:::info What is GIS?
-**Geographic Information Systems (GIS)** are systems for capturing, storing, analyzing, and visualizing geographic data. Think of GIS as a smart map that understands *what* things are, not just *where* they are — a building footprint is not just a polygon on a screen, it is a record linked to ownership data, floor counts, energy usage, and more.
-:::
+Where BIM operates at the building scale, GIS operates at the site, city, regional, and national scale. CDT integrates both: a building's IFC model appears in its correct geographic position on the map, surrounded by the city data that gives it context.
 
-## Common geospatial formats
+## Why GIS Matters for Digital Twins
 
-CDT works with several standard formats you will encounter when working with open data or configuring map layers:
+Infrastructure planning, environmental monitoring, and asset management all require understanding how things relate to each other across geography. A proposed transit line affects property values, flood zones, and walkability simultaneously. A wildfire perimeter needs to be read against fuel loads, roads, and community boundaries. Housing affordability data only makes sense when overlaid with income, transit access, and zoning.
+
+GIS makes these relationships visible and queryable. CDT's map viewer is the interface where multi-scale, multi-source geospatial data comes together with building-scale BIM.
+
+## Common Geospatial Formats
 
 | Format | What it is |
-|--------|------------|
-| **GeoJSON** | A JSON-based vector format that encodes points, lines, and polygons alongside properties. Web-friendly and widely supported. |
-| **Vector tiles** | Pre-sliced map data delivered tile by tile as you pan and zoom. Renders efficiently in the browser and supports interactive styling. |
-| **Raster tiles** | Pre-rendered image tiles — satellite imagery, aerial photos, or scanned maps — stitched together as you navigate. |
-| **WMS / WMTS** | Web Map Service standards that serve map images from a remote server. Common in government and municipal open data systems. |
+|---|---|
+| **GeoJSON** | JSON-based vector format encoding points, lines, and polygons with properties. Web-friendly and widely supported by open data portals |
+| **Vector tiles** | Pre-sliced map data delivered tile by tile as you pan and zoom. Renders efficiently in WebGL and supports interactive styling |
+| **Raster tiles (WMTS)** | Pre-rendered image tiles — satellite imagery, aerial photos, scanned maps — served by OGC Web Map Tile Service |
+| **WMS** | OGC Web Map Service — map images requested from a remote server with metadata; common in government and municipal open data systems |
+| **GeoTIFF** | Georeferenced raster imagery, used for elevation models and remote sensing data |
 
-## How CDT handles map data
+## Coordinate Reference Systems
 
-CDT's map stack is built on three open-source tools, which means no proprietary API keys and no vendor lock-in:
+Geographic data comes in many projections. Canadian open data frequently arrives in local systems: **MTM** (Modified Transverse Mercator), **UTM** (Universal Transverse Mercator), or provincial variants. CDT uses [Proj4js](https://proj4js.org/) to reproject all incoming data to **WGS 84** (EPSG:4326) automatically, so layers from different jurisdictions align correctly without manual re-projection.
 
-- **MapLibre GL JS** renders the map in your browser using WebGL. It handles vector tiles, raster tiles, and custom layer styles, and is the same engine powering the interactive map viewer in CDT.
-- **Martin** is a vector tile server that sits in front of your PostGIS database. It converts spatial database queries into vector tiles on demand, so CDT can serve building footprints and organization-specific spatial data without pre-generating static files.
-- **Turf.js** runs geospatial calculations directly in the browser — distances between points, area of a polygon, spatial intersections — without sending data to a server.
+## CDT's Map Stack
 
-## Open data integration
+CDT's map infrastructure is built entirely on open-source tools — no proprietary API keys, no vendor lock-in:
 
-CDT connects to **CKAN-based open data portals** — the same platform used by national, provincial (or any country subdivision), and many municipal governments around the world. From the dataset panel you can browse and toggle layers from these portals directly onto the map without downloading any files. The data stays at the source and is streamed into your session on demand.
+| Tool | Role |
+|---|---|
+| **MapLibre GL JS** | WebGL-based map renderer in the browser. Handles vector tiles, raster tiles, custom layer styles, and 3D camera. 100% free and open-source |
+| **Martin** | Lightweight vector tile server. Generates tiles dynamically from PostGIS queries, so the map reflects changes in the database instantly without pre-generated static files |
+| **PostGIS** | Spatial extension for PostgreSQL. Stores and indexes geometric types (points, polygons, rasters), enabling high-performance spatial queries and proximity searches |
+| **Turf.js** | Client-side geospatial analysis library. Calculates distances, areas, buffers, and spatial intersections directly in the browser without a server round-trip |
+| **Proj4js** | Coordinate reprojection library. Manages transformation between different CRS using standard EPSG identifiers |
 
-This means you can overlay municipal zoning boundaries, federal flood hazard zones, or provincial land-use classifications alongside your own building data in a few clicks.
+Four map renderers were evaluated before choosing MapLibre: Leaflet (excluded — lacks 3D/tilt support), Cesium (strong 3D but proprietary and fee-based), Mapbox GL JS (proprietary, fee-based), and MapLibre (fully open-source fork of Mapbox GL JS, actively maintained by a large community).
 
-## What you can do with maps in CDT
+## Open Data Integration
 
-The map viewer supports a range of tasks out of the box:
+Canada is a global leader in open data availability, but the information is fragmented across hundreds of portals using four different platform types: **CKAN**, **Huwise**, **Socrata**, and **ArcGIS Online** — each with its own API and data structure. CDT normalizes access to all of them, giving users a single interface regardless of the source system.
 
-- **Navigate** — pan, zoom, tilt, and rotate to any view
-- **Search locations** — find addresses or place names to jump quickly to an area of interest
-- **View building footprints** — see your organization's buildings as interactive features on the map
-- **Overlay open data layers** — toggle federal, provincial, and municipal datasets without leaving CDT
-- **Measure distances and areas** — draw lines or polygons and get instant metric results, powered by Turf.js
-- **Compare buildings** — select multiple buildings to compare attributes side by side
-- **Share map positions** — generate a link or QR code that encodes the current map view (center, zoom, bearing, and pitch) so colleagues land exactly where you are
+Data is fetched in real time directly from original sources — nothing is cached or replicated locally. This ensures currency and respects the data governance of the original publisher.
 
-## Next steps
+Supported open data scales:
 
-- [Map Viewer guide](../guides/map-viewer) — learn how to navigate the map, use tools, and customize layers
-- [Datasets & Open Data guide](../guides/datasets-and-open-data) — connect to open data portals and add datasets as map layers
+| Scale | Example sources |
+|---|---|
+| Federal | Open Government, NRCan, Statistics Canada, Geo.ca, CIFFC |
+| Provincial | Open Ontario, Données ouvertes Québec, Open BC, and others |
+| Municipal | Open Ottawa, Open Toronto, Vancouver Open Data, and more |
+| Community | OpenStreetMap (building footprints, roads, POIs) |
+
+## Urban Context
+
+For urban context, the platform uses OpenStreetMap building footprints extruded to their approximate height in LOD 1.3 (simple box volumes). This gives every location a readable volumetric context without loading full BIM models for every building in the scene.
+
+At larger scales, the map fetches tile layers from national and provincial services — topography, land cover, transportation networks — to provide geographic grounding for whatever asset-level data is loaded.
+
+## BIM / GIS Integration
+
+The fundamental integration point in CDT is the coexistence of IFC models and GIS data in the same coordinate system and the same scene. A Three.js layer is added on top of the MapLibre viewport: the map camera and the 3D scene camera are synchronized, so zooming or rotating the map moves the IFC model in lockstep with the surrounding urban context.
+
+This allows users to:
+- Verify a building's geographic position relative to site boundaries, roads, and neighbouring structures
+- Analyze shadow impact on adjacent buildings using BIM geometry in a GIS context
+- Overlay federal or municipal datasets (flood zones, zoning, infrastructure) directly against a building model
+
+See the [Map Viewer guide](../guides/map-viewer) and [Datasets & Open Data guide](../guides/datasets-and-open-data) for usage details.
