@@ -29,7 +29,9 @@ const templatePath = get('--template');
 const outputPath = get('--output');
 
 if (!sourcePath || !templatePath || !outputPath) {
-  console.error('Usage: node generate-doc.js --source <path> --template <path> --output <path>');
+  console.error(
+    'Usage: node generate-doc.js --source <path> --template <path> --output <path>',
+  );
   process.exit(1);
 }
 
@@ -38,7 +40,7 @@ const templateContent = fs.readFileSync(templatePath, 'utf8');
 
 const client = new Anthropic();
 
-const systemPrompt = `You are a technical documentation writer for a geospatial platform called Canada's Digital Twin (CDT).
+const systemPrompt = `You are a technical documentation writer for a geospatial platform called CDT.
 
 The platform is built with Next.js, TypeScript, Prisma, MapLibre, SWR, CASL, shadcn/ui, and MinIO.
 

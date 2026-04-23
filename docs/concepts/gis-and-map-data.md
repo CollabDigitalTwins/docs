@@ -31,7 +31,7 @@ CDT's map stack is built on three open-source tools, which means no proprietary 
 
 ## Open data integration
 
-CDT connects to **CKAN-based open data portals** — the same platform used by federal, provincial, and many municipal governments in Canada. From the dataset panel you can browse and toggle layers from these portals directly onto the map without downloading any files. The data stays at the source and is streamed into your session on demand.
+CDT connects to **CKAN-based open data portals** — the same platform used by national, provincial (or any country subdivision), and many municipal governments around the world. From the dataset panel you can browse and toggle layers from these portals directly onto the map without downloading any files. The data stays at the source and is streamed into your session on demand.
 
 This means you can overlay municipal zoning boundaries, federal flood hazard zones, or provincial land-use classifications alongside your own building data in a few clicks.
 

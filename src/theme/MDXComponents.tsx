@@ -6,12 +6,14 @@
   import CardFooter from '@site/src/components/Card/CardFooter';
   import CardHeader from '@site/src/components/Card/CardHeader';
   import CardImage from '@site/src/components/Card/CardImage';
+  import PluginArchitecture from '@site/src/components/PluginArchitecture';
   export default {
     // Reusing the default mapping
     ...MDXComponents,
-    Card, 
-    CardHeader, 
-    CardBody, 
+    Card,
+    CardHeader,
+    CardBody,
     CardFooter,
-    CardImage, 
+    CardImage,
+    PluginArchitecture,
   };
