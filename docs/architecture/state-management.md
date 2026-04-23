@@ -1,0 +1,161 @@
+---
+sidebar_position: 7
+---
+
+# State Management
+
+CDT uses a custom middleware pattern built on React Context and `useReducer`. There is no external state library — each domain owns its own context, reducer, and action types. All contexts are composed into a single `AppProvider` that wraps the application once.
+
+## Pattern
+
+Each store slice follows the same four-part structure:
+
+### 1. State type
+
+Defines the shape of the slice:
+
+```ts
+export type BuildingsState = {
+  buildings: Building[]
+  building: Building | null
+}
+```
+
+### 2. Action types
+
+A discriminated union of all actions the reducer handles:
+
+```ts
+export type BuildingsActions =
+  | { type: 'SET_BUILDINGS'; payload: Building[] }
+  | { type: 'SET_BUILDING'; payload: Building | null }
+```
+
+### 3. Reducer
+
+Pure function — receives the current state and an action, returns the next state. Components never modify state directly.
+
+```ts
+export const BuildingsReducer = (
+  state: BuildingsState,
+  action: BuildingsActions
+): BuildingsState => {
+  switch (action.type) {
+    case 'SET_BUILDINGS':
+      return { ...state, buildings: action.payload }
+    case 'SET_BUILDING':
+      return { ...state, building: action.payload }
+    default:
+      return state
+  }
+}
+```
+
+### 4. Context and Provider
+
+The context exposes `state` and `dispatch`. The provider wraps `useReducer` and passes both down:
+
+```tsx
+export const BuildingsContext = React.createContext<{
+  state: InitialStateType
+  dispatch: React.Dispatch<BuildingsActions>
+}>({ state: initialState, dispatch: () => null })
+
+export const BuildingsProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const [state, dispatch] = React.useReducer(reducer, initialState)
+  return (
+    <BuildingsContext.Provider value={{ state, dispatch }}>
+      {children}
+    </BuildingsContext.Provider>
+  )
+}
+```
+
+## Consuming a context
+
+Import the context and destructure `state` and `dispatch` with `useContext`:
+
+```tsx
+import { MapStyleContext } from '@/core/store/Map/context'
+
+export default function MapStyleMenu() {
+  const { state, dispatch } = useContext(MapStyleContext)
+
+  return (
+    <button onClick={() => dispatch({ type: 'UPDATE_MAP_STYLE', payload: { name: 'streets' } })}>
+      Streets
+    </button>
+  )
+}
+```
+
+Components dispatch actions — they never calculate the next state themselves.
+
+## CombineProviders
+
+All providers are composed into a single `AppProvider` using a `compose` utility in [`src/core/store/CombineProviders.tsx`](https://github.com/collabdt/core/blob/main/src/core/store/CombineProviders.tsx). This avoids deeply nested JSX while keeping each provider independent.
+
+```tsx
+const compose = providers =>
+  providers.reduce(
+    (Prev, Curr) =>
+      function ComposedProvider({ children }) {
+        return <Prev><Curr>{children}</Curr></Prev>
+      }
+  )
+
+export const AppProvider = compose([
+  AppConfigProvider,
+  BimProvider,
+  MapProvider,
+  MenusProvider,
+  ToolsProvider,
+  ContentProvider,
+  DatasetsProvider,
+  FilesProvider,
+  BuildingsProvider,
+  PointCloudProvider,
+  PermissionsProvider,
+])
+```
+
+`AppProvider` is rendered once at the application root. All child components have access to every context without prop drilling.
+
+## Providers
+
+| Provider | Context key | Purpose |
+|----------|-------------|---------|
+| `AppConfigProvider` | `appConfig` | Active organization and current user |
+| `BimProvider` | `bim` | IFC components, fragments, world, floor plans, BCF topics, model UI state |
+| `MapProvider` | `map` | Map instance, style, camera position, layers, click/hover managers, GeoJSON |
+| `MenusProvider` | `menus` | Active viewer, selected tab, sidebar panels, rows per page, visible sensors and comments |
+| `ToolsProvider` | `tools` | Currently active tool ID |
+| `ContentProvider` | `currentContent` | Active content view (`map`, `sites`, `buildings`, `files`, etc.) and instance |
+| `DatasetsProvider` | `datasets` | Dataset list, selected dataset, added datasets |
+| `FilesProvider` | `files` | File list, map file IDs, file manager open state, editing file |
+| `BuildingsProvider` | `buildings` | Building list, selected building |
+| `PointCloudProvider` | `pointcloud` | Point cloud viewer state |
+| `PermissionsProvider` | `ability` | CASL ability object built from the user's role permissions |
+
+## Key files
+
+| File | Role |
+|------|------|
+| `src/core/store/CombineProviders.tsx` | Composes all providers into `AppProvider` |
+| `src/core/store/ActionMap.ts` | Shared utility type for mapping action payloads |
+| `src/core/store/<Domain>/context.tsx` | Context definition and provider for each slice |
+| `src/core/store/<Domain>/reducer.ts` | State type, action types, and reducer for each slice |
+| `src/core/store/index.ts` | Re-exports |
+
+## Design decisions
+
+- **No external library.** React Context + `useReducer` covers CDT's needs without the overhead of Redux or Zustand. The pattern is intentionally close to Redux (actions, reducers, dispatch) so it's familiar and easy to reason about.
+- **One reducer per domain.** Each slice is fully self-contained. Adding a new domain means creating a `context.tsx` and `reducer.ts`, then registering the provider in `CombineProviders.tsx`.
+- **`PermissionsProvider` is special.** It does not use `useReducer` — it reads the user's session via NextAuth and builds a CASL `MongoAbility` object from the fetched role permissions. It is memoized so the ability only rebuilds when permissions change.
+- **`ContentProvider` is special.** It uses `useState` instead of `useReducer` because its state transitions are simple and don't benefit from the action/reducer pattern.
+
+## Related
+
+- [Authorization](../authorization/authorization_roles_permissions.md) — how CASL abilities are defined and checked
+- [Hooks](../hooks/overview.md) — data-fetching hooks that work alongside this store
+- [Architecture Overview](./overview.md)
