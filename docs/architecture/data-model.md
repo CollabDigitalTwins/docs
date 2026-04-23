@@ -1,0 +1,216 @@
+---
+sidebar_position: 9
+title: Data Model
+description: Core domain types used across the CDT platform — buildings, sites, infrastructure, sensors, files, users, organizations, and their enumerations.
+category: architecture
+status: draft
+last_updated: 2026-04-23
+---
+
+# Data Model
+
+CDT's domain types are defined in `src/core/types/dbTypes.ts` and shared across hooks, API adapters, and components. Every entity maps directly to a Prisma model on the backend.
+
+## Entities
+
+### Building
+
+The primary asset type. Tracks address, geometry, occupancy, energy, funding, assessments, and unit breakdown.
+
+Key fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `buildingName` | `string?` | Display name |
+| `buildingLatitude` / `buildingLongitude` | `number?` | Map coordinates |
+| `buildingType` | `string[]` | One or more building use categories |
+| `buildingOccupantType` | `BuildingOccupantType[]` | Resident demographics |
+| `buildingProjectPhase` | `BuildingProjectPhase?` | Lifecycle phase |
+| `buildingProjectType` | `BuildingProjectType?` | Modification, renovation, new build, etc. |
+| `buildingGeometryStyle` | `BuildingGeometryStyle?` | `Complex`, `Simple`, or `Apartment` |
+| `featureId` | `string?` | External GIS feature identifier |
+| `buildingParentSiteId` | `number?` | Site this building belongs to |
+
+### Site
+
+A geographic area that may contain multiple buildings. Tracks land use, ownership, energy, funding, and project phases.
+
+Key fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `siteName` | `string?` | Display name |
+| `siteLatitude` / `siteLongitude` | `number?` | Map coordinates |
+| `siteLandUse` | `SiteLandUse?` | Residential, Industrial, Park, etc. |
+| `siteProjectPhase` | `SiteProjectPhase?` | Lifecycle phase |
+| `siteOrganizationId` | `number` | Owning organization |
+
+### Infrastructure
+
+Civil infrastructure assets with IFC and CityGML attribute support. Covers roads, railways, bridges, utilities, and survey data.
+
+Key fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `infrastructureType` | `InfrastructureType?` | LandFeature, Road, Railway, Bridge, etc. |
+| `infrastructureState` | `InfrastructureState?` | Existing, Proposed, UnderConstruction, etc. |
+| `ifcDomain` | `IfcInfrastructureDomain?` | IFC domain (IfcRoad, IfcRailway, IfcBridge, etc.) |
+| `cityGmlLod` | `CityGmlLod?` | LOD0–LOD4 |
+| `organizationId` | `number` | Owning organization |
+
+See [IFC Infrastructure Types](../concepts/ifc-infrastructure-types.md) for the full enum reference.
+
+### Sensor
+
+IoT sensor placed in the 3D world. Can be attached to a building or positioned freely by coordinates.
+
+Key fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `name` | `string` | Display name |
+| `typeId` | `number?` | References `SensorType` |
+| `viewer` | `ViewerNames` | Which viewer context this sensor appears in |
+| `visible` | `boolean` | Visibility toggle |
+| `data` | `string` | Raw sensor data payload |
+| `dataFormat` | `SensorDataFormat` | `Csv` or `Json` |
+| `updateFrequency` | `number` | Polling interval in seconds |
+| `maxThreshold` / `minThreshold` | `number?` | Alert thresholds |
+| `tags` | `string[]` | Grouping tags |
+
+### SensorType
+
+Defines the appearance and value range for a category of sensors.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `name` | `SensorTypes` | Temperature, Humidity, Air Quality, etc. |
+| `icon` | `string` | Lucide icon name |
+| `minValue` / `maxValue` | `number` | Value scale |
+| `minColour` / `midColour` / `maxColour` | `string` | Colour gradient for visualisation |
+
+### DbFile
+
+Files attached to buildings, sites, or users. Supports IFC models, point clouds, images, and generic documents.
+
+Key fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `assetId` | `string` | MinIO object key |
+| `type` | `string` | MIME category |
+| `lazFileKey` / `potreeFolderKey` | `string?` | Point cloud asset references |
+| `pointCloudUploaded` / `pointCloudPotreeConverted` | `boolean?` | Processing status |
+
+### User
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `email` | `string` | Login credential |
+| `roleId` | `number` | References `Role` |
+| `organizationId` | `number?` | Owning organization |
+
+### Organization
+
+Tenant record. Controls branding, map defaults, feature flags, and language support.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `name` | `string` | URL slug / identifier |
+| `appContent` | `ViewerNames[]` | Enabled viewers for this org |
+| `languages` | `Language[]` | Supported locales |
+| `bbox` | `number[]` | Map bounding box `[w, s, e, n]` |
+| `mapStyles` | `unknown[]` | Custom MapLibre style definitions |
+
+### OpenDataPortal
+
+External open data source registered to the platform.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `name` | `string` | Display name |
+| `group` | `DatasetGroup` | Organizational, Municipal, National, Provincial |
+| `dataManagementSystem` | `DataManagementSystem?` | Ckan, Arcgis, Opendatasoft, Socrata, Other |
+| `portalUrl` / `apiUrl` | `string?` | Web and API endpoints |
+
+### Comment
+
+Geospatial annotation pinned to a viewer, building, or 3D position.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `number` | Primary key |
+| `viewer` | `ViewerNames` | Which viewer the comment belongs to |
+| `visible` | `boolean` | Visibility toggle |
+| `replyToId` | `number?` | Thread parent |
+| `buildingId` | `number?` | Optional building attachment |
+
+## Key Enumerations
+
+### ViewerNames
+
+Controls which sections of the app are available to an organization and routes state to the correct viewer.
+
+```ts
+enum ViewerNames {
+  auth, map, bim, pointcloud, buildings,
+  sites, files, land, infrastructure,
+  extensions, settings, users
+}
+```
+
+### Language
+
+```ts
+enum Language { En = 'En', Fr = 'Fr', Es = 'Es' }
+```
+
+### InfrastructureType
+
+```ts
+enum InfrastructureType {
+  LandFeature, Facility, Project, Alignment,
+  Road, Railway, Survey, LandDivision, Condominium, Other
+}
+```
+
+### SensorTypes
+
+```ts
+enum SensorTypes {
+  Temperature, Light, Humidity, Energy_Consumption,
+  Movement, Air_Quality, Atmospheric_Pressure,
+  Irradiance, Flow, State, Noise_Level
+}
+```
+
+### BuildingProjectPhase / SiteProjectPhase
+
+Both share the same phase vocabulary:
+`Inception_Phase → Conceptualization_Phase → Criteria_Definition_Phase → Design_Phase → Coordination_Phase → Implementation_Phase → Handover_Phase → Operations_Phase`
+
+## Key Files
+
+| File | Role |
+|------|------|
+| `src/core/types/dbTypes.ts` | All domain interfaces and enums |
+| `src/core/types/datasetTypes.ts` | Dataset and tile layer types |
+| `src/core/types/global.ts` | Shared utility types (`Position`, etc.) |
+
+## Related
+
+- [IFC Infrastructure Types](../concepts/ifc-infrastructure-types.md) — full IFC enum reference
+- [State Management](./state-management.md) — providers that hold these types in memory
+- [Hooks — Buildings](../hooks/buildings.md)
+- [Hooks — Sites](../hooks/sites.md)
+- [Hooks — Sensors](../hooks/sensors.md)

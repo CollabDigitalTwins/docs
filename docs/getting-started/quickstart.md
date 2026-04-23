@@ -51,7 +51,7 @@ Bottom toolbar includes:
 
 Access from the left sidebar:
 
-- **Language** — Switch between English and French (i18n support)
+- **Language** — Switch between supported locales (currently English, French, and Spanish via i18n)
 - **Support** — Get help or provide feedback
 - **Account** — Manage settings or logout
 

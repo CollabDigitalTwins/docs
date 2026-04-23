@@ -70,6 +70,8 @@ Send this URL to a collaborator and they arrive at the exact same view — no re
 
 Media and annotations added by any user are visible to others in the same Organization as soon as they are uploaded. There is no manual "sync" step. This means a team working on a site visit can upload photos from mobile devices while a remote team member sees them appear on the map in real time.
 
-## Bilingual Support
+## Internationalization Support
 
-The platform interface is available in both **English and French**, meeting the requirements for national reach across Canada. All user-facing labels, tooltips, and navigation elements are translated. The bilingual foundation also makes it straightforward to add further languages as adoption expands.
+The platform supports multiple interface languages using i18n, including **English, French, and Spanish**. User-facing labels, tooltips, and navigation content are localized through translation messages, and additional languages can be added with minimal code changes.
+
+For implementation details, see the [Internationalization architecture page](../architecture/internationalization.md).

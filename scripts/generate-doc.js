@@ -54,7 +54,8 @@ Rules:
 - Use plain, direct language. No filler phrases like "this component provides" or "this hook is responsible for".
 - Code examples should be minimal and realistic — not toy examples.
 - The Related section should link to the most likely related pages based on naming conventions (e.g. a buildings API route links to hooks/buildings.md and data-model/building.md).
-- Output only the raw MDX content. No preamble, no explanation, no markdown fences around the whole output.`;
+- Output only the raw MDX content. No preamble, no explanation, no markdown fences around the whole output.
+- NEVER include secrets, API keys, passwords, tokens, or environment variable values in the output. If the source contains secrets, omit or redact them.`;
 
 const userPrompt = `Here is the template to fill in:
 
