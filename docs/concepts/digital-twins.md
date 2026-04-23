@@ -4,79 +4,59 @@ sidebar_position: 1
 
 # What is a Digital Twin?
 
-An introduction to digital twin technology and how CDT implements it for cities, buildings, and infrastructure.
+A **digital twin** is composed of three parts: a physical product in real space, a virtual product in virtual space, and the connections of data and information that tie the two together.[^grieves] The key element that distinguishes a digital twin from a 3D model or a BIM file is the feedback loop — a live, synchronised data connection between the physical and digital worlds.
 
-## Overview
+[^grieves]: Michael Grieves, "Digital Twin: Manufacturing Excellence through Virtual Factory Replication" (white paper, 2015), 1.
 
-A **digital twin** is a virtual replica of a physical asset or system that stays synchronized with real-world data over time. Think of it as a living model — not a static snapshot, but a connected representation that reflects the current state of something in the real world, whether that is a single building, a neighbourhood, or an entire city.
+That distinction matters because the term is often misapplied. Many so-called "digital twins" are actually digital models or BIM files marketed as connected systems, but without any real-time data link.[^review] A point cloud of a building is not a twin. A static IFC file is not a twin. A digital twin must reflect the current state of its physical counterpart — and update as that state changes.
 
-When you work with a digital twin, you are interacting with structured data that mirrors physical reality: geometry, materials, sensors, spatial relationships, and historical records all in one place. Changes in the real world flow into the model; analysis and decisions made in the model can inform action in the real world.
+[^review]: A. Thelen et al., "A Comprehensive Review of Digital Twin — Part 1: Modeling and Twinning Enabling Technologies," *Structural and Multidisciplinary Optimization* 65 (2022): 354.
 
-:::info What makes a twin "digital"?
-The word "twin" signals the bidirectional relationship. A 3D model sitting on a hard drive is not a twin — it is a file. A digital twin is connected to authoritative data sources and reflects reality as it changes.
-:::
+## Why the Feedback Loop Matters
 
-## Why Digital Twins Matter
+Cities, buildings, and infrastructure are not static. A building's energy consumption changes by the hour. A wildfire perimeter shifts by the minute. A housing market evolves by the month. A digital representation that cannot update with these changes quickly becomes misleading rather than informative.
 
-Cities and the built environment generate enormous amounts of data — permit records, utility networks, sensor readings, satellite imagery, engineering drawings. The problem is not a lack of data; it is that data lives in disconnected silos, owned by different departments, in incompatible formats, accessible only to specialists who know where to look.
+The feedback loop closes this gap: sensors, IoT devices, open data streams, and user-generated content continuously feed new information into the model. Decisions made on the basis of that model can then inform action in the physical world — completing the cycle.
 
-Digital twins address this directly:
+## CDT's Interpretation
 
-- **Better decisions.** When planners, engineers, and community members share the same spatial model, they can evaluate options against real constraints rather than assumptions. A proposed transit corridor can be tested against existing building footprints, flood zones, and ridership data before any ground is broken.
-- **Reduced waste.** Clash detection in a building model catches conflicts between structural, mechanical, and electrical systems before construction. Finding a problem in a model costs a fraction of what it costs to fix in the field.
-- **Collaborative planning.** A shared, web-accessible twin lets architects, city staff, and the public look at the same data simultaneously. Decisions become easier to communicate and easier to scrutinize.
+CDT extends Grieves's definition to the AECO context and to the national scale. The platform integrates:
 
-## How CDT Implements Digital Twins
+- **Physical assets** — buildings, infrastructure, landscapes, and urban systems across Canada
+- **Digital representations** — BIM models, GIS layers, point clouds, open data, and documents
+- **Data connections** — live sensor feeds, IoT streams, open data APIs, and user contributions that synchronise the two
 
-CDT (Collab Digital Twins) is a Canadian non-profit platform purpose-built for the built environment. It takes a specific approach to the digital twin concept, prioritizing openness, scale, and accessibility.
+This means CDT is not a file viewer. It is infrastructure for managing the relationship between a physical environment and its digital representation over time.
 
-### Open Standards — No Vendor Lock-in
+## Scale
 
-CDT stores and exchanges data using established open standards:
+Most digital twin platforms are built for a single building or a single site. CDT operates across scales in a single session:
 
-| Standard | What it covers |
-|----------|----------------|
-| **IFC** (Industry Foundation Classes) | Buildings and infrastructure geometry and metadata |
-| **CityGML** | City-scale 3D models including terrain, roads, and land use |
-| **GeoJSON** | Vector geographic features and attributes |
-| **COPC** (Cloud Optimized Point Cloud) | Large-scale 3D point cloud data from LiDAR and photogrammetry |
+| Scale | Data types |
+|---|---|
+| National | Federal open data (NRCan, Statistics Canada, Open Government) |
+| Provincial | Provincial open data portals |
+| Municipal | City open data, zoning, parcels, infrastructure |
+| Campus / district | Federated BIM models, site surveys |
+| Building | IFC models, point clouds, sensor feeds |
+| Element | IFC property sets, real-time sensor readings |
 
-Your data is not locked into a proprietary format. You can bring existing files into CDT and export them to any tool that reads the same standards.
+Zooming from a national map view into a structural element's property set without switching applications is what CDT is designed to enable.
 
-### Multi-Scale: Buildings to Cities
+## Open vs. Proprietary
 
-CDT operates across spatial scales in a single session. You can start with a city-wide map view, zoom into a neighbourhood, open a building's BIM model, and inspect a structural element — without switching applications. Data from federal open portals, provincial datasets, and site-specific surveys all coexist in the same coordinate system.
+Commercial digital twin platforms — like Digital Twin Britain or Virtual Singapore — are powerful but proprietary: the data, the tools, and the infrastructure are controlled by a vendor. CDT takes the opposite approach. Everything is built on open standards and open-source software, which means:
 
-### Multi-Data: GIS + BIM + Point Clouds + IoT
-
-Most platforms handle one data type well and tolerate others poorly. CDT treats geographic information (GIS), building information models (BIM), point clouds, and live sensor streams as first-class data sources that can be displayed and queried together.
-
-:::info What is BIM?
-BIM (Building Information Modeling) refers to structured 3D models of buildings that include not just geometry but metadata — materials, fire ratings, floor areas, ownership, and more. The IFC format is the open standard for exchanging BIM data.
-:::
-
-### Web-Based: No Desktop Software Required
-
-CDT runs entirely in the browser. There is nothing to install. Anyone with a link and the right permissions can open a project, explore a model, and leave comments — whether they are on a construction site on a tablet or reviewing a proposal from a city council chamber.
-
-### Collaborative: Multi-User with Role-Based Access
-
-Digital twins are only useful if the right people can access them. CDT supports multiple simultaneous users and lets administrators assign roles that control who can view, annotate, upload, or administer each project.
+- Data is stored in open formats (IFC, GeoJSON, LAS) and can leave the platform at any time
+- The codebase is public and forkable
+- No vendor lock-in — if CDT disappears, your data and workflows are still yours
 
 ## Key Components
 
-CDT exposes the digital twin through three specialized viewers, each suited to a different data type:
+CDT exposes the digital twin through three specialized viewers:
 
-- **Map Viewer** — A MapLibre-powered 2D/3D web map for GIS data, city models, and spatial context. This is typically your starting point for any project.
-- **BIM Viewer** — Powered by That Open Company's open-source IFC engine, this viewer lets you open and inspect IFC building models directly in the browser without any plugin.
-- **Point Cloud Viewer** — Built on Potree, this viewer handles large LiDAR and photogrammetry datasets (COPC format) that would be impractical to load in a conventional GIS tool.
+- **Map Viewer** — MapLibre-powered 2D/3D web map for GIS data, city models, and open data layers
+- **BIM Viewer** — open-source IFC engine (That Open Company) for loading and inspecting building models
+- **Point Cloud Viewer** — Potree-based viewer for large LiDAR and photogrammetry datasets
 
-All three viewers draw from the same underlying project data stored in PostgreSQL and object storage (MinIO), so a building you upload in the BIM viewer appears in its correct geographic position in the map viewer automatically.
-
-## Next Steps
-
-Now that you have a shared vocabulary, explore the data types that make up a CDT project:
-
-- [BIM & IFC](./bim-and-ifc) — How building models are structured and what you can do with them in CDT
-- [GIS & Map Data](./gis-and-map-data) — Geographic data formats, coordinate systems, and the open data portals CDT connects to
-- [Architecture Overview](../architecture/overview) — How the platform is built under the hood
+All three viewers draw from the same underlying project data and share a coordinate system, so a building uploaded in the BIM viewer appears in its correct geographic position in the map viewer automatically.
