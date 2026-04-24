@@ -12,6 +12,10 @@ import PluginZones from '@site/src/components/PluginZones';
 
 CDT uses a minimal, VSCode-style plugin architecture. The core idea: **the host knows nothing about what contribution points mean** — it only enforces that plugins declare capabilities before using them. Everything else is data stored in a generic registry and consumed by whichever UI component knows how to render it.
 
+## Startup lifecycle
+
+<PluginLifecycle />
+
 ## How the three zones relate
 
 <PluginZones />
