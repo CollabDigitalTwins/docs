@@ -32,6 +32,8 @@ jobs:
         run: npm ci
 
       - name: Build website
+        env:
+          ALGOLIA_SEARCH_API_KEY: ${{ secrets.ALGOLIA_SEARCH_API_KEY }}
         run: npm run build
 
       - name: Upload artifact
