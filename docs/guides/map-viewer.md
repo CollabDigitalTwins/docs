@@ -50,11 +50,7 @@ Click the ruler icon to measure distances and areas directly on the map. Click t
 
 IFC models can be overlaid on the map as georeferenced 3D objects. The platform synchronizes the MapLibre camera with a Three.js scene, so BIM geometry appears correctly positioned relative to surrounding urban context. Models are loaded as Fragments and optimized with Level of Detail (LOD): distant models render at lower detail to keep interaction fluid.
 
-Supported approaches for loading geometry onto the map:
-
-1. **Fragments 2.0** (preferred) — binary IFC format for fast streaming and LOD
-2. **glTF / GLB** — pre-converted exterior geometry for faster load times
-3. **Three.js layer** — full IFC parsed at runtime via That Open Company libraries
+For loading BIM models onto the map: **Fragments 2.0** — binary IFC format for fast streaming and LOD
 
 ## Share
 

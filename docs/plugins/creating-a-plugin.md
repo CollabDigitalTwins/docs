@@ -4,17 +4,9 @@ description: Step-by-step guide to building and registering a CDT plugin.
 sidebar_position: 3
 ---
 
-import PluginLifecycle from '@site/src/components/PluginLifecycle';
-
 # Creating a Plugin
 
 This guide walks through building a plugin from scratch. By the end you will have a plugin that contributes a tool to the map toolbar.
-
-## What happens at startup
-
-Before writing any code it helps to see the full startup sequence — this is the chain your plugin slots into at steps 6 and 7:
-
-<PluginLifecycle />
 
 ## Prerequisites
 
