@@ -1,8 +1,11 @@
+import 'dotenv/config';
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+
+const algoliaApiKey = process.env.ALGOLIA_SEARCH_API_KEY;
 
 const config: Config = {
   title: 'CDT Docs',
@@ -168,6 +171,26 @@ const config: Config = {
       Collab Digital Twins. All rights reserved.
       Stewarded by a Canadian not-for-profit organization for long-term public benefit. Built with Docusaurus.`,
     },
+    ...(algoliaApiKey
+      ? {
+        algolia: {
+          // The application ID provided by Algolia
+          appId: 'OKIPW773AK',
+          apiKey: algoliaApiKey,
+          indexName: 'CDT Documentation',
+          // Optional: Algolia search parameters
+          searchParameters: {},
+          // Optional: path for search page that enabled by default (`false` to disable it)
+          searchPagePath: 'search',
+          // Optional: whether the insights feature is enabled or not on DocSearch (`false` by default)
+          insights: false,
+          // Contextual search is enabled by default
+          contextualSearch: true,
+          // Optional: enable Ask AI later if needed
+          // askAi: process.env.ALGOLIA_ASK_AI_ASSISTANT_ID,
+        },
+      }
+      : {}),
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
