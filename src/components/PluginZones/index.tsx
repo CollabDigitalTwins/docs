@@ -153,13 +153,13 @@ const HArrow: FC<{ label: string; direction: 'right' | 'left' }> = ({ label, dir
     <div style={{ display: 'flex', alignItems: 'center', width: '100%', gap: 0 }}>
       {direction === 'left' && (
         <svg width="8" height="12" viewBox="0 0 8 12" style={{ flexShrink: 0 }}>
-          <path d="M7 0 L0 6 L7 12 z" fill="var(--stroke-2)" opacity="0.8" />
+          <path d="M7 0 L0 6 L7 12 z" fill="var(--primary)" />
         </svg>
       )}
-      <div style={{ flex: 1, height: 1.5, background: 'var(--stroke-2)', opacity: 0.6 }} />
+      <div style={{ flex: 1, height: 1.5, background: 'var(--primary-line)' }} />
       {direction === 'right' && (
         <svg width="8" height="12" viewBox="0 0 8 12" style={{ flexShrink: 0 }}>
-          <path d="M0 0 L7 6 L0 12 z" fill="var(--stroke-2)" opacity="0.8" />
+          <path d="M0 0 L7 6 L0 12 z" fill="var(--primary)" />
         </svg>
       )}
     </div>
@@ -179,8 +179,8 @@ const FTick: FC = () => (
   </div>
 );
 
-/* ── Mobile downward arrow between zones ────────────────────── */
-const VArrow: FC<{ label: string }> = ({ label }) => (
+/* ── Mobile vertical arrow between zones ────────────────────── */
+const VArrow: FC<{ label: string; direction?: 'down' | 'up' }> = ({ label, direction = 'down' }) => (
   <div style={{
     display: 'flex', flexDirection: 'column', alignItems: 'center',
     padding: '10px 0', gap: 5,
@@ -193,10 +193,17 @@ const VArrow: FC<{ label: string }> = ({ label }) => (
     }}>
       {label}
     </div>
-    <div style={{ width: 1, height: 12, background: 'var(--stroke-2)', opacity: 0.6 }} />
-    <svg width="10" height="7" viewBox="0 0 10 7">
-      <path d="M0 0 L5 6 L10 0 z" fill="var(--stroke-2)" opacity="0.8" />
-    </svg>
+    {direction === 'up' && (
+      <svg width="10" height="7" viewBox="0 0 10 7">
+        <path d="M0 7 L5 1 L10 7 z" fill="var(--primary)" />
+      </svg>
+    )}
+    <div style={{ width: 1, height: 12, background: 'var(--primary-line)' }} />
+    {direction === 'down' && (
+      <svg width="10" height="7" viewBox="0 0 10 7">
+        <path d="M0 0 L5 6 L10 0 z" fill="var(--primary)" />
+      </svg>
+    )}
   </div>
 );
 
@@ -283,7 +290,7 @@ const PluginZones: FC = () => {
               </div>
             </div>
 
-            <VArrow label="reads from" />
+            <VArrow label="reads from" direction="up" />
             <ZoneDivider />
 
             <ZoneHeader label="Core app (unchanged)" kind="map" />
