@@ -11,7 +11,7 @@ Next.js API routes, authentication via NextAuth + CASL, REST endpoints organized
 <BrowserOnly>
   {() => {
     const BackendArchitectureDiagram = require('@site/src/components/BackendArchitectureDiagram').default;
-    return <BackendArchitectureDiagram bare preview />;
+    return <BackendArchitectureDiagram bare />;
   }}
 </BrowserOnly>
 

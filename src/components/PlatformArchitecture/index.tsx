@@ -175,7 +175,7 @@ const PlatformArchitectureDesktop: FC<PlatformArchitectureProps> = ({
 
 const PlatformArchitecture: FC<PlatformArchitectureProps> = (props) => {
   const isMobile = useIsMobile();
-  if (isMobile && !props.preview) {
+  if (isMobile) {
     return <PlatformArchitectureMobile {...props} />;
   }
   return <PlatformArchitectureDesktop {...props} />;

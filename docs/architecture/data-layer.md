@@ -11,7 +11,7 @@ PostgreSQL database managed by Prisma ORM, object storage via MinIO, and real-ti
 <BrowserOnly>
   {() => {
     const DataLayerArchitectureDiagram = require('@site/src/components/DataLayerArchitectureDiagram').default;
-    return <DataLayerArchitectureDiagram bare preview />;
+    return <DataLayerArchitectureDiagram bare />;
   }}
 </BrowserOnly>
 

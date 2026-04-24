@@ -41,6 +41,8 @@ export interface Edge {
   /** Fractional position of the L's horizontal segment along the corridor.
    *  0 = at source edge, 0.5 = middle (default), 1 = at target edge. */
   corner?: number;
+  /** Draw a straight vertical through the gap between these two node ids. */
+  srcXBetween?: [string, string];
 }
 
 export interface PlatformArchitectureProps {
