@@ -124,12 +124,9 @@ const StepBubble: FC<{ step: Step; last: boolean }> = ({ step, last }) => (
         display: 'flex', alignItems: 'center',
         paddingBottom: 32,
       }}>
-        <div style={{ flex: 1, height: 1.5, background: 'var(--stroke)' }} />
+        <div style={{ flex: 1, height: 1.5, background: 'var(--primary-line)' }} />
         <svg width="8" height="12" viewBox="0 0 8 12" style={{ flexShrink: 0 }}>
-          <path d="M0 0 L7 6 L0 12 z"
-            fill="var(--stroke-2)"
-            style={{ opacity: 0.7 }}
-          />
+          <path d="M0 0 L7 6 L0 12 z" fill="var(--primary)" />
         </svg>
       </div>
     )}
