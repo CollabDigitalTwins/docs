@@ -11,7 +11,7 @@ Next.js 15, React 19, three specialized viewers, state management via Context, a
 <BrowserOnly>
   {() => {
     const FrontendArchitectureDiagram = require('@site/src/components/FrontendArchitectureDiagram').default;
-    return <FrontendArchitectureDiagram bare preview />;
+    return <FrontendArchitectureDiagram bare />;
   }}
 </BrowserOnly>
 

@@ -5,12 +5,22 @@ sidebar_position: 2
 ---
 
 import PluginArchitecture from '@site/src/components/PluginArchitecture';
+import PluginLifecycle from '@site/src/components/PluginLifecycle';
+import PluginZones from '@site/src/components/PluginZones';
 
 # Plugin System
 
 CDT uses a minimal, VSCode-style plugin architecture. The core idea: **the host knows nothing about what contribution points mean** — it only enforces that plugins declare capabilities before using them. Everything else is data stored in a generic registry and consumed by whichever UI component knows how to render it.
 
-<PluginArchitecture />
+## How the three zones relate
+
+<PluginZones />
+
+The flow is one-way: your plugin **writes** contributions into the registry through the framework; core UI components **read** from that registry at render time. Neither side knows about the other — the registry is the only shared state.
+
+## What the framework is made of
+
+<PluginArchitecture bare />
 
 ## Four moving parts
 

@@ -142,7 +142,7 @@ export const DEFAULT_EDGES: Edge[] = [
   { from: 'gateway', to: 'core_api', kind: 'core' },
   { from: 'gateway', to: 'auth_svc', kind: 'core' },
   { from: 'gateway', to: 'geo_svc', kind: 'map', corner: 0.25 },
-  { from: 'gateway', to: 'files_svc', kind: 'unstruct' },
+  { from: 'gateway', to: 'files_svc', kind: 'unstruct', srcXBetween: ['auth_svc', 'geo_svc'] },
 
   // Backend → Data storage (one-to-one)
   { from: 'core_api', to: 'db', kind: 'core' },

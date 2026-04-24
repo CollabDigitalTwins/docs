@@ -129,8 +129,10 @@ export function computePaths(
   });
 
   /* 2b. Snap-to-straight: align both anchors to a shared x inside the
-     overlap so the edge renders as a single vertical line with no bend. */
+     overlap so the edge renders as a single vertical line with no bend.
+     Skip for edges with srcXBetween — they route themselves. */
   infos.forEach(info => {
+    if (info.e.srcXBetween) return;
     const { ar, br } = info;
     const aPad = Math.min(24, ar.width * 0.14);
     const bPad = Math.min(24, br.width * 0.14);
@@ -156,14 +158,49 @@ export function computePaths(
   });
   const localRects = allRects.map(({ id, r }) => ({ id, ...toLocal(r) }));
 
+  /* Helper: does a vertical line at x, spanning [yTop, yBot], clip any
+     unrelated node rect (with padding)? Returns the minimum right-edge
+     x we'd need to clear it, or null if unobstructed. */
+  const verticalClearance = (
+    x: number, yTop: number, yBot: number,
+    excludeIds: string[],
+  ): number | null => {
+    let nudge: number | null = null;
+    for (const r of localRects) {
+      if (excludeIds.includes(r.id)) continue;
+      if (x < r.left - OBSTRUCTION_PAD || x > r.right + OBSTRUCTION_PAD) continue;
+      if (yTop > r.bottom + OBSTRUCTION_PAD || yBot < r.top - OBSTRUCTION_PAD) continue;
+      const candidate = r.right + OBSTRUCTION_PAD;
+      if (nudge === null || candidate > nudge) nudge = candidate;
+    }
+    return nudge;
+  };
+
   const out: RoutedEdge[] = [];
   infos.forEach(info => {
-    const sx = anchors[`${info.idx}_out`] - container.left;
-    const ex = anchors[`${info.idx}_in`] - container.left;
+    let sx = anchors[`${info.idx}_out`] - container.left;
+    let ex = anchors[`${info.idx}_in`] - container.left;
     const sy = (info.goingDown ? info.ar.bottom : info.ar.top) - container.top;
     const eyRaw = (info.goingDown ? info.br.top : info.br.bottom) - container.top;
     const dir = info.goingDown ? 1 : -1;
     const ey = eyRaw - dir * ARROW_INSET;
+
+    /* srcXBetween: draw a straight vertical through the midpoint of the gap
+       between two named nodes, bypassing all fan-out and snap logic. */
+    if (info.e.srcXBetween) {
+      const [idA, idB] = info.e.srcXBetween;
+      const rA = nodeRefs[idA]?.getBoundingClientRect();
+      const rB = nodeRefs[idB]?.getBoundingClientRect();
+      if (rA && rB) {
+        const absX = ((rA.right + rB.left) / 2) - container.left;
+        out.push({
+          ...info.e,
+          d: `M ${absX} ${sy} L ${absX} ${ey}`,
+          id: `${info.e.from}__${info.e.to}__${info.idx}`,
+        });
+        return;
+      }
+    }
 
     /* Short-circuit: truly vertical → single straight line. */
     if (Math.abs(sx - ex) < STRAIGHT_TOL) {
