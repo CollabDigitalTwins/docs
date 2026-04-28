@@ -1,7 +1,7 @@
 ---
 title: CDT Hosted
 description: Managed SaaS and assisted deployment options for CDT — contact the team to learn more.
-sidebar_position: 7
+sidebar_position: 3
 ---
 
 # CDT Hosted

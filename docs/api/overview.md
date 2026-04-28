@@ -40,19 +40,17 @@ See [Roles & Permissions](../authorization/authorization_roles_permissions.md) f
 - IDs in URL segments are strings; the route handler parses them to the appropriate type.
 - SWR keys use arrays (e.g., `["buildings"]`, `["building", id]`) — never URL strings.
 
-## Routes
+## In this section
 
-| Domain | Doc |
-|--------|-----|
-| Buildings | [buildings.md](./buildings.md) |
-| Sites | [sites.md](./sites.md) |
-| Files | [files.md](./files.md) |
-| Sensors & Sensor Types | [sensors.md](./sensors.md) |
-| Infrastructure | [infrastructure.md](./infrastructure.md) |
-| Organizations | [organizations.md](./organizations.md) |
-| Users | [users.md](./users.md) |
-| Comments | [comments.md](./comments.md) |
-| Open Data Portals | [open-data-portals.md](./open-data-portals.md) |
+- [/api/buildings](./buildings.md)
+- [/api/comments](./comments.md)
+- [/api/files](./files.md)
+- [/api/infrastructure](./infrastructure.md)
+- [/api/open-data-portals](./open-data-portals.md)
+- [/api/organizations](./organizations.md)
+- [/api/sensors](./sensors.md)
+- [/api/sites](./sites.md)
+- [/api/users](./users.md)
 
 ## Related
 

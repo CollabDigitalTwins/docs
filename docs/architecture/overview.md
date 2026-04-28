@@ -126,8 +126,15 @@ Binary assets — IFC building models, Potree point cloud tiles, PDFs, images �
 | **NRCan elevation services** | Canadian elevation and hillshade raster tiles, proxied via rewrites in `next.config.ts` |
 | **Google OAuth** | Optional social sign-in via NextAuth (`AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET`) |
 
-## Next Steps
+## In this section
 
-- [Frontend deep dive](../architecture/frontend) — component structure, viewer engines, state patterns
-- [Backend & API reference](../architecture/backend-and-api) — route conventions, auth flow, permission model
-- [Data layer](../architecture/data-layer) — schema design, migrations, file storage, Martin configuration
+- [Frontend Architecture](./frontend.md) — component structure, viewer engines, state patterns
+- [Backend & API](./backend-and-api.md) — route conventions, auth flow, permission model
+- [Data Layer](./data-layer.md) — schema design, migrations, file storage, Martin configuration
+- [Internationalization](./internationalization.md) — locale routing and translations
+- [RESTful API Design](./api-design.md) — REST principles and URI conventions
+- [State Management](./state-management.md) — context providers and reducers
+- [Middleware](./middleware.md) — request pipeline and auth gating
+- [Data Model](./data-model.md) — Prisma schema and entity relationships
+- [Map Layers](./map-layers.md) — MapLibre layer composition
+- [Map Click Manager](./map-click-manager.md) — click dispatch across map layers

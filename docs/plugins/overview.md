@@ -19,7 +19,7 @@ The plugin framework lets you add tools, panels, and data sources to the CDT app
 Plugins are bundled with the app at build time by listing them in `installed.ts`. Runtime dynamic loading (adding plugins without rebuilding) is not supported in this version.
 :::
 
-## Contents
+## In this section
 
 1. [Create your first plugin](./create-your-first-plugin.md) — five-step walkthrough
 2. [PluginContext API](./plugin-context-api.md) — `pluginId`, `config`, `register`

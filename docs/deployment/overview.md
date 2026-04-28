@@ -8,6 +8,12 @@ sidebar_position: 1
 
 CDT is distributed as a containerized stack. All services start in the correct order via a single `docker-compose.yml` file — no manual orchestration required.
 
+## Prerequisites
+
+These instructions assume you already have a host environment ready to run containers — either a Linux/Windows server you control, or a cloud platform such as Azure, AWS, GCP, or DigitalOcean with a virtual machine provisioned and accessible over SSH. CDT does not prescribe a specific cloud provider; any host that can run Docker Engine 24.0+ (or Podman v5.7.1) and Docker Compose will work.
+
+If you are evaluating providers or sizing a VM, the stack runs comfortably on a 4 vCPU / 8 GB RAM instance with at least 50 GB of persistent disk for typical pilot deployments. Production workloads with large point cloud or BIM datasets require additional storage proportional to your asset volume.
+
 ## Stack Components
 
 | Layer | Service | Purpose |
@@ -64,13 +70,20 @@ docker compose run --rm migrate
 | Martin (tiles) | 6080 | 3000 |
 | CDT Application | 6012 | 3000 |
 
-## Start Here
+## In this section
 
-- [PostgreSQL](./postgresql.md)
-- [MinIO](./minio.md)
-- [Martin / PostGIS](./martin-postgis.md)
-- [Node / Next.js Application](./node-application.md)
-- [Open Data Service](./open-data-service.md)
+- [Services](./services.md) — PostgreSQL, MinIO, Martin/PostGIS, Node/Next.js, Open Data Service
+- [CDT Hosted](./cdt-hosted.md) — managed SaaS option
+
+## Service List
+
+All services are documented on a single [Services](./services.md) page. Jump directly to a section:
+
+- [PostgreSQL](./services.md#postgresql)
+- [MinIO](./services.md#minio)
+- [Martin / PostGIS](./services.md#martin--postgis)
+- [Node / Next.js Application](./services.md#node--nextjs-application)
+- [Open Data Service](./services.md#open-data-service)
 
 ## Related
 
