@@ -70,6 +70,11 @@ docker compose run --rm migrate
 | Martin (tiles) | 6080 | 3000 |
 | CDT Application | 6012 | 3000 |
 
+## In this section
+
+- [Services](./services.md) — PostgreSQL, MinIO, Martin/PostGIS, Node/Next.js, Open Data Service
+- [CDT Hosted](./cdt-hosted.md) — managed SaaS option
+
 ## Service List
 
 All services are documented on a single [Services](./services.md) page. Jump directly to a section:
