@@ -330,6 +330,44 @@ pre {
   border: 1px solid var(--hp-outline-variant) !important;
 }
 
+/* ── Audience routing grid (Introduction page) ───────── */
+.audienceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.audienceGrid > p {
+  border: 1px solid var(--hp-outline-variant);
+  border-radius: 12px;
+  padding: 1.25rem 1.25rem 1.1rem;
+  background: var(--hp-surface);
+  margin: 0;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.audienceGrid > p:hover {
+  border-color: var(--hp-primary);
+  transform: translateY(-2px);
+}
+
+.audienceGrid > p > strong:first-child a,
+.audienceGrid > p > a:first-child {
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--hp-primary);
+}
+
+.audienceGrid > p > em {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 0.9rem;
+  color: var(--hp-on-surface-variant);
+}
+
 /* ── Scrollbar (optional, webkit only) ───────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

@@ -43,8 +43,8 @@ This component is not gated by CASL permissions.
 
 ## Related
 
-- [Geocoder](/docs/components/viewers/map/Geocoder) — map search tool
-- [BIMSearchTool](/docs/components/viewers/bim/BIMSearchTool) — BIM search tool
-- [PCSearchTool](/docs/components/viewers/pointcloud/PCSearchTool) — point cloud search tool
-- [Sidebar](/docs/components/ui/Sidebar) — sidebar context provider and hooks
-- [MenusContext](/docs/store/MenusContext) — viewer state management
+- [Geocoder](/docs/components/top-navigation-bar) — map search tool
+- [BIMSearchTool](/docs/components/top-navigation-bar) — BIM search tool
+- [PCSearchTool](/docs/components/top-navigation-bar) — point cloud search tool
+- [Sidebar](/docs/components/app-sidebar) — sidebar context provider and hooks
+- [MenusContext](/docs/architecture/state-management) — viewer state management

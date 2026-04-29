@@ -213,5 +213,5 @@ After deletion, the hook revalidates both the sites list and buildings list (sin
 
 ## Related
 
-- [Data Model: Site](/docs/data-model/site)
+- [Data Model: Site](/docs/architecture/data-model#site)
 - [Hooks: Buildings](/docs/hooks/buildings)

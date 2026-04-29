@@ -1,0 +1,151 @@
+---
+sidebar_position: 4
+title: Troubleshooting
+description: Known failure modes for installation, deployment, and day-to-day use — with diagnostic steps and fixes.
+---
+
+# Troubleshooting
+
+This page collects the failures we see most often, grouped by where they happen. If your problem is not here, search [open issues](https://github.com/collabdt/core/issues) before filing a new one.
+
+## Installation and local development
+
+### `EADDRINUSE: address already in use :::3000`
+
+Another process is already using port 3000.
+
+```bash
+# Find the process
+lsof -i :3000           # macOS / Linux
+netstat -ano | find "3000"  # Windows
+
+# Then either stop it, or run CDT on a different port:
+yarn dev -p 3001
+```
+
+### `Error: Cannot find module 'next'` after a fresh install
+
+The dependency install was interrupted or partially failed.
+
+```bash
+rm -rf node_modules yarn.lock   # or package-lock.json
+yarn install
+```
+
+### `unsupported engine` warnings during install
+
+Your Node.js version is older than 18. Upgrade with [`nvm`](https://github.com/nvm-sh/nvm) or download a newer LTS from [nodejs.org](https://nodejs.org).
+
+### Sign-in returns a 500 with `AUTH_SECRET` errors
+
+`AUTH_SECRET` is missing, empty, or too short.
+
+```bash
+# Generate a strong secret
+openssl rand -base64 32
+```
+
+Paste the output as `AUTH_SECRET` in `.env`, then restart the dev server.
+
+### The map renders blank
+
+Most often the geocoder or tile server URL is missing. Check that `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` and `NEXT_PUBLIC_MARTIN_SERVER_URL` are set in `.env`. The geocoder is optional for local dev — set the key to any non-empty string to silence the warning.
+
+## Database
+
+### `Prisma migrate` fails with `connect ECONNREFUSED`
+
+PostgreSQL is not running, or `DATABASE_URL` does not point at it.
+
+```bash
+docker compose ps                 # confirm postgres is healthy
+docker compose logs postgres      # check for startup errors
+echo $DATABASE_URL                # confirm host, port, db match
+```
+
+Inside Docker Compose, the host is `postgres`, not `localhost`. From the host machine, it is `localhost:5432`.
+
+### `relation "Building" does not exist`
+
+Migrations have not been applied to this database.
+
+```bash
+docker compose run --rm migrate
+# or, in local dev:
+npx prisma migrate dev
+```
+
+### "Cannot connect after restoring a backup"
+
+If you restored a `pg_dump` from a different version, the schema may be out of sync. Either run pending migrations with `npx prisma migrate deploy`, or reset to a clean database and reapply.
+
+## Object storage (MinIO)
+
+### `AccessDenied` when uploading or downloading files
+
+The application's `S3_ACCESS_KEY` and `S3_ACCESS_SECRET` do not match a MinIO user with bucket access. Check the MinIO console at `http://<host>:9001` and confirm the access key exists and has read/write policy on the relevant buckets.
+
+### Files upload but cannot be downloaded by the browser
+
+`NEXT_PUBLIC_MINIO_BUCKET_URL` does not match how the browser actually reaches MinIO. In production this should be a public URL behind TLS — not an internal Docker hostname.
+
+### "Mixed content" warnings when CDT is on HTTPS but MinIO is HTTP
+
+Browsers block insecure subresource requests from secure pages. Put MinIO behind a reverse proxy with TLS and set `MINIO_USE_SSL=true`.
+
+## Authentication
+
+### Google sign-in returns "redirect_uri_mismatch"
+
+The redirect URI registered in your Google Cloud Console must exactly match `${AUTH_URL}/api/auth/callback/google`. Update either side until they match.
+
+### Sessions expire immediately after sign-in
+
+`AUTH_TRUST_HOST` is unset behind a reverse proxy, so NextAuth refuses to issue cookies. Set `AUTH_TRUST_HOST=true` and confirm `AUTH_URL` matches the public hostname.
+
+### Email verification or invitation emails never arrive
+
+Check the SMTP variables (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`). The Next.js logs show the result of each send — look for "EAUTH" or "EENVELOPE" errors. If you use Resend, the port should be `465` and the username should be `resend`.
+
+## Viewers
+
+### IFC files take minutes to load
+
+The first load of any IFC runs the conversion to Fragments format on the server, which is CPU-bound. Subsequent loads stream the cached `.frag` file and are much faster. If first loads are unacceptably slow, increase the CPU allocation for the application container.
+
+### "WebGL context lost" in the BIM or point cloud viewer
+
+Most often a memory pressure issue with very large models on a low-end GPU. Try:
+
+- Closing other tabs that hold WebGL contexts
+- Loading a smaller subset of the model (toggle visibility per file)
+- Running on a machine with a discrete GPU
+
+### Point cloud appears as a single dot or does not render
+
+The file's coordinate reference system is unknown or wildly different from the map view. Use the file's metadata pane to verify the CRS, and confirm the point cloud has the expected XYZ extent.
+
+## Deployment
+
+### `502 Bad Gateway` from the reverse proxy
+
+The application container is not responding on its expected port. Common causes:
+
+- `next start` has not finished booting yet — check container logs
+- The proxy is forwarding to the wrong port (host port `6012`, container port `3000`)
+- The container exited — `docker compose ps` will show `Exited (1)`
+
+### Static assets return 404 in production
+
+`AUTH_URL` and `NEXT_PUBLIC_MINIO_BUCKET_URL` must match the public hostnames the browser uses. A mismatch causes the browser to request assets from URLs the proxy does not route.
+
+### Health checks fail intermittently
+
+The default health check is `pg_isready` against PostgreSQL, with a 10-second interval and 5-second timeout. On underpowered hosts, increase the timeout in `docker-compose.yml` or move PostgreSQL to a dedicated instance.
+
+## Where to get more help
+
+- Search [open and closed GitHub issues](https://github.com/collabdt/core/issues?q=is%3Aissue) — many problems have already been answered.
+- Open a [new issue](https://github.com/collabdt/core/issues/new) with the symptom, the relevant log output, and your environment (OS, Node version, Docker version, deployment type).
+- Reach the team via the [contact form](https://collabdt.org/home#contact).
+- Security issues — do **not** file a public issue. Email the maintainers instead.

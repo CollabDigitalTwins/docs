@@ -161,5 +161,5 @@ On successful creation, revalidates the `["sensorTypes"]` list cache key.
 
 ## Related
 
-- [Data Model: SensorType](/docs/data-model/sensor-type)
-- [Hooks: Provider](/docs/hooks/provider)
+- [Data Model: SensorType](/docs/architecture/data-model#sensortype)
+- [Hooks: Provider](/docs/hooks/overview)

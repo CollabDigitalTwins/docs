@@ -66,10 +66,10 @@ Menu items can be restricted by role using the `accessibleTo` property. Items ar
 
 ## Related
 
-- [Sidebar UI Components](/docs/components/ui/sidebar)
-- [LanguageSwitch](/docs/components/language-switch)
-- [Logo](/docs/components/logo)
-- [useMenusContext](/docs/hooks/menus-context)
+- [Sidebar UI Components](/docs/components/app-sidebar)
+- [LanguageSwitch](/docs/components/overview)
+- [Logo](/docs/components/overview)
+- [useMenusContext](/docs/hooks/ui)
 - [useUserRole](/docs/hooks/users)
-- [Organization Data Model](/docs/data-model/organization)
-- [ViewerNames](/docs/types/viewer-names)
+- [Organization Data Model](/docs/architecture/data-model#organization)
+- [ViewerNames](/docs/components/overview)

@@ -129,10 +129,6 @@ Partial update — only fields present in the body are changed.
 
 The updated `Building` object.
 
-### Notes
-
-<!-- TODO: Confirm whether a building can be moved to a different organization via this route. -->
-
 ---
 
 ## Related

@@ -71,7 +71,7 @@ Editing controls are gated by CASL. The `FieldRenderer` disables inputs when the
 
 ## Related
 
-- [AddBuilding](/docs/components/AddBuilding) — Dialog for initiating new building creation
-- [FieldRenderer](/docs/components/FieldRenderer) — Renders individual form fields based on type
+- [AddBuilding](/docs/components/building-details) — Dialog for initiating new building creation
+- [FieldRenderer](/docs/components/overview) — Renders individual form fields based on type
 - [useBuilding / useCreateBuilding](/docs/hooks/buildings) — Data fetching and mutation hooks
-- [Building data model](/docs/data-model/building) — Prisma schema and type definitions
+- [Building data model](/docs/architecture/data-model#building) — Prisma schema and type definitions

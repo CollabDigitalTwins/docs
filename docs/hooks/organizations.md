@@ -144,6 +144,6 @@ return (
 
 ## Related
 
-- [Data Model: Organization](/docs/data-model/organization)
-- [Data Model: Role](/docs/data-model/role)
-- [Hooks Provider](/docs/hooks/provider)
+- [Data Model: Organization](/docs/architecture/data-model#organization)
+- [Data Model: Role](/docs/architecture/data-model#organization)
+- [Hooks Provider](/docs/hooks/overview)

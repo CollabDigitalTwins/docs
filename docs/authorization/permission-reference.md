@@ -1,0 +1,119 @@
+---
+title: Permission Reference
+description: Complete reference of permissions per built-in role, plus the full action and subject vocabulary used by CDT.
+sidebar_position: 3
+---
+
+# Permission Reference
+
+This page is the source of truth for what each built-in role can do, and the complete vocabulary of `(action, subject)` pairs used in the CDT permission system.
+
+## Default role permissions
+
+Each cell shows whether the role grants the action on the subject. `–` means no permission.
+
+### Read access
+
+| Subject | Viewer | Contributor | Manager | Admin |
+|---------|:------:|:-----------:|:-------:|:-----:|
+| Building | read | read | read | read |
+| Site | read | read | read | read |
+| Infrastructure | read | read | read | read |
+| File | read | read | read | read |
+| Sensor | read | read | read | read |
+| SensorType | read | read | read | read |
+| Comment | read | read | read | read |
+| User | read | read | read | read |
+| Role | – | – | read | read |
+| Organization | read | read | read | read |
+| OpenDataPortal | read | read | read | read |
+
+### Create access
+
+| Subject | Viewer | Contributor | Manager | Admin |
+|---------|:------:|:-----------:|:-------:|:-----:|
+| Building | – | – | create | create |
+| Site | – | – | create | create |
+| Infrastructure | – | – | create | create |
+| File | – | create | create | create |
+| Sensor | – | – | create | create |
+| SensorType | – | – | – | create |
+| Comment | – | create | create | create |
+| User (invite) | – | – | create | create |
+| Role | – | – | – | create |
+| OpenDataPortal | – | – | – | create |
+
+### Update access
+
+| Subject | Viewer | Contributor | Manager | Admin |
+|---------|:------:|:-----------:|:-------:|:-----:|
+| Building | – | – | update | update |
+| Site | – | – | update | update |
+| Infrastructure | – | – | update | update |
+| File | – | update (own) | update | update |
+| Sensor | – | – | update | update |
+| Comment | – | update (own) | update | update |
+| User | – | – | update | update |
+| Role | – | – | – | update |
+| Organization | – | – | – | update |
+
+### Delete access
+
+| Subject | Viewer | Contributor | Manager | Admin |
+|---------|:------:|:-----------:|:-------:|:-----:|
+| Building | – | – | – | delete |
+| Site | – | – | – | delete |
+| Infrastructure | – | – | – | delete |
+| File | – | delete (own) | delete | delete |
+| Sensor | – | – | – | delete |
+| Comment | – | delete (own) | delete | delete |
+| User | – | – | – | delete |
+| Role | – | – | – | delete |
+
+> "(own)" means the user can act only on records they themselves created.
+
+## Action vocabulary
+
+CDT uses a fixed set of action verbs:
+
+| Action | Meaning |
+|--------|---------|
+| `read` | Retrieve a record or list records. |
+| `create` | Create a new record. |
+| `update` | Modify an existing record. |
+| `delete` | Remove a record. |
+| `manage` | All of the above. Useful as a shorthand in custom roles. |
+
+## Subject vocabulary
+
+Subjects map directly to Prisma models — see [Architecture → Data Model](../architecture/data-model.md) for the full schema.
+
+| Subject | Description |
+|---------|-------------|
+| `Building` | A managed asset on the map. |
+| `Site` | A geographic grouping of buildings. |
+| `Infrastructure` | A non-building asset (utility line, road, etc.). |
+| `File` | An uploaded binary plus metadata. |
+| `Sensor` | A configured IoT sensor instance. |
+| `SensorType` | A reusable sensor category (temperature, occupancy, etc.). |
+| `Comment` | A threaded annotation on any other entity. |
+| `User` | A member of the organization. |
+| `Role` | A permission set scoped to the organization. |
+| `Organization` | The tenant itself. |
+| `OpenDataPortal` | A registered CKAN or Opendatasoft portal endpoint. |
+
+## Cross-resource dependencies
+
+Some actions implicitly require permissions on a parent resource. The most common:
+
+- **Uploading a File** requires `read` on the parent Building or Site.
+- **Adding a Comment** requires `read` on the entity being commented on.
+- **Inviting a User** requires `create: User` and at least `read: Role` to assign them a role.
+
+If an admin reports unexpected `403` errors, these dependencies are the most likely cause.
+
+## Related
+
+- [Authorization Overview](./overview.md)
+- [Managing roles and permissions](./managing-roles.md)
+- [Roles, Permissions & CASL (engine internals)](./authorization_roles_permissions.md)

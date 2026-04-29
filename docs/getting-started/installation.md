@@ -1,63 +1,114 @@
+---
+sidebar_position: 1
+title: Installation
+description: Set up a local CDT development environment on macOS, Linux, or Windows.
+---
+
 # Installation
 
-This guide will help you set up your local development environment for the Collab Digital Twins Platform.
+This guide walks through setting up a local CDT development environment. Plan for 15–25 minutes on a fresh machine.
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
-
-- **Node.js** (v18 or higher) — [Download here](https://nodejs.org/)
-- **Yarn** or **npm** — Package manager for dependencies
-- **Git** (optional, required for contributing) — [Download here](https://git-scm.com/)
+| Tool | Version | Purpose |
+|------|---------|---------|
+| **Node.js** | 18.0 or newer (LTS recommended) | Runs the Next.js application |
+| **Yarn** or **npm** | latest | Package manager |
+| **Git** | any recent version | Cloning the repository |
+| **Docker** *(optional)* | 24.0 or newer | Runs PostgreSQL, MinIO, and Martin locally |
 
 Verify your installations:
+
 ```bash
 node --version
 yarn --version  # or: npm --version
 git --version
 ```
 
-## Clone the Repository
+If `node --version` reports below 18, upgrade before continuing — older versions are not supported and will fail at install time.
+
+## 1. Clone the repository
+
 ```bash
 git clone https://github.com/collabdt/core.git
 cd core
 ```
 
-## Install Dependencies
+## 2. Install dependencies
 
-Using Yarn (recommended):
+Yarn is recommended because the lockfile is `yarn.lock`:
+
 ```bash
 yarn install
 ```
 
-Or using npm:
+Or with npm:
+
 ```bash
 npm install
 ```
 
-## Environment Setup
+## 3. Configure environment variables
 
-Create a `.env` file in the project root:
+Copy the example file:
+
 ```bash
 cp .env.example .env
 ```
 
-Update the environment variables as needed for your local setup.
+Open `.env` and fill in values. For a minimal local setup, the **required** variables are:
 
-## Start the Development Server
+- `DATABASE_URL` — PostgreSQL connection string
+- `AUTH_SECRET` — any random 32+ character string
+- `AUTH_URL` — `http://localhost:3000`
+- `S3_ACCESS_KEY` and `S3_ACCESS_SECRET` — MinIO credentials
+- `MINIO_ENDPOINT` — `localhost` for local MinIO
+
+All other keys are **optional** and only needed if you want to test the matching feature (Google OAuth, Geocode Earth, reCAPTCHA, etc.). The full list with descriptions is in the [Environment variables reference](./environment-variables.md).
+
+## 4. Start the database services
+
+The simplest path is to run PostgreSQL and MinIO locally with Docker Compose:
+
+```bash
+docker compose up -d postgres minio
+```
+
+Apply Prisma migrations once the database is ready:
+
+```bash
+npx prisma migrate dev
+```
+
+If you have an existing PostgreSQL or MinIO instance you want to use instead, point `DATABASE_URL` and the MinIO variables at it and skip the Docker step.
+
+## 5. Start the development server
+
 ```bash
 yarn dev
 ```
 
 Or with npm:
+
 ```bash
 npm run dev
 ```
 
-The application should now be running at `http://localhost:3000` (or your configured port).
+The application is available at `http://localhost:3000`.
 
-## Verify Installation
+## Verify the installation
 
-Open your browser and navigate to `http://localhost:3000`. You should see the CDT interface.
+Open `http://localhost:3000`. You should see the CDT sign-in screen. Create an account, then complete the [Quickstart](./quickstart.md) to confirm the full stack works end-to-end.
 
-**Troubleshooting:** If you encounter issues, check our [GitHub Issues](https://github.com/collabdt/core/issues) or reach out via our [contact form](https://collabdt.org/home#contact).
+## Troubleshooting common issues
+
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| `EADDRINUSE: address already in use :::3000` | Another process is on port 3000 | Stop the other process or run `yarn dev -p 3001` |
+| `Error: Cannot find module 'next'` after install | Install was incomplete | Delete `node_modules` and `yarn.lock` (or `package-lock.json`), then reinstall |
+| `Prisma migrate` fails with `connect ECONNREFUSED` | PostgreSQL is not running or `DATABASE_URL` is wrong | Confirm `docker compose ps` shows postgres healthy and that the URL host/port match |
+| `unsupported engine` warning during install | Node.js version is older than 18 | Upgrade Node.js — use `nvm` or download from [nodejs.org](https://nodejs.org) |
+| Sign-in returns 500 with `AUTH_SECRET` errors | `AUTH_SECRET` is missing or too short | Set it to at least 32 random characters in `.env` |
+| Map renders blank | `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` or Martin URL is missing | Set the values in `.env` or accept reduced functionality for local dev |
+
+If your issue is not listed here, see the broader [Troubleshooting page](./troubleshooting.md) or open an issue on [GitHub](https://github.com/collabdt/core/issues).

@@ -1,108 +1,166 @@
 ---
 sidebar_position: 2
+title: BIM Viewer
+description: Open IFC models, navigate them in 3D, inspect properties, validate against IDS, and coordinate with BCF topics.
 ---
 
 # BIM Viewer
 
-The BIM viewer lets you load, navigate, and interrogate IFC models independently of their map context. It is built on [That Open Engine](https://thatopen.com/) — an IFC engine based on Three.js that gives you full access to BIM geometry, metadata, and property sets while adhering to openBIM standards.
+The BIM viewer loads, navigates, and interrogates IFC models independently of their map context. It is built on [That Open Engine](https://thatopen.com/) — an IFC engine on top of Three.js that gives full access to BIM geometry, metadata, and property sets while honouring openBIM standards.
 
-## Loading Models
+## Goal
 
-Drag and drop an IFC file onto the viewer, or use the **File** tab in the left panel to upload from your device. The platform intercepts the raw IFC, converts it to the Fragments 2.0 binary format (`.frag`) on the server side, and streams the optimized file to your browser — significantly reducing load time compared to parsing IFC directly on the client.
+Load a BIM model, navigate it in 3D, read its property sets, and use the openBIM tools (IDS validation, BCF topics) for coordination work.
 
-Additional supported formats: **glTF / GLB, FBX, OBJ, Collada, DXF, LAZ / LAS / COPC** (point clouds).
+## Prerequisites
 
-## Toolbar
+- A CDT account with at least Contributor permissions (to upload).
+- An IFC file. Public test files are at the [buildingSMART sample repository](https://github.com/buildingSMART/Sample-Test-Files).
 
-The top toolbar gives quick access to the most common actions:
+## Load a model
+
+**Goal:** get an IFC into the viewer.
+
+1. Open the BIM Viewer from the left sidebar.
+2. Drag the IFC file onto the viewer, or use the **File** tab → **Upload** button.
+3. The platform converts the file to **Fragments 2.0** (`.frag`) on the server. The progress bar tracks parse → conversion → load.
+4. Once finished, the model appears in the scene and is added to the **File** tab list.
+
+The conversion happens once. Subsequent loads stream the cached `.frag` and are much faster.
+
+**Supported formats** beyond IFC: glTF / GLB, FBX, OBJ, Collada, DXF, LAZ / LAS / COPC.
+
+**Result:** the model is visible in the viewport and selectable.
+
+## Navigate in 3D
+
+| Control | What it does |
+|---------|--------------|
+| **Left-click + drag** | Orbit around the model |
+| **Right-click + drag** | Pan |
+| **Scroll wheel** | Zoom |
+| **Double-click** | Set the orbit pivot point |
+| **Fit Extents** (toolbar) | Frame the full model in the viewport |
+
+**Result:** smooth navigation in any direction, with predictable pivot behaviour.
+
+## Inspect element properties
+
+**Goal:** read the IFC schema data for a specific element.
+
+1. Click any element in the 3D scene.
+2. The right panel populates with:
+   - Entity attributes and geometry
+   - Property sets (Psets)
+   - Quantity sets (Qsets)
+   - Material assignments
+   - Associated `IfcTask` entries
+   - Spatial container relationships
+3. Use the search field to filter large property trees.
+4. Hold **Shift** and click multiple elements to compare attributes side-by-side.
+5. Click **Export** to save the current selection's properties as JSON or CSV.
+
+**Result:** the property panel shows the full IFC data for the selected element(s).
+
+## Cut a section
+
+**Goal:** see inside the model with a clipping plane.
+
+1. Click **Clipping plane** in the toolbar.
+2. Click any face on the model — a section plane appears aligned with that face.
+3. Drag the plane handle to adjust depth.
+4. Click the toolbar icon again (or press **Esc**) to remove it.
+
+**Result:** the model is sliced at your chosen plane and the interior is visible.
+
+## Browse the spatial hierarchy
+
+**Goal:** navigate to a specific element via the IFC tree rather than hunting in 3D.
+
+1. Open the **Layers** tab in the left panel.
+2. The IFC spatial tree expands as:
+   ```
+   IfcProject
+     └─ IfcSite
+          └─ IfcBuilding
+               └─ IfcBuildingStorey
+                    └─ IfcSpace / elements...
+   ```
+3. Click any node — the corresponding geometry highlights in the 3D view.
+
+This is the fastest way to find a specific room, storey, or system in a large federated model.
+
+**Result:** the selected element is highlighted and the camera centres on it.
+
+## Validate against an IDS file
+
+**Goal:** check whether the model satisfies an Information Delivery Specification.
+
+1. Open the **File** tab.
+2. Click **Import IDS** and pick your `.ids` file.
+3. The viewer evaluates each requirement against the model and lists pass/fail counts.
+4. Click any failed requirement to see the offending elements highlighted in 3D.
+
+**Result:** every requirement in the IDS shows pass/fail with element-level traceability.
+
+## Track issues with BCF topics
+
+**Goal:** open a coordination issue against a specific element and a specific viewpoint.
+
+1. Click the element(s) related to the issue.
+2. Open the **Topics** tab → **New topic**.
+3. Fill in title, description, responsible party, status, and priority. The current viewpoint is captured automatically.
+4. Save the topic.
+5. Export to `.bcf` from the topic list to share with teams using Revit, Archicad, or any compliant authoring tool.
+
+**Result:** the topic is saved against the element's `GlobalId` and viewpoint, and exports as a vendor-neutral `.bcf`.
+
+## Generate a floor plan
+
+**Goal:** view a 2D plan of any storey.
+
+1. Open the **File** tab.
+2. Floor plans are auto-generated for every `IfcStorey` — pick one from the list.
+3. The viewer switches to a top-down 2D plan with the same measurement and annotation tools as the 3D view.
+
+**Result:** a precise 2D plan of the chosen storey, navigable like the 3D view.
+
+## Toolbar quick reference
 
 | Tool | Description |
-|---|---|
-| **Clipping plane** | Create a section cut from any face in the model. Drag to adjust depth and orientation. |
-| **Fit extents** | Resets the camera to frame the full model within the viewport. |
-| **Add feature** | Import IFC, IDS, or BCF files; upload DXF drawings; add media (images, video, audio, PDFs). |
-| **Measurements** | Measure distances, angles, areas, and element volumes. |
-| **Share** | Generates a URL + QR code encoding the camera position and active asset ID. |
+|------|-------------|
+| **Clipping plane** | Section cut from any face. |
+| **Fit extents** | Reset the camera to frame the model. |
+| **Add feature** | Import IFC, IDS, or BCF; upload DXF; add media. |
+| **Measurements** | Distance, angle, area, and element volume. |
+| **Share** | URL + QR code encoding camera position and asset ID. |
 
-## Left Panel
+## Settings reference
 
-### File tab
+The **Settings** tab in the left panel controls the Three.js scene:
 
-Shows all models currently loaded in the scene. For each model you can:
+- **Theme** — system, dark, light.
+- **Camera** — perspective vs orthographic; FOV, speed, frustum.
+- **Grid** — toggle, resize, recolour.
+- **Lighting** — position, intensity, colour.
+- **Renderer** — gamma correction, ambient occlusion, gloss, outline effects.
 
-- Toggle visibility
-- Download the original IFC source file
-- Remove the model from the scene
+## DXF / CAD overlay
 
-The panel also lists **floor plans** (auto-generated for every `IfcStorey`) and **elevation views** (Front, Back, Left, Right) — both support the same measurement and annotation tools as the 3D view.
+Upload a `.dxf` to overlay a 2D drawing inside the 3D scene. The platform parses it through [DXF-Viewer](https://github.com/vagran/dxf-viewer) into Three.js lines. You can position, scale, and rotate it relative to the IFC coordinate system, and toggle CAD layers individually.
 
-**IDS validation** is available here: import an Information Delivery Specification file and the viewer highlights which model elements pass or fail each requirement, making compliance checks visual and actionable.
-
-**Selection sets** let you save named groups of elements for recurring queries or coordination tasks.
-
-### Layers tab
-
-Displays the full IFC spatial hierarchy as a collapsible tree:
-
-```
-IfcProject
-  └─ IfcSite
-       └─ IfcBuilding
-            └─ IfcBuildingStorey
-                 └─ IfcSpace / elements...
-```
-
-Click any node to highlight the corresponding geometry. Use this to navigate large federated models without hunting through the 3D scene.
-
-### Topics tab (BCF)
-
-Full [BIM Collaboration Format (BCF)](https://www.buildingsmart.org/standards/bsi-standards/bim-collaboration-format-bcf/) support. Upload existing BCF files or create new topics directly in the interface.
-
-For each topic you can:
-
-- Link the issue to a specific element or viewpoint in the model
-- Assign responsible parties and status (open / closed)
-- Add comments and screenshots
-- Sort and filter by status or priority
-
-Topics are vendor-neutral — BCF files exported here open in Revit, Archicad, or any other compliant authoring tool.
-
-### Settings tab
-
-Controls the visual environment of the Three.js scene:
-
-- **Theme** — system / dark / light
-- **Camera** — switch between perspective and orthographic; adjust FOV, speed, frustum
-- **Grid** — toggle, resize, recolour
-- **Lighting** — position, intensity, colour
-- **Renderer** — gamma correction, ambient occlusion, gloss, outline effects
-
-## Right Panel — Properties
-
-Click any element in the 3D scene to populate the properties panel with the full IFC schema data for that element:
-
-- Entity attributes and geometry
-- Property sets (Psets)
-- Quantity sets (Qsets)
-- Material assignments
-- Associated `IfcTask` entries
-- Spatial container relationships
-
-Select multiple elements to compare attributes side by side. Use the search field to filter large property trees in real time. Export the current selection's properties to a file for external documentation.
-
-## DXF / CAD Integration
-
-Upload DXF files to overlay 2D CAD drawings within the 3D scene. The platform uses [DXF-Viewer](https://github.com/vagran/dxf-viewer) to parse DXF geometry into Three.js lines. Once loaded, you can:
-
-- Position, scale, and rotate the drawing relative to the IFC coordinate system
-- Toggle individual CAD layers on or off
-- Use it as a reference alongside 3D BIM elements
-
-## Supported openBIM Formats
+## Supported openBIM formats
 
 | Format | Purpose |
-|---|---|
+|--------|---------|
 | **IFC** | Building model geometry + metadata |
 | **IDS** | Information delivery requirements + validation |
 | **BCF** | Issue tracking and coordination |
-| **bSDD** | buildingSMART Data Dictionary — used for element classification |
+| **bSDD** | buildingSMART Data Dictionary — element classification |
+
+## Related
+
+- [Concepts → BIM & IFC](../concepts/bim-and-ifc.md)
+- [File Management](./file-management.md)
+- [Collaboration → BCF Topics](./collaboration.md)
+- [Components → BIM Tools](../components/bim-tools.md)

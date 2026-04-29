@@ -173,5 +173,5 @@ const handleDelete = async (id: number) => {
 
 ## Related
 
-- [Data model: Infrastructure](/docs/data-model/infrastructure)
-- [Hooks provider](/docs/hooks/provider)
+- [Data model: Infrastructure](/docs/architecture/data-model#infrastructure)
+- [Hooks provider](/docs/hooks/overview)

@@ -1,77 +1,124 @@
 ---
 sidebar_position: 8
+title: Collaboration
+description: Invite teammates, manage roles, leave comments, raise BCF topics, and share live views.
 ---
 
 # Collaboration
 
-CDT is built for multi-user workflows. Several features allow teams to annotate, discuss, and coordinate directly within the platform — without leaving the 3D or map environment.
+CDT is built for multi-user workflows. Several features let teams annotate, discuss, and coordinate directly within the platform — without leaving the 3D or map environment.
 
-## Organizations and Roles
+## Goal
 
-All collaboration in CDT is scoped to an **Organization** — a group that can represent a university department, a government agency, a project team, or an open community.
+Invite a teammate, comment on a building or BIM element, raise a coordination issue (BCF), and share a live view.
 
-Role-based access control (RBAC) determines what each member can do:
+## Prerequisites
+
+- A CDT account.
+- For invites and role management, an Admin role on the Organization.
+
+## Invite a teammate
+
+**Goal:** add someone to your Organization with the right level of access.
+
+1. Open **Settings → Members → Invite member**.
+2. Enter the email and pick a role:
 
 | Role | Capabilities |
-|---|---|
-| **Viewer** | View all content within the Organization |
-| **Contributor** | Upload files, add comments and media |
-| **Manager** | Edit asset records, manage member roles |
-| **Admin** | Full control, including deletion and settings |
+|------|--------------|
+| **Viewer** | View all content within the Organization. |
+| **Contributor** | Upload files, add comments and media. |
+| **Manager** | Edit asset records, manage member roles. |
+| **Admin** | Full control, including deletion and settings. |
 
-Roles are enforced at the API level — not just hidden in the UI — so permissions are reliable across all access paths.
+3. Click **Send invitation**.
 
-## Comments and Annotations
+The new member receives an email with a sign-up link. Once they accept, they appear in the members list with the role you chose.
 
-### On the Map
+**Result:** the teammate can sign in and see what their role allows.
 
-Click any location on the map and use the **Add feature** tool to pin a comment to that coordinate. Comments are visible to all Organization members. They support:
+For the full role matrix, see [Authorization → Permission reference](../authorization/permission-reference.md).
 
-- Text notes
-- Attached images, videos, or audio
-- Attached PDF documents
+## Pin a comment to a map location
 
-All pinned items are automatically geolocated and persist in the database. This is useful for site observations, fieldwork documentation, or flagging issues for a remote team.
+**Goal:** annotate a place on the map for your team.
 
-### In the BIM Viewer
+1. Click the map at the location.
+2. Open the **Add feature** tool from the toolbar.
+3. Add text, and optionally attach images, video, audio, or PDFs.
+4. Save.
 
-Inside the BIM viewer, you can attach comments to specific model elements. Click an element, open its properties, and add a comment. Comments reference the element's GlobalId, so they remain linked to the correct object even if the model is replaced with a newer version.
+All pinned items are geolocated automatically and persist in the database. Useful for site observations, fieldwork, or flagging issues for a remote team.
 
-The **Add feature** toolbar button inside the BIM viewer lets you add media (images, video, audio, PDFs) positioned at explicit XYZ coordinates within the scene.
+**Result:** the comment is visible to all Organization members at that map location.
 
-## BCF Topics (BIM Issue Tracking)
+## Comment on a BIM element
 
-The [BIM Collaboration Format (BCF)](https://www.buildingsmart.org/standards/bsi-standards/bim-collaboration-format-bcf/) is the openBIM standard for communicating design coordination issues. The **Topics** tab in the BIM viewer gives you a full BCF workflow:
+**Goal:** attach a discussion thread to a specific building component.
 
-**Creating a topic:**
-1. Click the element(s) related to the issue
-2. Open the Topics tab → New Topic
-3. Assign a title, description, and responsible party
-4. Capture a screenshot of the current viewpoint automatically
-5. Set status (open / in progress / closed) and priority
+1. Open the building in the BIM viewer.
+2. Click the element you want to comment on.
+3. In the properties panel, open the **Comments** subpanel and add your comment.
+4. The comment is linked to the element's `GlobalId`, so it stays with the element even if the model is replaced with a newer version.
 
-**Managing topics:**
-- Filter by status or sort by date / priority
-- Navigate directly to the linked model viewpoint by clicking a topic
-- Export topics as a `.bcf` file for import into Revit, Archicad, or any other compliant authoring tool
+You can also use the **Add feature** toolbar button inside the BIM viewer to add media positioned at explicit XYZ coordinates within the scene.
 
-BCF is vendor-neutral — issues created in CDT open correctly in any BIM authoring application and vice versa.
+**Result:** the comment is anchored to the element and visible to anyone with access to the building.
 
-## Sharing Views
+## Raise a BCF topic
 
-Both the map viewer and the BIM viewer have a **Share** button that generates a URL encoding the full current state:
+**Goal:** open a coordination issue with a specific viewpoint.
 
-- **Map** — longitude, latitude, zoom, pitch, bearing, active style, loaded asset IDs
-- **BIM** — camera XYZ position and target, active asset ID
+The [BIM Collaboration Format (BCF)](https://www.buildingsmart.org/standards/bsi-standards/bim-collaboration-format-bcf/) is the openBIM standard for communicating design issues. The Topics tab in the BIM viewer gives you a full BCF workflow.
 
-Send this URL to a collaborator and they arrive at the exact same view — no re-navigation required. A QR code is also generated for sharing in presentations or printed documents.
+### Create a topic
 
-## Real-Time Synchronization
+1. Click the element(s) related to the issue.
+2. Open the **Topics** tab → **New topic**.
+3. Fill in title, description, and responsible party. The current camera viewpoint is captured automatically.
+4. Set status (open / in progress / closed) and priority.
+5. Save.
 
-Media and annotations added by any user are visible to others in the same Organization as soon as they are uploaded. There is no manual "sync" step. This means a team working on a site visit can upload photos from mobile devices while a remote team member sees them appear on the map in real time.
+### Manage topics
 
-## Internationalization Support
+- Filter by status or sort by date / priority.
+- Click any topic to navigate the camera to its viewpoint.
+- Export the topic list as a `.bcf` file for import into Revit, Archicad, or any compliant authoring tool.
 
-The platform supports multiple interface languages using i18n, including **English, French, and Spanish**. User-facing labels, tooltips, and navigation content are localized through translation messages, and additional languages can be added with minimal code changes.
+BCF is vendor-neutral — issues created in CDT open correctly in any compliant authoring application, and vice versa.
 
-For implementation details, see the [Internationalization architecture page](../architecture/internationalization.md).
+**Result:** the team has a structured, viewpoint-anchored coordination thread.
+
+## Share a live view
+
+**Goal:** send a teammate the exact view you are looking at.
+
+Both the map viewer and the BIM viewer have a **Share** button.
+
+1. Click **Share** on the toolbar.
+2. Copy the URL or scan the QR code.
+3. Send the link.
+
+The URL encodes:
+
+- **Map** — longitude, latitude, zoom, pitch, bearing, active style, loaded asset IDs.
+- **BIM** — camera XYZ position and target, active asset ID.
+
+Anyone who follows the URL arrives at the exact same view — no re-navigation required.
+
+**Result:** the recipient sees the same scene you do.
+
+## Real-time synchronization
+
+Media and annotations added by any user are visible to others in the same Organization as soon as they are uploaded. There is no manual sync step. A team on a site visit can upload photos from mobile devices while a remote teammate watches them appear on the map in real time.
+
+## Internationalization
+
+The interface supports **English, French, and Spanish** via i18n. Switch language from **Settings → Language**. For implementation details, see [Architecture → Internationalization](../architecture/internationalization.md).
+
+## Related
+
+- [Authorization → Managing roles](../authorization/managing-roles.md)
+- [BIM Viewer](./bim-viewer.md)
+- [Map Viewer](./map-viewer.md)
+- [Concepts → Organizations and multi-tenancy](../concepts/organizations.md)

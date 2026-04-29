@@ -262,5 +262,5 @@ function useOpenDataPortalsByName(name: string | null): {
 
 ## Related
 
-- [OpenDataPortal data model](/docs/data-model/open-data-portal)
-- [DatasetGroup type](/docs/data-model/dataset-group)
+- [OpenDataPortal data model](/docs/architecture/data-model#opendataportal)
+- [DatasetGroup type](/docs/architecture/data-model)

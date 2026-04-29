@@ -26,8 +26,10 @@ A fully managed SaaS deployment hosted in Canada, or an assisted deployment wher
 
 - [Self-Hosting](./self-hosting.md) — deploy CDT yourself with Docker or Podman
 - [Services](./services.md) — PostgreSQL, MinIO, Martin/PostGIS, Node/Next.js, Open Data Service
+- [Production Deployment](./production.md) — TLS, reverse proxy, monitoring, backups, hardening
 - [CDT Hosted](./cdt-hosted.md) — managed SaaS and assisted deployment options
 
 ## Related
 
 - [Architecture Overview](../architecture/overview.md)
+- [Environment variables reference](../getting-started/environment-variables.md)
