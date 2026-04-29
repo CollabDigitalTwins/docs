@@ -1,97 +1,130 @@
 ---
 sidebar_position: 4
+title: Buildings & Sites
+description: Create and manage buildings and sites, attach files and sensors, and use role-based access controls.
 ---
 
-# Managing Buildings & Sites
+# Buildings & Sites
 
-CDT organizes all assets in a two-level spatial hierarchy: **Sites** contain **Buildings**, and Buildings contain files and sub-assets. This structure maps directly to how real-world facilities are managed — a campus, military base, or district is a Site; the individual facilities within it are Buildings.
+CDT organizes assets in a two-level hierarchy: **Sites** contain **Buildings**, and Buildings contain files and sub-assets. This maps directly to how real-world facilities are managed — a campus or district is a Site; the individual facilities within it are Buildings.
 
-## Sites
+## Goal
 
-A Site is the top-level geospatial container. It defines:
+Create a Site, add Buildings to it, attach files, and configure access for your team.
 
-- **Coordinate reference system (CRS)** — the projection used by all assets within the site (e.g., UTM Zone 17N, MTM, or WGS 84)
-- **Boundary** — the geographic extent of the site on the map
-- **Ownership** — which Organization the site belongs to, and which roles can access it
+## Prerequisites
 
-Sites can represent anything from a single city block to a military installation to a provincial infrastructure portfolio.
+- A CDT account with at least Manager permissions to create or edit assets.
+- A clear idea of the geographic boundary — even a rough one.
 
-### Creating a Site
+## Create a Site
 
-1. Open the map viewer and navigate to your location
-2. Click **New Site** in the left panel
-3. Set the name, description, and CRS
-4. Draw the site boundary on the map or enter coordinates manually
-5. Assign the site to an Organization
+**Goal:** set up a Site so you can group buildings under it.
 
-## Buildings
+1. Open the map viewer and navigate to the area.
+2. Click **New Site** in the left panel.
+3. Fill in:
+   - **Name** and **description**.
+   - **CRS** (coordinate reference system) — the projection used for files inside the Site (e.g., UTM Zone 17N, MTM, or WGS 84).
+   - **Boundary** — draw on the map or enter coordinates.
+   - **Organization** — which org owns this Site.
+4. Click **Save**.
 
-A Building represents an individual facility within a Site. Its database record is mapped to the [buildingSMART Data Dictionary (bSDD)](https://www.buildingsmart.org/users/services/buildingsmart-data-dictionary/) for standardized classification.
+**Result:** the Site appears in the map and in the Sites list. Its CRS is now the default for any file uploaded inside it.
 
-Each Building acts as a container for:
+## Create a Building
 
-- **BIM models** — IFC files for design, as-built, or renovation
-- **Point clouds** — reality capture data
-- **CAD drawings** — DXF floor plans or site drawings
-- **Documents** — PDFs, reports, specifications
-- **Sensor feeds** — linked IoT data streams
-- **Media** — photos, videos, audio attached to specific locations
+**Goal:** add a Building under a Site.
 
-### Creating a Building
+1. Select the parent Site on the map (or pick from the dropdown if you are already in the Buildings list).
+2. Click **Add Building**.
+3. Fill in:
+   - **Name** — human-readable identifier.
+   - **Typology** — pick from the [bSDD](https://www.buildingsmart.org/users/services/buildingsmart-data-dictionary/) classification.
+   - **Construction year** — for portfolio filtering and retrofit analysis.
+   - **Coordinate** — drop a pin on the map or paste latitude/longitude.
+4. Click **Save**.
 
-1. Select the parent Site on the map
-2. Click **Add Building**
-3. Enter the building name, typology (from bSDD), and construction year
-4. Place the building on the map using its footprint or a single coordinate point
-5. Upload or link files as needed
+**Result:** the building appears as a marker on the map and in the buildings list.
 
-### Building Metadata
+## Attach files to a Building
 
-The platform stores the following attributes for each Building:
+**Goal:** associate IFC, point clouds, drawings, or documents with a Building.
+
+1. Open the building.
+2. Switch to the **Files** tab.
+3. Drag-and-drop files onto the panel, or click **Upload** to choose them.
+4. The file metadata is automatically linked to the building. IFC files are converted to Fragments format on upload.
+
+**Result:** files are listed under the building and accessible to anyone with permission.
+
+For details on supported formats and the upload pipeline, see [File Management](./file-management.md).
+
+## Edit Building metadata
+
+**Goal:** correct or augment the data record for a Building.
+
+1. Open the building.
+2. Click **Edit** in the details panel.
+3. Update any of:
 
 | Field | Description |
-|---|---|
-| Name | Human-readable identifier |
-| bSDD classification | Standardized building type |
-| Construction year | Used for portfolio filtering and retrofit planning |
-| Coordinate | Longitude / latitude of the building origin |
-| CRS | Coordinate reference system for local Cartesian files |
-| Organization | Access control scope |
+|-------|-------------|
+| Name | Display name. |
+| bSDD classification | Standardized building type. |
+| Construction year | Used for filtering and retrofit planning. |
+| Coordinate | Longitude / latitude of the building origin. |
+| CRS | Coordinate reference system for local Cartesian files. |
+| Organization | Access-control scope. |
 
-## File Types and Storage
+4. Click **Save**.
 
-Files attached to Buildings are split into two storage layers:
+**Result:** the database record is updated and the change appears immediately in lists and on the map.
 
-- **Binary payloads** — stored in MinIO (S3-compatible object storage), versioned
-- **Metadata** — stored in PostgreSQL, indexed for fast querying
+## Filter and search
 
-The platform distinguishes between:
+**Goal:** find a subset of buildings — for example, all pre-1980 residential buildings on a Site.
 
-- **Georeferenced files** — defined by longitude/latitude, placed on the map automatically
-- **Local Cartesian files** — defined by XYZ coordinates relative to the building origin, displayed in the BIM viewer
+1. Open the Buildings list.
+2. Use the filter controls at the top:
+   - **bSDD typology** (office, residential, industrial, etc.)
+   - **Construction year range**
+   - **Site**
+   - **Organization**
+3. Click any result to open it.
 
-Both types support version history, provenance tracking (author, timestamp), and permission-based access.
+**Result:** the list narrows to matching buildings; the map highlights them in place.
 
-## Role-Based Access
+## Storage layers
 
-Access to Sites and Buildings is controlled by the Organization's role assignments. Typical roles:
+Files attached to a building are split across two storage layers:
+
+- **Binary payloads** — stored in MinIO (S3-compatible), versioned automatically.
+- **Metadata** — stored in PostgreSQL, indexed for fast querying.
+
+The platform also distinguishes between:
+
+- **Georeferenced files** — defined by longitude/latitude, placed on the map automatically.
+- **Local Cartesian files** — defined by XYZ coordinates relative to the building origin, displayed in the BIM viewer.
+
+Both types support version history, provenance (author, timestamp), and permission-based access.
+
+## Access control
+
+A Building's files and metadata are visible to members of its Organization based on their role. Typical defaults:
 
 | Role | Permissions |
-|---|---|
-| **Viewer** | Read-only access to files and metadata |
-| **Contributor** | Upload files, add comments and media |
-| **Manager** | Edit building records, manage members |
-| **Admin** | Full control including deletion and CRS settings |
+|------|-------------|
+| **Viewer** | Read files and metadata. |
+| **Contributor** | Upload files, add comments and media. |
+| **Manager** | Edit building records, manage members. |
+| **Admin** | Full control, including deletion and CRS changes. |
 
-Roles are enforced at both the API level (Next.js server-side validation) and the UI level (features hidden or disabled based on permissions).
+Roles enforce on the API server-side, not just in the UI. See [Authorization → Permission reference](../authorization/permission-reference.md) for the full matrix.
 
-## Filtering and Search
+## Related
 
-From the map view, Buildings can be filtered by:
-
-- bSDD typology (office, residential, industrial, etc.)
-- Construction year range
-- Site
-- Organization
-
-This supports portfolio-level workflows such as identifying all pre-1980 residential buildings across a site for a retrofit assessment.
+- [Map Viewer](./map-viewer.md)
+- [File Management](./file-management.md)
+- [Authorization → Managing roles](../authorization/managing-roles.md)
+- [Architecture → Data Model](../architecture/data-model.md)

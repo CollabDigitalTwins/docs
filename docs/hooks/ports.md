@@ -564,8 +564,8 @@ deleteInfrastructure(id: number): Promise<Infrastructure>
 
 ## Related
 
-- [data-model/building.md](/docs/data-model/building.md)
-- [data-model/site.md](/docs/data-model/site.md)
-- [data-model/user.md](/docs/data-model/user.md)
-- [data-model/sensor.md](/docs/data-model/sensor.md)
-- [core/types/dbTypes.md](/docs/core/types/dbTypes.md)
+- [data-model/building.md](/docs/architecture/data-model#building)
+- [data-model/site.md](/docs/architecture/data-model#site)
+- [data-model/user.md](/docs/architecture/data-model#user)
+- [data-model/sensor.md](/docs/architecture/data-model#sensor)
+- [core/types/dbTypes.md](/docs/architecture/data-model)

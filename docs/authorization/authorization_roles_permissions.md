@@ -1,66 +1,101 @@
-# Authorization: Roles, Permissions, and CASL
+---
+title: Roles, Permissions & CASL
+description: How the CDT authorization engine works internally — Prisma storage, CASL ability construction, and server- and client-side enforcement.
+sidebar_position: 4
+---
 
-This document explains how **authorization** works in the cdt app, how **roles and permissions** are stored, how **CASL** is used to evaluate access, and how permissions are enforced on the **API and UI layers**.
+# Roles, Permissions & CASL
 
-The app uses a **role-based access control (RBAC)** system. We use:
-- Prisma to store roles and permissions in a PostgreSQL database.
-- CASL as the authorization engine
-- Server-side enforcement in API routes
-- UI-side enforcement
+This page is for **developers** working on the CDT authorization engine itself. It explains how roles and permissions are stored, how [CASL](https://casl.js.org) builds an `Ability` instance from them, and how that ability is enforced on the API and UI layers.
 
-## Organization-scoped authorization:
-Permissions are NOT global to a user. A user has 1 role, which has permissions within an organization.
+For the conceptual model, see [Authorization Overview](./overview.md). For UI tasks, see [Managing roles and permissions](./managing-roles.md).
 
-## Prisma:
-Roles are represented with the Role entity. Each User has a foreign key referencing a role within an organization.
-Permissions are stored as JSON on each role
+## Architecture summary
+
+CDT uses **role-based access control (RBAC)** scoped to organizations:
+
+- **Prisma** stores roles and permissions in PostgreSQL.
+- **CASL** is the authorization engine — it converts stored permissions into a queryable `Ability` instance.
+- **Server-side checks** in API routes are the authoritative gate.
+- **Client-side checks** in components hide and disable controls for the current user.
+
+## Storage (Prisma)
+
+Roles are represented by the `Role` entity. Each `User` has a foreign key to a `Role` scoped to an `Organization`. Permissions are stored as a JSON array on each role:
+
 ```json
-	[
-	  { "action": "read", "subject": "Building" },
-	  { "action": "update", "subject": "Building" }
-	]
+[
+  { "action": "read", "subject": "Building" },
+  { "action": "update", "subject": "Building" }
+]
 ```
 
-### Fields:
-- **action**: What the user can do (read, create, update, delete, etc.)
-- **subject**: What resource the action applies to (Building, Organization, User, etc.)
+| Field | Description |
+|-------|-------------|
+| `action` | The verb the user can perform — `read`, `create`, `update`, `delete`, or `manage`. |
+| `subject` | The resource the action applies to — `Building`, `Site`, `User`, etc. |
 
-CASL rules are derived from this data at runtime.
+CASL rules are derived from this data at request time.
 
+## CASL: building an Ability
 
-## CASL:
+CDT chose CASL because it offers:
 
-### Why CASL is used:
-CASL provides:
-- A simple method of defining rules (ability.can(action, subject))
-- A shared authorization model for server and UI
-- Potential to go from simple RBAC to more advanced conditional rules later.
+- A simple API for defining and checking rules — `ability.can(action, subject)`.
+- A shared authorization model usable on both server and client.
+- A path from simple RBAC today to attribute- and condition-based rules later, without changing call sites.
 
-### Building abilities from the database:
-Step 1: Fetch user permissions for an organization from the database (getUserPermissions(userId, orgId)).
-Step 2: The CASL AbilityBuilder converts database permissions into executable rules (buildAbilityFromPermissions(perms))
-Step 3: Get rules for a request
-- Fetches permissions for (userId, orgId)
-- Builds and returns a CASL ability
+The construction flow:
 
-## Enforcing permissions (server-side):
-Sensitive operations are protected within the api routes as such: 
-```javascript
+1. **Fetch permissions** for the current user and organization — `getUserPermissions(userId, orgId)`.
+2. **Build the rule set** with CASL's `AbilityBuilder` — `buildAbilityFromPermissions(perms)`.
+3. **Return the ability** — server code uses it directly; client code receives it via `PermissionsProvider`.
+
+## Enforcing permissions server-side
+
+Sensitive operations gate on `ability.can(...)` before any mutation:
+
+```ts
 if (!ability.can("read", "Building")) {
   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 }
 ```
 
-## Enforcing permissions (UI-side):
-The same permissions can be used to hide UI elements:
-```javascript
+This is the authoritative check. Bypassing the UI does not bypass it — direct API calls hit the same gate.
+
+## Enforcing permissions client-side
+
+The same ability instance, exposed via the `PermissionsProvider` context, drives UI affordances:
+
+```tsx
 {ability.can("create", "Organization") && (
   <Button>Create Organization</Button>
 )}
 ```
 
-This improves UX but cannot replace API enforcement.
+Client-side checks improve UX (no users see buttons that would 403) but cannot replace API enforcement, because client code can be modified or bypassed.
 
+## Internal types
 
+| Type | Source | Purpose |
+|------|--------|---------|
+| `MongoAbility` | `@casl/ability` | The `Ability` instance type. CDT uses the Mongo-style query syntax for forward compatibility with conditional rules. |
+| `BuildingOnOrganizations` | `prisma/schema.prisma` | Many-to-many bridge between `Building` and `Organization`. Used when scoping building queries to a user's organization. |
+| `Role.permissions` | `prisma/schema.prisma` | The `Json` column where the `(action, subject)` array lives. |
 
+## Adding a new subject
 
+When a new entity is added to the data model, integrate it with the authorization system:
+
+1. Add the entity name to the `subject` enum used by `buildAbilityFromPermissions`.
+2. Add server-side `ability.can(...)` checks in every mutation route for the entity.
+3. Update the [Permission reference](./permission-reference.md) to document default permissions for the built-in roles.
+4. Wire up any client-side gating in the relevant components.
+
+## Related
+
+- [Authorization Overview](./overview.md)
+- [Managing roles and permissions](./managing-roles.md)
+- [Permission reference](./permission-reference.md)
+- [Concepts → Organizations and multi-tenancy](../concepts/organizations.md)
+- [Architecture → Backend & API](../architecture/backend-and-api.md)

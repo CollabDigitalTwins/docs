@@ -1,30 +1,46 @@
 ---
 sidebar_position: 5
+title: File Management
+description: Upload, version, share, and manage files attached to buildings and sites.
 ---
 
 # File Management
 
-CDT stores all binary assets in [MinIO](https://min.io/), a high-performance open-source object storage server compatible with the S3 API. Metadata and relational attributes are stored in PostgreSQL and queried through the platform's API.
+CDT stores all binary assets in [MinIO](https://min.io/), a high-performance open-source object store with the S3 API. Metadata and relational attributes live in PostgreSQL.
 
-## Upload
+## Goal
 
-### Drag and Drop
+Upload files to a building or site, see their version history, and understand where they go.
 
-The quickest way to add files is to drag and drop them directly onto the map viewer or BIM viewer. The platform:
+## Prerequisites
 
-1. Detects the file type
-2. Routes it to the appropriate processing pipeline
-3. Stores the binary in MinIO
-4. Creates a metadata record in the database linked to the target Building
+- A CDT account with at least Contributor permissions on the target Building or Site.
+- Files in one of the supported formats listed below.
 
-### File Panel Upload
+## Upload a file
 
-In the BIM viewer, use the **File** tab → **Upload** button to select one or more files from your device. This gives you more control over placement and metadata before the file is added to the scene.
+**Goal:** add a file to a Building.
 
-## Supported File Types
+There are two upload paths:
+
+### Path 1 — Drag and drop
+
+1. Open the building (or open the BIM Viewer with the building active).
+2. Drag the file onto the viewport or the **Files** tab.
+3. The platform detects the type, routes it to the right pipeline, stores the binary in MinIO, and creates a metadata record.
+
+### Path 2 — File panel
+
+1. Open the building → **Files** tab → **Upload**.
+2. Pick one or more files.
+3. Optionally adjust placement and metadata before they are added to the scene.
+
+**Result:** the files appear in the file list and are downloadable, previewable, and (if applicable) loadable in the BIM or point cloud viewers.
+
+## Supported file types
 
 | Category | Formats |
-|---|---|
+|----------|---------|
 | **BIM models** | IFC |
 | **3D geometry** | glTF, GLB, FBX, OBJ, Collada |
 | **Point clouds** | LAS, LAZ, COPC, BIN |
@@ -33,49 +49,73 @@ In the BIM viewer, use the **File** tab → **Upload** button to select one or m
 | **Documents** | PDF |
 | **Media** | JPG, PNG, MP4, MP3, and other common video/audio formats |
 
-## IFC Processing Pipeline
+## What happens to an IFC on upload
 
-When you upload an IFC file, the server intercepts it before storage and runs an optimization pipeline:
+When you upload an IFC, the server runs an optimization pipeline before storage:
 
-1. Parses the raw IFC STEP file
-2. Converts geometry and metadata to **Fragments 2.0** binary format (`.frag`) using FlatBuffers encoding
-3. Stores both the original IFC and the `.frag` version in MinIO
-4. Streams the `.frag` file to the client at load time
+1. Parses the raw IFC STEP file.
+2. Converts geometry and metadata to **Fragments 2.0** (`.frag`) using FlatBuffers encoding.
+3. Stores both the original IFC and the `.frag` version in MinIO.
+4. Streams the `.frag` to the client at load time.
 
-This approach drastically reduces RAM overhead and loading time compared to parsing IFC directly in the browser — important for multi-gigabyte federated models.
+This dramatically reduces RAM and load time compared with parsing IFC in the browser — important for multi-gigabyte federated models.
 
-## Versioning
+## See file version history
 
-MinIO versioning is enabled on all buckets. Every time you re-upload a file with the same name, the previous version is preserved. You can:
+**Goal:** view or restore an older version of a file.
 
-- View the version history for any file
-- Restore an older version
-- Download any historical version
+MinIO versioning is enabled on all buckets. Every re-upload preserves the previous version.
 
-This supports ISO 19650-style information management workflows where traceability of changes is required.
+1. Open the building → **Files** tab.
+2. Click the **History** icon on the file row.
+3. The dialog lists every version with its uploader and timestamp.
+4. Click **Restore** on any version to make it current, or **Download** to fetch that specific version.
 
-## Metadata
+**Result:** the file is restored or downloaded as you chose. Useful for ISO 19650-style information management.
 
-Every file record in the database stores:
+## Inspect file metadata
+
+Every file record stores:
 
 | Field | Description |
-|---|---|
-| Name | Display name |
-| Format | File type |
-| Author | User who uploaded the file |
-| Created / Updated | Timestamps |
-| GlobalId | Linked IFC GlobalId (for BIM files) |
-| Location | Longitude/latitude or XYZ coordinates |
-| CRS | Coordinate reference system |
-| Building | Parent Building record |
-| Organization | Access control scope |
+|-------|-------------|
+| Name | Display name. |
+| Format | File type. |
+| Author | User who uploaded it. |
+| Created / Updated | Timestamps. |
+| GlobalId | Linked IFC GlobalId (for BIM files). |
+| Location | Longitude/latitude or XYZ coordinates. |
+| CRS | Coordinate reference system. |
+| Building | Parent Building record. |
+| Organization | Access-control scope. |
 
-GlobalId linkage means sensor data, BCF topics, IDS results, and media can all be associated with the same physical asset across different file types.
+GlobalId linkage means sensor data, BCF topics, IDS results, and media all pin to the same physical asset across different file types.
+
+## Mark a file private or shared
+
+**Goal:** restrict a file to yourself, or make it visible to all members of your Organization.
+
+1. Open the file's details.
+2. Toggle **Visibility** between **Private** (only you) and **Organization** (all members with Viewer permissions or higher).
+3. The change applies immediately — no save step.
+
+**Result:** the file's visibility matches what you selected.
 
 ## Permissions
 
-File visibility and editability follow the Organization's role assignments. A file uploaded by one team member within an Organization is accessible to all members with Viewer permissions or higher. Files can be marked as private (visible only to the uploader) or shared at the Organization level.
+File visibility and editability follow the Organization's role assignments. A file uploaded by one Organization member is accessible to all members with Viewer permissions or higher, unless marked private.
 
-## Storage Infrastructure
+For the full matrix, see [Authorization → Permission reference](../authorization/permission-reference.md).
 
-The MinIO instance runs on a Canadian server (Fullhost VPS in Vancouver and Toronto) to ensure data sovereignty. All data storage and processing remain within Canadian territorial boundaries. Network security restricts database and storage access to the platform's web server IP only.
+## Storage architecture
+
+The MinIO instance for the hosted CDT runs on Canadian infrastructure (Fullhost VPS in Vancouver and Toronto) for data sovereignty. All storage and processing remain within Canadian boundaries. Network policy restricts database and storage access to the application server's IP only.
+
+Self-hosted deployments inherit the same architecture — see [Self-Hosting](../deployment/self-hosting.md) and [Production Deployment](../deployment/production.md) for hardening guidance.
+
+## Related
+
+- [Buildings & Sites](./buildings-and-sites.md)
+- [BIM Viewer](./bim-viewer.md)
+- [Components → File Details](../components/file-details.md)
+- [Architecture → Data Layer](../architecture/data-layer.md)

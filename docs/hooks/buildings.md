@@ -60,9 +60,6 @@ return (
 );
 ```
 
-### Notes
-
-
 ---
 
 ## `useBuilding`
@@ -218,5 +215,5 @@ On successful creation, the hook revalidates the `["buildings"]` cache key.
 
 ## Related
 
-- [Data Model: Building](/docs/data-model/building)
+- [Data Model: Building](/docs/architecture/data-model#building)
 - [Hooks: useFiles](/docs/hooks/files) (referenced in revalidation)

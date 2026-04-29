@@ -248,5 +248,5 @@ const handleCreate = async () => {
 
 ## Related
 
-- [Sensor data model](/docs/data-model/sensor)
+- [Sensor data model](/docs/architecture/data-model#sensor)
 - [Building hooks](/docs/hooks/buildings)

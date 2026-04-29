@@ -1,0 +1,114 @@
+---
+title: Managing Roles and Permissions
+description: Step-by-step UI tasks for organization administrators — invite members, assign roles, create custom roles, and adjust permissions.
+sidebar_position: 2
+---
+
+# Managing Roles and Permissions
+
+This page is for **organization administrators**. It covers the day-to-day tasks of managing who is in the organization and what they can do, all from the CDT interface.
+
+If you want the conceptual model, see [Authorization Overview](./overview.md). If you are a developer working on the authorization engine itself, see [Roles, Permissions & CASL](./authorization_roles_permissions.md).
+
+## Prerequisites
+
+You need an account with the **Admin** role (or a custom role with `manage` permission on `Role` and `User`). Without it, the screens described here will not be visible.
+
+## Invite a new member
+
+**Goal:** add someone to your organization.
+
+1. Open **Settings → Members** from the left sidebar.
+2. Click **Invite member**.
+3. Enter the new member's email address.
+4. Select a role from the dropdown.
+5. Click **Send invitation**.
+
+The platform emails the user a sign-up link. Once they accept, they appear in the members table with the role you selected.
+
+> **Tip:** invitations expire after 7 days. Resend from the same screen if needed.
+
+## Change a member's role
+
+**Goal:** promote a Contributor to Manager, or demote an Admin to Viewer.
+
+1. Open **Settings → Members**.
+2. Find the member in the table.
+3. Click the role dropdown in their row.
+4. Select the new role.
+5. The change applies immediately — no save button.
+
+The member's next page load reflects the new permissions. Active sessions also pick up the change because the permission check runs per request.
+
+## Remove a member
+
+**Goal:** revoke a person's access entirely.
+
+1. Open **Settings → Members**.
+2. Find the member.
+3. Click the more-options menu (`…`) on their row.
+4. Choose **Remove from organization**.
+5. Confirm.
+
+The user's records (buildings they uploaded, comments they wrote) are preserved. They can no longer sign in to your organization, but their CDT account is not deleted.
+
+## Create a custom role
+
+**Goal:** define a permission set that does not match any built-in role — for example, a "Field Inspector" who can only read buildings and create comments.
+
+1. Open **Settings → Roles**.
+2. Click **New role**.
+3. Give it a name and an optional description.
+4. Tick the `(action, subject)` pairs the role should be granted. You can mix and match — for example, `read: Building`, `create: Comment`, `update: Comment`.
+5. Click **Save**.
+
+The role is now available in the role dropdowns elsewhere.
+
+## Edit a custom role
+
+**Goal:** broaden or tighten an existing role.
+
+1. Open **Settings → Roles**.
+2. Click the role to open its detail panel.
+3. Tick or untick permissions.
+4. Click **Save**.
+
+Existing members assigned to this role pick up the change on their next request.
+
+> **Caution:** tightening permissions on a role can break workflows for the people currently assigned to it. Consider migrating affected users to a different role first.
+
+## Delete a custom role
+
+**Goal:** remove a custom role you no longer need.
+
+1. Open **Settings → Roles**.
+2. Click the more-options menu (`…`) on the role.
+3. Choose **Delete**.
+4. Confirm.
+
+You cannot delete a role if any member is currently assigned to it — reassign them first. Built-in roles cannot be deleted.
+
+## Audit who can do what
+
+**Goal:** see which members have which role.
+
+1. Open **Settings → Members**.
+2. The table shows each member's email, role, and last sign-in. Sort by role to group similar members together.
+
+For a richer view, export the members list to CSV from the same screen.
+
+## What if a permission is missing?
+
+If a member reports they cannot do something they should be able to:
+
+1. Confirm their role on the **Members** page.
+2. Open **Settings → Roles** and verify that role has the relevant `(action, subject)` permission.
+3. If the permission is correct but the action is still blocked, check the [Permission reference](./permission-reference.md) for any cross-resource dependencies (for example, editing a `File` requires read access to its parent `Building`).
+4. If the issue persists, the engine itself may be at fault — see [Troubleshooting](../getting-started/troubleshooting.md) or open an issue.
+
+## Related
+
+- [Authorization Overview](./overview.md)
+- [Permission reference](./permission-reference.md)
+- [Roles, Permissions & CASL (engine internals)](./authorization_roles_permissions.md)
+- [Concepts → Organizations and multi-tenancy](../concepts/organizations.md)

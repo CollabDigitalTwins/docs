@@ -48,7 +48,7 @@ import { Dialog } from '@/core/components/ui/';
 
 ## Related
 
-- [SimpleBimViewer](/docs/components/viewers/bim/SimpleBimViewer) — 3D/BIM file renderer used for IFC and model previews
+- [SimpleBimViewer](/docs/components/viewer) — 3D/BIM file renderer used for IFC and model previews
 - [useFile](/docs/hooks/files) — Hook for file operations
-- [DbFile](/docs/data-model/file) — File metadata type definition
-- [FileDetails](/docs/components/viewers/Data/files/FileDetails) — Parent component that displays file metadata alongside preview
+- [DbFile](/docs/architecture/data-model#dbfile) — File metadata type definition
+- [FileDetails](/docs/components/file-details) — Parent component that displays file metadata alongside preview

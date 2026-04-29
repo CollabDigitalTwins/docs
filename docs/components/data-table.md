@@ -71,7 +71,7 @@ This component does not enforce permissions directly. Gating should be handled b
 
 ## Related
 
-- [DataTableSkeleton](/docs/components/DataTableSkeleton) — Skeleton loader used during loading state
-- [Table](/docs/components/ui/Table) — Underlying table primitives
-- [MenusContext](/docs/store/MenusContext) — Stores pagination preferences
-- [MapContext](/docs/store/MapContext) — Provides location data for empty state messages
+- [DataTableSkeleton](/docs/components/data-table) — Skeleton loader used during loading state
+- [Table](/docs/components/data-table) — Underlying table primitives
+- [MenusContext](/docs/architecture/state-management) — Stores pagination preferences
+- [MapContext](/docs/architecture/state-management) — Provides location data for empty state messages

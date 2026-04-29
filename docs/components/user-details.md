@@ -71,8 +71,8 @@ Role updates and avatar changes require the `update` action on the `Role` subjec
 
 ## Related
 
-- [AddUser](/docs/components/AddUser) — modal wrapper for quick user creation
-- [UserMoreOptions](/docs/components/UserMoreOptions) — bulk import/export actions
+- [AddUser](/docs/components/user-details) — modal wrapper for quick user creation
+- [UserMoreOptions](/docs/components/user-details) — bulk import/export actions
 - [useCreateUser](/docs/hooks/users) — mutation hook for creating users
 - [useUserRole](/docs/hooks/users) — fetches a user's current role
-- [User data model](/docs/data-model/user)
+- [User data model](/docs/architecture/data-model#user)

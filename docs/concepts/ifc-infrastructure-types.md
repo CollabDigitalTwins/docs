@@ -1,0 +1,196 @@
+---
+title: IFC Infrastructure Types
+description: How CDT maps civil infrastructure assets to IFC 4.x and CityGML domains — enum reference for roads, railways, bridges, utilities, and more.
+category: concepts
+status: draft
+last_updated: 2026-04-23
+---
+
+# IFC Infrastructure Types
+
+CDT's `Infrastructure` entity supports civil engineering assets across multiple IFC 4.x domains and CityGML. The type system is reflected in `src/core/types/dbTypes.ts` as a set of enumerations that map to IFC schema concepts.
+
+## Overview
+
+When creating or classifying an infrastructure asset, two top-level enums set the domain:
+
+- `InfrastructureType` — the broad category (Road, Railway, Bridge, etc.)
+- `IfcInfrastructureDomain` — the specific IFC schema domain
+
+Additional type-specific enums then apply depending on the domain (e.g., `ifcRoadType` applies only when `ifcDomain = IfcRoad`).
+
+## How It Works in CDT
+
+The `Infrastructure` model stores IFC domain fields as optional columns. Only the fields relevant to the asset type need to be populated — all others remain `null`.
+
+```ts
+// Example: a highway road segment
+const road: Partial<Infrastructure> = {
+  infrastructureType: 'Road',
+  ifcDomain: 'IfcRoad',
+  ifcRoadType: 'Highway',
+  ifcLaneCount: 4,
+  ifcDesignSpeed: 100,
+}
+```
+
+The CityGML fields (`cityGmlLod`, `cityGmlFunction`, etc.) can be set independently of IFC fields on the same record, supporting hybrid representations.
+
+## Key Files
+
+| File | Role |
+|------|------|
+| `src/core/types/dbTypes.ts` | All infrastructure enums and the `Infrastructure` interface |
+| `src/core/hooks/infrastructures/infrastructures.ts` | Hooks for reading/writing infrastructure records |
+
+## Enum Reference
+
+### InfrastructureType
+
+Top-level classification of the asset.
+
+| Value | Description |
+|-------|-------------|
+| `LandFeature` | Natural or artificial land feature |
+| `Facility` | Built facility (airport, port, station) |
+| `Project` | Construction project envelope |
+| `Alignment` | Linear reference route |
+| `Road` | Road corridor |
+| `Railway` | Rail corridor |
+| `Survey` | Survey boundary or point |
+| `LandDivision` | Cadastral division |
+| `Condominium` | Condominium unit boundary |
+| `Other` | Uncategorised |
+
+### InfrastructureState
+
+Lifecycle state of the asset.
+
+| Value |
+|-------|
+| `Existing` |
+| `Proposed` |
+| `Planned` |
+| `UnderConstruction` |
+| `Abandoned` |
+| `Demolished` |
+
+### IfcInfrastructureDomain
+
+IFC 4.x schema domain.
+
+| Value | IFC Schema |
+|-------|------------|
+| `IfcRoad` | Roads |
+| `IfcRailway` | Railways |
+| `IfcBridge` | Bridges |
+| `IfcMarineFacility` | Ports, harbours |
+| `IfcWaterway` | Canals, rivers |
+| `IfcGeotechnicalAssembly` | Ground/geotechnical |
+
+### IfcRoadType
+
+| Value |
+|-------|
+| `Highway`, `Street`, `Interchange`, `BicycleWay`, `Footway`, `NotDefined` |
+
+### IfcRailType
+
+| Value |
+|-------|
+| `HeavyRail`, `LightRail`, `Subway`, `Tram`, `Monorail`, `RackRail` |
+
+### IfcTrackComponentType
+
+| Value |
+|-------|
+| `Track`, `Sleeper`, `Ballast`, `Frog`, `Sleepers`, `Block` |
+
+### IfcBridgePartType
+
+| Value |
+|-------|
+| `Abutment`, `Deck`, `Pier`, `Pylon`, `Superstructure`, `Substructure` |
+
+### IfcGeotechType
+
+| Value |
+|-------|
+| `Borehole`, `Earthwork`, `RockTunnel` |
+
+### IfcSignalType
+
+| Value |
+|-------|
+| `TrafficLight`, `RailSignal`, `Sign`, `Panel` |
+
+### IfcSensorType
+
+| Value |
+|-------|
+| `TrafficSensor`, `WeatherSensor`, `SecurityCamera` |
+
+### IfcUtilityType
+
+| Value |
+|-------|
+| `PowerLine`, `Telecom`, `Stormwater`, `Sewage`, `Gas`, `DuctBank` |
+
+### IfcEarthworksType
+
+| Value |
+|-------|
+| `Cut`, `Fill`, `Embankment`, `Subgrade` |
+
+### IfcFacilityPartType
+
+| Value |
+|-------|
+| `Segment`, `Junction`, `LevelCrossing`, `Terminal` |
+
+## CityGML Enums
+
+CityGML fields describe the visual and semantic attributes of city objects at a given Level of Detail (LOD).
+
+### CityGmlLod
+
+`LOD0` (footprint) → `LOD4` (interior).
+
+### CityGmlFunction
+
+| Value |
+|-------|
+| `Traffic`, `WaterBody`, `SolitaryVegetation`, `PlantCover`, `CityFurniture`, `LandUse` |
+
+### CityGmlFurnitureType
+
+`TrafficLight`, `TrafficSign`, `StreetLamp`, `BusStop`, `Bench`, `WasteBin`, `Bollard`
+
+### CityGmlVegetationType
+
+`Tree`, `Shrub`, `Hedge`, `Grass`
+
+### CityGmlSurfaceMaterial
+
+`Asphalt`, `Concrete`, `Gravel`, `Soil`, `Grass`, `PavingStones`
+
+### CityGmlTrafficSurfaceFunction
+
+`DrivingLane`, `CycleLane`, `Sidewalk`, `ParkingBay`, `Crosswalk`, `TrafficIsland`, `Embankment`
+
+### CityGmlCondition
+
+`Intact`, `UnderConstruction`, `Declined`, `Demolished`, `Ruin`
+
+## Gotchas
+
+- IFC fields are domain-specific — setting `ifcRoadType` on a `IfcBridge` record has no semantic meaning. The schema does not enforce this constraint; validation is the application's responsibility.
+- `cityGmlLod` is independent of `ifcDomain`. A single record can carry both IFC and CityGML attributes.
+- `infrastructureParentId` is a string referencing another infrastructure record's external/feature ID, not its database `id`.
+
+## Further Reading
+
+- [IFC Infrastructure specification](https://standards.buildingsmart.org/IFC/RELEASE/IFC4_3/)
+- [CityGML standard](https://www.ogc.org/standard/citygml/)
+- [Data Model](../architecture/data-model.md#infrastructure)
+- [API — Infrastructure](../api/infrastructure.md)

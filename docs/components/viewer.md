@@ -52,10 +52,10 @@ No permissions are necessary here.
 
 ## Related
 
-- [MapViewer](/docs/components/map/MapViewer) — Map visualization component
-- [BimViewer](/docs/components/bim/BimViewer) — BIM model viewer
-- [PointCloudViewer](/docs/components/pointcloud/PointCloudViewer) — Point cloud visualization
-- [DataMenu](/docs/components/Data/DataMenu) — Data management views
-- [Toolbar](/docs/components/Toolbar) — Viewer toolbar controls
-- [MenusContext](/docs/store/MenusContext) — State management for current viewer
-- [BuildingsContext](/docs/store/BuildingsContext) — Building selection state
+- [MapViewer](/docs/components/viewer) — Map visualization component
+- [BimViewer](/docs/components/viewer) — BIM model viewer
+- [PointCloudViewer](/docs/components/viewer) — Point cloud visualization
+- [DataMenu](/docs/components/data-menu) — Data management views
+- [Toolbar](/docs/components/toolbar) — Viewer toolbar controls
+- [MenusContext](/docs/architecture/state-management) — State management for current viewer
+- [BuildingsContext](/docs/architecture/state-management) — Building selection state

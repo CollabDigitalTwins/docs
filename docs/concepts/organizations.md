@@ -1,0 +1,76 @@
+---
+sidebar_position: 8
+title: Organizations and Multi-tenancy
+description: How CDT scopes data, users, and permissions per organization — and what that means for self-hosted and shared deployments.
+---
+
+# Organizations and Multi-tenancy
+
+CDT is a **multi-tenant** platform: a single deployment can host many organizations, and each organization's data is isolated from the others. This page explains how that isolation works and why it shapes nearly every design decision in the platform.
+
+## What an Organization is
+
+An **Organization** is the top-level container in CDT. Everything else — users, buildings, sites, files, sensors, comments, roles — belongs to one organization. There is no concept of a "global" record. If a building exists, it exists *inside* an organization.
+
+A typical organization corresponds to:
+
+- A university department or research group
+- A municipal department or government agency
+- An engineering or architecture firm
+- A community of practice or open project
+
+The relationship is **one-to-many in both directions**: a user can belong to multiple organizations (in which case they pick which one is "active" on each session), and an organization has many users.
+
+## Why multi-tenancy matters
+
+Three properties follow from multi-tenancy, and each one shapes the platform:
+
+**Data isolation.** Two organizations sharing the same CDT instance never see each other's records. Every query in the API filters by the active organization, and every database row carries the organization ID.
+
+**Independent permissions.** A user who is an Admin in Organization A may be a Viewer in Organization B. Roles are scoped to organizations, not to users globally. See [Authorization Overview](../authorization/overview.md) for the full model.
+
+**Per-organization configuration.** Map defaults, feature flags, branding, and integration credentials are stored on the `Organization` record. Two organizations on the same instance can present completely different starting experiences.
+
+## How isolation is enforced
+
+Three layers cooperate to enforce isolation:
+
+| Layer | What it does |
+|-------|--------------|
+| **Session** | NextAuth records the active organization in the JWT. The user picks it on sign-in if they belong to more than one. |
+| **API** | Every route handler reads the active organization from the session and filters queries by it. Routes that touch records in a different organization return `403`. |
+| **Database** | Foreign keys to `organizationId` are not nullable on tenant-scoped tables. Bridge tables like `BuildingOnOrganizations` make the scoping explicit even for shared records. |
+
+Together these mean that a successful sign-in in one organization cannot read or modify data in any other.
+
+## Cross-organization sharing
+
+A small set of resources can deliberately cross organization boundaries:
+
+- **Open data portals** — registered globally so every organization sees the same federated catalogue.
+- **Shared building models** — a building can be linked to multiple organizations through `BuildingOnOrganizations` when collaboration spans tenants.
+- **Public assets** — an organization can mark specific records as public, exposing them in a read-only way to other organizations.
+
+These exceptions are explicit and small in number. The default for every new resource is "scoped to one organization."
+
+## When you would create a new Organization
+
+Self-hosting a CDT instance, you create a new organization for any group with:
+
+- Different membership lists
+- Different permission expectations
+- Different data ownership
+- Different branding or starting map
+
+Two teams within the same department might share an organization. Two municipal departments with separate data-handling policies should not.
+
+## Relationship to CDT Hosted
+
+On the hosted platform at `app.collabdt.org`, every customer is one organization. On self-hosted instances, organizations let you slice a single deployment among multiple groups without running multiple servers.
+
+## Related
+
+- [Authorization Overview](../authorization/overview.md)
+- [Managing roles and permissions](../authorization/managing-roles.md)
+- [Architecture → Data Model](../architecture/data-model.md)
+- [Architecture → Backend & API](../architecture/backend-and-api.md)

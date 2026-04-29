@@ -74,8 +74,8 @@ Individual field inputs are disabled based on CASL permissions. The `FieldRender
 
 ## Related
 
-- [FieldRenderer](/docs/components/field-renderer) — renders individual form fields
-- [AddInfrastructure](/docs/components/add-infrastructure) — dialog for initiating new infrastructure creation
+- [FieldRenderer](/docs/components/overview) — renders individual form fields
+- [AddInfrastructure](/docs/components/infrastructure-details) — dialog for initiating new infrastructure creation
 - [useInfrastructure](/docs/hooks/infrastructures) — SWR hook for fetching and mutating infrastructure
 - [useCreateInfrastructure](/docs/hooks/infrastructures) — SWR hook for creating infrastructure
-- [Infrastructure](/docs/data-model/infrastructure) — Prisma model definition
+- [Infrastructure](/docs/architecture/data-model#infrastructure) — Prisma model definition

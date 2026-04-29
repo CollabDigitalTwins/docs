@@ -232,5 +232,5 @@ On success, invalidates the all-comments list and any building-specific or autho
 
 ## Related
 
-- [Data model: Comment](/docs/data-model/comment)
+- [Data model: Comment](/docs/architecture/data-model#comment)
 - [Hooks: useBuilding](/docs/hooks/buildings)

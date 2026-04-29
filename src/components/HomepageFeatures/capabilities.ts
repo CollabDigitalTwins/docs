@@ -38,7 +38,7 @@ export const CAPABILITIES: Capability[] = [
     title: 'Collaboration',
     description:
       'Multi-user sessions, comments, and shared views — built for interdisciplinary teams.',
-    href: '/docs/authorization',
+    href: '/docs/authorization/overview',
   },
   {
     Icon: CodeIcon,

@@ -368,6 +368,6 @@ Attempts blob download via fetch for presigned URLs, with automatic fallback to 
 
 ## Related
 
-- [Data model: DbFile](/docs/data-model/file)
+- [Data model: DbFile](/docs/architecture/data-model#dbfile)
 - [Hooks: useBuildings](/docs/hooks/buildings)
 - [Hooks: useSites](/docs/hooks/sites)

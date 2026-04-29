@@ -1,61 +1,132 @@
 ---
 sidebar_position: 1
+title: Map Viewer
+description: Navigate the map, search for places, toggle data layers, measure, and share views.
 ---
 
 # Map Viewer
 
-The map viewer is the primary interface when you open CDT. It is built on [MapLibre GL JS](https://maplibre.org/) — a fully open-source WebGL map renderer — and serves as the spatial anchor for all other data types in the platform.
+The map viewer is the primary interface when you open CDT. It is built on [MapLibre GL JS](https://maplibre.org/) — a fully open-source WebGL renderer — and serves as the spatial anchor for every other data type in the platform.
 
-## Navigation
+## Goal
 
-Use your mouse or trackpad to pan, zoom, and tilt the map. MapLibre supports full 3D camera control: hold **right-click + drag** (or two-finger rotate on trackpad) to pitch and bearing-rotate the view. The map uses the **WGS 84** coordinate reference system as its base.
+Become productive in the map viewer: find a location, add data layers, measure distances, and share what you find with a teammate.
 
-For context, the map displays [OpenStreetMap](https://www.openstreetmap.org/) building footprints extruded to approximate height (LOD 1.3), giving you volumetric urban context without loading full BIM models.
+## Prerequisites
 
-## Geocoder
+- A CDT account. Sign in at your organization's CDT URL.
+- A modern browser with WebGL enabled.
 
-The search bar in the top-left queries both **Pelias** and **Nominatim** geocoder APIs, and also searches the platform's own database of loaded assets. Type any Canadian address, place name, or asset name to jump to that location.
+## Tour the controls
 
-## Layer Panel
+| Control | Where it is | What it does |
+|---------|-------------|--------------|
+| **Search bar** | Top-left | Geocodes addresses and place names; also searches your organization's assets. |
+| **Layer panel** | Left sidebar | Toggle federal, provincial, and municipal data layers. |
+| **Bottom toolbar** | Bottom of viewport | Datasets, Compare Buildings, Share, and Measure tools. |
+| **Settings** | Left sidebar | Language, support, and account. |
 
-A collapsible side menu shows available data layers organized by scale:
+## Navigate the map
 
-- **Federal** — Natural Resources Canada (NRCan), Statistics Canada, Open Government
-- **Provincial** — Open Ontario, Données ouvertes Québec, Open BC, and others
-- **Municipal** — Open Ottawa, Open Toronto, Vancouver Open Data, etc.
+**Goal:** move the camera and orient yourself in 3D.
 
-The map uses **scale-dependent visibility**: layers reveal progressively more detail as you zoom in. At the national level you see aggregated datasets; zooming into a city reveals neighbourhood-scale data; zooming further shows parcel and building-level information.
+1. Drag with the left mouse button to pan.
+2. Scroll the mouse wheel (or pinch on a trackpad) to zoom.
+3. Hold the right mouse button and drag to tilt and rotate the camera in 3D.
+4. Single-click a building footprint at street level to see its OSM attributes; CDT-managed buildings open the full Building Details panel.
 
-You can stack layers from different sources and scales simultaneously. Click any feature to access its full metadata directly on the map.
+**Result:** the map responds smoothly to all camera controls. Building footprints render as extruded polygons at LOD 1.3 once you are zoomed in.
 
-## Open Data Integration
+## Find a location
 
-The platform fetches data in real time directly from its original sources — nothing is cached or replicated locally. Supported formats include:
+**Goal:** centre the map on an address, place, or asset.
 
-- **GeoJSON** — vector features from most open data portals
-- **WMS / WMTS** — tiled raster imagery from geospatial services
-- **Vector tiles** — served from PostGIS via the Martin tile server
+1. Click the search bar in the top-left.
+2. Type a Canadian address, place name, or the name of an asset in your organization.
+3. Pick a result from the dropdown. The map flies to it.
 
-Each layer displays comprehensive metadata so you always know the provenance of what you are looking at.
+The search queries Pelias and Nominatim geocoders **and** your organization's own asset names, so saved buildings appear alongside public results.
 
-## Styling Tools
+**Result:** the camera centres on your chosen location and the search bar shows what you typed.
 
-You can style any layer by a numeric attribute — for example, colouring census tracts by population density or housing units by median rent. This makes it easy to surface spatial patterns in datasets without any GIS software.
+## Toggle a data layer
 
-## Measurement Tool
+**Goal:** overlay an open-data layer on the map.
 
-Click the ruler icon to measure distances and areas directly on the map. Click two or more points to get distances; close a polygon to get area. Uses the [Turf.js](https://turfjs.org/) library for client-side geospatial calculations.
+1. Click the **Datasets** icon in the bottom toolbar.
+2. The layer panel opens, organized by jurisdiction:
+   - **Federal** — Natural Resources Canada, Statistics Canada, Open Government, CIFFC.
+   - **Provincial** — British Columbia, Quebec, Ontario, Alberta, and others.
+   - **Municipal** — Ottawa, Toronto, Vancouver, Montreal, Calgary, Halifax, and more.
+3. Tick a layer. It appears on the map immediately.
+4. Click any feature on the layer to read its full attributes.
 
-## BIM on the Map
+**Result:** the layer is visible on the map and you can read attributes per feature. You can stack as many layers as you need — CDT reprojects everything to WGS 84 with [Proj4js](https://proj4js.org/) so jurisdictions align.
 
-IFC models can be overlaid on the map as georeferenced 3D objects. The platform synchronizes the MapLibre camera with a Three.js scene, so BIM geometry appears correctly positioned relative to surrounding urban context. Models are loaded as Fragments and optimized with Level of Detail (LOD): distant models render at lower detail to keep interaction fluid.
+The map uses **scale-dependent visibility**: more detailed layers reveal as you zoom in.
 
-For loading BIM models onto the map: **Fragments 2.0** — binary IFC format for fast streaming and LOD
+## Style a layer by an attribute
 
-## Share
+**Goal:** colour features by a numeric attribute (for example, census tracts by income).
 
-The share tool generates a URL that encodes the full map state: longitude, latitude, zoom, pitch, bearing, active map style, and the IDs of any loaded assets. Share this URL with a colleague and they open the exact same view — no re-navigation needed.
+1. With a layer active, click its name in the layer panel.
+2. Open the **Style** subpanel.
+3. Pick the attribute that should drive the colour gradient.
+4. Choose a colour ramp and value range.
+5. Click **Apply**.
 
-## Coordinate Reprojection
+**Result:** features are coloured by the attribute you selected.
 
-Canadian open data often arrives in local projections such as MTM or UTM. The platform uses [Proj4js](https://proj4js.org/) to reproject all incoming datasets to WGS 84 automatically, so layers from different jurisdictions align correctly.
+## Measure a distance or area
+
+**Goal:** measure with the ruler tool.
+
+1. Click the **Measure** icon in the bottom toolbar.
+2. Click two or more points on the map for a distance.
+3. Close the polygon by clicking the first point again to get an area.
+4. Press **Esc** to clear and start over.
+
+The measurement uses [Turf.js](https://turfjs.org/) for client-side geospatial calculations. Distances are in metres; areas in square metres.
+
+**Result:** the measured value is displayed next to the cursor and on each segment.
+
+## Share a view
+
+**Goal:** send a teammate the exact view you are looking at.
+
+1. Click the **Share** icon in the bottom toolbar.
+2. Copy the generated URL, or scan the QR code with your phone.
+3. Send the URL to your collaborator.
+
+The URL encodes longitude, latitude, zoom, pitch, bearing, the active map style, and the IDs of any loaded assets. Opening it loads the same scene without any re-navigation.
+
+**Result:** anyone who follows the URL sees the same map, layers, and assets you do.
+
+## Overlay an IFC model
+
+**Goal:** see a BIM model georeferenced on the map.
+
+IFC models are placed automatically when a building has a model attached. You can also drag and drop a model directly onto the map to position it ad-hoc.
+
+1. Open a building from the buildings list.
+2. If the building has an IFC attached, it appears as a 3D object at the building's coordinates.
+3. Pan and zoom — the model stays anchored.
+
+The platform synchronizes the MapLibre camera with a Three.js scene and uses **Fragments 2.0** with Level-of-Detail streaming so distant models render at lower fidelity to keep interaction fluid.
+
+**Result:** the IFC sits in its real geographic position alongside open-data layers.
+
+## Supported data formats
+
+| Format | Use |
+|--------|-----|
+| **GeoJSON** | Most open data portals. |
+| **WMS / WMTS** | OGC tiled raster imagery from geospatial services. |
+| **Vector tiles** | Served from PostGIS via the Martin tile server. |
+
+## Related
+
+- [Concepts → GIS & Map Data](../concepts/gis-and-map-data.md)
+- [Datasets & Open Data](./datasets-and-open-data.md)
+- [BIM Viewer](./bim-viewer.md)
+- [Components → Viewer](../components/viewer.md)

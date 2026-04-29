@@ -278,6 +278,6 @@ if (success) {
 
 ## Related
 
-- [Data model: User](/docs/data-model/user)
-- [Data model: Role](/docs/data-model/role)
-- [Hook provider](/docs/hooks/provider)
+- [Data model: User](/docs/architecture/data-model#user)
+- [Data model: Role](/docs/architecture/data-model#organization)
+- [Hook provider](/docs/hooks/overview)

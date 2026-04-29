@@ -61,4 +61,4 @@ function Header() {
 
 ## Related
 
-- [Components: Sidebar](/docs/components/sidebar)
+- [Components: Sidebar](/docs/components/app-sidebar)

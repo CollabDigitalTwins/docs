@@ -1,66 +1,123 @@
+---
+sidebar_position: 2
+title: Quickstart
+description: Your first 30 minutes with CDT — sign in, explore the map, add a building, upload an IFC model, and invite a teammate.
+---
+
 # Quickstart
 
-Get up and running with the CDT platform in under 10 minutes.
+This walkthrough takes you from a fresh CDT account to a working digital twin in roughly 30 minutes. By the end you will have explored the platform on a map, added a building, uploaded an IFC model, and invited a teammate to collaborate.
 
-## Quick Setup
+## Before you start
 
-If you haven't already, follow the [Installation Guide](./installation.md) to set up your environment.
+You need:
 
-Once the development server is running, navigate to `http://localhost:3000` to access the CDT platform.
+- An account on a CDT instance — either `https://app.collabdt.org` or your organization's self-hosted URL
+- A modern browser (Chrome, Edge, Firefox, or Safari) with WebGL enabled
+- Optional: a sample IFC file. Public test files are available from the [buildingSMART sample repository](https://github.com/buildingSMART/Sample-Test-Files)
 
-## Interface Overview
+If you do not have an account yet, your organization's administrator can invite you, or you can create an instance using the [Installation guide](./installation.md).
 
-### Map Viewer
+---
 
-The platform opens to the Map Viewer by default, where you can:
+## Step 1 — Sign in (≈ 2 minutes)
 
-- **Navigate the map** — Pan, zoom, and explore geospatial data
-- **Search locations** — Use the search bar in the top left to find geocoded locations
-- **View building footprints** — Zoom in and click on building footprints to see details
-- **Add datasets** — Click the database icon in the bottom toolbar to open the Datasets panel
-  - Browse federal, provincial, and municipal open data layers
-  - Toggle layers on/off to overlay geospatial data on the map
+**Goal:** confirm your account works and reach the main interface.
 
-### 3D Viewers
+1. Open your CDT URL in a browser.
+2. Sign in with your email and password, or with Google if your administrator has enabled OAuth.
+3. CDT opens to the **Map Viewer**, centred on your organization's default map view.
 
-Access different viewers from the left sidebar:
+**Result:** you see a map filling the viewport, a left sidebar with navigation icons, and a top toolbar with search and tools.
 
-- **BIM Viewer** — Load and interact with IFC BIM models
-- **Point Cloud Viewer** — Visualize point cloud data in 3D
+---
 
-### Data Management
+## Step 2 — Explore the map (≈ 5 minutes)
 
-Browse and manage spatial data:
+**Goal:** orient yourself in the spatial environment that anchors all CDT data.
 
-- **Buildings** — View building data stored in the platform database
-  - Click any building to see detailed information and associated files
-  - Add buildings directly to the map
-- **Sites** — View site information and associated buildings
-- **Files** — Access all files stored on the platform
+1. **Pan and zoom** with mouse drag and scroll wheel. Hold right-click and drag to tilt and rotate the camera in 3D.
+2. **Search a location** — type a Canadian address or place name in the top-left search bar and select a result.
+3. **Toggle a data layer** — click the **Datasets** icon in the bottom toolbar, browse the catalogue, and add a layer (for example, "Statistics Canada — Census tracts"). The layer appears on the map immediately.
+4. **Inspect a feature** — click any building footprint or layer feature to see its full attribute data in a side panel.
 
-### Tools & Features
+**Result:** you can navigate the map and read open-data attributes for any feature you click.
 
-Bottom toolbar includes:
+For more on the map, see the [Map Viewer guide](../guides/map-viewer.md).
 
-- **Datasets** — Toggle map layers from open data portals
-- **Compare Buildings** — Select multiple buildings to compare their properties
-- **Share** — Copy link or generate QR code for current map position
-- **Measure** — Calculate distances and areas on the map
+---
 
-### Settings & Preferences
+## Step 3 — Add a building (≈ 5 minutes)
 
-Access from the left sidebar:
+**Goal:** create your first asset record in the platform.
 
-- **Language** — Switch between supported locales (currently English, French, and Spanish via i18n)
-- **Support** — Get help or provide feedback
-- **Account** — Manage settings or logout
+1. Open the **Buildings** view from the left sidebar.
+2. Click **Add Building**.
+3. Fill in:
+   - **Name** — for example, *Test Building 1*
+   - **Type** — pick a category from the dropdown
+   - **Location** — drop a pin on the map, or paste latitude/longitude
+4. Click **Save**.
 
-## Next Steps
+**Result:** the building appears in the buildings list and as a marker on the map. Clicking it opens the **Building Details** panel.
 
-- Explore the [Architecture Overview](/docs/architecture/overview) to understand how components work together
-- Browse the [Concepts](/docs/concepts/digital-twins) section to learn about digital twins, BIM, and GIS
-- Read the [API Reference](/docs/api-reference/authentication) for backend integration
-- Check out the [Guides](/docs/guides/map-viewer) for working with CDT's viewers
-- [Contribute](https://github.com/collabdt/core?tab=contributing-ov-file#contributing-to-collab-digital-twins) to the project
+For full coverage, see [Managing Buildings & Sites](../guides/buildings-and-sites.md).
 
-**Need Help?** Join our community on [GitHub Discussions](https://github.com/collabdt/core/discussions) or reach out via our [contact form](https://collabdt.org/home#contact).
+---
+
+## Step 4 — Upload an IFC model (≈ 8 minutes)
+
+**Goal:** attach a 3D BIM model to your building and view it in the BIM viewer.
+
+1. Open the building you just created.
+2. Switch to the **Files** tab inside the building details panel.
+3. Drag and drop your IFC file onto the panel, or click **Upload** and select it. Small files (under 50 MB) finish in under a minute; larger files take longer.
+4. Once processing is complete, switch to the **BIM Viewer** from the left sidebar and select your file.
+5. Use **left-click + drag** to orbit, **right-click + drag** to pan, and the scroll wheel to zoom. Click any element to see its IFC property sets in the right panel.
+
+**Result:** your IFC model loads in the browser, navigable in 3D, with full property-set inspection. The platform converts the file to Fragments format on upload, so subsequent loads are fast.
+
+For more, see the [BIM Viewer guide](../guides/bim-viewer.md).
+
+---
+
+## Step 5 — Invite a teammate (≈ 5 minutes)
+
+**Goal:** share what you have built with another user in your organization.
+
+1. Open **Settings → Members** from the left sidebar.
+2. Click **Invite member**.
+3. Enter the teammate's email address.
+4. Choose a role — **Viewer** for read-only access, **Contributor** to upload files and add comments, or **Manager** to edit asset records.
+5. Click **Send invitation**.
+
+Your teammate receives an email with a sign-up link. Once they accept, they appear in the members list and can sign in with the role you assigned.
+
+**Result:** another user can now access the building and IFC model you uploaded, scoped to the permissions of their role.
+
+For the full role reference, see [Managing roles and permissions](../authorization/managing-roles.md).
+
+---
+
+## Verify everything works
+
+You should now be able to:
+
+- ✅ Sign in and reach the Map Viewer
+- ✅ Pan, zoom, and search the map
+- ✅ Toggle an open-data layer and click features for attributes
+- ✅ See your new building on the map and in the buildings list
+- ✅ Open your IFC model in the BIM viewer and inspect element properties
+- ✅ See an invited teammate in the members list
+
+If any step did not work as expected, see the [Troubleshooting page](./troubleshooting.md).
+
+## Next steps
+
+Pick the path that matches what you want to do next:
+
+- **Keep exploring as a user** — read the [Guides](../guides/map-viewer.md) for the Map, BIM, Point Cloud, and Datasets views.
+- **Build on the platform** — start with the [Developer Introduction](../developer-introduction.md) and [Plugins overview](../plugins/overview.md).
+- **Self-host CDT** — see the [Self-Hosting guide](../deployment/self-hosting.md) and [Environment variables reference](./environment-variables.md).
+
+Need help? Reach out via the [contact form](https://collabdt.org/home#contact) or the [GitHub repository](https://github.com/collabdt/core).
