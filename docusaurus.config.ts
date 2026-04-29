@@ -110,10 +110,22 @@ const config: Config = {
       },
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'baseSidebar',
+          type: 'doc',
+          docId: 'introduction',
           position: 'left',
-          label: 'Docs',
+          label: 'Users',
+        },
+        {
+          type: 'doc',
+          docId: 'developer-introduction',
+          position: 'left',
+          label: 'Developers',
+        },
+        {
+          type: 'doc',
+          docId: 'deployment/overview',
+          position: 'left',
+          label: 'Deployment',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         {

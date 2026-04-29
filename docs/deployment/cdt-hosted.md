@@ -42,4 +42,4 @@ Best for organizations with existing IT capacity that require data sovereignty o
 
 ## Related
 
-- [Self-Hosting Overview](./overview.md) — deploy it yourself
+- [Self-Hosting](./self-hosting.md) — deploy it yourself
