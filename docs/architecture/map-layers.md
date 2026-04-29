@@ -1,5 +1,6 @@
 ---
 sidebar_position: 10
+displayed_sidebar: developerSidebar
 title: Map Layers
 description: The composable map layer system — what each layer renders, what data it reads, and how layers register with MapClickManager.
 category: architecture

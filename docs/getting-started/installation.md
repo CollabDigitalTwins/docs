@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+displayed_sidebar: userSidebar
 title: Installation
 description: Set up a local CDT development environment on macOS, Linux, or Windows.
 ---

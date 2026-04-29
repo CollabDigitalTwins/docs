@@ -1,5 +1,6 @@
 ---
 sidebar_position: 9
+displayed_sidebar: developerSidebar
 title: Data Model
 description: Core domain types used across the CDT platform — buildings, sites, infrastructure, sensors, files, users, organizations, and their enumerations.
 category: architecture

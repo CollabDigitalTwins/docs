@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+displayed_sidebar: userSidebar
 title: Environment Variables
 description: Complete reference for every variable in .env.example, with required/optional status, defaults, and production guidance.
 ---

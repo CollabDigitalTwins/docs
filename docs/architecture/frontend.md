@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+displayed_sidebar: developerSidebar
 ---
 
 import BrowserOnly from '@docusaurus/BrowserOnly';

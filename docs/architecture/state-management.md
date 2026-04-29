@@ -1,5 +1,6 @@
 ---
 sidebar_position: 7
+displayed_sidebar: developerSidebar
 ---
 
 # State Management

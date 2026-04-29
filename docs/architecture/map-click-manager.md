@@ -1,5 +1,6 @@
 ---
 sidebar_position: 11
+displayed_sidebar: developerSidebar
 title: Map Click Manager
 description: Priority-based click dispatch system for the map viewer — how layers register handlers and how conflicts are resolved.
 category: architecture
