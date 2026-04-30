@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+displayed_sidebar: developerSidebar
 ---
 
 import BrowserOnly from '@docusaurus/BrowserOnly';
@@ -61,41 +62,35 @@ Point cloud renderer for LiDAR scans and photogrammetry datasets.
 
 ## State Management
 
-Application state is organized as a composition of React Context providers, each owning a focused domain slice:
+Application state is organized as a composition of React Context providers, each owning a focused domain slice. Rather than nesting providers manually, CDT uses a small `compose` utility (defined in `src/core/store/CombineProviders.tsx`) to flatten them into a single `AppProvider`:
 
-```typescript
-// src/contexts/index.tsx - composed at app root
+```tsx
+// src/core/store/CombineProviders.tsx
 
-export function ContextProviders({ children }) {
-  return (
-    <AppConfigProvider>
-      <PermissionsProvider>
-        <MapProvider>
-          <BimProvider>
-            <PointCloudProvider>
-              <MenusProvider>
-                <ToolsProvider>
-                  <ContentProvider>
-                    <DatasetsProvider>
-                      <FilesProvider>
-                        <BuildingsProvider>
-                          <Comments Provider>
-                            {children}
-                          </CommentsProvider>
-                        </BuildingsProvider>
-                      </FilesProvider>
-                    </DatasetsProvider>
-                  </ContentProvider>
-                </ToolsProvider>
-              </MenusProvider>
-            </PointCloudProvider>
-          </BimProvider>
-        </MapProvider>
-      </PermissionsProvider>
-    </AppConfigProvider>
-  );
-}
+const compose = providers =>
+  providers.reduce(
+    (Prev, Curr) =>
+      function ComposedProvider({ children }) {
+        return <Prev><Curr>{children}</Curr></Prev>
+      }
+  )
+
+export const AppProvider = compose([
+  AppConfigProvider,
+  BimProvider,
+  MapProvider,
+  MenusProvider,
+  ToolsProvider,
+  ContentProvider,
+  DatasetsProvider,
+  FilesProvider,
+  BuildingsProvider,
+  PointCloudProvider,
+  PermissionsProvider,
+])
 ```
+
+`AppProvider` is rendered once at the application root and gives every component access to every context without prop drilling. See [State Management](./state-management.md) for the full pattern (state, actions, reducers, and consumption).
 
 ### Provider Reference
 
@@ -157,27 +152,54 @@ All three viewers share the same chrome:
 
 ### Component Structure
 
-```
-src/components/
-├── viewers/
-│   ├── MapViewer.tsx          # MapLibre wrapper, controls
-│   ├── BimViewer.tsx          # That Open Company wrapper
-│   └── PointCloudViewer.tsx   # Potree wrapper
-├── panels/
-│   ├── Sidebar.tsx            # Left navigation
-│   ├── DetailsPanel.tsx       # Right properties
-│   └── ToolsPanel.tsx         # Bottom toolbar
-├── ui/                        # Radix-based design system
-│   ├── Button.tsx
-│   ├── Dialog.tsx
-│   ├── Tabs.tsx
-│   └── ...
-└── features/
-    ├── buildings/             # Building-specific components
-    ├── collaboration/         # Comments, BCF topics
-    ├── datasets/              # Open data layer management
-    └── ...
-```
+<BrowserOnly>
+  {() => {
+    const HierarchyTree = require('@site/src/components/HierarchyTree').default;
+    return (
+      <HierarchyTree
+        data={{
+          label: 'src/components/',
+          children: [
+            {
+              label: 'viewers/',
+              children: [
+                { label: 'MapViewer.tsx' },
+                { label: 'BimViewer.tsx' },
+                { label: 'PointCloudViewer.tsx' },
+              ],
+            },
+            {
+              label: 'panels/',
+              children: [
+                { label: 'Sidebar.tsx' },
+                { label: 'DetailsPanel.tsx' },
+                { label: 'ToolsPanel.tsx' },
+              ],
+            },
+            {
+              label: 'ui/',
+              children: [
+                { label: 'Button.tsx' },
+                { label: 'Dialog.tsx' },
+                { label: 'Tabs.tsx' },
+                { label: '…' },
+              ],
+            },
+            {
+              label: 'features/',
+              children: [
+                { label: 'buildings/' },
+                { label: 'collaboration/' },
+                { label: 'datasets/' },
+                { label: '…' },
+              ],
+            },
+          ],
+        }}
+      />
+    );
+  }}
+</BrowserOnly>
 
 ## Internationalization
 

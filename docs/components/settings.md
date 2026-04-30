@@ -6,6 +6,8 @@ status: draft
 last_updated: 2026-04-23
 ---
 
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
 # Settings Components
 
 The settings viewer (`ViewerNames.settings`) contains three panels accessible from a sidebar. Each panel is a self-contained component in `src/core/components/settings/src/`.
@@ -78,13 +80,24 @@ Visibility and actions within `DataMenu` are gated by the user's CASL permission
 
 ## Layout structure
 
-```
-SettingsContent
-  ├── SettingsSidebar        — tab navigation (account / organization / users)
-  ├── AccountSettingsPanel
-  ├── OrganizationSettingsPanel
-  └── UsersSettingsPanel
-```
+<BrowserOnly>
+  {() => {
+    const HierarchyTree = require('@site/src/components/HierarchyTree').default;
+    return (
+      <HierarchyTree
+        data={{
+          label: 'SettingsContent',
+          children: [
+            { label: 'SettingsSidebar' },
+            { label: 'AccountSettingsPanel' },
+            { label: 'OrganizationSettingsPanel' },
+            { label: 'UsersSettingsPanel' },
+          ],
+        }}
+      />
+    );
+  }}
+</BrowserOnly>
 
 `SettingsTabKey` type: `'account' | 'users' | 'organization'`
 

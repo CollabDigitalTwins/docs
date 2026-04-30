@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+displayed_sidebar: userSidebar
 title: Troubleshooting
 description: Known failure modes for installation, deployment, and day-to-day use — with diagnostic steps and fixes.
 ---

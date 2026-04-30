@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+displayed_sidebar: userSidebar
 title: Quickstart
 description: Your first 30 minutes with CDT — sign in, explore the map, add a building, upload an IFC model, and invite a teammate.
 ---

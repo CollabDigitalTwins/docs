@@ -2,6 +2,8 @@
 sidebar_position: 6
 ---
 
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
 # Multi-Viewer Architecture
 
 CDT exposes data through three specialized viewers — Map, BIM, and Point Cloud — each optimized for a different data type and scale. They are not separate applications; they share the same underlying project data, coordinate system, and storage layer, and can be used in combination within a single session.
@@ -35,24 +37,12 @@ The point cloud viewer handles large reality capture datasets that would be impr
 
 All three viewers draw from the same backend:
 
-```
-                        Browser
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  Map Viewer  │  │  BIM Viewer  │  │  Point Cloud │
-│  (MapLibre)  │  │ (That Open)  │  │   (Potree)   │
-└──────┬───────┘  └──────┬───────┘  └──────┬───────┘
-       │                 │                 │
-       └─────────────────┴─────────────────┘
-                         │
-                    Next.js API
-                         │
-          ┌──────────────┴──────────────┐
-          │                             │
-     PostgreSQL                       MinIO
-       + PostGIS                  (object storage)
-    (structured data)          (binary files: IFC,
-                                LAS, images, etc.)
-```
+<BrowserOnly>
+  {() => {
+    const MultiViewerStack = require('@site/src/components/MultiViewerStack').default;
+    return <MultiViewerStack />;
+  }}
+</BrowserOnly>
 
 - **PostgreSQL + PostGIS** — stores building and site records, user metadata, sensor readings, BCF topics, and spatial queries
 - **MinIO** — stores binary assets: IFC files, Fragments, point clouds, media uploads. S3-compatible, versioned, Canadian-hosted
