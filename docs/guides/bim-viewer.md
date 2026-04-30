@@ -4,6 +4,8 @@ title: BIM Viewer
 description: Open IFC models, navigate them in 3D, inspect properties, validate against IDS, and coordinate with BCF topics.
 ---
 
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
 # BIM Viewer
 
 The BIM viewer loads, navigates, and interrogates IFC models independently of their map context. It is built on [That Open Engine](https://thatopen.com/) — an IFC engine on top of Three.js that gives full access to BIM geometry, metadata, and property sets while honouring openBIM standards.
@@ -79,13 +81,33 @@ The conversion happens once. Subsequent loads stream the cached `.frag` and are 
 
 1. Open the **Layers** tab in the left panel.
 2. The IFC spatial tree expands as:
-   ```
-   IfcProject
-     └─ IfcSite
-          └─ IfcBuilding
-               └─ IfcBuildingStorey
-                    └─ IfcSpace / elements...
-   ```
+
+<BrowserOnly>
+  {() => {
+    const HierarchyTree = require('@site/src/components/HierarchyTree').default;
+    return (
+      <HierarchyTree
+        data={{
+          label: 'IfcProject',
+          children: [{
+            label: 'IfcSite',
+            children: [{
+              label: 'IfcBuilding',
+              children: [{
+                label: 'IfcBuildingStorey',
+                children: [
+                  { label: 'IfcSpace' },
+                  { label: 'IfcWall / IfcSlab / …' },
+                ],
+              }],
+            }],
+          }],
+        }}
+      />
+    );
+  }}
+</BrowserOnly>
+
 3. Click any node — the corresponding geometry highlights in the 3D view.
 
 This is the fastest way to find a specific room, storey, or system in a large federated model.
