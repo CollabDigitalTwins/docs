@@ -133,5 +133,5 @@ Use [`/api/open-data-portals`](./open-data-portals.md) to register a new portal 
 ## Related
 
 - [/api/open-data-portals](./open-data-portals.md)
-- [Concepts → Open Data Portals](../concepts/open-data-portals.md)
+- [Concepts → Open Data Portals](../concepts/open-data-portals.mdx)
 - [Datasets & Open Data guide](../guides/datasets-and-open-data.md)

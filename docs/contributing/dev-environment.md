@@ -6,7 +6,7 @@ sidebar_position: 2
 
 # Dev Environment Setup
 
-This page covers what you need on your machine to develop CDT itself. If you only want to *use* CDT or self-host it, see the user [Installation](../getting-started/installation.md) guide instead.
+This page covers what you need on your machine to develop CDT itself. If you only want to *use* CDT or self-host it, see the user [Installation](../getting-started/installation.mdx) guide instead.
 
 ## Toolchain
 
@@ -18,7 +18,7 @@ This page covers what you need on your machine to develop CDT itself. If you onl
 | **Docker Desktop** or **Engine + Compose** | 24.0+ | Runs PostgreSQL, MinIO, Martin |
 | **VS Code** | latest | Recommended editor — repo has shared settings |
 
-For the full prerequisite versions and platform notes, see [Installation](../getting-started/installation.md#prerequisites).
+For the full prerequisite versions and platform notes, see [Installation](../getting-started/installation.mdx#prerequisites).
 
 ## Initial setup
 
@@ -29,7 +29,7 @@ yarn install
 cp .env.example .env
 ```
 
-Open `.env` and fill in at least the required keys — see the [Environment variables reference](../getting-started/environment-variables.md).
+Open `.env` and fill in at least the required keys — see the [Environment variables reference](../getting-started/environment-variables.mdx).
 
 ## Local services
 
@@ -90,11 +90,11 @@ Playwright requires browsers to be installed once with `npx playwright install`.
 
 ## Troubleshooting setup
 
-For common installation failures (port conflicts, Prisma errors, missing modules), see the [Troubleshooting page](../getting-started/troubleshooting.md).
+For common installation failures (port conflicts, Prisma errors, missing modules), see the [Troubleshooting page](../getting-started/troubleshooting.mdx).
 
 ## Related
 
 - [Git Workflow](./git-workflow.md)
-- [Installation](../getting-started/installation.md)
-- [Environment variables](../getting-started/environment-variables.md)
-- [Architecture Overview](../architecture/overview.md)
+- [Installation](../getting-started/installation.mdx)
+- [Environment variables](../getting-started/environment-variables.mdx)
+- [Architecture Overview](../architecture/overview.mdx)

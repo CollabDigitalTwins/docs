@@ -31,5 +31,5 @@ A fully managed SaaS deployment hosted in Canada, or an assisted deployment wher
 
 ## Related
 
-- [Architecture Overview](../architecture/overview.md)
-- [Environment variables reference](../getting-started/environment-variables.md)
+- [Architecture Overview](../architecture/overview.mdx)
+- [Environment variables reference](../getting-started/environment-variables.mdx)

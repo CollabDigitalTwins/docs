@@ -1,0 +1,713 @@
+{
+  "generatedAt": "2026-04-30T20:24:09.626Z",
+  "audiences": [
+    {
+      "key": "userSidebar",
+      "label": "Users",
+      "rootDocs": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "slug": "/docs/introduction",
+          "primary": null
+        },
+        {
+          "id": "cdt-vs-alternatives",
+          "title": "CDT vs Alternatives",
+          "slug": "/docs/cdt-vs-alternatives",
+          "primary": null
+        },
+        {
+          "id": "changelog",
+          "title": "Changelog",
+          "slug": "/docs/changelog",
+          "primary": null
+        }
+      ],
+      "dirs": [
+        {
+          "name": "authorization",
+          "label": "Authorization",
+          "pages": [
+            {
+              "id": "authorization/managing-roles",
+              "title": "Managing Roles and Permissions",
+              "slug": "/docs/authorization/managing-roles",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "authorization/overview",
+              "title": "Overview",
+              "slug": "/docs/authorization/overview",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "authorization/permission-reference",
+              "title": "Permission Reference",
+              "slug": "/docs/authorization/permission-reference",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "authorization/authorization_roles_permissions",
+              "title": "Roles, Permissions & CASL",
+              "slug": "/docs/authorization/authorization_roles_permissions",
+              "primary": "developerSidebar"
+            }
+          ],
+          "primary": "userSidebar",
+          "sharedWith": [
+            "deploymentSidebar"
+          ]
+        },
+        {
+          "name": "concepts",
+          "label": "Concepts",
+          "pages": [
+            {
+              "id": "concepts/bim-and-ifc",
+              "title": "BIM & IFC",
+              "slug": "/docs/concepts/bim-and-ifc",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/gis-and-map-data",
+              "title": "GIS & Map Data",
+              "slug": "/docs/concepts/gis-and-map-data",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/ifc-infrastructure-types",
+              "title": "IFC Infrastructure Types",
+              "slug": "/docs/concepts/ifc-infrastructure-types",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/multi-viewer-architecture",
+              "title": "Multi-Viewer Architecture",
+              "slug": "/docs/concepts/multi-viewer-architecture",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/open-data-portals",
+              "title": "Open Data Portals",
+              "slug": "/docs/concepts/open-data-portals",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/open-standards",
+              "title": "Open Standards",
+              "slug": "/docs/concepts/open-standards",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/organizations",
+              "title": "Organizations and Multi-tenancy",
+              "slug": "/docs/concepts/organizations",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/point-clouds",
+              "title": "Point Clouds",
+              "slug": "/docs/concepts/point-clouds",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/digital-twins",
+              "title": "What is a Digital Twin?",
+              "slug": "/docs/concepts/digital-twins",
+              "primary": "userSidebar"
+            }
+          ],
+          "primary": "userSidebar",
+          "sharedWith": [
+            "developerSidebar"
+          ]
+        },
+        {
+          "name": "getting-started",
+          "label": "Getting Started",
+          "pages": [
+            {
+              "id": "getting-started/environment-variables",
+              "title": "Environment Variables",
+              "slug": "/docs/getting-started/environment-variables",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "getting-started/installation",
+              "title": "Installation",
+              "slug": "/docs/getting-started/installation",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "getting-started/quickstart",
+              "title": "Quickstart",
+              "slug": "/docs/getting-started/quickstart",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "getting-started/troubleshooting",
+              "title": "Troubleshooting",
+              "slug": "/docs/getting-started/troubleshooting",
+              "primary": "userSidebar"
+            }
+          ],
+          "primary": "userSidebar",
+          "sharedWith": [
+            "deploymentSidebar"
+          ]
+        },
+        {
+          "name": "guides",
+          "label": "Guides",
+          "pages": [
+            {
+              "id": "guides/bim-viewer",
+              "title": "BIM Viewer",
+              "slug": "/docs/guides/bim-viewer",
+              "primary": null
+            },
+            {
+              "id": "guides/buildings-and-sites",
+              "title": "Buildings & Sites",
+              "slug": "/docs/guides/buildings-and-sites",
+              "primary": null
+            },
+            {
+              "id": "guides/collaboration",
+              "title": "Collaboration",
+              "slug": "/docs/guides/collaboration",
+              "primary": null
+            },
+            {
+              "id": "guides/datasets-and-open-data",
+              "title": "Datasets & Open Data",
+              "slug": "/docs/guides/datasets-and-open-data",
+              "primary": null
+            },
+            {
+              "id": "guides/file-management",
+              "title": "File Management",
+              "slug": "/docs/guides/file-management",
+              "primary": null
+            },
+            {
+              "id": "guides/overview",
+              "title": "Guides Overview",
+              "slug": "/docs/guides/overview",
+              "primary": null
+            },
+            {
+              "id": "guides/map-viewer",
+              "title": "Map Viewer",
+              "slug": "/docs/guides/map-viewer",
+              "primary": null
+            },
+            {
+              "id": "guides/point-cloud-viewer",
+              "title": "Point Cloud Viewer",
+              "slug": "/docs/guides/point-cloud-viewer",
+              "primary": null
+            },
+            {
+              "id": "guides/sensors-and-iot",
+              "title": "Sensors & IoT Data",
+              "slug": "/docs/guides/sensors-and-iot",
+              "primary": null
+            }
+          ],
+          "primary": "userSidebar",
+          "sharedWith": []
+        }
+      ]
+    },
+    {
+      "key": "developerSidebar",
+      "label": "Developers",
+      "rootDocs": [
+        {
+          "id": "developer-introduction",
+          "title": "Introduction for Developers",
+          "slug": "/docs/developer-introduction",
+          "primary": null
+        },
+        {
+          "id": "changelog",
+          "title": "Changelog",
+          "slug": "/docs/changelog",
+          "primary": null
+        }
+      ],
+      "dirs": [
+        {
+          "name": "api",
+          "label": "API Reference",
+          "pages": [
+            {
+              "id": "api/buildings",
+              "title": "/api/buildings",
+              "slug": "/docs/api/buildings",
+              "primary": null
+            },
+            {
+              "id": "api/proxies",
+              "title": "/api/ckanProxy and /api/opendatasoftProxy",
+              "slug": "/docs/api/proxies",
+              "primary": null
+            },
+            {
+              "id": "api/comments",
+              "title": "/api/comments",
+              "slug": "/docs/api/comments",
+              "primary": null
+            },
+            {
+              "id": "api/data-analysis",
+              "title": "/api/data-analysis",
+              "slug": "/docs/api/data-analysis",
+              "primary": null
+            },
+            {
+              "id": "api/files",
+              "title": "/api/files",
+              "slug": "/docs/api/files",
+              "primary": null
+            },
+            {
+              "id": "api/infrastructure",
+              "title": "/api/infrastructure",
+              "slug": "/docs/api/infrastructure",
+              "primary": null
+            },
+            {
+              "id": "api/open-data-portals",
+              "title": "/api/open-data-portals",
+              "slug": "/docs/api/open-data-portals",
+              "primary": null
+            },
+            {
+              "id": "api/organizations",
+              "title": "/api/organizations",
+              "slug": "/docs/api/organizations",
+              "primary": null
+            },
+            {
+              "id": "api/sensors",
+              "title": "/api/sensors",
+              "slug": "/docs/api/sensors",
+              "primary": null
+            },
+            {
+              "id": "api/sites",
+              "title": "/api/sites",
+              "slug": "/docs/api/sites",
+              "primary": null
+            },
+            {
+              "id": "api/users",
+              "title": "/api/users",
+              "slug": "/docs/api/users",
+              "primary": null
+            },
+            {
+              "id": "api/overview",
+              "title": "API Overview",
+              "slug": "/docs/api/overview",
+              "primary": null
+            }
+          ],
+          "primary": "developerSidebar",
+          "sharedWith": []
+        },
+        {
+          "name": "architecture",
+          "label": "Architecture",
+          "pages": [
+            {
+              "id": "architecture/overview",
+              "title": "Architecture Overview",
+              "slug": "/docs/architecture/overview",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/backend-and-api",
+              "title": "Backend & API",
+              "slug": "/docs/architecture/backend-and-api",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/data-layer",
+              "title": "Data Layer",
+              "slug": "/docs/architecture/data-layer",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/data-model",
+              "title": "Data Model",
+              "slug": "/docs/architecture/data-model",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/frontend",
+              "title": "Frontend Architecture",
+              "slug": "/docs/architecture/frontend",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/internationalization",
+              "title": "Internationalization",
+              "slug": "/docs/architecture/internationalization",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/map-click-manager",
+              "title": "Map Click Manager",
+              "slug": "/docs/architecture/map-click-manager",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/map-layers",
+              "title": "Map Layers",
+              "slug": "/docs/architecture/map-layers",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/middleware",
+              "title": "Middleware",
+              "slug": "/docs/architecture/middleware",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/api-design",
+              "title": "RESTful API Design",
+              "slug": "/docs/architecture/api-design",
+              "primary": "developerSidebar"
+            },
+            {
+              "id": "architecture/state-management",
+              "title": "State Management",
+              "slug": "/docs/architecture/state-management",
+              "primary": "developerSidebar"
+            }
+          ],
+          "primary": "developerSidebar",
+          "sharedWith": [
+            "deploymentSidebar"
+          ]
+        },
+        {
+          "name": "components",
+          "label": "Components",
+          "pages": [
+            {
+              "id": "components/app-sidebar",
+              "title": "AppSidebarContent",
+              "slug": "/docs/components/app-sidebar",
+              "primary": null
+            },
+            {
+              "id": "components/auth",
+              "title": "Authentication Components",
+              "slug": "/docs/components/auth",
+              "primary": null
+            },
+            {
+              "id": "components/bim-tools",
+              "title": "BIM Viewer Tools",
+              "slug": "/docs/components/bim-tools",
+              "primary": null
+            },
+            {
+              "id": "components/building-details",
+              "title": "BuildingDetails",
+              "slug": "/docs/components/building-details",
+              "primary": null
+            },
+            {
+              "id": "components/data-menu",
+              "title": "DataMenu",
+              "slug": "/docs/components/data-menu",
+              "primary": null
+            },
+            {
+              "id": "components/data-table",
+              "title": "DataTable",
+              "slug": "/docs/components/data-table",
+              "primary": null
+            },
+            {
+              "id": "components/file-details",
+              "title": "FilePreview",
+              "slug": "/docs/components/file-details",
+              "primary": null
+            },
+            {
+              "id": "components/infrastructure-details",
+              "title": "InfrastructureDetails",
+              "slug": "/docs/components/infrastructure-details",
+              "primary": null
+            },
+            {
+              "id": "components/top-navigation-bar",
+              "title": "NavigationBar",
+              "slug": "/docs/components/top-navigation-bar",
+              "primary": null
+            },
+            {
+              "id": "components/overview",
+              "title": "Overview",
+              "slug": "/docs/components/overview",
+              "primary": null
+            },
+            {
+              "id": "components/point-cloud-tools",
+              "title": "Point Cloud Viewer Tools",
+              "slug": "/docs/components/point-cloud-tools",
+              "primary": null
+            },
+            {
+              "id": "components/settings",
+              "title": "Settings Components",
+              "slug": "/docs/components/settings",
+              "primary": null
+            },
+            {
+              "id": "components/site-details",
+              "title": "SiteDetails Components",
+              "slug": "/docs/components/site-details",
+              "primary": null
+            },
+            {
+              "id": "components/toolbar",
+              "title": "Toolbar",
+              "slug": "/docs/components/toolbar",
+              "primary": null
+            },
+            {
+              "id": "components/user-details",
+              "title": "UserDetails",
+              "slug": "/docs/components/user-details",
+              "primary": null
+            },
+            {
+              "id": "components/viewer",
+              "title": "Viewer",
+              "slug": "/docs/components/viewer",
+              "primary": null
+            }
+          ],
+          "primary": "developerSidebar",
+          "sharedWith": []
+        },
+        {
+          "name": "contributing",
+          "label": "Contributing",
+          "pages": [
+            {
+              "id": "contributing/index",
+              "title": "Contributing",
+              "slug": "/docs/contributing",
+              "primary": null
+            },
+            {
+              "id": "contributing/dev-environment",
+              "title": "Dev Environment Setup",
+              "slug": "/docs/contributing/dev-environment",
+              "primary": null
+            },
+            {
+              "id": "contributing/git-workflow",
+              "title": "Git Workflow",
+              "slug": "/docs/contributing/git-workflow",
+              "primary": null
+            }
+          ],
+          "primary": "developerSidebar",
+          "sharedWith": []
+        },
+        {
+          "name": "hooks",
+          "label": "Hooks",
+          "pages": [
+            {
+              "id": "hooks/ports",
+              "title": "ApiAdapter Interface",
+              "slug": "/docs/hooks/ports",
+              "primary": null
+            },
+            {
+              "id": "hooks/files",
+              "title": "File hooks",
+              "slug": "/docs/hooks/files",
+              "primary": null
+            },
+            {
+              "id": "hooks/infrastructures",
+              "title": "Infrastructure hooks",
+              "slug": "/docs/hooks/infrastructures",
+              "primary": null
+            },
+            {
+              "id": "hooks/overview",
+              "title": "Overview",
+              "slug": "/docs/hooks/overview",
+              "primary": null
+            },
+            {
+              "id": "hooks/sensors",
+              "title": "Sensor hooks",
+              "slug": "/docs/hooks/sensors",
+              "primary": null
+            },
+            {
+              "id": "hooks/sites",
+              "title": "Site hooks",
+              "slug": "/docs/hooks/sites",
+              "primary": null
+            },
+            {
+              "id": "hooks/buildings",
+              "title": "useBuilding hooks",
+              "slug": "/docs/hooks/buildings",
+              "primary": null
+            },
+            {
+              "id": "hooks/comments",
+              "title": "useComment hooks",
+              "slug": "/docs/hooks/comments",
+              "primary": null
+            },
+            {
+              "id": "hooks/ui",
+              "title": "useIsMobile hook",
+              "slug": "/docs/hooks/ui",
+              "primary": null
+            },
+            {
+              "id": "hooks/open-data-portals",
+              "title": "useOpenDataPortals hooks",
+              "slug": "/docs/hooks/open-data-portals",
+              "primary": null
+            },
+            {
+              "id": "hooks/organizations",
+              "title": "useOrganization hooks",
+              "slug": "/docs/hooks/organizations",
+              "primary": null
+            },
+            {
+              "id": "hooks/users",
+              "title": "User hooks",
+              "slug": "/docs/hooks/users",
+              "primary": null
+            },
+            {
+              "id": "hooks/sensor-types",
+              "title": "useSensorType hooks",
+              "slug": "/docs/hooks/sensor-types",
+              "primary": null
+            }
+          ],
+          "primary": "developerSidebar",
+          "sharedWith": []
+        },
+        {
+          "name": "plugins",
+          "label": "Plugins",
+          "pages": [
+            {
+              "id": "plugins/all-capabilities",
+              "title": "All 11 capabilities",
+              "slug": "/docs/plugins/all-capabilities",
+              "primary": null
+            },
+            {
+              "id": "plugins/create-your-first-plugin",
+              "title": "Create your first plugin",
+              "slug": "/docs/plugins/create-your-first-plugin",
+              "primary": null
+            },
+            {
+              "id": "plugins/error-handling-and-safety",
+              "title": "Error handling & safety",
+              "slug": "/docs/plugins/error-handling-and-safety",
+              "primary": null
+            },
+            {
+              "id": "plugins/overview",
+              "title": "Overview",
+              "slug": "/docs/plugins/overview",
+              "primary": null
+            },
+            {
+              "id": "plugins/plugin-context-api",
+              "title": "PluginContext API",
+              "slug": "/docs/plugins/plugin-context-api",
+              "primary": null
+            },
+            {
+              "id": "plugins/daynight-cycle-example",
+              "title": "Real example: daynight-cycle",
+              "slug": "/docs/plugins/daynight-cycle-example",
+              "primary": null
+            }
+          ],
+          "primary": "developerSidebar",
+          "sharedWith": []
+        }
+      ]
+    },
+    {
+      "key": "deploymentSidebar",
+      "label": "Deployment",
+      "rootDocs": [
+        {
+          "id": "changelog",
+          "title": "Changelog",
+          "slug": "/docs/changelog",
+          "primary": null
+        }
+      ],
+      "dirs": [
+        {
+          "name": "deployment",
+          "label": "Deployment",
+          "pages": [
+            {
+              "id": "deployment/cdt-hosted",
+              "title": "CDT Hosted",
+              "slug": "/docs/deployment/cdt-hosted",
+              "primary": null
+            },
+            {
+              "id": "deployment/overview",
+              "title": "Deployment Overview",
+              "slug": "/docs/deployment/overview",
+              "primary": null
+            },
+            {
+              "id": "deployment/production",
+              "title": "Production Deployment",
+              "slug": "/docs/deployment/production",
+              "primary": null
+            },
+            {
+              "id": "deployment/self-hosting",
+              "title": "Self-Hosting",
+              "slug": "/docs/deployment/self-hosting",
+              "primary": null
+            },
+            {
+              "id": "deployment/services",
+              "title": "Services",
+              "slug": "/docs/deployment/services",
+              "primary": null
+            }
+          ],
+          "primary": "deploymentSidebar",
+          "sharedWith": []
+        }
+      ]
+    }
+  ]
+}

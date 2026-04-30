@@ -114,6 +114,6 @@ Deletes the `DbFile` record. MinIO object deletion is handled separately.
 ## Related
 
 - [Hooks — Files](../hooks/files.md)
-- [Data Model — DbFile](../architecture/data-model.md#dbfile)
+- [Data Model — DbFile](../architecture/data-model.mdx#dbfile)
 - [Components — File Details](../components/file-details.md)
 - [Deployment — MinIO](../deployment/services.md#minio)

@@ -105,7 +105,7 @@ GlobalId linkage means sensor data, BCF topics, IDS results, and media all pin t
 
 File visibility and editability follow the Organization's role assignments. A file uploaded by one Organization member is accessible to all members with Viewer permissions or higher, unless marked private.
 
-For the full matrix, see [Authorization → Permission reference](../authorization/permission-reference.md).
+For the full matrix, see [Authorization → Permission reference](../authorization/permission-reference.mdx).
 
 ## Storage architecture
 
@@ -118,4 +118,4 @@ Self-hosted deployments inherit the same architecture — see [Self-Hosting](../
 - [Buildings & Sites](./buildings-and-sites.md)
 - [BIM Viewer](./bim-viewer.md)
 - [Components → File Details](../components/file-details.md)
-- [Architecture → Data Layer](../architecture/data-layer.md)
+- [Architecture → Data Layer](../architecture/data-layer.mdx)

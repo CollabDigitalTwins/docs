@@ -127,6 +127,6 @@ Changes a user's password after verifying the old one.
 ## Related
 
 - [Hooks — Users](../hooks/users.md)
-- [Data Model — User / Role](../architecture/data-model.md#user)
+- [Data Model — User / Role](../architecture/data-model.mdx#user)
 - [Authorization](../authorization/authorization_roles_permissions.md)
 - [Components — Settings](../components/settings.md)

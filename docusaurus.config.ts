@@ -113,19 +113,24 @@ const config: Config = {
           type: 'doc',
           docId: 'introduction',
           position: 'left',
-          label: 'Users',
+          html: '<span class="navbarItemWithIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M3 21c1.5-4 5-6 9-6s7.5 2 9 6"/></svg>Users</span>',
         },
         {
           type: 'doc',
           docId: 'developer-introduction',
           position: 'left',
-          label: 'Developers',
+          html: '<span class="navbarItemWithIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="8 7 3 12 8 17"/><polyline points="16 7 21 12 16 17"/><line x1="14" y1="4" x2="10" y2="20"/></svg>Developers</span>',
         },
         {
           type: 'doc',
           docId: 'deployment/overview',
           position: 'left',
-          label: 'Deployment',
+          html: '<span class="navbarItemWithIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><line x1="7" y1="7" x2="7.01" y2="7"/><line x1="7" y1="17" x2="7.01" y2="17"/></svg>Deployment</span>',
+        },
+        {
+          to: '/site-map',
+          html: '<span class="navbarItemWithIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="1 6 9 3 15 6 23 3 23 18 15 21 9 18 1 21 1 6"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>Site Map</span>',
+          position: 'left',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         {
@@ -153,6 +158,10 @@ const config: Config = {
             {
               label: 'Getting Started',
               to: '/docs/getting-started/installation',
+            },
+            {
+              label: 'Site Map',
+              to: '/site-map',
             },
           ],
         },

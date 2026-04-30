@@ -126,7 +126,7 @@ The platform synchronizes the MapLibre camera with a Three.js scene and uses **F
 
 ## Related
 
-- [Concepts → GIS & Map Data](../concepts/gis-and-map-data.md)
+- [Concepts → GIS & Map Data](../concepts/gis-and-map-data.mdx)
 - [Datasets & Open Data](./datasets-and-open-data.md)
 - [BIM Viewer](./bim-viewer.md)
 - [Components → Viewer](../components/viewer.md)

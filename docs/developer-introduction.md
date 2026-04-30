@@ -16,10 +16,10 @@ This section is for developers building on top of the Collab Digital Twins platf
 
 ## Where to start
 
-- New to the platform? Skim the [Concepts](./concepts/digital-twins.md) section first to understand digital twins, BIM, GIS, and the open standards CDT builds on.
+- New to the platform? Skim the [Concepts](./concepts/digital-twins.mdx) section first to understand digital twins, BIM, GIS, and the open standards CDT builds on.
 - Want to extend the UI? Start with [Plugins](./plugins/overview.md) and [Create your first plugin](./plugins/create-your-first-plugin.md).
 - Calling the API? Read the [API Overview](./api/overview.md) for the adapter pattern, authentication, and conventions.
-- Working in the core repo? See [Architecture](./architecture/overview.md) and [Contributing](./contributing/index.md).
+- Working in the core repo? See [Architecture](./architecture/overview.mdx) and [Contributing](./contributing/index.md).
 
 ## Key resources
 

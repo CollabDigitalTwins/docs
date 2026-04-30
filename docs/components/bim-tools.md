@@ -129,7 +129,7 @@ Only one tool is active at a time. When a new tool is activated, the previous to
 
 ## Related
 
-- [State Management](../architecture/state-management.md) — `ToolsContext`, `BimContext`
+- [State Management](../architecture/state-management.mdx) — `ToolsContext`, `BimContext`
 - [Components — Toolbar](./toolbar.md)
-- [Concepts — BIM and IFC](../concepts/bim-and-ifc.md)
+- [Concepts — BIM and IFC](../concepts/bim-and-ifc.mdx)
 - [Guides — BIM Viewer](../guides/bim-viewer.md)

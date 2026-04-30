@@ -85,6 +85,6 @@ Filters by `DatasetGroup`:
 ## Related
 
 - [Hooks — Open Data Portals](../hooks/open-data-portals.md)
-- [Concepts — Open Data Portals](../concepts/open-data-portals.md)
-- [Data Model — OpenDataPortal](../architecture/data-model.md#opendataportal)
+- [Concepts — Open Data Portals](../concepts/open-data-portals.mdx)
+- [Data Model — OpenDataPortal](../architecture/data-model.mdx#opendataportal)
 - [Guides — Datasets & Open Data](../guides/datasets-and-open-data.md)

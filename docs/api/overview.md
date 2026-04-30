@@ -42,7 +42,7 @@ The session is carried in a `next-auth.session-token` cookie issued at sign-in. 
 
 Routes check CASL permissions server-side. The user's `Role.permissions` array is loaded from the database and an `Ability` instance is built per request. Requests that fail the permission check return `403`.
 
-See [Authorization Overview](../authorization/overview.md) for the model and [Permission reference](../authorization/permission-reference.md) for the full matrix.
+See [Authorization Overview](../authorization/overview.mdx) for the model and [Permission reference](../authorization/permission-reference.mdx) for the full matrix.
 
 ## Conventions
 
@@ -160,5 +160,5 @@ curl -X POST .../api/buildings/create ...
 ## Related
 
 - [Hooks — Overview](../hooks/overview.md)
-- [Authorization Overview](../authorization/overview.md)
-- [State Management](../architecture/state-management.md)
+- [Authorization Overview](../authorization/overview.mdx)
+- [State Management](../architecture/state-management.mdx)

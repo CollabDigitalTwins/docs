@@ -33,5 +33,5 @@ Start with [DataMenu](./data-menu.md) — it's the main shell for managing build
 ## Related
 
 - [Hooks](../hooks/overview.md)
-- [State Management](../architecture/state-management.md)
-- [Authorization](../authorization/overview.md)
+- [State Management](../architecture/state-management.mdx)
+- [Authorization](../authorization/overview.mdx)

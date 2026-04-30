@@ -1,0 +1,24 @@
+.main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+  color: var(--hp-on-surface);
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--hp-on-surface-variant);
+  max-width: 60ch;
+  margin: 0;
+}

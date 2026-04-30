@@ -93,6 +93,6 @@ Partial update. Supports updating branding fields, map defaults, enabled viewers
 ## Related
 
 - [Hooks — Organizations](../hooks/organizations.md)
-- [Data Model — Organization](../architecture/data-model.md#organization)
+- [Data Model — Organization](../architecture/data-model.mdx#organization)
 - [Authorization](../authorization/authorization_roles_permissions.md)
 - [Components — Settings](../components/settings.md)

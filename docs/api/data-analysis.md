@@ -160,4 +160,4 @@ File counts grouped by extension. Useful for understanding the composition of an
 
 - [Hooks — Buildings](../hooks/buildings.md)
 - [Hooks — Sensors](../hooks/sensors.md)
-- [Architecture → Backend & API](../architecture/backend-and-api.md)
+- [Architecture → Backend & API](../architecture/backend-and-api.mdx)

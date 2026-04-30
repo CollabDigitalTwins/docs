@@ -8,6 +8,8 @@ status: draft
 last_updated: 2026-04-23
 ---
 
+<AudienceNotice home="developers" also="deployment" />
+
 # Map Click Manager
 
 `MapClickManager` is a priority-based click dispatch system for the MapLibre map viewer. When the user clicks the map, exactly one handler fires — the one with the highest priority whose layer contains a rendered feature at the click point.
@@ -127,5 +129,5 @@ private handleMapClick(e: maplibregl.MapMouseEvent) {
 
 ## Related
 
-- [Map Layers](./map-layers.md) — all layers that use this system
-- [State Management](./state-management.md) — `MapProvider` holds the `MapClickManager` instance
+- [Map Layers](./map-layers.mdx) — all layers that use this system
+- [State Management](./state-management.mdx) — `MapProvider` holds the `MapClickManager` instance

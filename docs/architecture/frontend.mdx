@@ -3,6 +3,8 @@ sidebar_position: 2
 displayed_sidebar: developerSidebar
 ---
 
+<AudienceNotice home="developers" also="deployment" />
+
 import BrowserOnly from '@docusaurus/BrowserOnly';
 
 # Frontend Architecture
@@ -90,7 +92,7 @@ export const AppProvider = compose([
 ])
 ```
 
-`AppProvider` is rendered once at the application root and gives every component access to every context without prop drilling. See [State Management](./state-management.md) for the full pattern (state, actions, reducers, and consumption).
+`AppProvider` is rendered once at the application root and gives every component access to every context without prop drilling. See [State Management](./state-management.mdx) for the full pattern (state, actions, reducers, and consumption).
 
 ### Provider Reference
 
@@ -203,7 +205,7 @@ All three viewers share the same chrome:
 
 ## Internationalization
 
-See [Internationalization](./internationalization.md) for full i18n architecture. In short:
+See [Internationalization](./internationalization.mdx) for full i18n architecture. In short:
 
 - **Message files:** `messages/{locale}.json` (en, fr, es)
 - **Component usage:** `const t = useTranslations()` → `<h1>{t('page.title')}</h1>`

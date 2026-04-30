@@ -85,7 +85,7 @@ Without these, NextAuth refuses to issue cookies and the browser rejects MinIO a
 
 ## Production environment variables
 
-The full list is in the [Environment variables reference](../getting-started/environment-variables.md). The keys most likely to differ from `.env.example`:
+The full list is in the [Environment variables reference](../getting-started/environment-variables.mdx). The keys most likely to differ from `.env.example`:
 
 | Key | Production value |
 |-----|------------------|
@@ -176,5 +176,5 @@ For breaking changes, see the [Changelog](../changelog.md).
 
 - [Self-Hosting](./self-hosting.md)
 - [Services reference](./services.md)
-- [Environment variables reference](../getting-started/environment-variables.md)
+- [Environment variables reference](../getting-started/environment-variables.mdx)
 - [CDT Hosted (managed deployment)](./cdt-hosted.md)

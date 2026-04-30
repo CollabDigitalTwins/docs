@@ -3,6 +3,8 @@ sidebar_position: 7
 displayed_sidebar: developerSidebar
 ---
 
+<AudienceNotice home="developers" also="deployment" />
+
 # State Management
 
 CDT uses a custom middleware pattern built on React Context and `useReducer`. There is no external state library — each domain owns its own context, reducer, and action types. All contexts are composed into a single `AppProvider` that wraps the application once.
@@ -159,4 +161,4 @@ export const AppProvider = compose([
 
 - [Authorization](../authorization/authorization_roles_permissions.md) — how CASL abilities are defined and checked
 - [Hooks](../hooks/overview.md) — data-fetching hooks that work alongside this store
-- [Architecture Overview](./overview.md)
+- [Architecture Overview](./overview.mdx)

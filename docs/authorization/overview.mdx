@@ -2,11 +2,14 @@
 title: Overview
 description: How authorization works in CDT — organizations, roles, and the permission model in plain language.
 sidebar_position: 1
+displayed_sidebar: userSidebar
 ---
+
+<AudienceNotice home="users" also="deployment" />
 
 # Authorization Overview
 
-CDT uses **role-based access control** scoped to **organizations**. This page explains the model in plain language. For step-by-step UI tasks, see [Managing roles and permissions](./managing-roles.md). For the engine internals, see [Roles, Permissions & CASL](./authorization_roles_permissions.md).
+CDT uses **role-based access control** scoped to **organizations**. This page explains the model in plain language. For step-by-step UI tasks, see [Managing roles and permissions](./managing-roles.mdx). For the engine internals, see [Roles, Permissions & CASL](./authorization_roles_permissions.md).
 
 ## The model in three sentences
 
@@ -16,7 +19,7 @@ Every user belongs to one **organization**. Within that organization, the user i
 
 Permissions are not global. A user who is an *Admin* in Organization A is not automatically anything in Organization B. This makes CDT safe for multi-tenant deployments: a self-hosted instance can serve several teams, departments, or partner organizations without their data colliding.
 
-For background, see [Concepts → Organizations and multi-tenancy](../concepts/organizations.md).
+For background, see [Concepts → Organizations and multi-tenancy](../concepts/organizations.mdx).
 
 ## Built-in roles
 
@@ -29,7 +32,7 @@ CDT ships with four default roles. Most deployments customize them — these are
 | **Manager** | Everything Contributor can do, plus create and edit buildings, sites, sensors, and members. |
 | **Admin** | Everything Manager can do, plus delete records, manage roles, and edit organization settings. |
 
-The full default permission matrix is on the [Permission reference](./permission-reference.md) page.
+The full default permission matrix is on the [Permission reference](./permission-reference.mdx) page.
 
 ## Where permissions are enforced
 
@@ -44,7 +47,7 @@ The same `Ability` object drives both checks, so server and UI never disagree.
 
 | You want to… | Read |
 |--------------|------|
-| Invite members and assign them a role | [Managing roles and permissions](./managing-roles.md) |
-| See the full permission matrix per role | [Permission reference](./permission-reference.md) |
+| Invite members and assign them a role | [Managing roles and permissions](./managing-roles.mdx) |
+| See the full permission matrix per role | [Permission reference](./permission-reference.mdx) |
 | Understand how CASL evaluates rules | [Roles, Permissions & CASL](./authorization_roles_permissions.md) |
-| Understand multi-tenancy | [Concepts → Organizations and multi-tenancy](../concepts/organizations.md) |
+| Understand multi-tenancy | [Concepts → Organizations and multi-tenancy](../concepts/organizations.mdx) |

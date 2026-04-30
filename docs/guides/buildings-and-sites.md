@@ -120,11 +120,11 @@ A Building's files and metadata are visible to members of its Organization based
 | **Manager** | Edit building records, manage members. |
 | **Admin** | Full control, including deletion and CRS changes. |
 
-Roles enforce on the API server-side, not just in the UI. See [Authorization → Permission reference](../authorization/permission-reference.md) for the full matrix.
+Roles enforce on the API server-side, not just in the UI. See [Authorization → Permission reference](../authorization/permission-reference.mdx) for the full matrix.
 
 ## Related
 
 - [Map Viewer](./map-viewer.md)
 - [File Management](./file-management.md)
-- [Authorization → Managing roles](../authorization/managing-roles.md)
-- [Architecture → Data Model](../architecture/data-model.md)
+- [Authorization → Managing roles](../authorization/managing-roles.mdx)
+- [Architecture → Data Model](../architecture/data-model.mdx)

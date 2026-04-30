@@ -1,0 +1,277 @@
+/* SiteMap — branded with the Sovereign palette */
+
+.wrap {
+  margin: 1rem 0 3rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  background: var(--hp-low);
+  border: 1px solid var(--hp-outline-variant);
+  font-size: 0.85rem;
+  color: var(--hp-on-surface-variant);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legendIcon {
+  font-weight: 600;
+  color: var(--hp-primary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 996px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Audience column ─────────────────────────────────────── */
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--hp-surface);
+  border: 1px solid var(--hp-outline-variant);
+  position: relative;
+  overflow: hidden;
+}
+
+.column::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--hp-primary);
+  opacity: 0.7;
+}
+
+.column[data-audience='developerSidebar']::before {
+  background: var(--hp-on-surface);
+}
+
+.column[data-audience='deploymentSidebar']::before {
+  background: var(--hp-outline);
+}
+
+.columnHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.audienceLabel {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--hp-on-surface);
+  letter-spacing: -0.01em;
+}
+
+.entryLink {
+  font-size: 0.8rem;
+  color: var(--hp-primary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.entryLink:hover {
+  color: var(--hp-primary-container);
+  text-decoration: underline;
+}
+
+.rootDocs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px dashed var(--hp-outline-variant);
+}
+
+.rootDocLink {
+  font-size: 0.85rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--hp-low);
+  color: var(--hp-on-surface);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.rootDocLink:hover {
+  background: var(--hp-mid);
+  border-color: var(--hp-outline-variant);
+  text-decoration: none;
+}
+
+.dirs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Directory card ──────────────────────────────────────── */
+.dirCard {
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  background: var(--hp-lowest);
+  border: 1px solid var(--hp-outline-variant);
+  position: relative;
+}
+
+.dirCard[data-shared='true'] {
+  border-color: var(--hp-primary-fixed);
+  background: linear-gradient(180deg, var(--hp-lowest) 0%, var(--hp-low) 100%);
+}
+
+.dirHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.dirLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--hp-on-surface);
+}
+
+.dirCount {
+  font-size: 0.75rem;
+  color: var(--hp-on-surface-variant);
+  background: var(--hp-mid);
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sharedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--hp-primary-container);
+  background: var(--hp-primary-fixed);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+}
+
+.sharedIcon {
+  font-weight: 600;
+}
+
+.pageList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.pageChip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--hp-on-surface-variant);
+  text-decoration: none;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.pageChip:hover {
+  background: var(--hp-low);
+  color: var(--hp-on-surface);
+  text-decoration: none;
+}
+
+.pageTitle {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.crossTag {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: var(--hp-low);
+  color: var(--hp-on-surface-variant);
+  border: 1px solid var(--hp-outline-variant);
+}
+
+.footnote {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--hp-on-surface-variant);
+  text-align: center;
+}
+
+.footnote code {
+  background: var(--hp-low);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+/* ── Dark mode tweaks ────────────────────────────────────── */
+[data-theme='dark'] .column {
+  background: var(--ifm-background-surface-color);
+}
+
+[data-theme='dark'] .dirCard {
+  background: var(--hp-lowest);
+}
+
+[data-theme='dark'] .rootDocLink {
+  background: var(--hp-mid);
+}
+
+[data-theme='dark'] .rootDocLink:hover {
+  background: var(--hp-high);
+}
+
+[data-theme='dark'] .sharedBadge {
+  background: rgba(212, 103, 58, 0.18);
+  color: var(--hp-primary);
+}
