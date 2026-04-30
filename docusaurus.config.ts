@@ -129,7 +129,7 @@ const config: Config = {
         },
         {
           to: '/site-map',
-          html: '<span class="navbarItemWithIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="1 6 9 3 15 6 23 3 23 18 15 21 9 18 1 21 1 6"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>Site Map</span>',
+          label: 'Site Map',
           position: 'left',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
