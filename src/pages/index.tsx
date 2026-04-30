@@ -352,6 +352,9 @@ function HomepageHeader() {
                   <span className={styles.audienceDesc}>Self-host CDT or use a managed deployment.</span>
                 </Link>
               </div>
+              <Link to="/site-map" className={styles.siteMapLink}>
+                Or browse the full <strong>Site Map</strong> →
+              </Link>
             </div>
           </div>
 

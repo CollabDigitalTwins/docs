@@ -301,6 +301,32 @@
   }
 }
 
+.siteMapLink {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--hp-on-surface-variant);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--hp-outline-variant);
+  align-self: flex-start;
+  padding-bottom: 0.1rem;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+
+.siteMapLink:hover {
+  color: var(--hp-primary);
+  border-color: var(--hp-primary);
+  text-decoration: none;
+}
+
+.siteMapLink strong {
+  color: var(--hp-on-surface);
+  font-weight: 600;
+}
+
+.siteMapLink:hover strong {
+  color: var(--hp-primary);
+}
+
 .audienceCard {
   position: relative;
   display: flex;

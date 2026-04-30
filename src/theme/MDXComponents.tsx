@@ -7,6 +7,7 @@
   import CardHeader from '@site/src/components/Card/CardHeader';
   import CardImage from '@site/src/components/Card/CardImage';
   import PluginArchitecture from '@site/src/components/PluginArchitecture';
+  import AudienceNotice from '@site/src/components/AudienceNotice';
   export default {
     // Reusing the default mapping
     ...MDXComponents,
@@ -16,4 +17,5 @@
     CardFooter,
     CardImage,
     PluginArchitecture,
+    AudienceNotice,
   };

@@ -119,5 +119,5 @@ The deleted `Site` object.
 ## Related
 
 - [Hooks — Sites](../hooks/sites.md)
-- [Data Model — Site](../architecture/data-model.md#site)
+- [Data Model — Site](../architecture/data-model.mdx#site)
 - [Components — Site Details](../components/site-details.md)

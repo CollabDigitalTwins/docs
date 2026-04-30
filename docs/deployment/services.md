@@ -308,4 +308,4 @@ npx prisma studio
 
 - [Self-Hosting Overview](./overview.md)
 - [CDT Hosted (SaaS)](./cdt-hosted.md)
-- [Architecture Overview](../architecture/overview.md)
+- [Architecture Overview](../architecture/overview.mdx)

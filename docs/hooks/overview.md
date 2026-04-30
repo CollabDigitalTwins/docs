@@ -30,5 +30,5 @@ If you're new to the codebase, start with [Buildings](./buildings.md) — it's t
 ## Related
 
 - [API](../api/overview.md)
-- [State Management](../architecture/state-management.md)
-- [Data Model](../architecture/data-model.md)
+- [State Management](../architecture/state-management.mdx)
+- [Data Model](../architecture/data-model.mdx)

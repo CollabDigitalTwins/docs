@@ -103,11 +103,11 @@ For large datasets, COPC is the recommended format because the viewer downloads 
 
 **Performance is poor.** Reduce point size or LOD level in the Style panel. Close other browser tabs that hold WebGL contexts.
 
-For more, see [Troubleshooting → Viewers](../getting-started/troubleshooting.md#viewers).
+For more, see [Troubleshooting → Viewers](../getting-started/troubleshooting.mdx#viewers).
 
 ## Related
 
-- [Concepts → Point Clouds](../concepts/point-clouds.md)
+- [Concepts → Point Clouds](../concepts/point-clouds.mdx)
 - [BIM Viewer](./bim-viewer.md)
 - [File Management](./file-management.md)
 - [Components → Point Cloud Tools](../components/point-cloud-tools.md)

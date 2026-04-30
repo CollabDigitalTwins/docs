@@ -109,5 +109,5 @@ Deletes the comment. Replies (`replyToId` references) are not automatically dele
 ## Related
 
 - [Hooks — Comments](../hooks/comments.md)
-- [Data Model — Comment](../architecture/data-model.md#comment)
+- [Data Model — Comment](../architecture/data-model.mdx#comment)
 - [Guides — Collaboration](../guides/collaboration.md)

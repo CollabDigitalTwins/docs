@@ -1,0 +1,70 @@
+---
+title: RESTful API Design
+description: REST principles and URI conventions used in the CDT API.
+sidebar_position: 6
+displayed_sidebar: developerSidebar
+---
+
+# RESTful API Design
+
+CDT's API follows REST principles to keep client and service decoupled and interoperable across platforms.
+
+## Core Principles
+
+### Loose Coupling
+
+The client and server evolve independently. Clients do not need to know how the API is implemented internally, and the API does not need to know about its callers.
+
+### Platform Independence
+
+Any HTTP client can call the API regardless of platform or language.
+
+## URI Design
+
+Resources are the central concept. Every resource has a URI that uniquely identifies it:
+
+```
+https://cdt.example.com/api/buildings/1
+```
+
+Guidelines:
+
+- Use **nouns**, not verbs: `/buildings`, not `/getBuildings`
+- Use **plural** resource names: `/buildings`, `/sites`
+- Nest sub-resources where the relationship is clear: `/buildings/1/files`
+- Keep URIs lowercase and hyphen-separated
+
+## HTTP Methods
+
+| Method | Use |
+|--------|-----|
+| `GET` | Retrieve a resource or collection |
+| `POST` | Create a new resource |
+| `PUT` / `PATCH` | Update an existing resource |
+| `DELETE` | Remove a resource |
+
+## Resource Representation
+
+Resources are represented as JSON. Responses should be consistent in shape across endpoints:
+
+```json
+{ "id": 1, "name": "Mackenzie Building", "siteId": 4 }
+```
+
+## Status Codes
+
+| Code | Meaning |
+|------|---------|
+| `200 OK` | Successful GET, PUT, PATCH |
+| `201 Created` | Successful POST |
+| `204 No Content` | Successful DELETE |
+| `400 Bad Request` | Invalid input |
+| `401 Unauthorized` | Missing or invalid auth |
+| `403 Forbidden` | Authenticated but not authorized |
+| `404 Not Found` | Resource does not exist |
+| `500 Internal Server Error` | Unexpected server error |
+
+## Related
+
+- [Backend & API Architecture](./backend-and-api.mdx)
+- [Authorization](../authorization/authorization_roles_permissions.md)

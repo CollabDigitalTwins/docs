@@ -122,4 +122,4 @@ Authentication screens are public — no CASL check applies. The reCAPTCHA guard
 
 - [Authorization](../authorization/authorization_roles_permissions.md)
 - [Deployment — Node Application](../deployment/services.md#node--nextjs-application) — `NEXTAUTH_SECRET` and provider config
-- [Getting Started — Installation](../getting-started/installation.md)
+- [Getting Started — Installation](../getting-started/installation.mdx)

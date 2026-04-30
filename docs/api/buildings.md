@@ -134,5 +134,5 @@ The updated `Building` object.
 ## Related
 
 - [Hooks — Buildings](../hooks/buildings.md)
-- [Data Model — Building](../architecture/data-model.md#building)
+- [Data Model — Building](../architecture/data-model.mdx#building)
 - [Components — Building Details](../components/building-details.md)

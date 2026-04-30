@@ -8,6 +8,8 @@ status: draft
 last_updated: 2026-04-23
 ---
 
+<AudienceNotice home="developers" also="deployment" />
+
 # Map Layers
 
 The map viewer composes a fixed set of named layers declared in `src/core/components/viewers/map/src/MapLayers/`. Each layer is a self-contained React component responsible for fetching its own data, adding MapLibre sources and layers, and registering a click handler with `MapClickManager`.
@@ -31,7 +33,7 @@ export const MapLayers = () => (
 )
 ```
 
-Render order affects visual stacking but click priority is controlled separately by `MapClickManager` — see [Map Click Manager](./map-click-manager.md).
+Render order affects visual stacking but click priority is controlled separately by `MapClickManager` — see [Map Click Manager](./map-click-manager.mdx).
 
 ## Layers
 
@@ -108,7 +110,7 @@ Renders the georeferenced footprint of a loaded IFC model on the map. Hides the 
 ## Adding a New Layer
 
 1. Create a component in `src/core/components/viewers/map/src/MapLayers/src/<YourLayer>/`.
-2. Register a click handler using `MapClickManager.register()` with an appropriate priority from `MapLayerClickPriority`. Add a new enum value if none fits — see [Map Click Manager](./map-click-manager.md).
+2. Register a click handler using `MapClickManager.register()` with an appropriate priority from `MapLayerClickPriority`. Add a new enum value if none fits — see [Map Click Manager](./map-click-manager.mdx).
 3. Add your component to `MapLayers/index.tsx`.
 4. Call `MapClickManager.unregister()` in a `useEffect` cleanup to avoid leaking handlers on unmount.
 
@@ -128,6 +130,6 @@ Renders the georeferenced footprint of a loaded IFC model on the map. Hides the 
 
 ## Related
 
-- [Map Click Manager](./map-click-manager.md) — how click priority dispatch works
-- [State Management](./state-management.md) — `MapProvider`, `DatasetsProvider`
-- [Open Data Portals concept](../concepts/open-data-portals.md)
+- [Map Click Manager](./map-click-manager.mdx) — how click priority dispatch works
+- [State Management](./state-management.mdx) — `MapProvider`, `DatasetsProvider`
+- [Open Data Portals concept](../concepts/open-data-portals.mdx)

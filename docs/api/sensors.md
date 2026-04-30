@@ -122,5 +122,5 @@ Returns all sensor type definitions. Sensor types are shared across the organiza
 
 - [Hooks — Sensors](../hooks/sensors.md)
 - [Hooks — Sensor Types](../hooks/sensor-types.md)
-- [Data Model — Sensor / SensorType](../architecture/data-model.md#sensor)
+- [Data Model — Sensor / SensorType](../architecture/data-model.mdx#sensor)
 - [Guides — Sensors & IoT](../guides/sensors-and-iot.md)

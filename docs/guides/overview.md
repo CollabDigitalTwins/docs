@@ -8,7 +8,7 @@ description: Task-oriented walkthroughs for everyday work in CDT — explore the
 
 The Guides section is for **end users and operators** of CDT. Each page is a task-oriented walkthrough — pick the goal you have in mind, follow the steps, and confirm the result before moving on.
 
-If you have not signed in yet, start with the [Quickstart](../getting-started/quickstart.md). It threads the most important guides together into a single 30-minute path.
+If you have not signed in yet, start with the [Quickstart](../getting-started/quickstart.mdx). It threads the most important guides together into a single 30-minute path.
 
 ## Where to start by goal
 
@@ -45,6 +45,6 @@ Skim the goal and result first to confirm a guide is the right one before readin
 
 If a step does not work as described:
 
-1. Check [Troubleshooting](../getting-started/troubleshooting.md) for the symptom.
+1. Check [Troubleshooting](../getting-started/troubleshooting.mdx) for the symptom.
 2. Search [GitHub issues](https://github.com/collabdt/core/issues).
 3. Ask on the [contact form](https://collabdt.org/home#contact).

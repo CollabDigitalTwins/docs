@@ -376,3 +376,23 @@ pre {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--hp-outline); }
+
+/* ── Navbar items with icons ─────────────────────────── */
+.navbarItemWithIcon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.navbarItemWithIcon svg {
+  flex-shrink: 0;
+  color: var(--hp-primary);
+  transition: color 120ms ease;
+  opacity: 0.85;
+}
+
+.navbar__link:hover .navbarItemWithIcon svg,
+.navbar__link--active .navbarItemWithIcon svg {
+  color: var(--hp-primary-container);
+  opacity: 1;
+}

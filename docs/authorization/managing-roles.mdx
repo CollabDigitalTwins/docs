@@ -2,13 +2,16 @@
 title: Managing Roles and Permissions
 description: Step-by-step UI tasks for organization administrators — invite members, assign roles, create custom roles, and adjust permissions.
 sidebar_position: 2
+displayed_sidebar: userSidebar
 ---
+
+<AudienceNotice home="users" also="deployment" />
 
 # Managing Roles and Permissions
 
 This page is for **organization administrators**. It covers the day-to-day tasks of managing who is in the organization and what they can do, all from the CDT interface.
 
-If you want the conceptual model, see [Authorization Overview](./overview.md). If you are a developer working on the authorization engine itself, see [Roles, Permissions & CASL](./authorization_roles_permissions.md).
+If you want the conceptual model, see [Authorization Overview](./overview.mdx). If you are a developer working on the authorization engine itself, see [Roles, Permissions & CASL](./authorization_roles_permissions.md).
 
 ## Prerequisites
 
@@ -103,12 +106,12 @@ If a member reports they cannot do something they should be able to:
 
 1. Confirm their role on the **Members** page.
 2. Open **Settings → Roles** and verify that role has the relevant `(action, subject)` permission.
-3. If the permission is correct but the action is still blocked, check the [Permission reference](./permission-reference.md) for any cross-resource dependencies (for example, editing a `File` requires read access to its parent `Building`).
-4. If the issue persists, the engine itself may be at fault — see [Troubleshooting](../getting-started/troubleshooting.md) or open an issue.
+3. If the permission is correct but the action is still blocked, check the [Permission reference](./permission-reference.mdx) for any cross-resource dependencies (for example, editing a `File` requires read access to its parent `Building`).
+4. If the issue persists, the engine itself may be at fault — see [Troubleshooting](../getting-started/troubleshooting.mdx) or open an issue.
 
 ## Related
 
-- [Authorization Overview](./overview.md)
-- [Permission reference](./permission-reference.md)
+- [Authorization Overview](./overview.mdx)
+- [Permission reference](./permission-reference.mdx)
 - [Roles, Permissions & CASL (engine internals)](./authorization_roles_permissions.md)
-- [Concepts → Organizations and multi-tenancy](../concepts/organizations.md)
+- [Concepts → Organizations and multi-tenancy](../concepts/organizations.mdx)

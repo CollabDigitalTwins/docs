@@ -182,7 +182,7 @@ Upload a `.dxf` to overlay a 2D drawing inside the 3D scene. The platform parses
 
 ## Related
 
-- [Concepts → BIM & IFC](../concepts/bim-and-ifc.md)
+- [Concepts → BIM & IFC](../concepts/bim-and-ifc.mdx)
 - [File Management](./file-management.md)
 - [Collaboration → BCF Topics](./collaboration.md)
 - [Components → BIM Tools](../components/bim-tools.md)

@@ -105,6 +105,6 @@ Every dataset and feature exposes its full metadata in the UI. Clicking a featur
 ## Related
 
 - [Map Viewer](./map-viewer.md)
-- [Concepts → GIS & Map Data](../concepts/gis-and-map-data.md)
-- [Concepts → Open Data Portals](../concepts/open-data-portals.md)
+- [Concepts → GIS & Map Data](../concepts/gis-and-map-data.mdx)
+- [Concepts → Open Data Portals](../concepts/open-data-portals.mdx)
 - [API → Open Data Portals](../api/open-data-portals.md)

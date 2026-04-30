@@ -59,5 +59,5 @@ If you want a recommendation tailored to your situation, reach out via [collabdt
 ## Related
 
 - [Introduction](./introduction.md)
-- [Concepts → What is a Digital Twin?](./concepts/digital-twins.md)
+- [Concepts → What is a Digital Twin?](./concepts/digital-twins.mdx)
 - [Plugins overview](./plugins/overview.md)

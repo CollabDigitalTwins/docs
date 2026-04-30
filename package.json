@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
+    "site-map": "node scripts/generate-site-map.mjs",
+    "prestart": "npm run site-map",
     "start": "docusaurus start",
+    "prebuild": "npm run site-map",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",

@@ -37,7 +37,7 @@ The new member receives an email with a sign-up link. Once they accept, they app
 
 **Result:** the teammate can sign in and see what their role allows.
 
-For the full role matrix, see [Authorization → Permission reference](../authorization/permission-reference.md).
+For the full role matrix, see [Authorization → Permission reference](../authorization/permission-reference.mdx).
 
 ## Pin a comment to a map location
 
@@ -114,11 +114,11 @@ Media and annotations added by any user are visible to others in the same Organi
 
 ## Internationalization
 
-The interface supports **English, French, and Spanish** via i18n. Switch language from **Settings → Language**. For implementation details, see [Architecture → Internationalization](../architecture/internationalization.md).
+The interface supports **English, French, and Spanish** via i18n. Switch language from **Settings → Language**. For implementation details, see [Architecture → Internationalization](../architecture/internationalization.mdx).
 
 ## Related
 
-- [Authorization → Managing roles](../authorization/managing-roles.md)
+- [Authorization → Managing roles](../authorization/managing-roles.mdx)
 - [BIM Viewer](./bim-viewer.md)
 - [Map Viewer](./map-viewer.md)
-- [Concepts → Organizations and multi-tenancy](../concepts/organizations.md)
+- [Concepts → Organizations and multi-tenancy](../concepts/organizations.mdx)

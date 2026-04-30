@@ -16,17 +16,17 @@ Three audiences read these docs. Pick the path that matches what you want to do 
 
 <div className="audienceGrid">
 
-**[End user / operator →](./getting-started/quickstart.md)**
+**[End user / operator →](./getting-started/quickstart.mdx)**
 You signed in to CDT and want to view buildings, browse open data, monitor sensors, or collaborate with a team.
-*Start with the [Quickstart](./getting-started/quickstart.md) — a 30-minute walkthrough from sign-in to your first uploaded model.*
+*Start with the [Quickstart](./getting-started/quickstart.mdx) — a 30-minute walkthrough from sign-in to your first uploaded model.*
 
 **[Developer / integrator →](./developer-introduction.md)**
 You want to extend CDT with a plugin, integrate it with another system, or contribute to the core.
-*Start with the [Developer Introduction](./developer-introduction.md), then the [Architecture Overview](./architecture/overview.md) and [Plugins](./plugins/overview.md).*
+*Start with the [Developer Introduction](./developer-introduction.md), then the [Architecture Overview](./architecture/overview.mdx) and [Plugins](./plugins/overview.md).*
 
 **[Self-hoster / deployer →](./deployment/overview.md)**
 You want to run CDT on your own infrastructure or evaluate a hosted deployment.
-*Start with the [Deployment Overview](./deployment/overview.md) and the [Environment variables reference](./getting-started/environment-variables.md).*
+*Start with the [Deployment Overview](./deployment/overview.md) and the [Environment variables reference](./getting-started/environment-variables.mdx).*
 
 </div>
 
@@ -39,7 +39,7 @@ CDT is infrastructure for managing the relationship between a physical environme
 - **Live data feedback loops** — IoT and sensor feeds linked to BIM elements via their `GlobalId`, so design models evolve into operational digital twins.
 - **Multi-tenant collaboration** — organizations, role-based permissions, threaded comments, and BCF issue tracking.
 
-For background, the [Concepts](./concepts/digital-twins.md) section explains digital twins, BIM, GIS, point clouds, and the open standards CDT builds on.
+For background, the [Concepts](./concepts/digital-twins.mdx) section explains digital twins, BIM, GIS, point clouds, and the open standards CDT builds on.
 
 ## What CDT is not
 
@@ -60,4 +60,4 @@ CDT is built around four principles that shape the platform:
 
 - [Contact form](https://collabdt.org/home#contact)
 - [GitHub repository](https://github.com/collabdt/core)
-- [Troubleshooting](./getting-started/troubleshooting.md)
+- [Troubleshooting](./getting-started/troubleshooting.mdx)

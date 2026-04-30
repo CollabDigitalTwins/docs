@@ -1,8 +1,11 @@
 ---
 sidebar_position: 8
+displayed_sidebar: userSidebar
 title: Organizations and Multi-tenancy
 description: How CDT scopes data, users, and permissions per organization — and what that means for self-hosted and shared deployments.
 ---
+
+<AudienceNotice home="users" also="developers" />
 
 # Organizations and Multi-tenancy
 
@@ -27,7 +30,7 @@ Three properties follow from multi-tenancy, and each one shapes the platform:
 
 **Data isolation.** Two organizations sharing the same CDT instance never see each other's records. Every query in the API filters by the active organization, and every database row carries the organization ID.
 
-**Independent permissions.** A user who is an Admin in Organization A may be a Viewer in Organization B. Roles are scoped to organizations, not to users globally. See [Authorization Overview](../authorization/overview.md) for the full model.
+**Independent permissions.** A user who is an Admin in Organization A may be a Viewer in Organization B. Roles are scoped to organizations, not to users globally. See [Authorization Overview](../authorization/overview.mdx) for the full model.
 
 **Per-organization configuration.** Map defaults, feature flags, branding, and integration credentials are stored on the `Organization` record. Two organizations on the same instance can present completely different starting experiences.
 
@@ -70,7 +73,7 @@ On the hosted platform at `app.collabdt.org`, every customer is one organization
 
 ## Related
 
-- [Authorization Overview](../authorization/overview.md)
-- [Managing roles and permissions](../authorization/managing-roles.md)
-- [Architecture → Data Model](../architecture/data-model.md)
-- [Architecture → Backend & API](../architecture/backend-and-api.md)
+- [Authorization Overview](../authorization/overview.mdx)
+- [Managing roles and permissions](../authorization/managing-roles.mdx)
+- [Architecture → Data Model](../architecture/data-model.mdx)
+- [Architecture → Backend & API](../architecture/backend-and-api.mdx)

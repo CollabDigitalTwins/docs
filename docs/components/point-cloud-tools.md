@@ -117,7 +117,7 @@ pcDispatch({ type: 'SET_ACTIVE_TOOL', payload: { activeTool: PointCloudTools.LIN
 
 ## Related
 
-- [State Management](../architecture/state-management.md) — `PointCloudProvider`, `ToolsProvider`
+- [State Management](../architecture/state-management.mdx) — `PointCloudProvider`, `ToolsProvider`
 - [Components — Toolbar](./toolbar.md)
-- [Concepts — Point Clouds](../concepts/point-clouds.md)
+- [Concepts — Point Clouds](../concepts/point-clouds.mdx)
 - [Guides — Point Cloud Viewer](../guides/point-cloud-viewer.md)

@@ -102,7 +102,7 @@ For tracked status, see the [Changelog](../changelog.md) and [GitHub roadmap](ht
 
 ## Related
 
-- [Concepts → Multi-Viewer Architecture](../concepts/multi-viewer-architecture.md)
+- [Concepts → Multi-Viewer Architecture](../concepts/multi-viewer-architecture.mdx)
 - [BIM Viewer](./bim-viewer.md)
 - [Map Viewer](./map-viewer.md)
 - [Hooks → Sensors](../hooks/sensors.md)

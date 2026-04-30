@@ -8,6 +8,8 @@ status: draft
 last_updated: 2026-04-23
 ---
 
+<AudienceNotice home="developers" also="deployment" />
+
 # Data Model
 
 CDT's domain types are defined in `src/core/types/dbTypes.ts` and shared across hooks, API adapters, and components. Every entity maps directly to a Prisma model on the backend.
@@ -63,7 +65,7 @@ Key fields:
 | `cityGmlLod` | `CityGmlLod?` | LOD0–LOD4 |
 | `organizationId` | `number` | Owning organization |
 
-See [IFC Infrastructure Types](../concepts/ifc-infrastructure-types.md) for the full enum reference.
+See [IFC Infrastructure Types](../concepts/ifc-infrastructure-types.mdx) for the full enum reference.
 
 ### Sensor
 
@@ -210,8 +212,8 @@ Both share the same phase vocabulary:
 
 ## Related
 
-- [IFC Infrastructure Types](../concepts/ifc-infrastructure-types.md) — full IFC enum reference
-- [State Management](./state-management.md) — providers that hold these types in memory
+- [IFC Infrastructure Types](../concepts/ifc-infrastructure-types.mdx) — full IFC enum reference
+- [State Management](./state-management.mdx) — providers that hold these types in memory
 - [Hooks — Buildings](../hooks/buildings.md)
 - [Hooks — Sites](../hooks/sites.md)
 - [Hooks — Sensors](../hooks/sensors.md)

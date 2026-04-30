@@ -90,5 +90,5 @@ Deletes the record. Associated geometry files are not automatically deleted.
 ## Related
 
 - [Hooks — Infrastructure](../hooks/infrastructures.md)
-- [Data Model — Infrastructure](../architecture/data-model.md#infrastructure)
-- [Concepts — IFC Infrastructure Types](../concepts/ifc-infrastructure-types.md)
+- [Data Model — Infrastructure](../architecture/data-model.mdx#infrastructure)
+- [Concepts — IFC Infrastructure Types](../concepts/ifc-infrastructure-types.mdx)

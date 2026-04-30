@@ -2,13 +2,14 @@
 title: Roles, Permissions & CASL
 description: How the CDT authorization engine works internally — Prisma storage, CASL ability construction, and server- and client-side enforcement.
 sidebar_position: 4
+displayed_sidebar: developerSidebar
 ---
 
 # Roles, Permissions & CASL
 
 This page is for **developers** working on the CDT authorization engine itself. It explains how roles and permissions are stored, how [CASL](https://casl.js.org) builds an `Ability` instance from them, and how that ability is enforced on the API and UI layers.
 
-For the conceptual model, see [Authorization Overview](./overview.md). For UI tasks, see [Managing roles and permissions](./managing-roles.md).
+For the conceptual model, see [Authorization Overview](./overview.mdx). For UI tasks, see [Managing roles and permissions](./managing-roles.mdx).
 
 ## Architecture summary
 
@@ -89,13 +90,13 @@ When a new entity is added to the data model, integrate it with the authorizatio
 
 1. Add the entity name to the `subject` enum used by `buildAbilityFromPermissions`.
 2. Add server-side `ability.can(...)` checks in every mutation route for the entity.
-3. Update the [Permission reference](./permission-reference.md) to document default permissions for the built-in roles.
+3. Update the [Permission reference](./permission-reference.mdx) to document default permissions for the built-in roles.
 4. Wire up any client-side gating in the relevant components.
 
 ## Related
 
-- [Authorization Overview](./overview.md)
-- [Managing roles and permissions](./managing-roles.md)
-- [Permission reference](./permission-reference.md)
-- [Concepts → Organizations and multi-tenancy](../concepts/organizations.md)
-- [Architecture → Backend & API](../architecture/backend-and-api.md)
+- [Authorization Overview](./overview.mdx)
+- [Managing roles and permissions](./managing-roles.mdx)
+- [Permission reference](./permission-reference.mdx)
+- [Concepts → Organizations and multi-tenancy](../concepts/organizations.mdx)
+- [Architecture → Backend & API](../architecture/backend-and-api.mdx)
