@@ -83,7 +83,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/collabdt/docs/tree/main/',
+            'https://github.com/CollabDigitalTwins/docs/tree/main/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -134,7 +134,7 @@ const config: Config = {
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/collabdt/docs',
+          href: 'https://github.com/CollabDigitalTwins/docs',
           label: 'GitHub',
           position: 'right',
         },
@@ -170,7 +170,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/collabdt',
+              href: 'https://github.com/CollabDigitalTwins',
             },
             {
               label: 'Contact',
