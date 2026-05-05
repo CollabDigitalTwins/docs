@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-30T20:37:05.651Z",
+  "generatedAt": "2026-05-05T19:50:16.990Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -239,86 +239,6 @@
         }
       ],
       "dirs": [
-        {
-          "name": "api",
-          "label": "API Reference",
-          "pages": [
-            {
-              "id": "api/buildings",
-              "title": "/api/buildings",
-              "slug": "/docs/api/buildings",
-              "primary": null
-            },
-            {
-              "id": "api/proxies",
-              "title": "/api/ckanProxy and /api/opendatasoftProxy",
-              "slug": "/docs/api/proxies",
-              "primary": null
-            },
-            {
-              "id": "api/comments",
-              "title": "/api/comments",
-              "slug": "/docs/api/comments",
-              "primary": null
-            },
-            {
-              "id": "api/data-analysis",
-              "title": "/api/data-analysis",
-              "slug": "/docs/api/data-analysis",
-              "primary": null
-            },
-            {
-              "id": "api/files",
-              "title": "/api/files",
-              "slug": "/docs/api/files",
-              "primary": null
-            },
-            {
-              "id": "api/infrastructure",
-              "title": "/api/infrastructure",
-              "slug": "/docs/api/infrastructure",
-              "primary": null
-            },
-            {
-              "id": "api/open-data-portals",
-              "title": "/api/open-data-portals",
-              "slug": "/docs/api/open-data-portals",
-              "primary": null
-            },
-            {
-              "id": "api/organizations",
-              "title": "/api/organizations",
-              "slug": "/docs/api/organizations",
-              "primary": null
-            },
-            {
-              "id": "api/sensors",
-              "title": "/api/sensors",
-              "slug": "/docs/api/sensors",
-              "primary": null
-            },
-            {
-              "id": "api/sites",
-              "title": "/api/sites",
-              "slug": "/docs/api/sites",
-              "primary": null
-            },
-            {
-              "id": "api/users",
-              "title": "/api/users",
-              "slug": "/docs/api/users",
-              "primary": null
-            },
-            {
-              "id": "api/overview",
-              "title": "API Overview",
-              "slug": "/docs/api/overview",
-              "primary": null
-            }
-          ],
-          "primary": "developerSidebar",
-          "sharedWith": []
-        },
         {
           "name": "architecture",
           "label": "Architecture",
@@ -683,12 +603,6 @@
               "id": "deployment/overview",
               "title": "Deployment Overview",
               "slug": "/docs/deployment/overview",
-              "primary": null
-            },
-            {
-              "id": "deployment/production",
-              "title": "Production Deployment",
-              "slug": "/docs/deployment/production",
               "primary": null
             },
             {

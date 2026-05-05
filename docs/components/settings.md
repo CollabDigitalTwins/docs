@@ -124,6 +124,4 @@ Visibility and actions within `DataMenu` are gated by the user's CASL permission
 
 - [Hooks — Users](../hooks/users.md)
 - [Hooks — Organizations](../hooks/organizations.md)
-- [API — Users](../api/users.md)
-- [API — Organizations](../api/organizations.md)
 - [Authorization](../authorization/authorization_roles_permissions.md)

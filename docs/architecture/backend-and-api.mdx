@@ -24,16 +24,7 @@ Next.js API routes, authentication via NextAuth + CASL, REST endpoints organized
 CDT's backend lives entirely within Next.js API routes — no separate server process. The structure mirrors domain-driven design:
 
 ```
-src/app/api/
-├── auth/
-│   ├── [...nextauth].ts       # NextAuth handlers
-│   ├── verify-email/
-│   └── reset-password/
-├── buildings/
-│   ├── route.ts               # GET /api/buildings (list)
-│   ├── [id]/
-│   │   ├── route.ts           # GET/PATCH /api/buildings/:id
-│   │   ├── files/route.ts     # POST /api/buildings/:id/files
+files
 │   │   └── comments/route.ts  # GET/POST comments on building
 │   └── bulk-import/route.ts   # POST for batch building create
 ├── sites/route.ts
@@ -194,42 +185,6 @@ return (
 );
 ```
 
-## Common Endpoints
-
-### Buildings
-
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/buildings` | GET | List all buildings in org |
-| `/api/buildings` | POST | Create building |
-| `/api/buildings/:id` | GET | Fetch single building |
-| `/api/buildings/:id` | PATCH | Update fields |
-| `/api/buildings/:id/files` | POST | Attach file to building |
-| `/api/buildings/bulk-import` | POST | CSV/GeoJSON bulk upload |
-
-### Files
-
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/files/upload-url` | POST | Get presigned S3 URL |
-| `/api/files/:id/download-url` | GET | Get presigned download URL |
-| `/api/files/:id` | DELETE | Remove file + S3 object |
-
-### Comments
-
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/buildings/:id/comments` | GET | Fetch comment thread |
-| `/api/buildings/:id/comments` | POST | Add comment |
-| `/api/comments/:id` | PATCH | Edit comment |
-
-### External Data Proxies
-
-| Endpoint | Purpose |
-|----------|---------|
-| `/api/ckanProxy` | Proxy CKAN portal queries (avoid CORS, hide API key) |
-| `/api/opendatasoftProxy` | Proxy Opendatasoft queries |
-
 ## Error Handling
 
 Standard response format:
@@ -277,29 +232,6 @@ Enforced per user/IP:
 const rateLimit = new RateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
   maxRequests: 100,
-});
-```
-
-## Testing
-
-Route tests authenticate via mock session:
-
-```typescript
-// __tests__/api/buildings.test.ts
-
-describe('GET /api/buildings', () => {
-  it('returns 401 if not authenticated', async () => {
-    const res = await fetch('/api/buildings');
-    expect(res.status).toBe(401);
-  });
-
-  it('returns user's buildings if authenticated', async () => {
-    const res = await fetch('/api/buildings', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('buildings');
-  });
 });
 ```
 

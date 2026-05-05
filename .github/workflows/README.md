@@ -73,7 +73,6 @@ Fill in the three fields:
 | `component` | React components in `src/core/components/` |
 | `hook` | SWR hooks in `src/core/hooks/` |
 | `context` | Context providers in `src/core/store/` |
-| `api` | API routes in `src/app/api/` |
 | `concept` | Narrative/architecture pages |
 
 **Single file vs directory:**

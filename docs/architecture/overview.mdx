@@ -65,23 +65,7 @@ CDT ships with English, French, and Spanish translations via **next-intl**, incl
 
 ## Backend
 
-CDT's backend lives entirely inside Next.js API routes — there is no separate server process. The `src/app/api/` directory contains **62 route handlers** organized by domain:
-
-| Domain | Routes |
-|---|---|
-| `buildings` | CRUD, file attachments, bulk import |
-| `sites` | Site management and hierarchy |
-| `files` | Upload, download, presigned URLs |
-| `sensors` / `sensorTypes` | IoT sensor data and type registry |
-| `infrastructure` | Infrastructure asset records |
-| `organizations` | Tenant management and config |
-| `users` | User accounts, roles, password reset |
-| `comments` | Threaded comments on entities |
-| `datasets` | Dataset metadata and records |
-| `openDataPortals` | Open data portal registry |
-| `ckanProxy` / `opendatasoftProxy` | External data source proxies |
-| `dataAnalysis` | Aggregation and reporting endpoints |
-| `auth` / `[...auth]` | NextAuth session and callback handlers |
+CDT's backend lives entirely inside Next.js API routes — there is no separate server process. 
 
 ### Authentication
 
