@@ -111,7 +111,7 @@ For the full matrix, see [Authorization → Permission reference](../authorizati
 
 The MinIO instance for the hosted CDT runs on Canadian infrastructure (Fullhost VPS in Vancouver and Toronto) for data sovereignty. All storage and processing remain within Canadian boundaries. Network policy restricts database and storage access to the application server's IP only.
 
-Self-hosted deployments inherit the same architecture — see [Self-Hosting](../deployment/self-hosting.md) and [Production Deployment](../deployment/production.md) for hardening guidance.
+Self-hosted deployments inherit the same architecture — see [Self-Hosting](../deployment/self-hosting.md)
 
 ## Related
 
