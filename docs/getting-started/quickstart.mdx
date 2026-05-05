@@ -15,7 +15,7 @@ This walkthrough takes you from a fresh CDT account to a working digital twin in
 
 You need:
 
-- An account on a CDT instance — either `https://app.collabdt.org` or your organization's self-hosted URL
+- An account on a CDT instance — or your organization URL: `https://collabdt.org/[your-organization]`
 - A modern browser (Chrome, Edge, Firefox, or Safari) with WebGL enabled
 - Optional: a sample IFC file. Public test files are available from the [buildingSMART sample repository](https://github.com/buildingSMART/Sample-Test-Files)
 
@@ -29,7 +29,8 @@ If you do not have an account yet, your organization's administrator can invite 
 
 1. Open your CDT URL in a browser.
 2. Sign in with your email and password, or with Google if your administrator has enabled OAuth.
-3. CDT opens to the **Map Viewer**, centred on your organization's default map view.
+3. You will receive a MFA code by email or authenticator app. Enter it to complete sign-in. This step will be skipped using cookies on subsequent visits from the same browser.
+4. CDT opens to the **Map Viewer**, centred on your organization's default map view.
 
 **Result:** you see a map filling the viewport, a left sidebar with navigation icons, and a top toolbar with search and tools.
 
@@ -73,8 +74,8 @@ For full coverage, see [Managing Buildings & Sites](../guides/buildings-and-site
 **Goal:** attach a 3D BIM model to your building and view it in the BIM viewer.
 
 1. Open the building you just created.
-2. Switch to the **Files** tab inside the building details panel.
-3. Drag and drop your IFC file onto the panel, or click **Upload** and select it. Small files (under 50 MB) finish in under a minute; larger files take longer.
+2. Switch to the **Map** or **BIM** viewer.
+3. Use the **Add tool** in the toolbar to add your IFC file onto the panel, or click **Upload** and select it. Small files (under 50 MB) finish in under a minute; larger files take longer. You can also use the File section on the app sidebar to manage uploads and see progress.
 4. Once processing is complete, switch to the **BIM Viewer** from the left sidebar and select your file.
 5. Use **left-click + drag** to orbit, **right-click + drag** to pan, and the scroll wheel to zoom. Click any element to see its IFC property sets in the right panel.
 
