@@ -48,7 +48,7 @@ Variables are grouped by subsystem.
 
 ## Email (SMTP)
 
-Required for verification emails, password reset, and member invitations.
+Required for sending multi-factor authentication codes at sign-in.
 
 | Variable | Description | Example |
 |----------|-------------|---------|
@@ -63,7 +63,7 @@ Required for verification emails, password reset, and member invitations.
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` | Geocode Earth API key for address search. Without it, the geocoder is disabled. | `ge-…` |
-| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Google reCAPTCHA v3 public site key for sign-up forms. | `…` |
+| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Google reCAPTCHA v3 public site key for the sign-in form. | `…` |
 | `NEXT_PUBLIC_RECAPTCHA_SECRET_KEY` | reCAPTCHA secret key. | `…` |
 
 ## Tile and asset URLs
