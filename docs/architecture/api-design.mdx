@@ -40,7 +40,7 @@ Guidelines:
 |--------|-----|
 | `GET` | Retrieve a resource or collection |
 | `POST` | Create a new resource |
-| `PUT` / `PATCH` | Update an existing resource |
+| `PATCH` | Update an existing resource (partial update) |
 | `DELETE` | Remove a resource |
 
 ## Resource Representation
@@ -55,7 +55,7 @@ Resources are represented as JSON. Responses should be consistent in shape acros
 
 | Code | Meaning |
 |------|---------|
-| `200 OK` | Successful GET, PUT, PATCH |
+| `200 OK` | Successful GET, PATCH |
 | `201 Created` | Successful POST |
 | `204 No Content` | Successful DELETE |
 | `400 Bad Request` | Invalid input |
