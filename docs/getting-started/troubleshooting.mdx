@@ -106,7 +106,7 @@ The redirect URI registered in your Google Cloud Console must exactly match `${A
 
 `AUTH_TRUST_HOST` is unset behind a reverse proxy, so NextAuth refuses to issue cookies. Set `AUTH_TRUST_HOST=true` and confirm `AUTH_URL` matches the public hostname.
 
-### Email verification or invitation emails never arrive
+### MFA code emails never arrive
 
 Check the SMTP variables (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`). The Next.js logs show the result of each send — look for "EAUTH" or "EENVELOPE" errors. If you use Resend, the port should be `465` and the username should be `resend`.
 

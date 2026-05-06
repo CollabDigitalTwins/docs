@@ -130,9 +130,10 @@ export function computePaths(
 
   /* 2b. Snap-to-straight: align both anchors to a shared x inside the
      overlap so the edge renders as a single vertical line with no bend.
-     Skip for edges with srcXBetween — they route themselves. */
+     Skip for edges with srcXBetween or srcXFrac — they route themselves. */
   infos.forEach(info => {
     if (info.e.srcXBetween) return;
+    if (typeof info.e.srcXFrac === 'number') return;
     const { ar, br } = info;
     const aPad = Math.min(24, ar.width * 0.14);
     const bPad = Math.min(24, br.width * 0.14);
@@ -146,6 +147,14 @@ export function computePaths(
     const shared = Math.max(lo, Math.min(hi, preferred));
     anchors[`${info.idx}_out`] = shared;
     anchors[`${info.idx}_in`] = shared;
+  });
+
+  /* 2c. srcXFrac: pin the source-side vertical at a fraction of the
+     source node's width (0 = left edge, 1 = right edge). */
+  infos.forEach(info => {
+    if (typeof info.e.srcXFrac !== 'number') return;
+    const f = Math.max(0, Math.min(1, info.e.srcXFrac));
+    anchors[`${info.idx}_out`] = info.ar.left + info.ar.width * f;
   });
 
   /* 3. Build every path. Corner (horizontal segment) must never overlap

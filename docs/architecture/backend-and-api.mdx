@@ -21,169 +21,91 @@ Next.js API routes, authentication via NextAuth + CASL, REST endpoints organized
 
 ## Architecture
 
-CDT's backend lives entirely within Next.js API routes — no separate server process. The structure mirrors domain-driven design:
+CDT's backend lives entirely within Next.js API routes — no separate server process. Routes are organized by domain under `src/app/api/`:
 
 ```
-files
-│   │   └── comments/route.ts  # GET/POST comments on building
-│   └── bulk-import/route.ts   # POST for batch building create
+src/app/api/
+├── buildings/route.ts
 ├── sites/route.ts
 ├── sensors/route.ts
-├── files/route.ts             # Upload, download, presigned URLs
-├── datasets/route.ts          # Dataset metadata & records
+├── files/route.ts
+├── comments/route.ts
+├── organizations/route.ts
+├── users/route.ts
+├── infrastructure/route.ts
 ├── openDataPortals/route.ts
-├── ckanProxy/route.ts         # CKAN API proxy (CORS bypass)
-├── opendatasoftProxy/route.ts
-├── dataAnalysis/route.ts      # Aggregations, reports
-└── health/route.ts            # Readiness/liveness checks
+└── ...
 ```
 
 ## Route Conventions
 
-Each route follows a consistent pattern:
+Each route uses the shared `getRequestAbility` helper to authenticate and load the caller's CASL ability in one step. The helper calls `auth()` internally and returns the user's id, their organization id, and an `ability` built from the role's permissions — or an `errorResponse` if the request is unauthenticated.
 
 ```typescript
 // src/app/api/buildings/route.ts
 
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { NextResponse } from 'next/server';
+import { getRequestAbility, forbidAction } from '@/lib/permissions';
 import prisma from '@/lib/prisma';
 
-export async function GET(req: NextRequest) {
-  // 1. Authenticate
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+export async function GET() {
+  const { errorResponse, organizationId, ability } = await getRequestAbility();
+  if (errorResponse) return errorResponse;
+  if (!ability.can('read', 'Building')) return forbidAction();
 
-  // 2. Check permissions
-  const orgId = req.nextUrl.searchParams.get('orgId');
-  const can = defineAbilityFor(session.user);
-  if (!can.can('read', 'Building', { organizationId: orgId })) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
-
-  // 3. Query & respond
   const buildings = await prisma.building.findMany({
-    where: { BuildingOnOrganizations: { some: { organizationId: orgId } } },
+    where: { organizationId },
   });
   return NextResponse.json(buildings);
 }
-
-export async function POST(req: NextRequest) {
-  const session = await auth();
-  const body = await req.json();
-
-  // Validate, mutate, respond
-  const building = await prisma.building.create({ data: body });
-  return NextResponse.json(building, { status: 201 });
-}
 ```
+
+The same shape applies to `POST`, `PATCH`, and `DELETE` — call `getRequestAbility`, check the relevant `(action, subject)` against `ability.can(...)`, then mutate scoped by the caller's `organizationId`.
 
 ## Authentication
 
-**NextAuth v5** manages user sessions and OAuth.
+**NextAuth v5** manages user sessions. The session carries the user's id and their organization id, which `getRequestAbility` reads on every request to scope queries and load the right CASL ability.
 
-### Setup
-
-```typescript
-// src/lib/auth.ts
-
-import NextAuth from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import Google from 'next-auth/providers/google';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import prisma from './prisma';
-
-export const { auth, handlers, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  providers: [
-    Credentials({
-      async authorize(credentials) {
-        // Email + bcrypt password validation
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-        const isValid = await bcrypt.compare(credentials.password, user.passwordHash);
-        return isValid ? user : null;
-      },
-    }),
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-    }),
-  ],
-  session: { strategy: 'jwt' },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) token.sub = user.id;
-      return token;
-    },
-    async session({ session, token }) {
-      session.user.id = token.sub;
-      return session;
-    },
-  },
-});
-```
-
-### Session & Verification
-
-- **Email verification:** Sent via Nodemailer on sign-up; token expires in 24h
-- **Password reset:** Temporary link expires in 1h; bcrypt with `rounds=12`
-- **Session duration:** 30 days (JWT), refreshed on each request
-- **CORS:** Credentials with `sameSite=lax` for cross-subdomain auth
+Sign-in requires a multi-factor code delivered by email. MFA codes expire after 5 minutes. Sessions are valid for 8 hours and are not refreshed on activity — users are signed out at expiry and must sign in again.
 
 ## Permissions (CASL)
 
-**CASL** (an attribute-based access control library) enforces permissions consistently on server + client.
+**CASL** enforces permissions consistently on server + client. Permissions are stored as `(action, subject)` pairs against each role and loaded for the caller on every request.
 
-### Define Abilities
+### Build an ability from a role's permissions
 
 ```typescript
 // src/lib/permissions.ts
 
-import { defineAbility } from '@casl/ability';
+import { AbilityBuilder, createMongoAbility } from '@casl/ability';
 
-export function defineAbilityFor(user) {
-  const { can, rules } = new AbilityBuilder(Ability);
-
-  if (user.role === 'Admin') {
-    can('manage', 'all'); // Full access
-  } else if (user.role === 'Manager') {
-    can('read', 'Building');
-    can('update', 'Building', { organizationId: user.organizationId });
-    can('delete', 'Building', { organizationId: user.organizationId });
-  } else if (user.role === 'Contributor') {
-    can('read', 'Building');
-    can('create', 'File');
-    can('create', 'Comment');
-  } else {
-    can('read', 'Building');
-  }
-
-  return new Ability(rules);
+export function buildAbilityFromPermissions(perms) {
+  const { can, build } = new AbilityBuilder(createMongoAbility);
+  for (const p of perms) can(p.action, p.subject);
+  return build();
 }
 ```
 
-### API Check
+### API check
+
+`getRequestAbility` returns the ability for the current request. Routes use it to gate every action:
 
 ```typescript
-const can = defineAbilityFor(session.user);
-if (!can.can('update', 'Building', building)) {
-  return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-}
+const { errorResponse, ability } = await getRequestAbility();
+if (errorResponse) return errorResponse;
+if (!ability.can('update', 'Building')) return forbidAction();
 ```
 
-### Frontend Check
+### Frontend check
+
+The frontend builds the same ability from the session and uses it to hide controls the user cannot use:
 
 ```typescript
-const can = defineAbilityFor(user);
-return (
-  <>
-    {can.can('update', building) && <EditButton />}
-    {can.can('delete', building) && <DeleteButton />}
-  </>
-);
+{ability.can('update', 'Building') && <EditButton />}
+{ability.can('delete', 'Building') && <DeleteButton />}
 ```
+
+See [Authorization → Permission reference](../authorization/permission-reference.mdx) for the full role/permission matrix.
 
 ## Error Handling
 

@@ -43,6 +43,11 @@ export interface Edge {
   corner?: number;
   /** Draw a straight vertical through the gap between these two node ids. */
   srcXBetween?: [string, string];
+  /** Fix the vertical (source-side) x at a fraction of the source node's
+   *  width: 0 = left edge, 0.5 = center, 1 = right edge. Bypasses
+   *  fan-out and snap-to-straight; the L-bend still happens at the
+   *  target's anchor x. */
+  srcXFrac?: number;
 }
 
 export interface PlatformArchitectureProps {

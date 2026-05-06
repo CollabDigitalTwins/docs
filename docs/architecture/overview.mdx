@@ -69,7 +69,7 @@ CDT's backend lives entirely inside Next.js API routes — there is no separate 
 
 ### Authentication
 
-**NextAuth v5** handles authentication with a credentials provider (email + bcrypt password) and Google OAuth. Sessions are JWT-based with a Prisma adapter that persists `Account` records to PostgreSQL. Email verification and password-reset flows use **Nodemailer** (SMTP).
+**NextAuth v5** handles authentication. Sign-in requires a multi-factor code delivered by email; codes expire after 5 minutes. Sessions are JWT-based, valid for 8 hours, and are not refreshed on activity.
 
 ### Permissions
 
@@ -109,7 +109,7 @@ Binary assets — IFC building models, Potree point cloud tiles, PDFs, images �
 | Service | Purpose |
 |---|---|
 | **CKAN** | Open data portal API — proxied through `/api/ckanProxy` and `/api/opendatasoftProxy` to avoid CORS and hide credentials |
-| **Google reCAPTCHA v3** | Bot protection on public-facing forms (sign-up, contact) |
+| **Google reCAPTCHA v3** | Bot protection on the sign-in form |
 | **Geocode Earth** | Forward and reverse geocoding for address search (`NEXT_PUBLIC_GEOCODE_EARTH_API_KEY`) |
 | **NRCan elevation services** | Canadian elevation and hillshade raster tiles, proxied via rewrites in `next.config.ts` |
 | **Google OAuth** | Optional social sign-in via NextAuth (`AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET`) |

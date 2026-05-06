@@ -1,6 +1,6 @@
 import type { Layer, Edge } from './types';
 import {
-  UserIcon, GlobeIcon, GatewayIcon, ShieldIcon, LayersIcon,
+  UserIcon, GlobeIcon, ShieldIcon, LayersIcon,
   BoxIcon, CloudIcon, MapIcon, FilesIcon, StackIcon,
 } from './kindIcons';
 import {
@@ -49,7 +49,7 @@ export const DEFAULT_LAYERS: Layer[] = [
     }],
   },
   {
-    id: 'api', label: 'API LAYER', note: 'Gateways & scheduled pipelines',
+    id: 'api', label: 'API LAYER', note: 'Next.js API routes & scheduled pipelines',
     nodes: [
       {
         id: 'opendata_svc', title: 'External Open Data',
@@ -58,10 +58,10 @@ export const DEFAULT_LAYERS: Layer[] = [
         tech: [{ Logo: Node_, n: 'Node.js' }],
       },
       {
-        id: 'gateway', title: 'API Gateway',
-        subtitle: `Routing ${DOT} Rate-limit ${DOT} Observability`,
-        kind: 'core', Icon: GatewayIcon,
-        tech: [{ Logo: Node_, n: 'Node.js' }],
+        id: 'api_routes', title: 'Next.js API Routes',
+        subtitle: `Domain handlers ${DOT} Auth ${DOT} CASL checks`,
+        kind: 'core', Icon: LayersIcon,
+        tech: [{ Logo: Next_, n: 'Next.js' }, { Logo: NextAuth_, n: 'NextAuth.js' }, { Logo: CASL_, n: 'CASL' }],
       },
     ],
   },
@@ -136,13 +136,16 @@ export const DEFAULT_LAYERS: Layer[] = [
 export const DEFAULT_EDGES: Edge[] = [
   // Primary top-down flow
   { from: 'user', to: 'frontend', kind: 'core' },
-  { from: 'frontend', to: 'gateway', kind: 'core' },
+  { from: 'frontend', to: 'api_routes', kind: 'core' },
 
-  // Gateway fans out to backend services
-  { from: 'gateway', to: 'core_api', kind: 'core' },
-  { from: 'gateway', to: 'auth_svc', kind: 'core' },
-  { from: 'gateway', to: 'geo_svc', kind: 'map', corner: 0.25 },
-  { from: 'gateway', to: 'files_svc', kind: 'unstruct', srcXBetween: ['auth_svc', 'geo_svc'] },
+  // Next.js API routes fan out to backend services
+  { from: 'api_routes', to: 'core_api', kind: 'core' },
+  { from: 'api_routes', to: 'auth_svc', kind: 'core' },
+  { from: 'api_routes', to: 'geo_svc', kind: 'map' },
+  // Drop straight through the gap between Authentication and Geospatial
+  // Service so the line reaches files_svc on the row below without
+  // crossing the other backend cards.
+  { from: 'api_routes', to: 'files_svc', kind: 'unstruct', srcXBetween: ['auth_svc', 'geo_svc'] },
 
   // Backend → Data storage (one-to-one)
   { from: 'core_api', to: 'db', kind: 'core' },
