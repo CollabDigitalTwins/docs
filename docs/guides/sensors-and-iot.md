@@ -14,7 +14,7 @@ Register a sensor against a Building or BIM element, link it to a data stream, a
 
 ## Prerequisites
 
-- A CDT account with at least Manager permissions to register sensors.
+- A CDT account with **User** or **Admin** role to register sensors.
 - A live data stream you can read from — an MQTT topic, an HTTP endpoint, or a CSV import.
 - Optionally, an IFC element's `GlobalId` you want the sensor pinned to.
 

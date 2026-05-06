@@ -10,30 +10,22 @@ CDT stores all binary assets in [MinIO](https://min.io/), a high-performance ope
 
 ## Goal
 
-Upload files to a building or site, see their version history, and understand where they go.
+Upload files to a building or site and understand where they go.
 
 ## Prerequisites
 
-- A CDT account with at least Contributor permissions on the target Building or Site.
+- A CDT account with **User** or **Admin** role on the target Building or Site.
 - Files in one of the supported formats listed below.
 
 ## Upload a file
 
 **Goal:** add a file to a Building.
 
-There are two upload paths:
-
-### Path 1 — Drag and drop
-
-1. Open the building (or open the BIM Viewer with the building active).
-2. Drag the file onto the viewport or the **Files** tab.
-3. The platform detects the type, routes it to the right pipeline, stores the binary in MinIO, and creates a metadata record.
-
-### Path 2 — File panel
-
 1. Open the building → **Files** tab → **Upload**.
 2. Pick one or more files.
 3. Optionally adjust placement and metadata before they are added to the scene.
+
+The platform detects the file type, routes it to the right pipeline, stores the binary in MinIO, and creates a metadata record.
 
 **Result:** the files appear in the file list and are downloadable, previewable, and (if applicable) loadable in the BIM or point cloud viewers.
 
@@ -60,19 +52,6 @@ When you upload an IFC, the server runs an optimization pipeline before storage:
 
 This dramatically reduces RAM and load time compared with parsing IFC in the browser — important for multi-gigabyte federated models.
 
-## See file version history
-
-**Goal:** view or restore an older version of a file.
-
-MinIO versioning is enabled on all buckets. Every re-upload preserves the previous version.
-
-1. Open the building → **Files** tab.
-2. Click the **History** icon on the file row.
-3. The dialog lists every version with its uploader and timestamp.
-4. Click **Restore** on any version to make it current, or **Download** to fetch that specific version.
-
-**Result:** the file is restored or downloaded as you chose. Useful for ISO 19650-style information management.
-
 ## Inspect file metadata
 
 Every file record stores:
@@ -91,19 +70,9 @@ Every file record stores:
 
 GlobalId linkage means sensor data, BCF topics, IDS results, and media all pin to the same physical asset across different file types.
 
-## Mark a file private or shared
-
-**Goal:** restrict a file to yourself, or make it visible to all members of your Organization.
-
-1. Open the file's details.
-2. Toggle **Visibility** between **Private** (only you) and **Organization** (all members with Viewer permissions or higher).
-3. The change applies immediately — no save step.
-
-**Result:** the file's visibility matches what you selected.
-
 ## Permissions
 
-File visibility and editability follow the Organization's role assignments. A file uploaded by one Organization member is accessible to all members with Viewer permissions or higher, unless marked private.
+File visibility and editability follow the Organization's role assignments. A file uploaded by one Organization member is accessible to all members of the same Organization based on their role.
 
 For the full matrix, see [Authorization → Permission reference](../authorization/permission-reference.mdx).
 

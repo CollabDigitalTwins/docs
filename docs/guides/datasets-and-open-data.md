@@ -15,7 +15,7 @@ Find an open dataset, overlay it on the map, style it by an attribute, and (opti
 ## Prerequisites
 
 - A CDT account.
-- For uploads, at least Contributor permissions in your Organization.
+- For uploads, **User** or **Admin** role in your Organization.
 
 ## Why a federated approach
 
