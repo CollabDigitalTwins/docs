@@ -46,55 +46,17 @@ Prisma handles migrations declaratively. Workflow:
 ```bash
 # 1. Update schema.prisma
 # 2. Create migration (generates SQL)
-npx prisma migrate dev --name add_energy_field
+npx prisma migrate dev --name <migration_name>
 
 # 3. In CI/CD before deploy
 npx prisma migrate deploy
-
-# 4. Reset dev database (destructive)
-npx prisma migrate reset
 ```
 
 Migrations stored in `prisma/migrations/` as timestamped `.sql` files for version control and auditing.
 
 ## Object Storage (MinIO)
 
-Binary assets — IFC models, point cloud tiles, PDFs, images — stored in **MinIO** (S3-compatible).
-
-### Upload Flow
-
-```typescript
-// src/app/api/files/upload-url/route.ts
-
-import { s3Client } from '@/lib/s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
-
-export async function POST(req: Request) {
-  const { filename, mimeType, sizeBytes, buildingId } = await req.json();
-
-  // Generate presigned URL
-  const command = new PutObjectCommand({
-    Bucket: process.env.S3_BUCKET,
-    Key: `buildings/${buildingId}/${crypto.randomUUID()}-${filename}`,
-    ContentType: mimeType,
-  });
-
-  const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-
-  // Browser uploads directly to S3
-  return NextResponse.json({ uploadUrl: url });
-}
-```
-
-### Download Flow
-
-Browser receives presigned URL, downloads directly from MinIO:
-
-```typescript
-const url = await fetch(`/api/files/${fileId}/download-url`).then(r => r.json());
-window.location = url; // Direct S3 URL with auth token
-```
+Binary assets — IFC models, point cloud tiles, PDFs, images — are stored in **MinIO** (S3-compatible). Each File record in PostgreSQL holds the metadata (name, type, size, owner, parent building); the binary itself lives in MinIO and is referenced by an object key.
 
 ## Vector Tiles (Martin)
 
@@ -176,10 +138,8 @@ await prisma.$transaction(async (tx) => {
 
 ## Backups & Recovery
 
-- **Automated:** Daily backups to S3 (pgBackRest)
-- **Retention:** 30-day rolling window
-- **Recovery:** Point-in-time restore to any prior timestamp
-- **MinIO:** S3 replication to separate region for disaster recovery
+- **Automated:** Daily database backups via Fullhost
+- **Retention:** Rolling window of the 5 most recent backups (oldest is up to 5 days old)
 
 ## Performance Tuning
 
@@ -195,10 +155,10 @@ const result = await prisma.$queryRaw`
 
 ### Connection Pooling
 
-PgBouncer in front of PostgreSQL:
+The application connects to PostgreSQL using a standard `DATABASE_URL` (host, port, database, schema):
 
 ```env
-DATABASE_URL="postgresql://user:pass@pgbouncer:6432/cdt?schema=public"
+DATABASE_URL="postgresql://<user>:<pass>@<host>:5432/cdt?schema=public"
 ```
 
 ### Caching
