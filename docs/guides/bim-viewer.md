@@ -16,7 +16,7 @@ Load a BIM model, navigate it in 3D, read its property sets, and use the openBIM
 
 ## Prerequisites
 
-- A CDT account with at least Contributor permissions (to upload).
+- A CDT account with **User** or **Admin** role (to upload).
 - An IFC file. Public test files are at the [buildingSMART sample repository](https://github.com/buildingSMART/Sample-Test-Files).
 
 ## Load a model

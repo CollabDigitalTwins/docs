@@ -106,7 +106,7 @@ The URL encodes longitude, latitude, zoom, pitch, bearing, the active map style,
 
 **Goal:** see a BIM model georeferenced on the map.
 
-IFC models are placed automatically when a building has a model attached. You can also drag and drop a model directly onto the map to position it ad-hoc.
+IFC models are placed automatically when a building has a model attached.
 
 1. Open a building from the buildings list.
 2. If the building has an IFC attached, it appears as a 3D object at the building's coordinates.

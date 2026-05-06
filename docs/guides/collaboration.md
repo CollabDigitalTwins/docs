@@ -10,34 +10,13 @@ CDT is built for multi-user workflows. Several features let teams annotate, disc
 
 ## Goal
 
-Invite a teammate, comment on a building or BIM element, raise a coordination issue (BCF), and share a live view.
+Comment on a building or BIM element, raise a coordination issue (BCF), and share a live view.
 
 ## Prerequisites
 
 - A CDT account.
-- For invites and role management, an Admin role on the Organization.
 
-## Invite a teammate
-
-**Goal:** add someone to your Organization with the right level of access.
-
-1. Open **Settings → Members → Invite member**.
-2. Enter the email and pick a role:
-
-| Role | Capabilities |
-|------|--------------|
-| **Viewer** | View all content within the Organization. |
-| **Contributor** | Upload files, add comments and media. |
-| **Manager** | Edit asset records, manage member roles. |
-| **Admin** | Full control, including deletion and settings. |
-
-3. Click **Send invitation**.
-
-The new member receives an email with a sign-up link. Once they accept, they appear in the members list with the role you chose.
-
-**Result:** the teammate can sign in and see what their role allows.
-
-For the full role matrix, see [Authorization → Permission reference](../authorization/permission-reference.mdx).
+To invite teammates and manage roles, see [Managing roles and permissions](../authorization/managing-roles.mdx).
 
 ## Pin a comment to a map location
 

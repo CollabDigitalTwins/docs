@@ -17,63 +17,61 @@ Each cell shows whether the role grants the action on the subject. `–` means n
 
 ### Read access
 
-| Subject | Viewer | Contributor | Manager | Admin |
-|---------|:------:|:-----------:|:-------:|:-----:|
-| Building | read | read | read | read |
-| Site | read | read | read | read |
-| Infrastructure | read | read | read | read |
-| File | read | read | read | read |
-| Sensor | read | read | read | read |
-| SensorType | read | read | read | read |
-| Comment | read | read | read | read |
-| User | read | read | read | read |
-| Role | – | – | read | read |
-| Organization | read | read | read | read |
-| OpenDataPortal | read | read | read | read |
+| Subject | Viewer | User | Admin |
+|---------|:------:|:----:|:-----:|
+| Building | read | read | read |
+| Site | read | read | read |
+| Infrastructure | read | read | read |
+| File | read | read | read |
+| Sensor | read | read | read |
+| SensorType | read | read | read |
+| Comment | read | read | read |
+| User | read | read | read |
+| Role | read | read | read |
+| Organization | read | read | read |
 
 ### Create access
 
-| Subject | Viewer | Contributor | Manager | Admin |
-|---------|:------:|:-----------:|:-------:|:-----:|
-| Building | – | – | create | create |
-| Site | – | – | create | create |
-| Infrastructure | – | – | create | create |
-| File | – | create | create | create |
-| Sensor | – | – | create | create |
-| SensorType | – | – | – | create |
-| Comment | – | create | create | create |
-| User (invite) | – | – | create | create |
-| Role | – | – | – | create |
-| OpenDataPortal | – | – | – | create |
+| Subject | Viewer | User | Admin |
+|---------|:------:|:----:|:-----:|
+| Building | – | create | create |
+| Site | – | create | create |
+| Infrastructure | – | create | create |
+| File | – | create | create |
+| Sensor | – | create | create |
+| SensorType | – | create | create |
+| Comment | – | create | create |
+| User | – | – | create |
+| Organization | – | create | create |
 
 ### Update access
 
-| Subject | Viewer | Contributor | Manager | Admin |
-|---------|:------:|:-----------:|:-------:|:-----:|
-| Building | – | – | update | update |
-| Site | – | – | update | update |
-| Infrastructure | – | – | update | update |
-| File | – | update (own) | update | update |
-| Sensor | – | – | update | update |
-| Comment | – | update (own) | update | update |
-| User | – | – | update | update |
-| Role | – | – | – | update |
-| Organization | – | – | – | update |
+| Subject | Viewer | User | Admin |
+|---------|:------:|:----:|:-----:|
+| Building | – | update | update |
+| Site | – | update | update |
+| Infrastructure | – | update | update |
+| File | – | update | update |
+| Sensor | – | update | update |
+| SensorType | – | update | update |
+| Comment | – | update | update |
+| User | – | update | update |
+| Role | – | – | update |
+| Organization | – | update | update |
 
 ### Delete access
 
-| Subject | Viewer | Contributor | Manager | Admin |
-|---------|:------:|:-----------:|:-------:|:-----:|
-| Building | – | – | – | delete |
-| Site | – | – | – | delete |
-| Infrastructure | – | – | – | delete |
-| File | – | delete (own) | delete | delete |
-| Sensor | – | – | – | delete |
-| Comment | – | delete (own) | delete | delete |
-| User | – | – | – | delete |
-| Role | – | – | – | delete |
-
-> "(own)" means the user can act only on records they themselves created.
+| Subject | Viewer | User | Admin |
+|---------|:------:|:----:|:-----:|
+| Building | – | delete | delete |
+| Site | – | delete | delete |
+| Infrastructure | – | delete | delete |
+| File | – | delete | delete |
+| Sensor | – | delete | delete |
+| SensorType | – | delete | delete |
+| Comment | – | delete | delete |
+| User | – | – | delete |
+| Organization | – | – | delete |
 
 ## Action vocabulary
 
@@ -101,9 +99,8 @@ Subjects map directly to Prisma models — see [Architecture → Data Model](../
 | `SensorType` | A reusable sensor category (temperature, occupancy, etc.). |
 | `Comment` | A threaded annotation on any other entity. |
 | `User` | A member of the organization. |
-| `Role` | A permission set scoped to the organization. |
+| `Role` | The role assigned to a user. |
 | `Organization` | The tenant itself. |
-| `OpenDataPortal` | A registered CKAN or Opendatasoft portal endpoint. |
 
 ## Cross-resource dependencies
 
