@@ -103,11 +103,6 @@ const config: Config = {
       respectPrefersColorScheme: false,
     },
     navbar: {
-      title: 'CDT Docs',
-      logo: {
-        alt: 'Collab Digital Twins',
-        src: 'img/cdt-logo-stroke.svg',
-      },
       items: [
         {
           type: 'doc',
