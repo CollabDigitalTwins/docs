@@ -10,7 +10,7 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 
 # Backend & API
 
-Next.js API routes, authentication via NextAuth + CASL, REST endpoints organized by domain.
+Next.js API routes, authentication via NextAuth, RBAC authorization via CASL, REST endpoints organized by domain.
 
 <BrowserOnly>
   {() => {
@@ -21,7 +21,7 @@ Next.js API routes, authentication via NextAuth + CASL, REST endpoints organized
 
 ## Architecture
 
-CDT's backend lives entirely within Next.js API routes — no separate server process. Routes are organized by domain under `src/app/api/`:
+CDT's backend is a single **Core API** running inside Next.js API routes — no separate server process. The Core API hosts business logic and CRUD endpoints; Authentication and Authorization are cross-cutting services it calls on every request. Routes are organized by domain under `src/app/api/`:
 
 ```
 src/app/api/
@@ -68,9 +68,9 @@ The same shape applies to `POST`, `PATCH`, and `DELETE` — call `getRequestAbil
 
 Sign-in requires a multi-factor code delivered by email. MFA codes expire after 5 minutes. Sessions are valid for 8 hours and are not refreshed on activity — users are signed out at expiry and must sign in again.
 
-## Permissions (CASL)
+## Authorization (RBAC via CASL)
 
-**CASL** enforces permissions consistently on server + client. Permissions are stored as `(action, subject)` pairs against each role and loaded for the caller on every request.
+**Role-Based Access Control (RBAC)** is enforced by **CASL** consistently on server + client. Each role owns a set of `(action, subject)` permission pairs that are loaded for the caller on every request and compiled into an `Ability`.
 
 ### Build an ability from a role's permissions
 

@@ -14,7 +14,7 @@ How CDT's frontend, backend, and data layers connect to form a collaborative dig
 
 ## Overview
 
-CDT is a full-stack Next.js 15 application that combines three specialized visualization engines — maps, BIM/IFC models, and point clouds — with a REST API layer and a PostgreSQL + MinIO storage backend. The entire application, from server-side rendering to API routes, lives in a single Next.js deployment, which keeps infrastructure simple while still supporting a rich, interactive browser experience. Authentication, role-based permissions, and multi-tenant organization support are built in at the framework level.
+CDT is a full-stack Next.js 15 application that combines three specialized visualization engines — maps, BIM/IFC models, and point clouds — with a REST API layer and a PostgreSQL + MinIO storage backend. The entire application, from server-side rendering to API routes, lives in a single Next.js deployment, which keeps infrastructure simple while still supporting a rich, interactive browser experience. Authentication, RBAC authorization, and multi-tenant organization support are built in at the framework level.
 
 ## High-Level Architecture
 
@@ -65,19 +65,19 @@ CDT ships with English, French, and Spanish translations via **next-intl**, incl
 
 ## Backend
 
-CDT's backend lives entirely inside Next.js API routes — there is no separate server process. 
+CDT's backend is a single **Core API** that lives entirely inside Next.js API routes — there is no separate server process. The Core API hosts the business logic and CRUD endpoints, and delegates to two cross-cutting services on every request: Authentication and Authorization. A scheduled External Open Data integration sits alongside the Core API to pull and proxy public datasets.
 
 ### Authentication
 
 **NextAuth v5** handles authentication. Sign-in requires a multi-factor code delivered by email; codes expire after 5 minutes. Sessions are JWT-based, valid for 8 hours, and are not refreshed on activity.
 
-### Permissions
+### Authorization
 
-**CASL** (an attribute-based access control library) enforces permissions on both the server and client. The `PermissionsProvider` builds an `Ability` instance from the current user's `Role` at session time. API routes check this ability before mutating data, and the frontend uses it to conditionally render controls.
+**Role-Based Access Control (RBAC)** is enforced via **CASL**. Roles are stored per-organization in PostgreSQL as `(action, subject)` permission sets. The `PermissionsProvider` builds an `Ability` instance from the current user's `Role` at session time. API routes check this ability before mutating data, and the frontend uses it to conditionally render controls.
 
 ## Data Layer
 
-### PostgreSQL via Prisma
+### Database (PostgreSQL via Prisma)
 
 All structured data lives in **PostgreSQL**. **Prisma ORM** provides a type-safe query client and handles migrations. The core models are:
 
@@ -94,15 +94,15 @@ All structured data lives in **PostgreSQL**. **Prisma ORM** provides a type-safe
 - **Comment** — threaded annotation on buildings or organizations
 - **OpenDataPortal** — registered CKAN or Opendatasoft portal endpoints
 
-Buildings carry PostGIS-compatible coordinates (`buildingLatitude`, `buildingLongitude`, `featureId`) and are served as vector tiles by Martin.
+Buildings carry PostGIS-compatible coordinates (`buildingLatitude`, `buildingLongitude`, `featureId`).
 
-### Object storage (MinIO / S3)
+### Spatial Database (PostGIS + Martin)
 
-Binary assets — IFC building models, Potree point cloud tiles, PDFs, images — are stored in **MinIO** (S3-compatible). The API issues presigned URLs so the browser uploads and downloads directly to storage, keeping large files out of the Next.js process. The `@aws-sdk/client-s3` and `@aws-sdk/s3-request-presigner` packages handle all S3 operations.
+Geospatial data lives in **PostGIS**, the PostgreSQL spatial extension that adds geometry, raster, and spatial indexing. **Martin** is a tile server that reads directly from PostGIS and serves the results as Mapbox Vector Tiles. MapLibre consumes those tiles to render building footprints and site boundaries on the map without transferring full GeoJSON payloads. PostGIS + Martin together act as the platform's spatial store and tile-serving pipeline.
 
-### Martin (vector tiles)
+### Unstructured Files (MinIO / S3)
 
-**Martin** is a separate PostGIS tile server that reads spatial data directly from PostgreSQL and serves it as Mapbox Vector Tiles. MapLibre consumes these tiles to render building footprints and site boundaries on the map without transferring full GeoJSON payloads.
+Binary assets — IFC building models, glTF, DXF, LAS/LAZ point cloud tiles, PDFs, images, video, CSV — are stored in **MinIO** (S3-compatible). The API issues presigned URLs so the browser uploads and downloads directly to storage, keeping large files out of the Next.js process. The `@aws-sdk/client-s3` and `@aws-sdk/s3-request-presigner` packages handle all S3 operations.
 
 ## External Integrations
 

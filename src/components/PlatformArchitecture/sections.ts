@@ -18,14 +18,14 @@ export function getFrontendEdges(): Edge[] {
 }
 
 export function getBackendLayers(): Layer[] {
-    // API + Backend services only
-    return DEFAULT_LAYERS.filter(l => ['api', 'backend'].includes(l.id));
+    // Integrations row + Backend services (Next.js API routes are inside Core API)
+    return DEFAULT_LAYERS.filter(l => ['integrations', 'backend'].includes(l.id));
 }
 
 export function getBackendEdges(): Edge[] {
-    // API gateway → backend service edges
+    // Edges between integrations and backend service cards only
     return DEFAULT_EDGES.filter(e => {
-        const layerIds = new Set(['api', 'backend']);
+        const layerIds = new Set(['integrations', 'backend']);
         const fromInScope = DEFAULT_LAYERS.find(l => l.nodes.some(n => n.id === e.from))?.id;
         const toInScope = DEFAULT_LAYERS.find(l => l.nodes.some(n => n.id === e.to))?.id;
         return fromInScope && toInScope && layerIds.has(fromInScope) && layerIds.has(toInScope);

@@ -54,13 +54,13 @@ npx prisma migrate deploy
 
 Migrations stored in `prisma/migrations/` as timestamped `.sql` files for version control and auditing.
 
-## Object Storage (MinIO)
+## Unstructured Files (MinIO)
 
-Binary assets — IFC models, point cloud tiles, PDFs, images — are stored in **MinIO** (S3-compatible). Each File record in PostgreSQL holds the metadata (name, type, size, owner, parent building); the binary itself lives in MinIO and is referenced by an object key.
+Binary assets — IFC models, glTF, DXF, LAS/LAZ point cloud tiles, PDFs, images, video, CSV — are stored in **MinIO** (S3-compatible). Each `File` record in PostgreSQL holds the metadata (name, type, size, owner, parent building); the binary itself lives in MinIO and is referenced by an object key.
 
-## Vector Tiles (Martin)
+## Spatial Database (PostGIS + Martin)
 
-**Martin** is a separate PostGIS tile server. Reads building geometries + attributes from PostgreSQL, serves as Mapbox Vector Tiles to MapLibre.
+Geospatial data lives in **PostGIS**, the PostgreSQL spatial extension. **Martin** is a tile server that reads building geometries and attributes from PostGIS and serves them as Mapbox Vector Tiles directly to MapLibre — no GeoJSON round-trip through the API. Treat PostGIS + Martin as one spatial store with a tile-serving front door.
 
 ### Setup
 

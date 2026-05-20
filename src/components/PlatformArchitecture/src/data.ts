@@ -1,7 +1,7 @@
 import type { Layer, Edge } from './types';
 import {
   UserIcon, GlobeIcon, ShieldIcon, LayersIcon,
-  BoxIcon, CloudIcon, MapIcon, FilesIcon, StackIcon,
+  BoxIcon, CloudIcon, StackIcon,
 } from './kindIcons';
 import {
   Node_, Next_, React_, TS_, Tailwind_, Shadcn_, NextAuth_,
@@ -49,53 +49,34 @@ export const DEFAULT_LAYERS: Layer[] = [
     }],
   },
   {
-    id: 'api', label: 'API LAYER', note: 'Next.js API routes & scheduled pipelines',
-    nodes: [
-      {
-        id: 'opendata_svc', title: 'External Open Data',
-        subtitle: `Integration ${DOT} Transform ${DOT} Scheduled pulls`,
-        kind: 'open', Icon: GlobeIcon,
-        tech: [{ Logo: Node_, n: 'Node.js' }],
-      },
-      {
-        id: 'api_routes', title: 'Next.js API Routes',
-        subtitle: `Domain handlers ${DOT} Auth ${DOT} CASL checks`,
-        kind: 'core', Icon: LayersIcon,
-        tech: [{ Logo: Next_, n: 'Next.js' }, { Logo: NextAuth_, n: 'NextAuth.js' }, { Logo: CASL_, n: 'CASL' }],
-      },
-    ],
+    id: 'integrations', label: 'INTEGRATIONS', note: 'External data services & scheduled pipelines',
+    nodes: [{
+      id: 'opendata_svc', title: 'External Open Data',
+      subtitle: `Integration ${DOT} Transform ${DOT} Scheduled pulls`,
+      kind: 'open', wide: true, Icon: GlobeIcon,
+      tech: [{ Logo: Node_, n: 'Node.js' }],
+    }],
   },
   {
-    id: 'backend', label: 'BACKEND SERVICES', note: 'Domain services, horizontally scalable',
+    id: 'backend', label: 'BACKEND SERVICES', note: 'Next.js API routes and cross-cutting domain services',
     nodes: [
       {
         id: 'core_api', title: 'Core API',
-        subtitle: `Business logic ${DOT} CRUD ${DOT} Assets`,
-        kind: 'core', Icon: BoxIcon,
-        tech: [{ Logo: Node_, n: 'Node.js' }],
+        subtitle: `Next.js API routes ${DOT} Business logic ${DOT} CRUD`,
+        kind: 'core', Icon: LayersIcon,
+        tech: [{ Logo: Next_, n: 'Next.js' }, { Logo: Node_, n: 'Node.js' }],
       },
       {
         id: 'auth_svc', title: 'Authentication',
-        subtitle: `Tokens ${DOT} Permissions ${DOT} Sessions`,
+        subtitle: `Tokens ${DOT} Sessions ${DOT} MFA`,
         kind: 'core', Icon: ShieldIcon,
-        tech: [{ Logo: NextAuth_, n: 'NextAuth.js' }, { Logo: CASL_, n: 'CASL' }],
+        tech: [{ Logo: NextAuth_, n: 'NextAuth.js' }],
       },
       {
-        id: 'geo_svc', title: 'Geospatial Service',
-        subtitle: `Tile generation ${DOT} Spatial ops`,
-        kind: 'map', Icon: MapIcon,
-        tech: [{ Logo: Martin_, n: 'Martin' }],
-      },
-      {
-        id: 'files_svc', title: 'Unstructured Files',
-        subtitle: `Large file processing ${DOT} Conversion`,
-        kind: 'unstruct', Icon: FilesIcon,
-        tech: [
-          { Logo: GLTF_, n: 'glTF' },
-          { Logo: DXF_, n: 'DXF' },
-          { Logo: IFC_, n: 'IFC' },
-          { Logo: LAS_, n: 'LAS/LAZ' },
-        ],
+        id: 'authz_svc', title: 'Authorization',
+        subtitle: `RBAC ${DOT} Roles ${DOT} Permissions`,
+        kind: 'core', Icon: ShieldIcon,
+        tech: [{ Logo: CASL_, n: 'CASL' }],
       },
     ],
   },
@@ -109,16 +90,22 @@ export const DEFAULT_LAYERS: Layer[] = [
         tech: [{ Logo: Postgres_, n: 'PostgreSQL' }, { Logo: Prisma_, n: 'Prisma' }],
       },
       {
-        id: 'objstore', title: 'Object Store',
-        subtitle: `BIM ${DOT} Point clouds ${DOT} Video ${DOT} CSV`,
-        kind: 'unstruct', Icon: BoxIcon,
-        tech: [{ Logo: MinIO_, n: 'MinIO' }],
+        id: 'spatial_db', title: 'Spatial Database',
+        subtitle: `Geometry ${DOT} Raster ${DOT} Vector tiles`,
+        kind: 'map', Icon: StackIcon,
+        tech: [{ Logo: PostGIS_, n: 'PostGIS' }, { Logo: Martin_, n: 'Martin' }],
       },
       {
-        id: 'spatial_db', title: 'Spatial Database',
-        subtitle: `Geometry ${DOT} Raster ${DOT} Indexes`,
-        kind: 'map', Icon: StackIcon,
-        tech: [{ Logo: PostGIS_, n: 'PostGIS' }],
+        id: 'objstore', title: 'Unstructured Files',
+        subtitle: `BIM ${DOT} Point clouds ${DOT} Video ${DOT} CSV`,
+        kind: 'unstruct', Icon: BoxIcon,
+        tech: [
+          { Logo: MinIO_, n: 'MinIO' },
+          { Logo: IFC_, n: 'IFC' },
+          { Logo: GLTF_, n: 'glTF' },
+          { Logo: DXF_, n: 'DXF' },
+          { Logo: LAS_, n: 'LAS/LAZ' },
+        ],
       },
     ],
   },
@@ -134,31 +121,26 @@ export const DEFAULT_LAYERS: Layer[] = [
 ];
 
 export const DEFAULT_EDGES: Edge[] = [
-  // Primary top-down flow
+  // Primary top-down flow. Auth + Authz are cross-cutting concerns
+  // Core API invokes on every request — their adjacency in the
+  // Backend Services row conveys that without an explicit edge.
   { from: 'user', to: 'frontend', kind: 'core' },
-  { from: 'frontend', to: 'api_routes', kind: 'core' },
+  { from: 'frontend', to: 'core_api', kind: 'core' },
 
-  // Next.js API routes fan out to backend services
-  { from: 'api_routes', to: 'core_api', kind: 'core' },
-  { from: 'api_routes', to: 'auth_svc', kind: 'core' },
-  { from: 'api_routes', to: 'geo_svc', kind: 'map' },
-  // Drop straight through the gap between Authentication and Geospatial
-  // Service so the line reaches files_svc on the row below without
-  // crossing the other backend cards.
-  { from: 'api_routes', to: 'files_svc', kind: 'unstruct', srcXBetween: ['auth_svc', 'geo_svc'] },
-
-  // Backend → Data storage (one-to-one)
+  // Backend → Data storage. Core API mediates all reads/writes;
+  // auth + authz both persist their state in the relational DB.
   { from: 'core_api', to: 'db', kind: 'core' },
-  { from: 'auth_svc', to: 'db', kind: 'core', corner: 0.75 },
-  { from: 'geo_svc', to: 'spatial_db', kind: 'map' },
-  { from: 'files_svc', to: 'objstore', kind: 'unstruct' },
+  { from: 'core_api', to: 'spatial_db', kind: 'map' },
+  { from: 'core_api', to: 'objstore', kind: 'unstruct' },
+  { from: 'auth_svc', to: 'db', kind: 'core' },
+  { from: 'authz_svc', to: 'db', kind: 'core' },
 
-  // External Open Data service bridges the frontend with the geospatial backend
+  // External Open Data service bridges the frontend with the spatial store
   { from: 'opendata_svc', to: 'frontend', kind: 'open' },
-  { from: 'opendata_svc', to: 'geo_svc', kind: 'open' },
+  { from: 'opendata_svc', to: 'spatial_db', kind: 'open' },
 
   // Data layer sits on Cloud (substrate for everything above)
   { from: 'db', to: 'cloud', kind: 'core', bidir: false },
-  { from: 'objstore', to: 'cloud', kind: 'unstruct', bidir: false },
   { from: 'spatial_db', to: 'cloud', kind: 'map', bidir: false },
+  { from: 'objstore', to: 'cloud', kind: 'unstruct', bidir: false },
 ];
