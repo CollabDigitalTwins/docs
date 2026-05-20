@@ -100,6 +100,7 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/cdt-og_card.png',
     colorMode: {
+      defaultMode: 'dark',
       respectPrefersColorScheme: false,
     },
     navbar: {
