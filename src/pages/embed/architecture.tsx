@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import Head from '@docusaurus/Head';
 
@@ -30,6 +30,7 @@ function ArchitectureEmbed() {
     getParam('theme', 'dark') === 'light' ? 'light' : 'dark',
   );
   const showChrome = getParam('chrome', '0') === '1';
+  const rootRef = useRef<HTMLDivElement>(null);
 
   // Force the docs palette to match the requested theme (──hp-* live on
   // html[data-theme]). Overrides any persisted Docusaurus colour preference.
@@ -37,10 +38,19 @@ function ArchitectureEmbed() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  // Report content height so an embedding iframe can size itself exactly.
+  // Report the *content* height so an embedding iframe can size itself
+  // exactly. We measure the root element (content-driven height) rather than
+  // document.body / scrollHeight — using a viewport-relative height like
+  // 100vh here would feed back through the parent's iframe sizing and grow
+  // without bound. A small dead-band avoids sub-pixel oscillation.
   useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    let last = 0;
     const report = () => {
-      const height = Math.ceil(document.body.scrollHeight);
+      const height = Math.ceil(el.getBoundingClientRect().height);
+      if (Math.abs(height - last) < 2) return;
+      last = height;
       try {
         window.parent?.postMessage({ type: 'cdt-arch-height', height }, '*');
       } catch {
@@ -49,7 +59,7 @@ function ArchitectureEmbed() {
     };
     report();
     const ro = new ResizeObserver(report);
-    ro.observe(document.body);
+    ro.observe(el);
     window.addEventListener('load', report);
     return () => {
       ro.disconnect();
@@ -59,19 +69,14 @@ function ArchitectureEmbed() {
 
   return (
     <div
+      ref={rootRef}
       style={{
-        minHeight: '100vh',
         background: 'var(--hp-surface-grad, var(--hp-surface))',
         padding: 'clamp(12px, 2vw, 28px)',
         boxSizing: 'border-box',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
       }}
     >
-      <div style={{ width: '100%' }}>
-        <PlatformArchitecture theme={theme} bare={!showChrome} />
-      </div>
+      <PlatformArchitecture theme={theme} bare={!showChrome} />
     </div>
   );
 }
@@ -82,8 +87,10 @@ export default function ArchitectureEmbedPage(): React.ReactElement {
       <Head>
         <title>CDT Platform Architecture</title>
         <meta name="robots" content="noindex" />
-        {/* Strip default page chrome margins for a clean embed. */}
-        <style>{`html,body{margin:0;padding:0;background:var(--hp-surface);} #__docusaurus{min-height:100vh;}`}</style>
+        {/* Strip default page chrome margins for a clean embed. No 100vh /
+            min-height anywhere — the page is exactly as tall as the diagram so
+            the height it reports to the parent iframe stays stable. */}
+        <style>{`html,body{margin:0;padding:0;background:var(--hp-surface);}`}</style>
       </Head>
       <BrowserOnly>{() => <ArchitectureEmbed />}</BrowserOnly>
     </>
