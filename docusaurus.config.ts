@@ -135,7 +135,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://collabdt.org/home',
+          href: 'https://collabdt.org',
           label: 'Home',
           position: 'right',
         },
@@ -170,7 +170,7 @@ const config: Config = {
             },
             {
               label: 'Contact',
-              href: 'https://collabdt.org/home#contact',
+              href: 'https://collabdt.org#contact',
             },
           ],
         },
@@ -179,7 +179,7 @@ const config: Config = {
           items: [
             {
               label: 'CDT Home',
-              href: 'https://collabdt.org/home',
+              href: 'https://collabdt.org',
             },
           ],
         },
