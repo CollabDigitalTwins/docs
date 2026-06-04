@@ -1,7 +1,7 @@
 ---
 sidebar_position: 5
 title: File Management
-description: Upload, version, share, and manage files attached to buildings and sites.
+description: Upload, organize, and manage files attached to buildings and sites.
 ---
 
 # File Management
@@ -23,7 +23,6 @@ Upload files to a building or site and understand where they go.
 
 1. Open the building → **Files** tab → **Upload**.
 2. Pick one or more files.
-3. Optionally adjust placement and metadata before they are added to the scene.
 
 The platform detects the file type, routes it to the right pipeline, stores the binary in MinIO, and creates a metadata record.
 

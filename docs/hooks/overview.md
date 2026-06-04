@@ -16,16 +16,16 @@ If you're new to the codebase, start with [Buildings](./buildings.md) — it's t
 
 - [useBuilding hooks](./buildings.md)
 - [useComment hooks](./comments.md)
-- [File hooks](./files.md)
-- [Infrastructure hooks](./infrastructures.md)
+- [useFile hooks](./files.md)
+- [useInfrastructure hooks](./infrastructures.md)
 - [useOpenDataPortals hooks](./open-data-portals.md)
 - [useOrganization hooks](./organizations.md)
 - [ApiAdapter Interface](./ports.md)
 - [useSensorType hooks](./sensor-types.md)
-- [Sensor hooks](./sensors.md)
-- [Site hooks](./sites.md)
+- [useSensor hooks](./sensors.md)
+- [useSite hooks](./sites.md)
 - [useIsMobile hook](./ui.md)
-- [User hooks](./users.md)
+- [useUser hooks](./users.md)
 
 ## Related
 

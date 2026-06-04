@@ -53,7 +53,7 @@ export function activate(ctx: PluginContext): void {
 
 ```tsx
 import type { MapToolProps } from '../../sdk/types'
-// ✓ Only imports from sdk/. No imports from src/core/.
+// ✓ Only imports from sdk/. No imports from @collabdt/core/.
 
 export function DayNightToolbarIcon({ map }: MapToolProps) {
   // map is MapLibre Map | null

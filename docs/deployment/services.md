@@ -82,7 +82,7 @@ The hostname `postgres` resolves through Docker Compose internal networking. Por
 MinIO starts as part of the CDT Compose stack. A one-time `minio-init` service runs on first startup to:
 
 1. Wait for MinIO to become available
-2. Create the following buckets if they do not exist: `dnd`, `users`, `building-footprints`, `org-logos`
+2. Create the platform's storage buckets (for example, `users` and `building-footprints`) if they do not exist
 3. Exit automatically after initialization
 
 No manual bucket creation is needed.

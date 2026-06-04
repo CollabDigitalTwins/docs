@@ -41,7 +41,7 @@ None.
 ### Example
 
 ```tsx
-import { useIsMobile } from '@/core/hooks/ui/use-mobile';
+import { useIsMobile } from '@collabdt/core/hooks/ui/use-mobile';
 
 function Header() {
   const isMobile = useIsMobile();

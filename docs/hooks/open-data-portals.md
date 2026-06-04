@@ -1,6 +1,6 @@
 ---
 title: useOpenDataPortals hooks
-description: SWR-based hooks for fetching open data portal records with various filtering options.
+description: SWR-based hooks for fetching and creating open data portal records.
 category: hooks
 status: draft
 last_updated: 2025-01-14
@@ -8,7 +8,7 @@ last_updated: 2025-01-14
 
 # useOpenDataPortals hooks
 
-These hooks provide read access to open data portal records, supporting queries by ID, municipality, country subdivision, dataset group, and name. All hooks use SWR for caching and revalidation, and are created via a factory function that accepts an `ApiAdapter` for dependency injection.
+These hooks provide read and create access to open data portal records. Read hooks support queries by ID, municipality, country subdivision, dataset group, and name; `useCreateOpenDataPortal` adds new portals. All hooks use SWR (mutations use SWR Mutation) for caching and revalidation, and are created via a factory function that accepts an `ApiAdapter` for dependency injection.
 
 ## Hooks
 
@@ -16,6 +16,7 @@ These hooks provide read access to open data portal records, supporting queries 
 |------|-------------|
 | `useOpenDataPortals` | Fetches all open data portals |
 | `useOpenDataPortalById` | Fetches a single portal by numeric ID |
+| `useCreateOpenDataPortal` | Creates a new open data portal record |
 | `useOpenDataPortalsByMunicipality` | Fetches portals filtered by municipality name |
 | `useOpenDataPortalsByMunicipalityAndCountrySubdivision` | Fetches portals filtered by both municipality and country subdivision |
 | `useOpenDataPortalsByCountrySubdivision` | Fetches portals filtered by country subdivision (province/territory) |
@@ -102,6 +103,51 @@ function useOpenDataPortalById(id: number | null): {
 const { openDataPortal, isLoading } = useOpenDataPortalById(selectedPortalId);
 
 if (!openDataPortal) return null;
+```
+
+---
+
+## `useCreateOpenDataPortal`
+
+Creates a new open data portal record. Built on SWR Mutation: it returns a trigger function plus the mutation state, and revalidates the portal list on success.
+
+### Signature
+
+```ts
+function useCreateOpenDataPortal(): {
+  createOpenDataPortal: (data: Partial<OpenDataPortal>) => Promise<OpenDataPortal>;
+  isMutating: boolean;
+  createError: Error | undefined;
+  createdData: OpenDataPortal | undefined;
+};
+```
+
+### Parameters
+
+None. Pass the new portal's fields to the returned `createOpenDataPortal` trigger when you call it.
+
+### Returns
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `createOpenDataPortal` | `(data: Partial<OpenDataPortal>) => Promise<OpenDataPortal>` | Trigger that creates the portal and resolves to the created record |
+| `isMutating` | `boolean` | SWR Mutation in-flight state |
+| `createError` | `Error \| undefined` | Error thrown by the mutation, if any |
+| `createdData` | `OpenDataPortal \| undefined` | The most recently created record |
+
+### Example
+
+```tsx
+const { createOpenDataPortal, isMutating } = useCreateOpenDataPortal();
+
+async function handleCreate() {
+  const portal = await createOpenDataPortal({
+    name: "City of Ottawa Open Data",
+    countrySubdivision: "ON",
+    municipality: "Ottawa",
+  });
+  console.log("Created portal", portal.id);
+}
 ```
 
 ---

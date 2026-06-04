@@ -13,8 +13,8 @@ Renders a floating toolbar anchored to the bottom center of the viewport. The to
 ## Usage
 
 ```tsx
-import { Toolbar } from '@/components/Toolbar';
-import { ViewerNames } from '@/types';
+import { Toolbar } from '@collabdt/core/components/Toolbar';
+import { ViewerNames } from '@collabdt/core/types';
 
 <Toolbar viewer={ViewerNames.map} />
 ```

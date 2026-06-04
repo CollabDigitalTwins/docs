@@ -41,7 +41,7 @@ The trigger button is disabled when the user lacks create permission.
 ### Usage
 
 ```tsx
-import AddSite from '@/core/components/viewers/Data/siteDetails/AddSite'
+import AddSite from '@collabdt/core/components/viewers/Data/siteDetails/AddSite'
 
 const [siteName, setSiteName] = useState('')
 
@@ -90,7 +90,7 @@ Displays buildings associated with a site. Supports searching, filtering, attach
 ### Usage
 
 ```tsx
-import AssociatedBuildingsTable from '@/core/components/viewers/Data/siteDetails/AssociatedBuildings'
+import AssociatedBuildingsTable from '@collabdt/core/components/viewers/Data/siteDetails/AssociatedBuildings'
 
 <AssociatedBuildingsTable
   buildings={site.siteBuildings}
@@ -185,7 +185,7 @@ The component exposes a ref with the following method:
 ### Usage
 
 ```tsx
-import SiteDetails, { SiteDetailsRef } from '@/core/components/viewers/Data/siteDetails/SiteDetails'
+import SiteDetails, { SiteDetailsRef } from '@collabdt/core/components/viewers/Data/siteDetails/SiteDetails'
 
 const detailsRef = useRef<SiteDetailsRef>(null)
 

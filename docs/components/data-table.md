@@ -13,7 +13,7 @@ A flexible, generic table component built on TanStack Table (React Table v8). Re
 ## Usage
 
 ```tsx
-import { DataTable } from '@/components/ui/DataTable';
+import { DataTable } from '@collabdt/core/components/ui/DataTable';
 import { ColumnDef } from '@tanstack/react-table';
 
 type Building = {

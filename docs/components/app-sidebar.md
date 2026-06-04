@@ -13,7 +13,7 @@ Renders the primary sidebar navigation for the CDT platform. Displays grouped me
 ## Usage
 
 ```tsx
-import { AppSidebarContent } from '@/components/AppSidebarContent';
+import { AppSidebarContent } from '@collabdt/core/components/AppSidebarContent';
 
 <AppSidebarContent
   organization={organization}

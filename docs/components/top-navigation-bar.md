@@ -13,7 +13,7 @@ Top-level navigation bar that adapts its contents based on the current viewer mo
 ## Usage
 
 ```tsx
-import NavigationBar from '@/components/NavigationBar';
+import NavigationBar from '@collabdt/core/components/NavigationBar';
 
 // Typically rendered at the layout level, not directly instantiated
 <NavigationBar />

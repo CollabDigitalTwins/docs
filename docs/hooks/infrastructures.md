@@ -1,12 +1,12 @@
 ---
-title: Infrastructure hooks
+title: useInfrastructure hooks
 description: SWR-based hooks for fetching, creating, updating, and deleting infrastructure records.
 category: hooks
 status: draft
 last_updated: 2025-01-14
 ---
 
-# Infrastructure hooks
+# useInfrastructure hooks
 
 Hooks for managing infrastructure data throughout the application. Built on SWR for caching and revalidation, with mutation hooks for create, update, and delete operations. All hooks are accessed through the core hooks provider and delegate to an ApiAdapter for actual API calls.
 

@@ -12,9 +12,11 @@ CDT uses a feature-branch workflow on top of two long-lived branches: `dev` (int
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Production. Pushing here triggers a Vercel build and a new release. |
-| `dev` | Development integration. All feature branches merge here first. |
-| `feature/*` | Your work. Branch off `dev`, merge back to `dev` when done. |
+| `main` | Production. Protected — only maintainers merge here, which triggers a CI release (`semantic-release`) and deploy. |
+| `dev` | Development integration. Feature branches merge here first via reviewed PRs. |
+| `feature/*` | Your work. Branch off `dev`, then open a PR back into `dev`. |
+
+> **Branch protection.** `main` and `dev` are protected. Contributions go through **pull requests** — direct pushes to `main` and `dev` are restricted to maintainers. PRs into `dev` require maintainer review and approval, and only maintainers promote `dev` to `main`.
 
 ### Creating a feature branch from a GitHub issue
 
@@ -62,7 +64,7 @@ CDT follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1
 
 ## Semantic versioning
 
-CDT uses `semantic-release` to automate versioning based on commit messages. It runs in CI on every push to `main` or `beta`.
+CDT uses `semantic-release` to automate versioning based on commit messages. It runs in CI when commits land on `main` or `beta`.
 
 **Version format: `MAJOR.MINOR.PATCH`**
 
@@ -74,7 +76,7 @@ CDT uses `semantic-release` to automate versioning based on commit messages. It 
 
 ### How it works
 
-1. Push commits to `main` with conventional commit messages.
+1. A maintainer merges a reviewed PR into `main` with conventional commit messages.
 2. `semantic-release` runs in CI, determines the version bump from commit types.
 3. A GitHub release is created automatically with a changelog.
 

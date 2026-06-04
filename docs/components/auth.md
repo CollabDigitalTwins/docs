@@ -8,7 +8,7 @@ last_updated: 2026-04-23
 
 # Authentication Components
 
-The authentication screens live in `src/core/components/authentication/`. They share a common `AuthPage` layout wrapper that renders a split-screen with an animated map globe on one side and the form on the other.
+The authentication screens live in `@collabdt/core/components/authentication/`. They share a common `AuthPage` layout wrapper that renders a split-screen with an animated map globe on one side and the form on the other.
 
 ## Components
 

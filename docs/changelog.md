@@ -2,6 +2,7 @@
 sidebar_position: 99
 title: Changelog
 description: Version history for the CDT platform — breaking changes, new features, and migration notes.
+displayed_sidebar: deploymentSidebar
 ---
 
 # Changelog

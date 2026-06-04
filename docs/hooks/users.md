@@ -1,12 +1,12 @@
 ---
-title: User hooks
+title: useUser hooks
 description: Hooks for fetching, creating, updating, and deleting users, plus role and password management.
 category: hooks
 status: draft
 last_updated: 2025-01-14
 ---
 
-# User hooks
+# useUser hooks
 
 These hooks manage user data throughout the application, including user CRUD operations, role assignments, and password verification/changes. Built on SWR for data fetching with automatic caching and revalidation, and useSWRMutation for mutations. Password-related hooks use React state directly rather than SWR.
 

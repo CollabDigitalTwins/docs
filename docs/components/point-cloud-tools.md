@@ -10,7 +10,7 @@ last_updated: 2026-04-23
 
 The point cloud viewer toolbar is built from `pointcloudToolbarTools()`. Tools interact with the Potree-based viewer instance stored in `PointCloudContext`.
 
-Source: `src/core/components/viewers/pointcloud/src/tools/`
+Source: `@collabdt/core/components/viewers/pointcloud/src/tools/`
 
 ## Available Tools
 
@@ -106,14 +106,14 @@ pcDispatch({ type: 'SET_ACTIVE_TOOL', payload: { activeTool: PointCloudTools.LIN
 
 | File | Role |
 |------|------|
-| `src/core/components/viewers/pointcloud/src/tools/pointcloudToolbarTools.ts` | Tool list definition |
-| `src/core/components/viewers/pointcloud/src/tools/MeasureTools/MeasurePointCloudTool.tsx` | Measurement tool sub-menu |
-| `src/core/components/viewers/pointcloud/src/tools/MeasureTools/LineMeasurement.tsx` | Line measurement |
-| `src/core/components/viewers/pointcloud/src/tools/MeasureTools/AreaMeasurement.tsx` | Area measurement |
-| `src/core/components/viewers/pointcloud/src/tools/MeasureTools/AngleMeasurement.tsx` | Angle measurement |
-| `src/core/components/viewers/pointcloud/src/tools/FitToScreen.tsx` | Fit to screen |
-| `src/core/components/viewers/pointcloud/src/tools/SetCameraOption.tsx` | Camera projection toggle |
-| `src/core/components/viewers/pointcloud/src/tools/PerformanceSettingsTools/` | Performance controls |
+| `@collabdt/core/components/viewers/pointcloud/src/tools/pointcloudToolbarTools.ts` | Tool list definition |
+| `@collabdt/core/components/viewers/pointcloud/src/tools/MeasureTools/MeasurePointCloudTool.tsx` | Measurement tool sub-menu |
+| `@collabdt/core/components/viewers/pointcloud/src/tools/MeasureTools/LineMeasurement.tsx` | Line measurement |
+| `@collabdt/core/components/viewers/pointcloud/src/tools/MeasureTools/AreaMeasurement.tsx` | Area measurement |
+| `@collabdt/core/components/viewers/pointcloud/src/tools/MeasureTools/AngleMeasurement.tsx` | Angle measurement |
+| `@collabdt/core/components/viewers/pointcloud/src/tools/FitToScreen.tsx` | Fit to screen |
+| `@collabdt/core/components/viewers/pointcloud/src/tools/SetCameraOption.tsx` | Camera projection toggle |
+| `@collabdt/core/components/viewers/pointcloud/src/tools/PerformanceSettingsTools/` | Performance controls |
 
 ## Related
 

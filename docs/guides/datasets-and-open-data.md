@@ -1,12 +1,12 @@
 ---
 sidebar_position: 7
 title: Datasets & Open Data
-description: Browse, overlay, and style federated open data from federal, provincial, and municipal portals.
+description: Browse, overlay, and style federated open data from national, provincial/territorial, and municipal portals.
 ---
 
 # Datasets & Open Data
 
-CDT aggregates open data from federal, provincial, and municipal sources into a single interface — no GIS software required. Data fetches in real time directly from its original source, so you always see the most current version.
+CDT aggregates open data from national, provincial/territorial, and municipal sources into a single interface — no GIS software required. Data fetches in real time directly from its original source, so you always see the most current version.
 
 ## Goal
 
@@ -25,7 +25,7 @@ Canada is a global leader in open data availability, but the information is frag
 
 **Goal:** overlay a public dataset on the map.
 
-1. Open the side menu in the map viewer.
+1. Click the **Datasets** icon in the bottom toolbar.
 2. Browse or search the catalogue by keyword, jurisdiction, or category.
 3. Click a dataset to add it as a layer.
 4. The layer appears immediately. Click any feature to read its attributes.
@@ -51,17 +51,20 @@ You can have multiple layers active at once. CDT reprojects everything to WGS 84
 **Goal:** add a private or shared dataset to your Organization.
 
 1. Open the **Add media** feature in the map.
-2. Drop a GeoJSON file onto the map, or browse and pick one.
+2. Choose the source type:
+   - **GeoJSON** — drop a file onto the map, or browse and pick one.
+   - **ArcGIS Feature Service** — paste the service URL to pull its features directly.
+   - **WMS** — paste the service URL and enter the **WMS layer name(s)**. WMS data is added as a **raster overlay** rather than a vector dataset, so its features are not individually clickable.
 3. Choose visibility — **Private** (only you) or **Organization** (all members).
-4. The layer is stored in MinIO and listed alongside official datasets.
+4. The dataset is added to the map and listed alongside official datasets. Uploaded GeoJSON files are stored in MinIO; ArcGIS and WMS layers are fetched live from their source.
 
 You can also upload geotagged photos, videos, audio, and pinned text annotations through the same flow. Useful for fieldwork, community engagement, and site documentation.
 
 **Result:** your dataset is selectable in the layer panel like any other.
 
-## Supported sources
+Portals are organized by jurisdiction — **National**, **Country Subdivision** (provincial/territorial), and **Municipal** — plus **Organizational** datasets your own organization adds.
 
-### Federal
+### National
 
 | Source | Content |
 |--------|---------|
@@ -71,7 +74,7 @@ You can also upload geotagged photos, videos, audio, and pinned text annotations
 | Geo.ca | National geospatial catalogue |
 | CIFFC | Active wildfire perimeters and conditions |
 
-### Provincial
+### Country subdivision (provincial / territorial)
 
 British Columbia (Open BC), Quebec (Données ouvertes), Ontario, New Brunswick, Alberta, Saskatchewan, Yukon, Nunavut, and others.
 
@@ -79,11 +82,9 @@ British Columbia (Open BC), Quebec (Données ouvertes), Ontario, New Brunswick, 
 
 Ottawa, Toronto, Vancouver, Montreal, Calgary, Halifax, and additional cities — providing parcel data, zoning, infrastructure, transit, and more.
 
-### Community
+### Organizational
 
-- **OpenStreetMap** — building footprints, roads, points of interest.
-- **Affordable housing databases** — from municipal and non-profit partners.
-- **User-uploaded data** — contributed directly through the platform.
+Datasets your organization adds to the platform — see [Upload your own dataset](#upload-your-own-dataset) above. Community and global sources are also available, including **OpenStreetMap** (building footprints, roads, points of interest) and partner **affordable-housing databases**.
 
 ## Supported formats
 

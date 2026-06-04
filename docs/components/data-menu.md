@@ -13,8 +13,8 @@ A container component that renders a searchable, filterable data table for vario
 ## Usage
 
 ```tsx
-import { DataMenu } from '@/components/menus/DataMenu';
-import { ViewerNames } from '@/types';
+import { DataMenu } from '@collabdt/core/components/menus/DataMenu';
+import { ViewerNames } from '@collabdt/core/types';
 
 <DataMenu
   currentViewer={ViewerNames.buildings}

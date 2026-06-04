@@ -1,12 +1,12 @@
 ---
-title: Site hooks
+title: useSite hooks
 description: Hooks for fetching, creating, updating, and deleting sites.
 category: hooks
 status: draft
 last_updated: 2025-01-14
 ---
 
-# Site hooks
+# useSite hooks
 
 Hooks for managing site data within the CDT platform. Sites represent physical locations that can contain multiple buildings. These hooks use SWR for data fetching with automatic caching and revalidation, and SWR Mutation for create, update, and delete operations. The hooks are created via a factory pattern (`createSiteHooks`) that accepts an API adapter, enabling dependency injection for testing.
 

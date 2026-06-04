@@ -80,7 +80,7 @@ export const BuildingsProvider: React.FC<React.PropsWithChildren> = ({ children 
 Import the context and destructure `state` and `dispatch` with `useContext`:
 
 ```tsx
-import { MapStyleContext } from '@/core/store/Map/context'
+import { MapStyleContext } from '@collabdt/core/store/Map/context'
 
 export default function MapStyleMenu() {
   const { state, dispatch } = useContext(MapStyleContext)
@@ -97,7 +97,7 @@ Components dispatch actions — they never calculate the next state themselves.
 
 ## CombineProviders
 
-All providers are composed into a single `AppProvider` using a `compose` utility in [`src/core/store/CombineProviders.tsx`](https://github.com/collabdt/core/blob/main/src/core/store/CombineProviders.tsx). This avoids deeply nested JSX while keeping each provider independent.
+All providers are composed into a single `AppProvider` using a `compose` utility in [`@collabdt/core/store/CombineProviders.tsx`](https://github.com/collabdt/core/blob/main/src/core/store/CombineProviders.tsx). This avoids deeply nested JSX while keeping each provider independent.
 
 ```tsx
 const compose = providers =>
@@ -145,11 +145,11 @@ export const AppProvider = compose([
 
 | File | Role |
 |------|------|
-| `src/core/store/CombineProviders.tsx` | Composes all providers into `AppProvider` |
-| `src/core/store/ActionMap.ts` | Shared utility type for mapping action payloads |
-| `src/core/store/<Domain>/context.tsx` | Context definition and provider for each slice |
-| `src/core/store/<Domain>/reducer.ts` | State type, action types, and reducer for each slice |
-| `src/core/store/index.ts` | Re-exports |
+| `@collabdt/core/store/CombineProviders.tsx` | Composes all providers into `AppProvider` |
+| `@collabdt/core/store/ActionMap.ts` | Shared utility type for mapping action payloads |
+| `@collabdt/core/store/<Domain>/context.tsx` | Context definition and provider for each slice |
+| `@collabdt/core/store/<Domain>/reducer.ts` | State type, action types, and reducer for each slice |
+| `@collabdt/core/store/index.ts` | Re-exports |
 
 ## Design decisions
 

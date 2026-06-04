@@ -10,7 +10,7 @@ last_updated: 2026-04-23
 
 The BIM viewer toolbar is built from a list of `Tool` objects defined in `bimToolbarTools()`. Each tool is a React component rendered in a `ToolbarSubmenu` and activated/deactivated via `ToolsContext`.
 
-Source: `src/core/components/viewers/bim/src/tools/`
+Source: `@collabdt/core/components/viewers/bim/src/tools/`
 
 ## Available Tools
 
@@ -115,13 +115,13 @@ Only one tool is active at a time. When a new tool is activated, the previous to
 
 | File | Role |
 |------|------|
-| `src/core/components/viewers/bim/src/tools/bimToolbar.ts` | Tool list definition |
-| `src/core/components/viewers/bim/src/tools/ClippingTool/ClippingTool.tsx` | Clipping plane tool |
-| `src/core/components/viewers/bim/src/tools/AddToBim/index.tsx` | Add content sub-menu |
-| `src/core/components/viewers/bim/src/tools/InspectBimTool.tsx` | Element inspection |
-| `src/core/components/viewers/bim/src/tools/measureBimTool.tsx` | Distance/area measurement |
-| `src/core/components/viewers/bim/src/tools/FitCameraTool.tsx` | Fit camera |
-| `src/core/components/viewers/bim/src/tools/shareBimTool.tsx` | Share camera position |
+| `@collabdt/core/components/viewers/bim/src/tools/bimToolbar.ts` | Tool list definition |
+| `@collabdt/core/components/viewers/bim/src/tools/ClippingTool/ClippingTool.tsx` | Clipping plane tool |
+| `@collabdt/core/components/viewers/bim/src/tools/AddToBim/index.tsx` | Add content sub-menu |
+| `@collabdt/core/components/viewers/bim/src/tools/InspectBimTool.tsx` | Element inspection |
+| `@collabdt/core/components/viewers/bim/src/tools/measureBimTool.tsx` | Distance/area measurement |
+| `@collabdt/core/components/viewers/bim/src/tools/FitCameraTool.tsx` | Fit camera |
+| `@collabdt/core/components/viewers/bim/src/tools/shareBimTool.tsx` | Share camera position |
 
 ## Permissions
 

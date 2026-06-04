@@ -1,12 +1,12 @@
 ---
-title: File hooks
+title: useFile hooks
 description: SWR hooks for fetching, uploading, updating, and deleting file attachments.
 category: hooks
 status: draft
 last_updated: 2025-01-13
 ---
 
-# File hooks
+# useFile hooks
 
 These hooks manage file attachments for buildings, sites, and users. Files are fetched via SWR with array-based cache keys, and mutations trigger revalidation of related caches (parent entity, file lists). The hooks are created via a factory pattern (`createFileHooks`) that accepts an `ApiAdapter`, with convenience wrappers exported for direct import.
 
