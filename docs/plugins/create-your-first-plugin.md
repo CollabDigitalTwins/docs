@@ -13,10 +13,10 @@ This walkthrough builds a minimal map toolbar tool. Five steps, one file each.
 
 ## Directory layout
 
-All plugins live under `src/core/plugins/` in the main repo. Create a directory named after your plugin's slug:
+All plugins live under `@collabdt/core/plugins/` in the `@collabdt/core` package. Create a directory named after your plugin's slug:
 
 ```
-src/core/plugins/hello-map/
+@collabdt/core/plugins/hello-map/
   manifest.json
   index.ts
   components/
@@ -69,14 +69,14 @@ export function activate(ctx: PluginContext): void {
 
 **Rules**
 
-- Only import from `../sdk/types` and `../sdk/components` (or your own files). Never import from `src/core/` — that breaks plugin isolation.
+- Only import from `../sdk/types` and `../sdk/components` (or your own files). Never import from `@collabdt/core/` — that breaks plugin isolation.
 - `ctx.register()` is the only way to contribute to the app. Call it once per contribution.
 
 ## Your component
 
 The toolbar passes a `MapToolProps` object to your component. For map tools, that means `{ map: Map | null }`.
 
-`src/core/plugins/hello-map/components/HelloMapTool.tsx`
+`@collabdt/core/plugins/hello-map/components/HelloMapTool.tsx`
 
 ```tsx
 'use client'
@@ -106,9 +106,9 @@ export function HelloMapTool({ map }: MapToolProps) {
 
 ## installed.ts
 
-`src/core/plugins/installed.ts` is the single place that controls which plugins the app loads. Add your plugin here:
+`@collabdt/core/plugins/installed.ts` is the single place that controls which plugins the app loads. Add your plugin here:
 
-`src/core/plugins/installed.ts`
+`@collabdt/core/plugins/installed.ts`
 
 ```ts
 import type { PluginEntry, PluginManifest } from './sdk/types'

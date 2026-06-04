@@ -21,7 +21,7 @@ An `OpenDataPortal` record stores the connection details for a single portal (na
 
 ### Portal registry
 
-Portals are stored in the database and exposed via the hooks in `src/core/hooks/openDataPortals/`. The map viewer queries portals filtered by municipality and country subdivision (ISO 3166-2 code) to surface the most relevant datasets for the visible area.
+Portals are stored in the database and exposed via the hooks in `@collabdt/core/hooks/openDataPortals/`. The map viewer queries portals filtered by municipality and country subdivision (ISO 3166-2 code) to surface the most relevant datasets for the visible area.
 
 ```ts
 const { openDataPortals } = useOpenDataPortalsByMunicipalityAndCountrySubdivision(
@@ -59,10 +59,10 @@ Portals are tagged with a `DatasetGroup`:
 
 | File | Role |
 |------|------|
-| `src/core/hooks/openDataPortals/openDataPortals.ts` | Hook exports |
-| `src/core/hooks/openDataPortals/createOpenDataPortalHooks.ts` | SWR hook implementations |
-| `src/core/types/dbTypes.ts` | `OpenDataPortal`, `DatasetGroup`, `DataManagementSystem` types |
-| `src/core/components/viewers/map/src/MapLayers/src/OpenDataLayers/` | Map layer that renders portal datasets |
+| `@collabdt/core/hooks/openDataPortals/openDataPortals.ts` | Hook exports |
+| `@collabdt/core/hooks/openDataPortals/createOpenDataPortalHooks.ts` | SWR hook implementations |
+| `@collabdt/core/types/dbTypes.ts` | `OpenDataPortal`, `DatasetGroup`, `DataManagementSystem` types |
+| `@collabdt/core/components/viewers/map/src/MapLayers/src/OpenDataLayers/` | Map layer that renders portal datasets |
 
 ## Gotchas
 

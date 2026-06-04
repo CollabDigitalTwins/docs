@@ -12,14 +12,14 @@ last_updated: 2026-04-23
 
 # Map Layers
 
-The map viewer composes a fixed set of named layers declared in `src/core/components/viewers/map/src/MapLayers/`. Each layer is a self-contained React component responsible for fetching its own data, adding MapLibre sources and layers, and registering a click handler with `MapClickManager`.
+The map viewer composes a fixed set of named layers declared in `@collabdt/core/components/viewers/map/src/MapLayers/`. Each layer is a self-contained React component responsible for fetching its own data, adding MapLibre sources and layers, and registering a click handler with `MapClickManager`.
 
 ## Layer Composition
 
 `MapLayers` renders all layers in a fixed stacking order:
 
 ```tsx
-// src/core/components/viewers/map/src/MapLayers/index.tsx
+// @collabdt/core/components/viewers/map/src/MapLayers/index.tsx
 export const MapLayers = () => (
   <>
     <CountryLayer />
@@ -105,11 +105,11 @@ Renders the georeferenced footprint of a loaded IFC model on the map. Hides the 
 
 ### SiteLayer (utility, not in `MapLayers`)
 
-`src/core/components/viewers/map/src/MapLayers/src/SiteLayer/index.ts` exports `createSitesDataset()`, a helper that converts `Site[]` to a GeoJSON `FeatureCollection` for use as an OpenDataLayer dataset. It is not a standalone layer component.
+`@collabdt/core/components/viewers/map/src/MapLayers/src/SiteLayer/index.ts` exports `createSitesDataset()`, a helper that converts `Site[]` to a GeoJSON `FeatureCollection` for use as an OpenDataLayer dataset. It is not a standalone layer component.
 
 ## Adding a New Layer
 
-1. Create a component in `src/core/components/viewers/map/src/MapLayers/src/<YourLayer>/`.
+1. Create a component in `@collabdt/core/components/viewers/map/src/MapLayers/src/<YourLayer>/`.
 2. Register a click handler using `MapClickManager.register()` with an appropriate priority from `MapLayerClickPriority`. Add a new enum value if none fits — see [Map Click Manager](./map-click-manager.mdx).
 3. Add your component to `MapLayers/index.tsx`.
 4. Call `MapClickManager.unregister()` in a `useEffect` cleanup to avoid leaking handlers on unmount.
@@ -118,15 +118,15 @@ Renders the georeferenced footprint of a loaded IFC model on the map. Hides the 
 
 | File | Role |
 |------|------|
-| `src/core/components/viewers/map/src/MapLayers/index.tsx` | Composes all layers |
-| `src/core/components/viewers/map/src/MapLayers/src/BuildingLayers/index.tsx` | Building layer implementation |
-| `src/core/components/viewers/map/src/MapLayers/src/CommentLayers/CommentLayers.tsx` | Comment layer implementation |
-| `src/core/components/viewers/map/src/MapLayers/src/SensorsLayer/index.tsx` | Sensor layer implementation |
-| `src/core/components/viewers/map/src/MapLayers/src/FileLayer/index.tsx` | File layer implementation |
-| `src/core/components/viewers/map/src/MapLayers/src/OpenDataLayers/src/index.tsx` | Open data layer implementation |
-| `src/core/components/viewers/map/src/MapLayers/src/BimLayer/index.tsx` | BIM footprint layer |
-| `src/core/components/viewers/map/src/MapLayers/src/SiteLayer/index.ts` | `createSitesDataset()` utility |
-| `src/core/components/viewers/map/utils/MapEventManager/MapClickManager.ts` | Click priority registry |
+| `@collabdt/core/components/viewers/map/src/MapLayers/index.tsx` | Composes all layers |
+| `@collabdt/core/components/viewers/map/src/MapLayers/src/BuildingLayers/index.tsx` | Building layer implementation |
+| `@collabdt/core/components/viewers/map/src/MapLayers/src/CommentLayers/CommentLayers.tsx` | Comment layer implementation |
+| `@collabdt/core/components/viewers/map/src/MapLayers/src/SensorsLayer/index.tsx` | Sensor layer implementation |
+| `@collabdt/core/components/viewers/map/src/MapLayers/src/FileLayer/index.tsx` | File layer implementation |
+| `@collabdt/core/components/viewers/map/src/MapLayers/src/OpenDataLayers/src/index.tsx` | Open data layer implementation |
+| `@collabdt/core/components/viewers/map/src/MapLayers/src/BimLayer/index.tsx` | BIM footprint layer |
+| `@collabdt/core/components/viewers/map/src/MapLayers/src/SiteLayer/index.ts` | `createSitesDataset()` utility |
+| `@collabdt/core/components/viewers/map/utils/MapEventManager/MapClickManager.ts` | Click priority registry |
 
 ## Related
 

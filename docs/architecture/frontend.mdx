@@ -65,10 +65,10 @@ Point cloud renderer for LiDAR scans and photogrammetry datasets.
 
 ## State Management
 
-Application state is organized as a composition of React Context providers, each owning a focused domain slice. Rather than nesting providers manually, CDT uses a small `compose` utility (defined in `src/core/store/CombineProviders.tsx`) to flatten them into a single `AppProvider`:
+Application state is organized as a composition of React Context providers, each owning a focused domain slice. Rather than nesting providers manually, CDT uses a small `compose` utility (defined in `@collabdt/core/store/CombineProviders.tsx`) to flatten them into a single `AppProvider`:
 
 ```tsx
-// src/core/store/CombineProviders.tsx
+// @collabdt/core/store/CombineProviders.tsx
 
 const compose = providers =>
   providers.reduce(

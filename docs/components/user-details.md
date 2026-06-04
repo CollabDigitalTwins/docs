@@ -13,7 +13,7 @@ Displays detailed user information in a read-only or editable form. Used in admi
 ## Usage
 
 ```tsx
-import UserDetails, { UserDetailsRef } from '@/core/components/viewers/Data/userDetails/UserDetails';
+import UserDetails, { UserDetailsRef } from '@collabdt/core/components/viewers/Data/userDetails/UserDetails';
 
 const detailsRef = useRef<UserDetailsRef>(null);
 

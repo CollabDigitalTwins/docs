@@ -6,7 +6,7 @@ sidebar_position: 1
 
 # Components
 
-Custom React components built for the CDT platform. This section covers components in `src/core/components/` — excluding shadcn/ui primitives, which are third-party and not documented here.
+Custom React components built for the CDT platform. This section covers components in `@collabdt/core/components/` — excluding shadcn/ui primitives, which are third-party and not documented here.
 
 Components are organized by feature area: `authentication/`, `settings/`, `viewers/`, and `ui/` for shared UI elements. Top-level components like `Toolbar`, `AppSidebar`, and `DataTable` are the main entry points for the platform shell.
 

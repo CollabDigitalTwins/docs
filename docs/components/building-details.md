@@ -13,7 +13,7 @@ Renders a tabbed detail view for a building record. Supports viewing, editing, a
 ## Usage
 
 ```tsx
-import BuildingDetails, { BuildingDetailsRef } from '@/core/components/viewers/Data/buildingDetails/BuildingDetails';
+import BuildingDetails, { BuildingDetailsRef } from '@collabdt/core/components/viewers/Data/buildingDetails/BuildingDetails';
 
 const detailsRef = React.useRef<BuildingDetailsRef>(null);
 

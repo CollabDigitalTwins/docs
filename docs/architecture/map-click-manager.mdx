@@ -14,7 +14,7 @@ last_updated: 2026-04-23
 
 `MapClickManager` is a priority-based click dispatch system for the MapLibre map viewer. When the user clicks the map, exactly one handler fires — the one with the highest priority whose layer contains a rendered feature at the click point.
 
-Source: `src/core/components/viewers/map/utils/MapEventManager/MapClickManager.ts`
+Source: `@collabdt/core/components/viewers/map/utils/MapEventManager/MapClickManager.ts`
 
 ## Problem it solves
 
@@ -124,8 +124,8 @@ private handleMapClick(e: maplibregl.MapMouseEvent) {
 
 | File | Role |
 |------|------|
-| `src/core/components/viewers/map/utils/MapEventManager/MapClickManager.ts` | Full implementation |
-| `src/core/components/viewers/map/src/MapLayers/src/BuildingLayers/index.tsx` | Example of register/unregister pattern |
+| `@collabdt/core/components/viewers/map/utils/MapEventManager/MapClickManager.ts` | Full implementation |
+| `@collabdt/core/components/viewers/map/src/MapLayers/src/BuildingLayers/index.tsx` | Example of register/unregister pattern |
 
 ## Related
 

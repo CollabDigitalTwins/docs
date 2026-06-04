@@ -13,7 +13,7 @@ Root viewer component that manages switching between different visualization mod
 ## Usage
 
 ```tsx
-import { Viewer } from '@/components/Viewer';
+import { Viewer } from '@collabdt/core/components/Viewer';
 
 <Viewer organization={organization} />
 ```

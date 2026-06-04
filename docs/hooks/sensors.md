@@ -8,7 +8,7 @@ last_updated: 2025-01-14
 
 # useSensor hooks
 
-These hooks manage sensor data throughout the application. They use SWR for data fetching with automatic caching and revalidation. The hooks are created via a factory pattern (`createSensorHooks`) that accepts an API adapter, allowing for different data sources. Components import hooks directly from `src/core/hooks/sensors/sensors.ts`.
+These hooks manage sensor data throughout the application. They use SWR for data fetching with automatic caching and revalidation. The hooks are created via a factory pattern (`createSensorHooks`) that accepts an API adapter, allowing for different data sources. Components import hooks directly from `@collabdt/core/hooks/sensors/sensors.ts`.
 
 ## Hooks
 

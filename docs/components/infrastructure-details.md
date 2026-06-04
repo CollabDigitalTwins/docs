@@ -13,7 +13,7 @@ Tabbed detail panel for viewing and editing infrastructure records. Appears in t
 ## Usage
 
 ```tsx
-import InfrastructureDetails from '@/core/components/viewers/Data/infrastructureDetails/InfrastructureDetails';
+import InfrastructureDetails from '@collabdt/core/components/viewers/Data/infrastructureDetails/InfrastructureDetails';
 
 const detailsRef = useRef<InfrastructureDetailsRef>(null);
 

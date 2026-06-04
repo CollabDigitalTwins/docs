@@ -10,9 +10,9 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 
 # Settings Components
 
-The settings viewer (`ViewerNames.settings`) contains three panels accessible from a sidebar. Each panel is a self-contained component in `src/core/components/settings/src/`.
+The settings viewer (`ViewerNames.settings`) contains three panels accessible from a sidebar. Each panel is a self-contained component in `@collabdt/core/components/settings/src/`.
 
-Source: `src/core/components/settings/`
+Source: `@collabdt/core/components/settings/`
 
 ## Panels
 
@@ -105,12 +105,12 @@ Visibility and actions within `DataMenu` are gated by the user's CASL permission
 
 | File | Role |
 |------|------|
-| `src/core/components/settings/src/AccountSettingsPanel.tsx` | Account panel |
-| `src/core/components/settings/src/OrganizationSettingsPanel.tsx` | Organization panel |
-| `src/core/components/settings/src/UsersSettingsPanel.tsx` | Users panel (wraps DataMenu) |
-| `src/core/components/settings/src/SettingsSidebar.tsx` | Tab navigation |
-| `src/core/components/settings/src/types.ts` | `SettingsTabKey` type |
-| `src/core/components/settings/src/ChangePassword.tsx` | Password change sub-component |
+| `@collabdt/core/components/settings/src/AccountSettingsPanel.tsx` | Account panel |
+| `@collabdt/core/components/settings/src/OrganizationSettingsPanel.tsx` | Organization panel |
+| `@collabdt/core/components/settings/src/UsersSettingsPanel.tsx` | Users panel (wraps DataMenu) |
+| `@collabdt/core/components/settings/src/SettingsSidebar.tsx` | Tab navigation |
+| `@collabdt/core/components/settings/src/types.ts` | `SettingsTabKey` type |
+| `@collabdt/core/components/settings/src/ChangePassword.tsx` | Password change sub-component |
 
 ## Permissions
 

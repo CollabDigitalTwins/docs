@@ -42,7 +42,7 @@ State flows in one direction. Components never mutate state directly — they de
 
 ## Anatomy of a Middleware Slice
 
-Every domain in `src/core/store/` follows the same structure.
+Every domain in `@collabdt/core/store/` follows the same structure.
 
 ### State
 
@@ -101,7 +101,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 Import the context, destructure `state` and `dispatch`, and call `dispatch` on interaction. The component does not know how the state changes — only that an action occurred.
 
 ```tsx
-import { MapStyleContext } from '@/core/store/Map/context'
+import { MapStyleContext } from '@collabdt/core/store/Map/context'
 
 export default function MapStyleMenu() {
   const { state, dispatch } = useContext(MapStyleContext)
@@ -116,10 +116,10 @@ export default function MapStyleMenu() {
 
 ## Adding a New Slice
 
-1. Create `src/core/store/<Domain>/reducer.ts` — define state type, action payload map, and reducer.
-2. Create `src/core/store/<Domain>/context.tsx` — define the context and provider.
+1. Create `@collabdt/core/store/<Domain>/reducer.ts` — define state type, action payload map, and reducer.
+2. Create `@collabdt/core/store/<Domain>/context.tsx` — define the context and provider.
 3. Register the provider in `CombineProviders.tsx`.
-4. Export from `src/core/store/index.ts`.
+4. Export from `@collabdt/core/store/index.ts`.
 
 ## Related
 

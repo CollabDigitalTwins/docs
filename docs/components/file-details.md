@@ -13,8 +13,8 @@ Displays a preview card for uploaded files, automatically selecting the appropri
 ## Usage
 
 ```tsx
-import FilePreview from '@/core/components/viewers/Data/files/FilePreview';
-import { Dialog } from '@/core/components/ui/';
+import FilePreview from '@collabdt/core/components/viewers/Data/files/FilePreview';
+import { Dialog } from '@collabdt/core/components/ui/';
 
 <Dialog>
   <FilePreview 
