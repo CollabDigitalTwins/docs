@@ -22,8 +22,8 @@ To invite teammates and manage roles, see [Managing roles and permissions](../au
 
 **Goal:** annotate a place on the map for your team.
 
-1. Click the map at the location.
-2. Open the **Add feature** tool from the toolbar.
+1. Open the **Add feature** tool from the toolbar.
+2. **Double-click** the map where you want the pin. A single click won't place it — the map uses a double-click to set the point.
 3. Add text, and optionally attach images, video, audio, or PDFs.
 4. Save.
 

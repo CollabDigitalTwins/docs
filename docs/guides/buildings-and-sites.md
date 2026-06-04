@@ -21,14 +21,22 @@ Create a Site, add Buildings to it, attach files, and configure access for your 
 
 **Goal:** set up a Site so you can group buildings under it.
 
-1. Open the map viewer and navigate to the area.
-2. Click **New Site** in the left panel.
-3. Fill in:
-   - **Name**.
-   - **Longitude** and **latitude** — drop a pin on the map or enter coordinates.
-4. Click **Save**.
+You can create a Site by drawing it on the map, or from the Sites list.
 
-**Result:** the Site appears in the map and in the Sites list.
+### Draw it on the map
+
+1. Open the map viewer and navigate to the area.
+2. Click **New Site**.
+3. Enter a **Name**.
+4. Start drawing and click on the map to place the boundary points. Close the boundary by clicking the first point again.
+
+The Site is created when you close the boundary — there are no separate longitude/latitude fields and no Save button; the location comes from the shape you draw.
+
+### From the Sites list
+
+Open the **Sites** list and add a new Site there. Use this when you want to add a Site without drawing on the map.
+
+**Result:** the Site appears on the map and in the Sites list.
 
 ## Attach a Building to a Site
 
@@ -89,7 +97,7 @@ For details on supported formats and the upload pipeline, see [File Management](
 
 Files attached to a building are split across two storage layers:
 
-- **Binary payloads** — stored in MinIO (S3-compatible), versioned automatically.
+- **Binary payloads** — stored in MinIO (S3-compatible).
 - **Metadata** — stored in PostgreSQL, indexed for fast querying.
 
 The platform also distinguishes between:
@@ -97,7 +105,7 @@ The platform also distinguishes between:
 - **Georeferenced files** — defined by longitude/latitude, placed on the map automatically.
 - **Local Cartesian files** — defined by XYZ coordinates relative to the building origin, displayed in the BIM viewer.
 
-Both types support version history, provenance (author, timestamp), and permission-based access.
+Both types record provenance (author, timestamp) and respect permission-based access.
 
 ## Access control
 

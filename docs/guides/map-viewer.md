@@ -22,7 +22,7 @@ Become productive in the map viewer: find a location, add data layers, measure d
 | Control | Where it is | What it does |
 |---------|-------------|--------------|
 | **Search bar** | Top-left | Geocodes addresses and place names; also searches your organization's assets. |
-| **Layer panel** | Left sidebar | Toggle federal, provincial, and municipal data layers. |
+| **Layer panel** | Left sidebar | Toggle national, provincial/territorial, and municipal data layers. |
 | **Bottom toolbar** | Bottom of viewport | Datasets, Compare Buildings, Share, and Measure tools. |
 | **Settings** | Left sidebar | Language, support, and account. |
 
@@ -55,8 +55,8 @@ The search queries Pelias and Nominatim geocoders **and** your organization's ow
 
 1. Click the **Datasets** icon in the bottom toolbar.
 2. The layer panel opens, organized by jurisdiction:
-   - **Federal** — Natural Resources Canada, Statistics Canada, Open Government, CIFFC.
-   - **Provincial** — British Columbia, Quebec, Ontario, Alberta, and others.
+   - **National** — Natural Resources Canada, Statistics Canada, Open Government, CIFFC.
+   - **Country subdivision** (provincial/territorial) — British Columbia, Quebec, Ontario, Alberta, and others.
    - **Municipal** — Ottawa, Toronto, Vancouver, Montreal, Calgary, Halifax, and more.
 3. Tick a layer. It appears on the map immediately.
 4. Click any feature on the layer to read its full attributes.

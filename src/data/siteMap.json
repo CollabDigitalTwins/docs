@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-01T19:29:46.349Z",
+  "generatedAt": "2026-06-04T00:59:31.848Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -16,49 +16,9 @@
           "title": "CDT vs Alternatives",
           "slug": "/docs/cdt-vs-alternatives",
           "primary": null
-        },
-        {
-          "id": "changelog",
-          "title": "Changelog",
-          "slug": "/docs/changelog",
-          "primary": null
         }
       ],
       "dirs": [
-        {
-          "name": "authorization",
-          "label": "Authorization",
-          "pages": [
-            {
-              "id": "authorization/managing-roles",
-              "title": "Managing Roles and Permissions",
-              "slug": "/docs/authorization/managing-roles",
-              "primary": "userSidebar"
-            },
-            {
-              "id": "authorization/overview",
-              "title": "Overview",
-              "slug": "/docs/authorization/overview",
-              "primary": "userSidebar"
-            },
-            {
-              "id": "authorization/permission-reference",
-              "title": "Permission Reference",
-              "slug": "/docs/authorization/permission-reference",
-              "primary": "userSidebar"
-            },
-            {
-              "id": "authorization/authorization_roles_permissions",
-              "title": "Roles, Permissions & CASL",
-              "slug": "/docs/authorization/authorization_roles_permissions",
-              "primary": "developerSidebar"
-            }
-          ],
-          "primary": "userSidebar",
-          "sharedWith": [
-            "deploymentSidebar"
-          ]
-        },
         {
           "name": "concepts",
           "label": "Concepts",
@@ -229,12 +189,6 @@
           "id": "developer-introduction",
           "title": "Introduction for Developers",
           "slug": "/docs/developer-introduction",
-          "primary": null
-        },
-        {
-          "id": "changelog",
-          "title": "Changelog",
-          "slug": "/docs/changelog",
           "primary": null
         }
       ],
@@ -456,33 +410,9 @@
               "primary": null
             },
             {
-              "id": "hooks/files",
-              "title": "File hooks",
-              "slug": "/docs/hooks/files",
-              "primary": null
-            },
-            {
-              "id": "hooks/infrastructures",
-              "title": "Infrastructure hooks",
-              "slug": "/docs/hooks/infrastructures",
-              "primary": null
-            },
-            {
               "id": "hooks/overview",
               "title": "Overview",
               "slug": "/docs/hooks/overview",
-              "primary": null
-            },
-            {
-              "id": "hooks/sensors",
-              "title": "Sensor hooks",
-              "slug": "/docs/hooks/sensors",
-              "primary": null
-            },
-            {
-              "id": "hooks/sites",
-              "title": "Site hooks",
-              "slug": "/docs/hooks/sites",
               "primary": null
             },
             {
@@ -495,6 +425,18 @@
               "id": "hooks/comments",
               "title": "useComment hooks",
               "slug": "/docs/hooks/comments",
+              "primary": null
+            },
+            {
+              "id": "hooks/files",
+              "title": "useFile hooks",
+              "slug": "/docs/hooks/files",
+              "primary": null
+            },
+            {
+              "id": "hooks/infrastructures",
+              "title": "useInfrastructure hooks",
+              "slug": "/docs/hooks/infrastructures",
               "primary": null
             },
             {
@@ -516,15 +458,27 @@
               "primary": null
             },
             {
-              "id": "hooks/users",
-              "title": "User hooks",
-              "slug": "/docs/hooks/users",
+              "id": "hooks/sensors",
+              "title": "useSensor hooks",
+              "slug": "/docs/hooks/sensors",
               "primary": null
             },
             {
               "id": "hooks/sensor-types",
               "title": "useSensorType hooks",
               "slug": "/docs/hooks/sensor-types",
+              "primary": null
+            },
+            {
+              "id": "hooks/sites",
+              "title": "useSite hooks",
+              "slug": "/docs/hooks/sites",
+              "primary": null
+            },
+            {
+              "id": "hooks/users",
+              "title": "useUser hooks",
+              "slug": "/docs/hooks/users",
               "primary": null
             }
           ],
@@ -585,7 +539,7 @@
           "id": "changelog",
           "title": "Changelog",
           "slug": "/docs/changelog",
-          "primary": null
+          "primary": "deploymentSidebar"
         }
       ],
       "dirs": [
