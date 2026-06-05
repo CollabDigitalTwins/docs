@@ -70,6 +70,25 @@ docker compose run --rm migrate
 | Martin (tiles) | 6080 | 3000 |
 | CDT Application | 6012 | 3000 |
 
+## Geocoding (address search)
+
+The map's search bar resolves addresses and place names through a geocoding provider. CDT selects one from the environment, so a self-hosted deployment can run entirely key-free if you want. Providers are tried in priority order:
+
+| Priority | When | Provider |
+|----------|------|----------|
+| 1 | `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` is set | [Geocode Earth](https://geocode.earth) — hosted Pelias, highest-quality results |
+| 2 | `NEXT_PUBLIC_GEOCODER_URL` is set | Your own [Pelias](https://pelias.io) instance — no key, identical response format |
+| 3 | neither is set | Free public OpenStreetMap services — [Photon](https://photon.komoot.io) for autocomplete, [Nominatim](https://nominatim.openstreetmap.org) for reverse geocoding |
+
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` | Geocode Earth API key. Takes priority when set. |
+| `NEXT_PUBLIC_GEOCODER_URL` | Base URL of a self-hosted Pelias-compatible endpoint, e.g. `https://pelias.example.com`. No key required. |
+| `NEXT_PUBLIC_PHOTON_URL` | Overrides the Photon autocomplete endpoint. Defaults to the public `https://photon.komoot.io`. |
+| `NEXT_PUBLIC_NOMINATIM_URL` | Overrides the Nominatim reverse-geocoding endpoint. Defaults to the public `https://nominatim.openstreetmap.org`. |
+
+**Production note:** the public Photon and Nominatim instances are community-run and rate-limited — fine for evaluation and small pilots, but heavier deployments should run their own Pelias (single provider, best quality) or self-host Photon/Nominatim and point the URLs above at them.
+
 ## Service List
 
 All services are documented on a single [Services](./services.md) page. Jump directly to a section:
