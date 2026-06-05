@@ -62,9 +62,14 @@ Required for sending multi-factor authentication codes at sign-in.
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` | Geocode Earth API key for address search. Without it, the geocoder is disabled. | `ge-…` |
+| `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` | Geocode Earth API key for address search (hosted Pelias). Highest-quality results; used when set. Optional — see the geocoder fallback below. | `ge-…` |
+| `NEXT_PUBLIC_GEOCODER_URL` | Base URL of a self-hosted Pelias-compatible geocoder (no key, same response format). Used when no Geocode Earth key is set. | `https://pelias.example.com` |
+| `NEXT_PUBLIC_PHOTON_URL` | Photon autocomplete endpoint for the key-free public fallback. Defaults to the public instance. | `https://photon.komoot.io` |
+| `NEXT_PUBLIC_NOMINATIM_URL` | Nominatim reverse-geocoding endpoint for the key-free public fallback. Defaults to the public instance. | `https://nominatim.openstreetmap.org` |
 | `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Google reCAPTCHA v3 public site key for the sign-in form. | `…` |
 | `NEXT_PUBLIC_RECAPTCHA_SECRET_KEY` | reCAPTCHA secret key. | `…` |
+
+**Geocoder provider selection:** the geocoder variables resolve in priority order — Geocode Earth (if a key is set) → self-hosted Pelias (`NEXT_PUBLIC_GEOCODER_URL`) → free public OpenStreetMap services (Photon for autocomplete, Nominatim for reverse). Address search therefore works out of the box with no key; set a key or self-hosted URL for higher quality and to avoid the public instances' rate limits. See [Self-Hosting → Geocoding](../deployment/self-hosting.md#geocoding-address-search) for the full table.
 
 ## Tile and asset URLs
 
