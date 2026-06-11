@@ -16,16 +16,21 @@ If you are evaluating providers or sizing a VM, the stack runs comfortably on a 
 
 ## Stack Components
 
-| Layer | Service | Purpose |
-|-------|---------|---------|
-| Data | PostgreSQL 15 | Relational application data |
-| Data | PostGIS 3.4 | Geospatial database extension |
-| Data | MinIO | Object storage (BIM, point clouds, GIS files) |
-| Tile Server | Martin | Vector tile server consuming PostGIS spatial tables |
-| Backend | Node / Next.js | Core API, business logic, web application |
-| Auth | NextAuth.js | Authentication and session management |
-| Mapping | MapLibre | Frontend vector map rendering |
-| Data Integration | Open Data Service | Open data portal registry and dataset discovery |
+| Service | Purpose |
+|---------|---------|
+| `postgres` | PostgreSQL 15 with PostGIS 3.4 — relational and geospatial data |
+| `minio` | Object storage for BIM, point clouds, and GIS files |
+| `martin` | Vector tile server consuming PostGIS spatial tables |
+| `cdt` | Core application — API, business logic, and web UI |
+| `minio-init` | One-time init job: creates the public buckets required for the app to function |
+| `migrate` | One-time init job: applies pending database migrations on startup |
+
+### Init Services
+
+Two short-lived services run automatically on every `docker compose up` and exit when their work is done:
+
+- **minio-init** — waits for MinIO to be healthy, then creates the public buckets required for the app to function. Safe to re-run; it skips creation for any bucket that already exists.
+- **migrate** — waits for PostgreSQL to be ready, then runs `prisma migrate deploy` to apply any pending schema migrations. This is idempotent and safe across upgrades.
 
 ## Container Engine Options
 
@@ -46,25 +51,84 @@ If Docker is not permitted on your infrastructure, Podman is a compatible altern
 
 Most Docker Compose files work with `podman-compose` without changes. Some networking or volume features may behave slightly differently.
 
-## Starting the Full Stack
+## Environment Configuration
 
-From the root directory of the project (where `docker-compose.yml` lives):
+Before starting the stack, create a `.env` file in the project root. You can use `.env.example` as a starting point:
 
 ```bash
-docker compose up -d --build
+cp .env.example .env
 ```
 
-## Port Map
+Then fill in the values described in the sections below.
 
-| Service | Host Port | Container Port |
-|---------|-----------|----------------|
-| PostgreSQL | 5433 | 5432 |
-| MinIO API | 9000 | 9000 |
-| MinIO Console | 9001 | 9001 |
-| Martin (tiles) | 6080 | 3000 |
-| CDT Application | 6012 | 3000 |
+### Required Variables
 
-## Geocoding (address search)
+These must be set before the stack will start correctly.
+
+#### Authentication
+
+| Variable | Description |
+|----------|-------------|
+| `AUTH_SECRET` | Random secret used to sign session tokens. Generate with: `openssl rand -base64 32` |
+| `AUTH_TRUST_HOST` | Set to `true` when running behind a reverse proxy or on a non-localhost domain |
+| `AUTH_URL` | The public URL of your CDT deployment, e.g. `https://cdt.example.com` |
+
+#### Database
+
+| Variable | Description |
+|----------|-------------|
+| `POSTGRES_USER` | PostgreSQL superuser username |
+| `POSTGRES_PASSWORD` | PostgreSQL superuser password |
+| `POSTGRES_DB` | Database name |
+| `DATABASE_URL` | Full Prisma connection string, e.g. `postgresql://user:pass@postgres:5432/db` |
+
+#### Object Storage (MinIO)
+
+| Variable | Description |
+|----------|-------------|
+| `MINIO_ROOT_USER` | MinIO admin username |
+| `MINIO_ROOT_PASSWORD` | MinIO admin password |
+| `S3_ACCESS_KEY` | Access key for the app to authenticate with MinIO (set equal to `MINIO_ROOT_USER` for self-hosted) |
+| `S3_ACCESS_SECRET` | Secret key for the app to authenticate with MinIO (set equal to `MINIO_ROOT_PASSWORD` for self-hosted) |
+| `MINIO_ENDPOINT` | MinIO host as seen from inside the Docker network, e.g. `minio:9000` |
+| `MINIO_USE_SSL` | `true` if MinIO is behind TLS, `false` for local/internal setups |
+| `MINIO_REGION` | Region string, e.g. `us-east-1` (arbitrary for self-hosted MinIO) |
+| `MINIO_URL` | Server-side URL the app uses to reach MinIO, e.g. `http://minio:9000/` |
+| `NEXT_PUBLIC_MINIO_BUCKET_URL` | Public URL browsers use to load assets, e.g. `https://minio.example.com` |
+
+#### reCAPTCHA
+
+CDT uses Google reCAPTCHA v2 on login and registration forms. Register your domain at [google.com/recaptcha/admin](https://www.google.com/recaptcha/admin) to obtain keys.
+
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Public site key (sent to the browser) |
+| `RECAPTCHA_SECRET_KEY` | Private secret key (server-side verification only — never expose this) |
+
+#### Email / SMTP
+
+CDT sends one-time passcodes for multi-factor authentication via email. You must configure an SMTP relay for logins to work.
+
+| Variable | Description |
+|----------|-------------|
+| `EMAIL_HOST` | SMTP server hostname, e.g. `smtp.example.com` |
+| `EMAIL_PORT` | SMTP port, typically `465` (SSL) or `587` (STARTTLS) |
+| `EMAIL_FROM` | The sender address that appears on outgoing emails |
+| `EMAIL_USER` | SMTP authentication username |
+| `EMAIL_PASS` | SMTP authentication password |
+
+### Optional Variables
+
+#### Google OAuth (account linking and social login)
+
+If you want users to be able to sign in with or link a Google account, create an OAuth 2.0 client in the [Google Cloud Console](https://console.cloud.google.com/) and add your deployment's callback URL (`<AUTH_URL>/api/auth/callback/google`). Leave these unset to disable Google login entirely.
+
+| Variable | Description |
+|----------|-------------|
+| `AUTH_GOOGLE_ID` | Google OAuth client ID |
+| `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
+
+#### Geocoding (address search)
 
 The map's search bar resolves addresses and place names through a geocoding provider. CDT selects one from the environment, so a self-hosted deployment can run entirely key-free if you want. Providers are tried in priority order:
 
@@ -82,6 +146,72 @@ The map's search bar resolves addresses and place names through a geocoding prov
 | `NEXT_PUBLIC_NOMINATIM_URL` | Overrides the Nominatim reverse-geocoding endpoint. Defaults to the public `https://nominatim.openstreetmap.org`. |
 
 **Production note:** the public Photon and Nominatim instances are community-run and rate-limited — fine for evaluation and small pilots, but heavier deployments should run their own Pelias (single provider, best quality) or self-host Photon/Nominatim and point the URLs above at them.
+
+## Starting the Full Stack
+
+From the root directory of the project (where `docker-compose.yml` lives):
+
+```bash
+docker compose up -d
+```
+
+## Seeding the Database
+
+Before you can log in for the first time, you must seed the database with an initial organization and admin user. Run the following from the project root, using the host-side database port (`5433`):
+
+```bash
+DATABASE_URL="postgresql://<POSTGRES_USER>:<POSTGRES_PASSWORD>@localhost:5433/<POSTGRES_DB>" \
+  yarn seed-local
+```
+
+This creates:
+- A **test organization** (`test-org`)
+- An **admin user** with email `admin@collabdt.org` and password `TestPassword123!`
+
+Change the admin password immediately after your first login. The seed script is idempotent — safe to re-run if needed.
+
+## Port Map
+
+| Service | Host Port | Container Port |
+|---------|-----------|----------------|
+| PostgreSQL | 5433 | 5432 |
+| MinIO API | 9000 | 9000 |
+| MinIO Console | 9001 | 9001 |
+| Martin (tiles) | 6080 | 3000 |
+| CDT Application | 6012 | 3000 |
+
+## Stopping the Stack
+
+To stop all running containers without losing any data:
+
+```bash
+docker compose down
+```
+
+This removes the containers but preserves the named volumes (`postgres_data`, `minio_data`), so your database and uploaded files survive the restart.
+
+### Removing All Data
+
+> **Warning:** This is irreversible. All database records, uploaded files, and MinIO objects will be permanently deleted.
+
+To stop the stack **and delete all volumes**:
+
+```bash
+docker compose down -v
+```
+
+Use this only when you want a completely clean slate — for example, resetting a test environment or decommissioning the deployment entirely.
+
+## Upgrading
+
+To update CDT to a newer version, pull the latest images and restart the stack:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+The `migrate` service runs automatically on startup and applies any new database migrations before the application comes back up. No manual migration step is needed.
 
 ## Service List
 
