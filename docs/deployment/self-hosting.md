@@ -54,17 +54,11 @@ From the root directory of the project (where `docker-compose.yml` lives):
 docker compose up -d --build
 ```
 
-On first run, apply database migrations once PostgreSQL is healthy:
-
-```bash
-docker compose run --rm migrate
-```
-
 ## Port Map
 
 | Service | Host Port | Container Port |
 |---------|-----------|----------------|
-| PostgreSQL | 5432 | 5432 |
+| PostgreSQL | 5433 | 5432 |
 | MinIO API | 9000 | 9000 |
 | MinIO Console | 9001 | 9001 |
 | Martin (tiles) | 6080 | 3000 |
