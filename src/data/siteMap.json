@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-04T10:55:52.551Z",
+  "generatedAt": "2026-06-16T19:00:04.107Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -27,6 +27,12 @@
               "id": "concepts/bim-and-ifc",
               "title": "BIM & IFC",
               "slug": "/docs/concepts/bim-and-ifc",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/maturity-model",
+              "title": "Digital Twin Maturity Model",
+              "slug": "/docs/concepts/maturity-model",
               "primary": "userSidebar"
             },
             {

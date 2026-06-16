@@ -1,0 +1,62 @@
+---
+title: Digital Twin Maturity Model
+description: A digital twin is built, not bought. CDT's five-level maturity framework — and how your information practice, not your technology, determines where you sit on the scale.
+category: concepts
+status: draft
+last_updated: 2026-06-16
+sidebar_position: 7
+displayed_sidebar: userSidebar
+---
+
+<AudienceNotice home="users" also="developers" />
+
+import MaturityModel from '@site/src/components/MaturityModel';
+
+# Digital Twin Maturity Model
+
+A digital twin is not a single thing you either have or don't — it is a capability that deepens over time. The maturity model below charts that progression across five levels, plotting the **value** a twin delivers against the **level of effort** required to reach it. Each level builds on the one before: you cannot predict what you cannot see, and you cannot act autonomously on what you cannot predict.
+
+It is also not something you can buy off the shelf. One of the most common misconceptions is that a digital twin is a product or a piece of technology you purchase — when in reality it *emerges* from the right combination of standards, data, people, technology, and governance working together. In practice, where a BIM- or GIS-based twin sits on this scale depends almost entirely on the quality of the information practice behind it: the discipline of deciding what data matters, capturing it well, and keeping it trustworthy over time.
+
+Select a level to expand the capabilities it unlocks.
+
+<MaturityModel />
+
+## The Five Levels
+
+The model moves from passive documentation to a closed-loop system that operates on its own. Higher levels do not replace lower ones — they layer on top of them.
+
+1. **Descriptive — _Map what exists._** A static digital representation of physical assets: federated 3D geometry, BIM, and GIS data establish a geospatial baseline. The twin documents the world but does not yet reflect change.
+2. **Informative — _See what is happening now._** The twin is wired to live data. IoT and telemetry feeds, plus asset information management, give right-time awareness of conditions across the asset in 4D.
+3. **Predictive — _Anticipate what is next._** Analytics project future states. Trend and anomaly detection, performance scoring, and predictive maintenance surface risk and degradation before they happen.
+4. **Prescriptive — _Test what could be._** Simulation lets you explore interventions safely. What-if scenarios, optimization, and remote diagnosis compare outcomes before you act in the real world.
+5. **Autonomous — _Let the system act._** The twin closes the loop — sensing, deciding, and acting with minimal human intervention. AI twins, self-adaptive control, and virtual–physical convergence operate the asset as one continuous system.
+
+## The Foundation
+
+Every level rests on the same groundwork. These pillars are not a sixth tier you climb to — they span the whole model, and weakness in any one limits how far up the ladder a twin can reliably go:
+
+- **Standards** — open, interoperable formats (IFC, GeoJSON, LAS) so data is portable and tools are interchangeable.
+- **Data** — accurate, current, well-structured source data feeding every level.
+- **People** — the skills and workflows to operate and trust the twin.
+- **Technology** — the platform, viewers, and pipelines that hold it all together.
+- **Data Governance & Sovereignty** — clear ownership, access control, and Canadian-hosted storage so the data stays where it should.
+
+### Information requirements come first
+
+Standards and data only pay off when they answer a concrete question: *what decisions do you actually need to make, and what data do you need to make them?* Information-management frameworks such as **ISO 19650** — the international standard for managing information across the full lifecycle of an asset — exist to force that question early, defining how information is specified, delivered, and exchanged so the right data reaches the right people at the right time. The output of that exercise, the **information requirements**, is the foundation everything else builds on: get it wrong and you accumulate data nobody uses; get it right and every level above becomes reachable. The principle holds whether the twin is driven by BIM models, GIS layers, or both.
+
+Good requirements still aren't enough on their own. Moving up the scale consistently takes four things in place at once:
+
+- an **owner or operator** who genuinely prioritizes digital delivery,
+- a **champion** inside the organization pushing the work forward,
+- a **team** that knows how to execute against those requirements, and
+- **governance** that keeps the data accessible — and sovereign — over time.
+
+Miss any one of these and progress tends to stall, no matter how capable the technology is.
+
+## Where CDT Fits
+
+CDT is built to carry a project up this ladder rather than lock it at one rung. The [three viewers](./multi-viewer-architecture.mdx) and [open-standards](./open-standards.mdx) foundation cover the **Descriptive** baseline today; [live sensor and IoT feeds](../guides/sensors-and-iot.md) move projects into the **Informative** level; and the open, federated data layer is what makes the **Predictive** and higher levels reachable without vendor lock-in.
+
+Because everything is stored in open formats and the platform operates across scales — national map view down to a single structural element — a project can keep climbing without migrating to a different tool. See [What is a Digital Twin?](./digital-twins.mdx) for the underlying definition the model builds on.
