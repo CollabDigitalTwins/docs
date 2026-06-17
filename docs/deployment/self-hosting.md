@@ -72,7 +72,9 @@ If Docker is not permitted on your infrastructure, Podman is a compatible altern
 - Install Podman: [podman.io/getting-started/installation](https://podman.io/getting-started/installation)
 - Install Podman Compose: [github.com/containers/podman-compose](https://github.com/containers/podman-compose)
 
-Most Docker Compose files work with `podman-compose` without changes. Some networking or volume features may behave slightly differently.
+The `docker-compose.yml` included with CDT has already been adapted for Podman: volume mounts use the `:Z` SELinux relabeling flag required on Fedora/RHEL systems. You should be able to run `podman-compose up -d` with the same `.env` setup described below.
+
+That said, Podman compatibility is best-effort. Networking behavior, `depends_on` condition handling, and rootless container permissions can differ between Podman versions and Linux distributions. If you encounter issues, consult the [Podman Compose documentation](https://github.com/containers/podman-compose) for your specific environment.
 
 ---
 
