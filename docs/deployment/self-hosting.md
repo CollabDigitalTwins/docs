@@ -189,11 +189,13 @@ The map's search bar resolves addresses and place names through a geocoding prov
 
 ## Starting the Full Stack
 
-From the root directory of the project (where `docker-compose.yml` lives):
+From the directory containing `docker-compose.public.yml` and your `.env` file:
 
 ```bash
-docker compose up -d
+docker compose -f docker-compose.public.yml up -d
 ```
+
+This pulls the pre-built CDT images from the GitHub Container Registry and starts all services. No source code or build tooling is required.
 
 ---
 
@@ -294,7 +296,7 @@ On the host machine, ports **80** (HTTP, used by Caddy for certificate issuance 
 To stop all running containers without losing any data:
 
 ```bash
-docker compose down
+docker compose -f docker-compose.public.yml down
 ```
 
 This removes the containers but preserves the named volumes (`postgres_data`, `minio_data`), so your database and uploaded files survive the restart.
@@ -306,7 +308,7 @@ This removes the containers but preserves the named volumes (`postgres_data`, `m
 To stop the stack **and delete all volumes**:
 
 ```bash
-docker compose down -v
+docker compose -f docker-compose.public.yml down -v
 ```
 
 Use this only when you want a completely clean slate — for example, resetting a test environment or decommissioning the deployment entirely.
@@ -318,8 +320,8 @@ Use this only when you want a completely clean slate — for example, resetting 
 To update CDT to a newer version, pull the latest images and restart the stack:
 
 ```bash
-docker compose pull
-docker compose up -d
+docker compose -f docker-compose.public.yml pull
+docker compose -f docker-compose.public.yml up -d
 ```
 
 The `migrate` service runs automatically on startup and applies any new database migrations before the application comes back up. No manual migration step is needed.
