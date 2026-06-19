@@ -1,6 +1,6 @@
 <div align="center">
 
-# <img src="https://github.com/collabdt/docs/blob/main/static/img/cdt-logo.svg" alt="CDT Logo" height="40" />
+# <img src="https://github.com/CollabDigitalTwins/docs/blob/main/static/img/cdt-logo.svg" alt="CDT Logo" height="40" />
 #  `COLLAB DIGITAL TWINS`
 
 

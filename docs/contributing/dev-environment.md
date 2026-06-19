@@ -23,7 +23,7 @@ For the full prerequisite versions and platform notes, see [Installation](../get
 ## Initial setup
 
 ```bash
-git clone https://github.com/collabdt/core.git
+git clone https://github.com/CollabDigitalTwins/core.git
 cd core
 yarn install
 cp .env.example .env

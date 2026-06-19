@@ -194,7 +194,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.DOCS_REPO_TOKEN }}
-          repository: collabdt/docs
+          repository: CollabDigitalTwins/docs
           event-type: source-updated
           client-payload: |
             {

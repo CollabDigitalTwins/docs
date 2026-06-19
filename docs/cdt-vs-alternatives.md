@@ -48,7 +48,7 @@ CDT is **not** the right choice when:
 
 **Can I migrate off CDT later?** Yes. All data is in open formats — IFC, GeoJSON, LAS — and can be exported in bulk. There is no proprietary lock-in.
 
-**Does CDT support [feature X from a commercial product]?** Often, but not always. Check the relevant guide and the [GitHub roadmap](https://github.com/collabdt/core/milestones). If a feature is missing and broadly useful, file an issue. If it is narrow, consider a [plugin](./plugins/overview.md).
+**Does CDT support [feature X from a commercial product]?** Often, but not always. Check the relevant guide and the [GitHub roadmap](https://github.com/CollabDigitalTwins/core/milestones). If a feature is missing and broadly useful, file an issue. If it is narrow, consider a [plugin](./plugins/overview.md).
 
 **Is CDT production-ready?** Yes for federation, visualization, and collaboration use cases. Some advanced features (full IoT device management, alert rules, runtime plugin loading) are still on the roadmap — see the [Changelog](./changelog.md) for what is shipped.
 

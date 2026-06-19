@@ -67,7 +67,7 @@ This work established the data model and visualization patterns now used in CDT'
 - Integration with national environmental datasets (CIFFC wildfire monitoring, Environment Canada weather).
 - Export of time-series data to CSV or API for external analysis.
 
-For tracked status, see the [Changelog](../changelog.md) and [GitHub roadmap](https://github.com/collabdt/core/milestones).
+For tracked status, see the [Changelog](../changelog.md) and [GitHub roadmap](https://github.com/CollabDigitalTwins/core/milestones).
 
 ## Related
 
