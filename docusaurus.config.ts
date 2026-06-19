@@ -49,7 +49,7 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'collabdt', // Usually your GitHub org/user name.
+  organizationName: 'CollabDigitalTwins', // Usually your GitHub org/user name.
   projectName: 'docs', // Usually your repo name.
 
   onBrokenLinks: 'warn',
@@ -72,7 +72,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/collabdt/docs/tree/main/',
+            'https://github.com/CollabDigitalTwins/docs/tree/main/',
         },
         blog: {
           showReadingTime: true,
@@ -130,7 +130,7 @@ const config: Config = {
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/CollabDigitalTwins/docs',
+          href: 'https://github.com/CollabDigitalTwins/core',
           label: 'GitHub',
           position: 'right',
         },
@@ -165,8 +165,12 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'GitHub',
-              href: 'https://github.com/CollabDigitalTwins',
+              label: 'Core',
+              href: 'https://github.com/CollabDigitalTwins/core',
+            },
+            {
+              label: 'Docs',
+              href: 'https://github.com/CollabDigitalTwins/docs',
             },
             {
               label: 'Contact',

@@ -9,7 +9,7 @@ displayed_sidebar: deploymentSidebar
 
 CDT follows [Semantic Versioning](https://semver.org). Versions are produced automatically by `semantic-release` from commit messages on `main`. This page mirrors the GitHub release notes with extra context for breaking changes and migration steps.
 
-For the canonical, machine-generated list, see [GitHub Releases](https://github.com/collabdt/core/releases).
+For the canonical, machine-generated list, see [GitHub Releases](https://github.com/CollabDigitalTwins/core/releases).
 
 ## Versioning policy
 
@@ -39,7 +39,7 @@ Always run migrations before bringing up the new application version. For detail
 
 ## Past releases
 
-Past releases and full release notes are published on [GitHub](https://github.com/collabdt/core/releases). Migration notes for any release tagged with `BREAKING CHANGE` are mirrored here once that release ships.
+Past releases and full release notes are published on [GitHub](https://github.com/CollabDigitalTwins/core/releases). Migration notes for any release tagged with `BREAKING CHANGE` are mirrored here once that release ships.
 
 ## Reporting regressions
 

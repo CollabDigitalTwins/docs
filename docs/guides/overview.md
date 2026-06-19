@@ -46,5 +46,5 @@ Skim the goal and result first to confirm a guide is the right one before readin
 If a step does not work as described:
 
 1. Check [Troubleshooting](../getting-started/troubleshooting.mdx) for the symptom.
-2. Search [GitHub issues](https://github.com/collabdt/core/issues).
+2. Search [GitHub issues](https://github.com/CollabDigitalTwins/core/issues).
 3. Ask on the [contact form](https://collabdt.org/home#contact).

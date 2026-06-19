@@ -26,4 +26,4 @@ This section is for developers building on top of the Collab Digital Twins platf
 - **Components** — UI components used across the platform ([overview](./components/overview.md))
 - **Plugin context API** — extension points available to plugins ([reference](./plugins/plugin-context-api.md))
 
-**Need Help?** Reach out via our [contact form](https://collabdt.org/home#contact) or visit our [GitHub repository](https://github.com/collabdt/core).
+**Need Help?** Reach out via our [contact form](https://collabdt.org/home#contact) or visit the [core repository on GitHub](https://github.com/CollabDigitalTwins/core).
