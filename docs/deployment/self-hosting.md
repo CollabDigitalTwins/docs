@@ -151,6 +151,15 @@ CDT sends one-time passcodes for multi-factor authentication via email. You must
 | `EMAIL_USER` | SMTP authentication username |
 | `EMAIL_PASS` | SMTP authentication password |
 
+#### Other
+
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_MARTIN_SERVER_URL` | Public URL browsers use to load map vector tiles — `http://localhost:6080` for local use, or `https://tiles.yourorg.com` for org deployments |
+| `PORT` | Port the CDT server listens on inside the container. Must be `3000` to match the compose port mapping. |
+
+> **Note:** The compose file sets `SELF_HOSTED=true` automatically — this is what enables the `/setup` initialization page and the auth redirect when no organization exists. You do not need to set this in your `.env`.
+
 ### Optional Variables
 
 #### Google OAuth (account linking and social login)
