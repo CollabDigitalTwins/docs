@@ -47,4 +47,4 @@ If a step does not work as described:
 
 1. Check [Troubleshooting](../getting-started/troubleshooting.mdx) for the symptom.
 2. Search [GitHub issues](https://github.com/CollabDigitalTwins/core/issues).
-3. Ask on the [contact form](https://collabdt.org/home#contact).
+3. Ask on the [contact form](https://collabdt.org/En/contact/).

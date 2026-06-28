@@ -174,7 +174,7 @@ const config: Config = {
             },
             {
               label: 'Contact',
-              href: 'https://collabdt.org#contact',
+              href: 'https://collabdt.org/En/contact/',
             },
           ],
         },

@@ -93,7 +93,7 @@ CDT follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1
 
 ## Join the project team
 
-Interested in becoming a regular contributor or maintainer? Reach out via [collabdt.org](https://collabdt.org/home#contact) or introduce yourself in an issue.
+Interested in becoming a regular contributor or maintainer? Reach out via [collabdt.org](https://collabdt.org/En/contact/) or introduce yourself in an issue.
 
 ## Related
 

@@ -58,6 +58,6 @@ CDT is built around four principles that shape the platform:
 
 ## Get help
 
-- [Contact form](https://collabdt.org/home#contact)
+- [Contact form](https://collabdt.org/En/contact/)
 - [Core repository on GitHub](https://github.com/CollabDigitalTwins/core)
 - [Troubleshooting](./getting-started/troubleshooting.mdx)
