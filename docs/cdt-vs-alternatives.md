@@ -54,7 +54,7 @@ CDT is **not** the right choice when:
 
 ## Get help deciding
 
-If you want a recommendation tailored to your situation, reach out via [collabdt.org/home#contact](https://collabdt.org/home#contact). We will be honest about whether CDT is the right tool for your problem.
+If you want a recommendation tailored to your situation, reach out via [collabdt.org/En/contact/](https://collabdt.org/En/contact/). We will be honest about whether CDT is the right tool for your problem.
 
 ## Related
 
