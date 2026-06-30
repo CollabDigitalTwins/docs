@@ -63,7 +63,7 @@ Two short-lived services run automatically on every `docker compose up` and exit
 Install Docker Engine and Compose CLI: [docs.docker.com/engine/install](https://docs.docker.com/engine/install)
 
 **Linux GUI or cross-platform:**
-Install Docker Desktop (includes Engine + Compose): [docs.docker.com/desktop/setup/install/linux](https://docs.docker.com/desktop/setup/install/linux/)
+Install Docker Desktop (includes Engine + Compose): [docs.docker.com/desktop](https://docs.docker.com/desktop/)
 
 ### Option 2 — Podman
 
@@ -119,7 +119,7 @@ These must be set before the stack will start correctly.
 | `MINIO_ROOT_PASSWORD` | MinIO admin password |
 | `S3_ACCESS_KEY` | Access key for the app to authenticate with MinIO (set equal to `MINIO_ROOT_USER` for self-hosted) |
 | `S3_ACCESS_SECRET` | Secret key for the app to authenticate with MinIO (set equal to `MINIO_ROOT_PASSWORD` for self-hosted) |
-| `MINIO_ENDPOINT` | MinIO host as seen from inside the Docker network — `minio:9000` |
+| `MINIO_ENDPOINT` | MinIO host:port without protocol — set to match `MINIO_URL` (e.g. `host.docker.internal:9000`) |
 | `MINIO_USE_SSL` | `true` if MinIO is behind TLS, `false` for local/internal setups |
 | `MINIO_REGION` | Region string, e.g. `us-east-1` (arbitrary for self-hosted MinIO) |
 | `MINIO_URL` | The URL the app uses to connect to MinIO and generate presigned URLs. **This hostname must be reachable by browsers** — presigned upload and download URLs embed it directly. Do not use `http://minio:9000` — that is the internal Docker network name and browsers cannot resolve it. Choose based on your environment: **Mac/Windows (Docker Desktop):** `http://host.docker.internal:9000` — Docker Desktop automatically resolves this to your host machine. **Linux (local):** `host.docker.internal` is not available by default; use your machine's LAN IP instead (e.g. `http://192.168.1.100:9000`), or add `extra_hosts: ["host.docker.internal:host-gateway"]` under the `cdt` service in `docker-compose.public.yml` and then use `http://host.docker.internal:9000`. **Server deployment:** use the public hostname and port (e.g. `http://cdt.yourorg.com:9000` or `https://files.yourorg.com`). |
@@ -201,19 +201,21 @@ This pulls the pre-built CDT images from the GitHub Container Registry and start
 
 ## Instance Initialization
 
-Once the stack is running, open your CDT URL in a browser (`http://localhost:6012` for local deployments, or your configured domain for org deployments). If no organization has been set up yet, you will be redirected to the setup page at `/setup`.
+Once the stack is running, open your CDT URL in a browser (`http://localhost:6012` for local deployments, or your configured domain for org deployments). If no organization has been set up yet, you will be redirected to the setup page at `/organization-config`.
 
 Fill in the initialization form:
 
 | Field | Description |
 |-------|-------------|
-| Org name (slug) | A short URL-safe identifier for your organization, e.g. `my-org` |
-| Org title | The display name for your organization |
-| Org description | A short description shown in the UI |
-| Languages | Comma-separated language codes your org will use, e.g. `En, Fr` |
+| Organization name | 3–63 characters, lowercase letters, numbers, dots, and hyphens only, e.g. `my-org` |
+| Organization title | The display name for your organization |
+| Organization description | A short description shown in the UI |
+| Languages | Checkboxes: English (default), French, Spanish |
+| 3D Viewers | Checkboxes for which viewer types to enable: Map (always on), BIM (default on) |
+| Data | Checkboxes for which data types to enable: Sites, Buildings, Files (all default on) |
 | Admin name | Full name for the initial admin account |
 | Admin email | Email address for the initial admin account |
-| Admin password | Password for the initial admin account (minimum 8 characters) |
+| Password | Password for the initial admin account (minimum 8 characters) |
 
 After submitting, you will be redirected to the sign-in page for your organization. The setup page is only accessible when no organization exists — once initialized, it redirects to sign-in automatically.
 
