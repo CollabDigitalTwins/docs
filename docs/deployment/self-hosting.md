@@ -21,17 +21,18 @@ Run CDT on your own machine for personal evaluation or development. All services
 Deploy CDT on a server so that multiple people can access it through a browser. This requires:
 
 1. **A host machine with a stable IP address** — a server on your internal network, or a cloud VM (Azure, AWS, GCP, DigitalOcean, etc.)
-2. **Three subdomains pointing at that server** — CDT runs three browser-accessible services (the app, the tile server, and file storage), each assigned its own subdomain. All three point to the same server IP; the reverse proxy routes traffic to the right container based on the hostname. See [DNS Configuration](#dns-configuration) below.
-3. **A reverse proxy** — routes incoming HTTPS requests to the right container and handles TLS certificates automatically. See [Reverse Proxy](#reverse-proxy) below.
-4. **Updated environment variables** — swap all `localhost` URLs in your `.env` for the real subdomains. See the notes in [Environment Configuration](#environment-configuration) below.
+2. **Network-reachable URLs for three services** — CDT has three browser-accessible services: the app (port 6012), the tile server (port 6080), and file storage (port 9000). Browsers must be able to reach all three. There are two common approaches:
+   - **Single hostname, multiple ports** — expose the host's ports directly. No reverse proxy needed. URLs look like `http://cdt.yourorg.com:6080`. Simpler to set up; TLS is harder to add later.
+   - **Subdomains + reverse proxy** — assign a subdomain to each service (`cdt.yourorg.com`, `tiles.yourorg.com`, `files.yourorg.com`), point all three at the same server IP, and use a reverse proxy to route traffic to the right container. Clean URLs, TLS handled automatically. See [DNS Configuration](#dns-configuration) and [Reverse Proxy](#reverse-proxy) below.
+3. **Updated environment variables** — replace all `localhost` URLs in your `.env` with the real hostnames and ports for your chosen approach. See the notes in [Environment Configuration](#environment-configuration) below.
 
 ---
 
 ## Prerequisites
 
-These instructions assume you already have a host environment ready to run containers — either a Linux/Windows server you control, or a cloud platform such as Azure, AWS, GCP, or DigitalOcean with a virtual machine provisioned and accessible over SSH. CDT does not prescribe a specific cloud provider; any host that can run Docker Engine 24.0+ (or Podman v5.7.1) and Docker Compose will work.
+These instructions assume you already have a host environment ready to run containers — either a Linux/Windows server you control, or a cloud platform such as Azure, AWS, GCP, or DigitalOcean with a virtual machine provisioned and accessible over SSH. CDT does not prescribe a specific cloud provider; any host that can run a recent version of Docker Engine and Docker Compose (or Podman with Podman Compose) will work.
 
-If you are evaluating providers or sizing a VM, the stack runs comfortably on a 4 vCPU / 8 GB RAM instance with at least 50 GB of persistent disk for typical pilot deployments. Production workloads with large point cloud or BIM datasets require additional storage proportional to your asset volume.
+If you are evaluating providers or sizing a VM, the stack has been tested on a 4 vCPU / 8 GB RAM instance with at least 50 GB of persistent disk for typical pilot deployments. Production workloads with large point cloud or BIM datasets require additional storage proportional to your asset volume.
 
 ---
 
@@ -119,14 +120,14 @@ These must be set before the stack will start correctly.
 | `MINIO_ROOT_PASSWORD` | MinIO admin password |
 | `S3_ACCESS_KEY` | Access key for the app to authenticate with MinIO (set equal to `MINIO_ROOT_USER` for self-hosted) |
 | `S3_ACCESS_SECRET` | Secret key for the app to authenticate with MinIO (set equal to `MINIO_ROOT_PASSWORD` for self-hosted) |
-| `MINIO_ENDPOINT` | MinIO host as seen from inside the Docker network — always `minio:9000` |
+| `MINIO_ENDPOINT` | MinIO host as seen from inside the Docker network — `minio:9000` |
 | `MINIO_USE_SSL` | `true` if MinIO is behind TLS, `false` for local/internal setups |
 | `MINIO_REGION` | Region string, e.g. `us-east-1` (arbitrary for self-hosted MinIO) |
-| `MINIO_URL` | Server-side URL the app uses to reach MinIO — always `http://minio:9000/` (internal Docker network address) |
-| `NEXT_PUBLIC_MINIO_BUCKET_URL` | Public URL browsers use to load assets — `http://localhost:9000` for local use, or `https://files.yourorg.com` for org deployments |
+| `MINIO_URL` | The URL the app uses to connect to MinIO and generate presigned URLs. **This hostname must be reachable by browsers** — presigned upload and download URLs embed it directly. Do not use `http://minio:9000` — that is the internal Docker network name and browsers cannot resolve it. Choose based on your environment: **Mac/Windows (Docker Desktop):** `http://host.docker.internal:9000` — Docker Desktop automatically resolves this to your host machine. **Linux (local):** `host.docker.internal` is not available by default; use your machine's LAN IP instead (e.g. `http://192.168.1.100:9000`), or add `extra_hosts: ["host.docker.internal:host-gateway"]` under the `cdt` service in `docker-compose.public.yml` and then use `http://host.docker.internal:9000`. **Server deployment:** use the public hostname and port (e.g. `http://cdt.yourorg.com:9000` or `https://files.yourorg.com`). |
+| `MINIO_BUCKET_URL` | Public base URL browsers use to load stored assets (e.g. org logos). For local use: `http://localhost:9000`. For org deployments: the public MinIO URL (same value as `MINIO_URL` in most setups). |
 | `ALLOWED_ORIGIN` | The CDT app URL, used to configure MinIO's CORS policy so the browser can upload and download files. Set to your `AUTH_URL` value (e.g. `http://localhost:6012` or `https://cdt.yourorg.com`). Defaults to `*` if unset, which is fine for local testing but should be locked down for org deployments. |
 
-> **Local deployments on Mac or Windows:** `NEXT_PUBLIC_MINIO_BUCKET_URL` is used by browsers to load files directly from MinIO. On Mac and Windows, Docker Desktop runs containers in a Linux VM, so `localhost` inside a container refers to that VM — not your machine. If you see file-loading errors in the browser when running locally, set `NEXT_PUBLIC_MINIO_BUCKET_URL=http://host.docker.internal:9000` instead of `http://localhost:9000`. `host.docker.internal` is a special hostname that Docker Desktop resolves to your actual host machine from inside any container.
+> **Presigned URLs and browser reachability:** CDT generates presigned MinIO URLs server-side for file uploads and downloads. These URLs are sent to the browser, which then contacts MinIO directly. If `MINIO_URL` is set to an internal Docker hostname like `minio:9000`, presigned URLs will contain that hostname and fail in the browser. Always set `MINIO_URL` to a hostname your users' browsers can reach.
 
 #### reCAPTCHA
 
@@ -150,15 +151,6 @@ CDT sends one-time passcodes for multi-factor authentication via email. You must
 | `EMAIL_FROM` | The sender address that appears on outgoing emails |
 | `EMAIL_USER` | SMTP authentication username |
 | `EMAIL_PASS` | SMTP authentication password |
-
-#### Other
-
-| Variable | Description |
-|----------|-------------|
-| `NEXT_PUBLIC_MARTIN_SERVER_URL` | Public URL browsers use to load map vector tiles — `http://localhost:6080` for local use, or `https://tiles.yourorg.com` for org deployments |
-| `PORT` | Port the CDT server listens on inside the container. Must be `3000` to match the compose port mapping. |
-
-> **Note:** The compose file sets `SELF_HOSTED=true` automatically — this is what enables the `/setup` initialization page and the auth redirect when no organization exists. You do not need to set this in your `.env`.
 
 ### Optional Variables
 
@@ -246,9 +238,9 @@ For local deployments, these ports are accessed directly (e.g. `http://localhost
 
 ## DNS Configuration
 
-*This section applies to organization deployments only. For local use, skip to [Starting the Full Stack](#starting-the-full-stack).*
+*This section applies to organization deployments using the subdomain approach. If you are using single-hostname + port URLs, skip to [Starting the Full Stack](#starting-the-full-stack).*
 
-CDT has three browser-accessible services, each assigned its own subdomain. All three subdomains point to the **same server IP** — it is one machine running all three containers. The reverse proxy (configured in the next section) reads the hostname on each incoming request and routes it to the correct container.
+With the subdomain approach, all three subdomains point to the **same server IP** — one machine running all three containers. The reverse proxy reads the hostname on each incoming request and routes it to the correct container.
 
 Create three DNS **A records** at your registrar or DNS provider (Cloudflare, Route 53, etc.):
 
@@ -260,13 +252,13 @@ Create three DNS **A records** at your registrar or DNS provider (Cloudflare, Ro
 
 Replace `yourorg.com` with your actual domain. The subdomain names (`cdt`, `tiles`, `files`) are conventions — use whatever names make sense to you, as long as they match the URLs you set in your `.env`.
 
-**Internal/VPN-only deployments:** if CDT should only be reachable within your organization's network, use your internal DNS server to create the same records pointing to the server's **private IP** instead. Users on the LAN or VPN will resolve the names without any public DNS entry.
+**Internal/VPN-only deployments:** use your internal DNS server to create the same records pointing to the server's **private IP** instead. Users on the LAN or VPN will resolve the names without any public DNS entry.
 
 ---
 
 ## Reverse Proxy
 
-*This section applies to organization deployments only. For local use, skip to [Starting the Full Stack](#starting-the-full-stack).*
+*This section applies to the subdomain approach only. If you are exposing services directly on their ports (6012, 6080, 9000), skip to [Starting the Full Stack](#starting-the-full-stack).*
 
 A reverse proxy sits in front of the Docker stack and handles two things: routing incoming requests to the right container based on the hostname, and terminating HTTPS/TLS so that all traffic is encrypted in transit.
 
@@ -297,6 +289,24 @@ Caddy will automatically issue TLS certificates for all three domains on first r
 ### Firewall
 
 On the host machine, ports **80** (HTTP, used by Caddy for certificate issuance and redirect) and **443** (HTTPS) should be open to the network. The application ports (6012, 6080, 9000, 9001, 5433) should be firewalled from external access — all traffic reaches them through Caddy on the same machine.
+
+---
+
+## Single-Hostname Setup (Port-Based)
+
+*This section applies to the single-hostname + port approach.*
+
+If you are not using a reverse proxy, expose the three service ports directly on your host and set your `.env` URLs accordingly:
+
+| Service | Port | Example URL |
+|---------|------|-------------|
+| CDT app | 6012 | `http://cdt.yourorg.com:6012` |
+| Martin (tiles) | 6080 | `http://cdt.yourorg.com:6080` |
+| MinIO (files) | 9000 | `http://cdt.yourorg.com:9000` |
+
+Set `AUTH_URL`, `MARTIN_SERVER_URL`, and `NEXT_PUBLIC_MINIO_BUCKET_URL` (or `MINIO_BUCKET_URL`) to these URLs in your `.env`. Ensure your firewall allows inbound traffic on all three ports.
+
+Note that this approach uses plain HTTP unless you separately configure TLS on each port. For internal/VPN-only networks where traffic does not leave a trusted network, this is often acceptable.
 
 ---
 
