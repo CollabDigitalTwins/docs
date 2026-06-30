@@ -21,9 +21,9 @@ Run CDT on your own machine for personal evaluation or development. All services
 Deploy CDT on a server so that multiple people can access it through a browser. This requires:
 
 1. **A host machine with a stable IP address** — a server on your internal network, or a cloud VM (Azure, AWS, GCP, DigitalOcean, etc.)
-2. **Network-reachable URLs for three services** — CDT has three browser-accessible services: the app (port 6012), the tile server (port 6080), and file storage (port 9000). Browsers must be able to reach all three. There are two common approaches:
-   - **Single hostname, multiple ports** — expose the host's ports directly. No reverse proxy needed. URLs look like `http://cdt.yourorg.com:6080`. Simpler to set up; TLS is harder to add later.
-   - **Subdomains + reverse proxy** — assign a subdomain to each service (`cdt.yourorg.com`, `tiles.yourorg.com`, `files.yourorg.com`), point all three at the same server IP, and use a reverse proxy to route traffic to the right container. Clean URLs, TLS handled automatically. See [DNS Configuration](#dns-configuration) and [Reverse Proxy](#reverse-proxy) below.
+2. **Network-reachable URLs for two services** — CDT has two browser-accessible services: the app (port 6012) and file storage (port 9000). Browsers must be able to reach both. There are two common approaches:
+   - **Single hostname, multiple ports** — expose the host's ports directly. No reverse proxy needed. URLs look like `http://cdt.yourorg.com:9000`. Simpler to set up; TLS is harder to add later.
+   - **Subdomains + reverse proxy** — assign a subdomain to each service (`cdt.yourorg.com`, `files.yourorg.com`), point both at the same server IP, and use a reverse proxy to route traffic to the right container. Clean URLs, TLS handled automatically. See [DNS Configuration](#dns-configuration) and [Reverse Proxy](#reverse-proxy) below.
 3. **Updated environment variables** — replace all `localhost` URLs in your `.env` with the real hostnames and ports for your chosen approach. See the notes in [Environment Configuration](#environment-configuration) below.
 
 ---
@@ -42,7 +42,6 @@ If you are evaluating providers or sizing a VM, the stack has been tested on a 4
 |---------|---------|
 | `postgres` | PostgreSQL 15 with PostGIS 3.4 — relational and geospatial data |
 | `minio` | Object storage for BIM, point clouds, and GIS files |
-| `martin` | Vector tile server consuming PostGIS spatial tables |
 | `cdt` | Core application — API, business logic, and web UI |
 | `minio-init` | One-time init job: creates the public buckets required for the app to function |
 | `migrate` | One-time init job: applies pending database migrations on startup |
@@ -229,7 +228,6 @@ Change the admin password immediately after your first login if you shared the c
 | PostgreSQL | 5433 | 5432 |
 | MinIO API | 9000 | 9000 |
 | MinIO Console | 9001 | 9001 |
-| Martin (tiles) | 6080 | 3000 |
 | CDT Application | 6012 | 3000 |
 
 For local deployments, these ports are accessed directly (e.g. `http://localhost:6012`). For org deployments behind a reverse proxy, these ports stay internal to the host — only ports 80 and 443 are exposed to the network, and the proxy routes traffic to the right container.
@@ -247,7 +245,6 @@ Create three DNS **A records** at your registrar or DNS provider (Cloudflare, Ro
 | Record | Type | Value |
 |--------|------|-------|
 | `cdt.yourorg.com` | A | `<your server's public IP>` |
-| `tiles.yourorg.com` | A | `<your server's public IP>` |
 | `files.yourorg.com` | A | `<your server's public IP>` |
 
 Replace `yourorg.com` with your actual domain. The subdomain names (`cdt`, `tiles`, `files`) are conventions — use whatever names make sense to you, as long as they match the URLs you set in your `.env`.
@@ -258,7 +255,7 @@ Replace `yourorg.com` with your actual domain. The subdomain names (`cdt`, `tile
 
 ## Reverse Proxy
 
-*This section applies to the subdomain approach only. If you are exposing services directly on their ports (6012, 6080, 9000), skip to [Starting the Full Stack](#starting-the-full-stack).*
+*This section applies to the subdomain approach only. If you are exposing services directly on their ports (6012, 9000), skip to [Starting the Full Stack](#starting-the-full-stack).*
 
 A reverse proxy sits in front of the Docker stack and handles two things: routing incoming requests to the right container based on the hostname, and terminating HTTPS/TLS so that all traffic is encrypted in transit.
 
@@ -267,10 +264,6 @@ A reverse proxy sits in front of the Docker stack and handles two things: routin
 ```
 cdt.yourorg.com {
     reverse_proxy localhost:6012
-}
-
-tiles.yourorg.com {
-    reverse_proxy localhost:6080
 }
 
 files.yourorg.com {
@@ -288,7 +281,7 @@ Caddy will automatically issue TLS certificates for all three domains on first r
 
 ### Firewall
 
-On the host machine, ports **80** (HTTP, used by Caddy for certificate issuance and redirect) and **443** (HTTPS) should be open to the network. The application ports (6012, 6080, 9000, 9001, 5433) should be firewalled from external access — all traffic reaches them through Caddy on the same machine.
+On the host machine, ports **80** (HTTP, used by Caddy for certificate issuance and redirect) and **443** (HTTPS) should be open to the network. The application ports (6012, 9000, 9001, 5433) should be firewalled from external access — all traffic reaches them through Caddy on the same machine.
 
 ---
 
@@ -301,10 +294,9 @@ If you are not using a reverse proxy, expose the three service ports directly on
 | Service | Port | Example URL |
 |---------|------|-------------|
 | CDT app | 6012 | `http://cdt.yourorg.com:6012` |
-| Martin (tiles) | 6080 | `http://cdt.yourorg.com:6080` |
 | MinIO (files) | 9000 | `http://cdt.yourorg.com:9000` |
 
-Set `AUTH_URL`, `MARTIN_SERVER_URL`, and `NEXT_PUBLIC_MINIO_BUCKET_URL` (or `MINIO_BUCKET_URL`) to these URLs in your `.env`. Ensure your firewall allows inbound traffic on all three ports.
+Set `AUTH_URL` and `MINIO_URL` / `MINIO_BUCKET_URL` to these URLs in your `.env`. Ensure your firewall allows inbound traffic on all three ports.
 
 Note that this approach uses plain HTTP unless you separately configure TLS on each port. For internal/VPN-only networks where traffic does not leave a trusted network, this is often acceptable.
 
@@ -353,6 +345,5 @@ All services are documented on a single [Services](./services.md) page. Jump dir
 
 - [PostgreSQL](./services.md#postgresql)
 - [MinIO](./services.md#minio)
-- [Martin / PostGIS](./services.md#martin--postgis)
 - [Node / Next.js Application](./services.md#node--nextjs-application)
 - [Open Data Service](./services.md#open-data-service)
