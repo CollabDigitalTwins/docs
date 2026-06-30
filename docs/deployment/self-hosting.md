@@ -136,7 +136,7 @@ CDT uses Google reCAPTCHA v2 on login and registration forms. Register your doma
 
 | Variable | Description |
 |----------|-------------|
-| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Public site key (sent to the browser) |
+| `RECAPTCHA_SITE_KEY` | Public site key (sent to the browser) |
 | `RECAPTCHA_SECRET_KEY` | Private secret key (server-side verification only — never expose this) |
 
 #### Email / SMTP
@@ -172,18 +172,18 @@ The map's search bar resolves addresses and place names through a geocoding prov
 
 | Priority | When | Provider |
 |----------|------|----------|
-| 1 | `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` is set | [Geocode Earth](https://geocode.earth) — hosted Pelias, highest-quality results |
-| 2 | `NEXT_PUBLIC_GEOCODER_URL` is set | Your own [Pelias](https://pelias.io) instance — no key, identical response format |
+| 1 | `GEOCODE_EARTH_API_KEY` is set | [Geocode Earth](https://geocode.earth) — hosted Pelias, highest-quality results |
+| 2 | `GEOCODER_URL` is set | Your own [Pelias](https://pelias.io) instance — no key, identical response format |
 | 3 | neither is set | Free public OpenStreetMap services — [Photon](https://photon.komoot.io) for autocomplete, [Nominatim](https://nominatim.openstreetmap.org) for reverse geocoding |
 
 | Variable | Description |
 |----------|-------------|
-| `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` | Geocode Earth API key. Takes priority when set. |
-| `NEXT_PUBLIC_GEOCODER_URL` | Base URL of a self-hosted Pelias-compatible endpoint, e.g. `https://pelias.example.com`. No key required. |
-| `NEXT_PUBLIC_PHOTON_URL` | Overrides the Photon autocomplete endpoint. Defaults to the public `https://photon.komoot.io`. |
-| `NEXT_PUBLIC_NOMINATIM_URL` | Overrides the Nominatim reverse-geocoding endpoint. Defaults to the public `https://nominatim.openstreetmap.org`. |
+| `GEOCODE_EARTH_API_KEY` | Geocode Earth API key. Takes priority when set. |
+| `GEOCODER_URL` | Base URL of a self-hosted Pelias-compatible endpoint, e.g. `https://pelias.example.com`. No key required. |
+| `PHOTON_URL` | Overrides the Photon autocomplete endpoint. Defaults to the public `https://photon.komoot.io`. |
+| `NOMINATIM_URL` | Overrides the Nominatim reverse-geocoding endpoint. Defaults to the public `https://nominatim.openstreetmap.org`. |
 
-**Production note:** the public Photon and Nominatim instances are community-run and rate-limited — fine for evaluation and small pilots, but heavier deployments should run their own Pelias (single provider, best quality) or self-host Photon/Nominatim and point the URLs above at them.
+**Production note:** the public Photon and Nominatim instances are community-run and rate-limited — fine for evaluation and small pilots, but heavier deployments should run their own Pelias (single provider, best quality) or self-host Photon/Nominatim and point `PHOTON_URL` / `NOMINATIM_URL` at them.
 
 ---
 
