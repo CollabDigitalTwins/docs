@@ -80,13 +80,15 @@ That said, Podman compatibility is best-effort. Networking behavior, `depends_on
 
 ## Environment Configuration
 
-Before starting the stack, create a `.env` file in the project root. You can use `.env.example` as a starting point:
+Before starting the stack, create a `.env` file in the same directory as your compose file. Download the example below as a starting point, save it as `.env`, then fill in the values described in the sections that follow.
+
+<a href="/resources/env.example" download="env.example" className="button button--primary">⬇ Download env.example</a>
+
+If you cloned the CDT repository, you can instead copy the bundled example:
 
 ```bash
 cp .env.example .env
 ```
-
-Then fill in the values described in the sections below.
 
 > **Organization deployments:** anywhere a variable takes a `localhost` URL in the examples below, replace it with the corresponding subdomain you configured in [DNS Configuration](#dns-configuration).
 
@@ -189,7 +191,11 @@ The map's search bar resolves addresses and place names through a geocoding prov
 
 ## Starting the Full Stack
 
-From the directory containing `docker-compose.public.yml` and your `.env` file:
+Download the compose file and place it in the same directory as your `.env`:
+
+<a href="/resources/docker-compose.public.yml" download="docker-compose.public.yml" className="button button--primary">⬇ Download docker-compose.public.yml</a>
+
+From that directory, start the stack:
 
 ```bash
 docker compose -f docker-compose.public.yml up -d
