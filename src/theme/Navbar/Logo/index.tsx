@@ -29,7 +29,7 @@ export default function NavbarLogo(): ReactNode {
     <Link to={homeHref} className="navbar__brand cdt-brand" aria-label="CDT Docs home">
       <CdtIcon className="cdt-brand__icon" />
       <span className="cdt-brand__wordmark">
-        <span className="cdt-brand__wordmark-accent">collab</span>digitaltwins
+        <span className="cdt-brand__wordmark-accent">cdt</span>documentation
       </span>
     </Link>
   );
