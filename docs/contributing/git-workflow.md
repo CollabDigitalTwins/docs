@@ -53,7 +53,7 @@ CDT follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1
 | `fix` | patch | `fix(api): handle null responses from user endpoint` |
 | `feat` | minor | `feat(map): add layer opacity control` |
 | `perf` | patch | `perf(viewer): reduce re-renders on tile load` |
-| `build`, `ci`, `docs`, `refactor`, `test` | patch | `docs(readme): update setup instructions` |
+| `build`, `ci`, `docs`, `refactor`, `test` | no release | `docs(readme): update setup instructions` |
 | `BREAKING CHANGE:` in footer | major | `feat!: migrate auth to Auth.js` |
 
 ### References
@@ -70,7 +70,7 @@ CDT uses `semantic-release` to automate versioning based on commit messages. It 
 
 | Version change | When |
 |----------------|------|
-| `PATCH` (for example, `1.0.1`) | Bug fixes, docs, refactors |
+| `PATCH` (for example, `1.0.1`) | Bug fixes and performance improvements |
 | `MINOR` (for example, `1.2.0`) | New backwards-compatible features |
 | `MAJOR` (for example, `2.0.0`) | Breaking API changes |
 
@@ -84,25 +84,30 @@ See the [semantic-release docs](https://semantic-release.gitbook.io/semantic-rel
 
 ## Forking the repository
 
-The CDT repository is private during the pre-release period. To contribute:
+Contributions target [`@collabdt/core`](https://github.com/CollabDigitalTwins/core) — the open-source library. To contribute:
 
-1. Ask a team lead to invite you as a collaborator ([GitHub docs](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository)).
-2. Accept the email invitation.
-3. Fork the repo, naming your fork `cdt-{initials}` (for example, `cdt-dp`).
-4. Clone your fork:
+1. Fork [CollabDigitalTwins/core](https://github.com/CollabDigitalTwins/core) on GitHub.
+2. Clone your fork and install dependencies:
 
 ```bash
-git clone https://github.com/<your-username>/cdt-<initials>.git
-cd cdt-<initials>
+git clone https://github.com/<your-username>/core.git
+cd core
+yarn install
 ```
 
-5. Copy the `.env` file from your team lead into the project root.
-6. Install dependencies and start the dev server:
+3. Branch off `dev`, make your change, and validate it:
 
 ```bash
-yarn        # or: npm install
-yarn dev    # or: npm run dev
+yarn build
+yarn test:unit
+yarn lint
 ```
+
+4. Push to your fork and open a pull request against `dev`. You'll be asked to
+   sign the Contributor License Agreement on your first PR.
+
+No environment files or services are needed — core is a library. See
+[Dev Environment Setup](./dev-environment.md) for the full guide.
 
 ## Related
 
