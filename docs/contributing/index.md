@@ -10,6 +10,20 @@ Thanks for taking the time to contribute to Collab Digital Twins. All types of c
 
 If you like the project but do not have time to contribute right now, other ways to help include starring the repository, mentioning CDT at meetups, or referencing it from your own project's readme.
 
+## Three ways to participate
+
+Pick the path that matches what you want to do:
+
+| You want to… | You are a… | Start here |
+|---|---|---|
+| Improve CDT itself — viewers, components, hooks, fixes | **Core contributor** | [Dev Environment Setup](./dev-environment.md) → PR to [`@collabdt/core`](https://github.com/CollabDigitalTwins/core) |
+| Extend CDT with your own tool or feature | **Plugin creator** | [Plugins overview](../plugins/overview.md) → [Create your first plugin](../plugins/create-your-first-plugin.md) |
+| Run CDT on your own infrastructure | **Self-hoster** | [Self-hosting guide](../deployment/self-hosting.md) — Docker image + compose, no build required |
+
+All three build on the same open foundation: the [`@collabdt/core`](https://github.com/CollabDigitalTwins/core)
+library and the published CDT Docker images. Merged core and plugin
+contributions ship to every CDT deployment with the next platform release.
+
 ## I have a question
 
 Before opening an issue, search [existing issues](https://github.com/CollabDigitalTwins/core/issues) — someone may have already asked. If you still need clarification:
