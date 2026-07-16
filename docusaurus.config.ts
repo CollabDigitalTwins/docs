@@ -10,7 +10,7 @@ const algoliaApiKey = process.env.ALGOLIA_SEARCH_API_KEY;
 const config: Config = {
   title: 'CDT Docs',
   tagline: 'Visit our guides, documents, and examples to integrate with Collab Digital Twins’ platform.',
-  favicon: 'img/cdt-logo-stroke.svg',
+  favicon: 'img/favicon.ico',
 
   headTags: [
     {
