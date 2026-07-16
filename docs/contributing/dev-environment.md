@@ -1,100 +1,91 @@
 ---
 title: Dev Environment Setup
-description: Set up a local development environment for contributing to CDT — toolchain, services, and editor configuration.
+description: Set up a local development environment for contributing to @collabdt/core — the open-source heart of CDT.
 sidebar_position: 2
 ---
 
 # Dev Environment Setup
 
-This page covers what you need on your machine to develop CDT itself. If you only want to *use* CDT or self-host it, see the user [Installation](../getting-started/installation.mdx) guide instead.
+This page covers what you need on your machine to contribute to
+[**`@collabdt/core`**](https://github.com/CollabDigitalTwins/core) — the
+open-source library that powers CDT's viewers, UI components, hooks, and plugin
+SDK. If you only want to *use* CDT or self-host it, see the
+[Installation](../getting-started/installation.mdx) and
+[Self-hosting](../deployment/self-hosting.md) guides instead.
+
+:::info How CDT is structured
+The **CDT platform** (the deployed application) is maintained by the CDT team
+and distributed as a Docker image for self-hosting. The open-source surface you
+contribute to is **`@collabdt/core`**: the viewers, components, and plugin
+system the platform is built from. Your merged core contributions ship to every
+CDT deployment with the next platform release.
+:::
 
 ## Toolchain
 
 | Tool | Version | Notes |
 |------|---------|-------|
-| **Node.js** | 18.0+ (LTS) | Use `nvm` for easy version management |
-| **Yarn** | 1.x classic | The repo's lockfile is `yarn.lock` |
-| **Git** | any recent | Required to clone and push branches |
-| **Docker Desktop** or **Engine + Compose** | 24.0+ | Runs PostgreSQL, MinIO, Martin |
-| **VS Code** | latest | Recommended editor — repo has shared settings |
+| **Node.js** | 22.2.0 | the repo ships an `.nvmrc` — `nvm use` picks it up |
+| **Yarn** | 1.x classic | the repo's lockfile is `yarn.lock` |
+| **Git** | any recent | required to clone and push branches |
+| **VS Code** | latest | recommended editor |
 
-For the full prerequisite versions and platform notes, see [Installation](../getting-started/installation.mdx#prerequisites).
+No database or Docker setup is needed to develop core — it's a library.
 
 ## Initial setup
 
 ```bash
-git clone https://github.com/CollabDigitalTwins/core.git
+git clone https://github.com/<your-fork>/core.git
 cd core
-yarn install
-cp .env.example .env
+yarn install     # installs tsup + build deps (takes a few minutes the first time)
 ```
 
-Open `.env` and fill in at least the required keys — see the [Environment variables reference](../getting-started/environment-variables.mdx).
-
-## Local services
-
-The fastest path is to run PostgreSQL, MinIO, and Martin with Docker Compose:
-
-```bash
-docker compose up -d postgres minio martin
-npx prisma migrate dev   # apply schema to a fresh database
-yarn dev
-```
-
-The application is available at `http://localhost:3000`.
-
-## Recommended VS Code extensions
-
-The repository ships a `.vscode/extensions.json` with the extensions the team relies on:
-
-- **ESLint** — surfaces lint errors as you type
-- **Prettier** — autoformat on save
-- **Prisma** — schema syntax and autocomplete
-- **Tailwind CSS IntelliSense** — class name completion
-- **GitLens** — inline blame and history
-
-Open the Command Palette → *Show Recommended Extensions* to install them in one click.
-
-## Editor configuration
-
-The repo includes `.editorconfig`, `.prettierrc`, and `eslint.config.mjs`. Enable **format on save** so your changes always match the project style. If you need to format from the command line:
-
-```bash
-yarn lint        # ESLint
-yarn format      # Prettier
-```
-
-## Useful commands
+## Build, test, lint
 
 | Command | What it does |
 |---------|--------------|
-| `yarn dev` | Run the dev server with Turbopack (hot reload) |
-| `yarn build` | Production build — useful before opening a PR |
-| `yarn lint` | Run ESLint over the codebase |
-| `yarn test` | Run the unit and integration test suites |
-| `npx prisma studio` | Browse and edit database records in a local UI |
-| `npx prisma migrate dev` | Apply pending migrations to your local database |
-| `docker compose logs -f cdt` | Tail logs from the application container |
+| `yarn build` | full library build — tsup (per-file ESM), CSS copy, type declarations |
+| `yarn dev` | watch mode: rebuilds `dist/` on every change |
+| `yarn test:unit` | Vitest unit tests (watch mode: `yarn test:unit:watch`) |
+| `yarn lint` | ESLint over `src/` |
 
-## Running the test suite
+Run all three (`build`, `test:unit`, `lint`) before opening a PR — CI checks the same.
 
-CDT uses Vitest for unit tests and Playwright for end-to-end. Both run via:
+## Seeing your changes running
 
-```bash
-yarn test          # all tests
-yarn test:unit     # unit only
-yarn test:e2e      # Playwright
-```
+`@collabdt/core` is a library, so day-to-day you validate changes with the unit
+test suite (Vitest covers the viewers, plugin host, and UI logic — see
+[TESTING.md](https://github.com/CollabDigitalTwins/core/blob/dev/TESTING.md)).
 
-Playwright requires browsers to be installed once with `npx playwright install`.
+To see a change running inside the full platform:
 
-## Troubleshooting setup
+- **During review** — maintainers exercise every core PR inside the platform
+  before merging, and will share screenshots/feedback on visual changes.
+- **Self-hosters** — platform releases pick up the new core version; watch the
+  [changelog](../changelog.md) for the release that includes your change.
+- A standalone **dev harness** (a runnable sandbox app inside the core repo) is
+  on the roadmap to close this gap — track progress in the repo's issues.
 
-For common installation failures (port conflicts, Prisma errors, missing modules), see the [Troubleshooting page](../getting-started/troubleshooting.mdx).
+## Contribution flow
+
+1. Fork [CollabDigitalTwins/core](https://github.com/CollabDigitalTwins/core) and clone your fork.
+2. Branch off **`dev`** (the integration branch).
+3. Make your change; run `yarn lint` and `yarn test:unit`.
+4. Commit using [Conventional Commits](./git-workflow.md#commit-message-convention) and open a PR **against `dev`**.
+5. On your first PR you'll be asked to accept the Contributor License Agreement (CLA).
+
+Full details: [Git Workflow](./git-workflow.md) and the repo's
+[CONTRIBUTING.md](https://github.com/CollabDigitalTwins/core/blob/dev/CONTRIBUTING.md).
+
+## Building a plugin instead?
+
+If your goal is to *extend* CDT rather than change its internals, start with the
+[Plugins overview](../plugins/overview.md) — plugins build against the plugin
+SDK and don't require platform internals knowledge.
 
 ## Related
 
 - [Git Workflow](./git-workflow.md)
-- [Installation](../getting-started/installation.mdx)
-- [Environment variables](../getting-started/environment-variables.mdx)
+- [Plugins overview](../plugins/overview.md)
+- [Self-hosting](../deployment/self-hosting.md)
 - [Architecture Overview](../architecture/overview.mdx)
