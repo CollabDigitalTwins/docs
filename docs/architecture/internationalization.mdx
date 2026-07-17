@@ -12,7 +12,7 @@ CDT supports multiple interface languages using **next-intl**. The current basel
 
 ## How It Works
 
-UI strings are stored in locale message files (e.g. `messages/en.json`) instead of being hardcoded in components. Components read translated strings at runtime through `next-intl` hooks. Locale-aware routing resolves the active language from the URL prefix. Numbers and dates use locale-aware formatters so language-specific conventions are applied automatically.
+UI strings are stored in locale message files (e.g. `en.json`) instead of being hardcoded in components. Components read translated strings at runtime through `next-intl` hooks, with **English as the fallback locale**. Numbers and dates use locale-aware formatters so language-specific conventions are applied automatically.
 
 This keeps presentation text separate from business logic and makes translation updates mostly a content change rather than a code change.
 
@@ -20,11 +20,26 @@ This keeps presentation text separate from business logic and makes translation 
 
 ---
 
+## Message Catalogs
+
+`@collabdt/core` ships one message catalog per locale under `src/core/i18n/messages/` (`en.json`, `fr.json`, `es.json`), exported together as `coreMessages` from `@collabdt/core/messages`:
+
+```ts
+import { coreMessages } from '@collabdt/core/messages';
+// { en: { ... }, fr: { ... }, es: { ... } }
+```
+
+English is the source of truth and the universal fallback: `en.json` defines the full key set, and any key a locale hasn't translated yet falls back to English rather than crashing. So `fr.json` and `es.json` must mirror `en.json` exactly — same namespaces, same keys.
+
+To translate or fix a string, edit the relevant catalog in `src/core/i18n/messages/` and republish `@collabdt/core`.
+
+---
+
 ## Basic Usage
 
 ```tsx
 // Without i18n — avoid this
-export default function HomePage() {
+export default function Welcome() {
   return <h1>Hello World</h1>;
 }
 ```
@@ -33,20 +48,20 @@ export default function HomePage() {
 // With next-intl
 import { useTranslations } from 'next-intl';
 
-export default function HomePage() {
-  const t = useTranslations();
-  return <h1>{t('HomePage.greeting')}</h1>;
+export default function Welcome() {
+  const t = useTranslations('Welcome');
+  return <h1>{t('greeting')}</h1>;
 }
 ```
 
-Message files live in `messages/`:
+Message files are keyed by namespace:
 
 ```json
-// messages/en.json
-{ "HomePage": { "greeting": "Hello" } }
+// en.json
+{ "Welcome": { "greeting": "Hello" } }
 
-// messages/fr.json
-{ "HomePage": { "greeting": "Bonjour" } }
+// fr.json
+{ "Welcome": { "greeting": "Bonjour" } }
 ```
 
 > When designing layouts, leave extra space for French — text is typically 15–30% longer than English.
@@ -59,13 +74,13 @@ Use the **component name** as the namespace:
 
 ```json
 {
-  "About": { "title": "About us" },
-  "HomePage": { "submit": "Submit", "cancel": "Cancel" }
+  "Signin": { "title": "Login to your account" },
+  "ConfirmDialog": { "delete": "Delete", "cancel": "Cancel" }
 }
 ```
 
 ```tsx
-const t = useTranslations('About');
+const t = useTranslations('Signin');
 return <h1>{t('title')}</h1>;
 ```
 
@@ -154,10 +169,62 @@ function EventDate({ date }: { date: Date }) {
 
 ## Adding a New Language
 
-1. Add a new message file to `messages/` (e.g. `messages/es.json`).
-2. Register the locale in the i18n routing configuration.
-3. Translate all keys from `en.json`.
-4. Verify layouts with the translated text — some languages need more space.
+The steps below add **Portuguese** to `@collabdt/core`. Locale codes are capitalized in the `Language` enum (`Pt`) and lowercase as catalog keys and filenames (`pt`).
+
+### 1. Add the core catalog
+
+Copy `src/core/i18n/messages/en.json` to `src/core/i18n/messages/pt.json` and translate every value. Keep the keys identical to `en.json` — an untranslated key falls back to English at runtime, and a missing key degrades to a visible key name rather than crashing.
+
+### 2. Register it in `coreMessages`
+
+```ts
+// src/core/i18n/index.ts
+import en from './messages/en.json'
+import fr from './messages/fr.json'
+import es from './messages/es.json'
+import pt from './messages/pt.json' // new
+
+export const coreMessages: Record<string, Record<string, unknown>> = { en, fr, es, pt }
+```
+
+### 3. Add the locale to the `Language` enum
+
+```ts
+// src/core/types/dbTypes.ts
+export enum Language { En = 'En', Fr = 'Fr', Es = 'Es', Pt = 'Pt' }
+```
+
+### 4. Offer it in the language switcher
+
+`LanguageSwitch` renders one dropdown entry per known language. Add Portuguese to its option list and label union:
+
+```tsx
+// src/core/components/LanguageSwitch.tsx
+const LANGUAGE_OPTIONS: { lang: Language; labelKey: 'english' | 'french' | 'spanish' | 'portuguese' }[] = [
+  { lang: Language.En, labelKey: 'english' },
+  { lang: Language.Fr, labelKey: 'french' },
+  { lang: Language.Es, labelKey: 'spanish' },
+  { lang: Language.Pt, labelKey: 'portuguese' }, // new
+]
+```
+
+### 5. Add the language-name labels
+
+The switcher label comes from the `LanguageSwitch` namespace, so add a `portuguese` key in **every** catalog, translated into that language:
+
+```json
+// LanguageSwitch namespace, per file
+"portuguese": "Portuguese"  // en.json
+"portuguese": "Portugais"   // fr.json
+"portuguese": "Portugués"   // es.json
+"portuguese": "Português"   // pt.json
+```
+
+> Language names also appear in the `OrganizationConfig` namespace (`langEnglish`, `langFrench`, `langSpanish`) for instances that let admins choose enabled languages. Add a `langPortuguese` there too if you use that flow.
+
+### 6. Publish and enable
+
+Rebuild and publish `@collabdt/core`. Verify layouts with the translated text — some languages need more space.
 
 ---
 
