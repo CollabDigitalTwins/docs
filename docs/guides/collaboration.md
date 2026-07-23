@@ -44,6 +44,30 @@ You can also use the **Add feature** toolbar button inside the BIM viewer to add
 
 **Result:** the comment is anchored to the element and visible to anyone with access to the building.
 
+## Place, reply to, and edit comments
+
+When you start writing a new comment, the panel prompts you to click the **+** to place it. After you click **+**, a message confirms that you can double-click in the viewer to drop the comment at a location.
+
+Comments support lightweight, single-level threads. In the **Comments** sidebar each comment shows its author, relative time, and full text once. Replies are shown as a distinct, indented thread beneath the comment — expand or collapse them with the reply count toggle. This keeps a comment and its discussion visually separate rather than repeating the same text.
+
+- **Reply:** use the reply action on a comment. Replies appear in the nested thread under the original comment.
+- **Edit:** the author can edit their own comment text with the pencil action. Edited comments show an "Edited" badge.
+- **Delete:** the author can remove their own comment.
+
+## Interacting with comment markers in the viewer
+
+Comment markers on the map and in the BIM scene share the same interactions:
+
+- **Open:** click a marker's avatar to open its card.
+- **Actions on the card:** the card has a **close** button, and — mirroring the sidebar — **reply**, **edit**, and **delete** actions (edit and delete are limited to the comment's author). In the BIM viewer, reply and edit open the comment's editor in the **Comments** sidebar so you have room to type; delete and close act in place.
+- **Zoom to a comment:** **double-click** a marker — or a comment in the sidebar — to fly the camera to it. The focused comment is outlined with a thicker highlight ring so it is easy to spot. Double-clicking again re-frames it.
+
+Markers use a thin ring by default, a highlight ring when hovered or selected, and a thicker ring when focused, so the current state is always clear.
+
+## Grouped (clustered) comments
+
+When several comments overlap, they collapse into a single numbered circle. **Hover** the circle and the members animate outward into a fan so you can see and click each one; move the mouse away and they animate back into the cluster. Clicking a member opens that comment and zooms to it. This keeps busy maps and dense BIM scenes readable. The BIM clusters use the same colour scheme as the map clusters. On the map, clicking a cluster also zooms in to separate the comments.
+
 ## Raise a BCF topic
 
 **Goal:** open a coordination issue with a specific viewpoint.
