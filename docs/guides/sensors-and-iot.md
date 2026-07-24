@@ -60,6 +60,18 @@ Sensor stations with geographic coordinates appear as markers on the map viewer.
 
 The platform supports chart-based dashboards for portfolio-level analysis: energy consumption across all buildings in a Site, indoor air quality trends over a week, occupancy patterns by floor.
 
+### Timezone, time ranges, and the expanded view
+
+Every sensor card and chart renders times in a **display timezone**. By default this is derived from the current building's location (falling back to a sensor's coordinates, then to your browser's timezone), so readings show in the local time of where the sensor sits. The zone is a session preference: it is not persisted and resets on reload.
+
+Open a sensor's **expanded view** with the expand tool on the card's action row (available in the sidebar and the map popup). The expanded dialog adds:
+
+- **Time-range presets**: All, Last day, Last hour, plus a **Custom** range you set by dragging the navigator brush under the chart.
+- A **timezone selector** that changes the display zone for every sensor time across the app (charts and the "Created" timestamps).
+- A **metadata panel** that, when the source is an OGC SensorThings Datastream, lists the observation type, observed property and its definition link, the unit and unit definition, the phenomenon-time interval, the observation count, and the generator properties.
+
+Hovering the chart shows a tooltip with both the reading's **value** and its **time** in the selected zone.
+
 ## Architecture in brief
 
 | Layer | Notes |
