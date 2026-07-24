@@ -2,7 +2,7 @@
 sidebar_position: 9
 displayed_sidebar: developerSidebar
 title: Data Model
-description: Core domain types used across the CDT platform — buildings, sites, infrastructure, sensors, files, users, organizations, and their enumerations.
+description: Core domain types used across the CDT platform: buildings, sites, infrastructure, sensors, files, users, organizations, and their enumerations.
 category: architecture
 status: draft
 last_updated: 2026-04-23
@@ -80,9 +80,9 @@ Key fields:
 | `typeId` | `number?` | References `SensorType` |
 | `viewer` | `ViewerNames` | Which viewer context this sensor appears in |
 | `visible` | `boolean` | Visibility toggle |
-| `data` | `string` | Raw sensor data payload |
-| `dataFormat` | `SensorDataFormat` | `Csv` or `Json` |
-| `updateFrequency` | `number` | Polling interval in seconds |
+| `data` | `string` | Data source URL. Fetched verbatim, no prefix is added |
+| `dataFormat` | `SensorDataFormat` | `Csv` (header-less `time,value`) or `Json` (auto-detects OGC SensorThings: STA Datastream, `dataArray`, or a single reading) |
+| `updateFrequency` | `number` | Polling interval in milliseconds. The chart floors this at 1000ms (1s) |
 | `maxThreshold` / `minThreshold` | `number?` | Alert thresholds |
 | `tags` | `string[]` | Grouping tags |
 
@@ -212,8 +212,8 @@ Both share the same phase vocabulary:
 
 ## Related
 
-- [IFC Infrastructure Types](../concepts/ifc-infrastructure-types.mdx) — full IFC enum reference
-- [State Management](./state-management.mdx) — providers that hold these types in memory
-- [Hooks — Buildings](../hooks/buildings.md)
-- [Hooks — Sites](../hooks/sites.md)
-- [Hooks — Sensors](../hooks/sensors.md)
+- [IFC Infrastructure Types](../concepts/ifc-infrastructure-types.mdx): full IFC enum reference
+- [State Management](./state-management.mdx): providers that hold these types in memory
+- [Hooks: Buildings](../hooks/buildings.md)
+- [Hooks: Sites](../hooks/sites.md)
+- [Hooks: Sensors](../hooks/sensors.md)
