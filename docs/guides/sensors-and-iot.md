@@ -6,7 +6,7 @@ description: Connect telemetry to buildings and BIM elements, and visualize live
 
 # Sensors & IoT Data
 
-CDT is designed to move beyond static models toward a true digital twin — a physical environment and a digital representation connected by a live data feedback loop. Sensor and IoT integration is how that loop is realized.
+CDT is designed to move beyond static models toward a true digital twin: a physical environment and a digital representation connected by a live data feedback loop. Sensor and IoT integration is how that loop is realized.
 
 ## Goal
 
@@ -20,19 +20,37 @@ Understand how CDT links telemetry to Buildings and BIM elements and visualizes 
 
 CDT is built to ingest telemetry from:
 
-- **Building Automation Systems (BAS)** — HVAC, lighting controls, energy meters
-- **Environmental sensors** — temperature, humidity, CO₂, air quality
-- **Occupancy sensors** — presence detection, people counting
-- **Smart meters** — electricity, gas, water consumption
-- **Weather stations** — outdoor temperature, solar radiation, wind
+- **Building Automation Systems (BAS)**: HVAC, lighting controls, energy meters
+- **Environmental sensors**: temperature, humidity, CO₂, air quality
+- **Occupancy sensors**: presence detection, people counting
+- **Smart meters**: electricity, gas, water consumption
+- **Weather stations**: outdoor temperature, solar radiation, wind
 
 Once connected, telemetry is linked to specific building elements (an `IfcSpace` for a room sensor, an `IfcSystem` for an HVAC network) using the element's `GlobalId`.
+
+## Connecting a data source
+
+When you add a sensor, the **Data URL** field is fetched verbatim (no prefix is added), so paste the full URL you want polled. For example, the `sensors-api` synthetic service exposes URLs like `https://sensors-api-tau.vercel.app/api/sensor/temperature`.
+
+**Data Format** controls how the response is parsed:
+
+- **Csv**: header-less `time,value` rows.
+- **Json**: auto-detects the response shape and reads OGC SensorThings data:
+  - an STA Datastream (`?format=sta`)
+  - a compact `dataArray` (`?format=dataarray`)
+  - a single `reading` (`?format=reading`)
+
+Recommended: use `?format=sta` when the source supports it. It's the only windowed format that carries a unit (from `unitOfMeasurement.symbol`). `dataarray` also returns history but no unit, and `reading` returns only the current value with no history.
+
+When the source provides a unit, it's shown next to the value in the chart.
+
+The chart polls the Data URL at the sensor's **Update Frequency** (floored at 1 second), so both the history and the current value stay live without a page refresh.
 
 ## Visualize sensor data
 
 ### In the BIM Viewer
 
-When sensor data is linked to a model element, the properties panel shows the current reading next to the element's IFC attributes. You can colour elements by sensor value — for example, rooms by current temperature to identify hot or cold zones.
+When sensor data is linked to a model element, the properties panel shows the current reading next to the element's IFC attributes. You can colour elements by sensor value, for example rooms by current temperature to identify hot or cold zones.
 
 ### On the Map
 
@@ -46,7 +64,7 @@ The platform supports chart-based dashboards for portfolio-level analysis: energ
 
 | Layer | Notes |
 |-------|-------|
-| **Time-Series Database (TSDB)** | High-frequency readings live separate from PostgreSQL — optimized for high write throughput, range queries, and retention policies. |
+| **Time-Series Database (TSDB)** | High-frequency readings live separate from PostgreSQL: optimized for high write throughput, range queries, and retention policies. |
 | **Real-time updates** | Frontend polls at a configurable interval and uses SWR (stale-while-revalidate) caching, so the UI always shows the latest value without hammering the database. |
 | **Linkage** | Sensors carry a `GlobalId` reference into the linked IFC element, so the same data appears in BIM, map, and dashboard contexts. |
 
@@ -54,9 +72,9 @@ The platform supports chart-based dashboards for portfolio-level analysis: energ
 
 The platform's sensor integration was first developed for a university digital-campus deployment that connected real-time data to a federated BIM model of 50+ buildings:
 
-- **Energy consumption monitoring** — electricity kWh/ft² per building, updated live.
-- **Building occupancy** — sensor estimates visualized on floor plans.
-- **Parking availability** — real-time parking lot status across campus.
+- **Energy consumption monitoring**: electricity kWh/ft² per building, updated live.
+- **Building occupancy**: sensor estimates visualized on floor plans.
+- **Parking availability**: real-time parking lot status across campus.
 
 This work established the data model and visualization patterns now used in CDT's sensor integration layer.
 
