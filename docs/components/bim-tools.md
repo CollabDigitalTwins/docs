@@ -8,7 +8,7 @@ last_updated: 2026-04-23
 
 # BIM Viewer Tools
 
-The BIM viewer toolbar is built from a list of `Tool` objects defined in `bimToolbarTools()`. Each tool is a React component rendered in a `ToolbarSubmenu` and activated/deactivated via `ToolsContext`.
+The BIM viewer toolbar is built from a list of `Tool` objects defined in `useBimToolbarTools()`. Each tool is a React component rendered in a `ToolbarSubmenu` and activated/deactivated via `ToolsContext`.
 
 Source: `@collabdt/core/components/viewers/bim/src/tools/`
 
