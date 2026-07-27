@@ -45,6 +45,8 @@ Menu items are defined as three static arrays (`viewerItems`, `datasetItems`, `m
 
 Viewer availability is controlled by `appContent` on the Organization model. If `appContent` is empty, all viewers are shown; otherwise the list is filtered to only what the organization has enabled. This filtering happens at the item level via `.filter(item => appContent.includes(item.id))` so the sidebar automatically reflects each organization's configuration without any additional logic.
 
+The list itself comes from `resolveAppContent(organization)` in `src/core/utils/appContent.ts`, which the sidebar shares with any other entry point into a viewer, notably the map building popover's tool row. Keeping one implementation matters because a tool that navigates to a viewer the sidebar hides is a dead end: the user arrives somewhere they cannot navigate back to. `resolveAppContent` always includes `map` and treats an unconfigured `appContent` as "everything", so an organization that never set the field keeps the full app.
+
 Role-based visibility is handled via the `accessibleTo` field on `MenuItem` and the `canRenderItem` callback, which checks the current user's role against the allowed roles for each item. This is intentionally separate from CASL — it controls whether a nav item is visible at all, while CASL controls what actions are available once inside a viewer.
 
 The `handleChangeViewer` function is exported so it can be called from other parts of the app (e.g. map interactions, HeaderButtons) that need to trigger a viewer change without going through the sidebar directly. It always resets selected item, site, file, and view state to prevent stale detail views carrying over between viewers.

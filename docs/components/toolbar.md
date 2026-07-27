@@ -29,8 +29,8 @@ import { ViewerNames } from '@collabdt/core/types';
 
 - Renders nothing if the `viewer` value doesn't match a known viewer type or if the corresponding tool set is empty.
 - Tools are loaded dynamically based on the viewer:
-  - `ViewerNames.map` → `mapToolbarTools()`
-  - `ViewerNames.bim` → `bimToolbarTools()`
+  - `ViewerNames.map` → `useMapToolbarTools()`
+  - `ViewerNames.bim` → `useBimToolbarTools()`
   - `ViewerNames.pointcloud` → `pointcloudToolbarTools()`
 - The toolbar is positioned fixed at the bottom center of the screen with `pointer-events-none` on the container (individual buttons handle their own pointer events).
 - Wraps all toolbar buttons in a `SubmenuProvider` to support tools with nested submenus.
@@ -52,6 +52,6 @@ No CASL permission checks in this component.
 - [ToolbarButton](/docs/components/toolbar) — Renders individual tool buttons
 - [Menubar](https://ui.shadcn.com/docs/components/radix/menubar) — Container component for the toolbar
 - [SubmenuProvider](/docs/components/toolbar) — Context provider for submenu state
-- [mapToolbarTools](/docs/components/toolbar) — Tool definitions for the map viewer
-- [bimToolbarTools](/docs/components/toolbar) — Tool definitions for the BIM viewer
+- [useMapToolbarTools](/docs/components/toolbar) — Tool definitions for the map viewer
+- [useBimToolbarTools](/docs/components/toolbar) — Tool definitions for the BIM viewer
 - [pointcloudToolbarTools](/docs/components/toolbar) — Tool definitions for the point cloud viewer
