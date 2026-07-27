@@ -72,6 +72,31 @@ Open a sensor's **expanded view** with the expand tool on the card's action row 
 
 Hovering the chart shows a tooltip with both the reading's **value** and its **time** in the selected zone.
 
+### Value colours, the legend, and marker halos
+
+Each **sensor type** carries a value range (`minValue`, `maxValue`) and a three-stop colour ramp (`minColour`, `midColour`, `maxColour`). Those settings drive a single value-to-colour mapping used everywhere a value is shown, so the same colour always means the same reading:
+
+- **The chart fill** is a gradient stretched over the type's range, not just over the plot box. A colour partway up the area corresponds to an actual value, and readings beyond the configured range clamp to the end colours.
+- **Marker halos.** Focus a sensor (click its marker, or its row in the sidebar) and every sensor of that same type gets a halo coloured by its own current reading. Scanning the model or map then shows which sensors of that type are running high and which are low, without opening any of them.
+- **The focused sensor** is marked by a *thicker* ring rather than a different colour, since colour is carrying the value.
+- **The legend** appears bottom-left in the BIM and map viewers, in the same card stack as the layers card. It shows the focused sensor's type, its current reading, the colour ramp as a bar, the low/middle/high values of the range, and a caret marking where the current reading falls on the ramp.
+- **Sidebar rows.** In the sensors sidebar, each row's icon is ringed in the colour of that sensor's current reading, and the reading itself is printed under the name. Every listed sensor gets one, not just the focused type, so the panel doubles as an at-a-glance status list. Colours are resolved per type, so a reading always reads high or low against its own type's range and is not comparable across different types.
+
+If a sensor type has no colours configured, or its `minValue` and `maxValue` are equal, there is nothing meaningful to map: no legend appears, no halos are drawn, and the chart keeps its plain appearance.
+
+### Comparing sensors of the same type
+
+The expanded view has a scope control beside the time-range presets. It scopes both charts below it at once:
+
+- **This sensor** shows the single-sensor area chart described above.
+- **All of type** shows every sensor of the same type in the same viewer.
+- **By tag** narrows that set to one tag, so you can compare only the sensors on a floor, a zone, or an equipment group.
+
+When more than one sensor is in scope you get two charts:
+
+- **Over time**, a multi-line chart. The focused sensor is the only coloured line; its siblings are recessive grey hairlines. Identity comes from the sensor list beside the chart rather than from colour, which keeps it readable whether a type has three sensors or thirty. Hovering a name lifts that line, and clicking a line or a name focuses that sensor everywhere: the legend, the marker halos, and both charts follow. One tooltip lists every sensor's value at the moment under the pointer.
+- **Current values**, a horizontal bar chart sorted from high to low, one bar per sensor. Each bar is filled with the same ramp colour as that sensor's halo in the viewer, so a bar can be matched to a marker in the scene. Clicking a bar focuses that sensor.
+
 ## Architecture in brief
 
 | Layer | Notes |
