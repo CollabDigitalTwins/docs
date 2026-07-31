@@ -75,12 +75,36 @@ The conversion happens once. Subsequent loads stream the cached `.frag` and are 
 
 **Result:** the model is sliced at your chosen plane and the interior is visible.
 
-## Browse the spatial hierarchy
+## Browse and filter the model
 
-**Goal:** navigate to a specific element via the IFC tree rather than hunting in 3D.
+**Goal:** navigate to elements via a list rather than hunting in 3D, and control what is visible.
 
-1. Open the **Layers** tab in the left panel.
-2. The IFC spatial tree expands as:
+Open the **Layers** tab in the left panel. It holds two collapsible groups, each with a switcher between two views:
+
+| Group | Views | What it lists |
+|-------|-------|---------------|
+| **Drawings** | Floorplans / Elevations | Generated 2D views of the model |
+| **Classifier** | Spatial / IFC Classes | The IFC spatial tree, or every IFC class in the model |
+
+Collapsing one group gives its height to the other, and the divider between them can be dragged.
+
+### Drawings
+
+Selecting a storey generates its floorplan and frames it in the view. Below the drawing, a **Layers** list gives every IFC class in the plan its own visibility switch and colour picker, so you can mute furniture, recolour the structure, and so on.
+
+#### Rooms
+
+Rooms (`IFCSPACE`) get their own **Rooms** layer, drawn the way most authoring software does: a translucent light-blue fill over the room's footprint, an X across it, and the room's name at its centre.
+
+The layer starts **off**, because room fills sit over the linework underneath. Switch it on from the Layers list.
+
+Picking a colour for the layer replaces the light blue and **hides the X** — the cross reads as "unstyled room", so it stops making sense once a room carries a deliberate colour. The name tags stay either way, since they are information rather than styling.
+
+The fill follows the room's real footprint, so an L-shaped room is drawn as an L rather than as its bounding rectangle.
+
+### Spatial
+
+The spatial view is the IFC containment hierarchy, rooted at each model's building:
 
 <BrowserOnly>
   {() => {
@@ -88,19 +112,13 @@ The conversion happens once. Subsequent loads stream the cached `.frag` and are 
     return (
       <HierarchyTree
         data={{
-          label: 'IfcProject',
+          label: 'IfcBuilding',
           children: [{
-            label: 'IfcSite',
-            children: [{
-              label: 'IfcBuilding',
-              children: [{
-                label: 'IfcBuildingStorey',
-                children: [
-                  { label: 'IfcSpace' },
-                  { label: 'IfcWall / IfcSlab / …' },
-                ],
-              }],
-            }],
+            label: 'IfcBuildingStorey',
+            children: [
+              { label: 'IfcSpace' },
+              { label: 'IfcWall / IfcSlab / …' },
+            ],
           }],
         }}
       />
@@ -108,11 +126,43 @@ The conversion happens once. Subsequent loads stream the cached `.frag` and are 
   }}
 </BrowserOnly>
 
-3. Click any node — the corresponding geometry highlights in the 3D view.
+Rows show each element's **name** (`Basic Wall:Generic 200mm`) with its IFC class beside it. Every loaded model contributes its own building, so a federated set appears as sibling branches in one tree.
 
-This is the fastest way to find a specific room, storey, or system in a large federated model.
+### IFC Classes
 
-**Result:** the selected element is highlighted and the camera centres on it.
+The classes view groups the same elements by what they *are* rather than where they sit — one row per IFC class (`IFCWALL`, `IFCSLAB`, `IFCDOOR`, …) with the number of elements in it. Class names are shown exactly as the IFC defines them, in every language. Only classes that have geometry are listed.
+
+:::note Classes hidden by default
+
+Three classes start hidden, because their geometry envelops the building and would obscure everything behind it:
+
+| Class | Why |
+|-------|-----|
+| `IFCGEOGRAPHICELEMENT` | Topography in IFC4 |
+| `IFCSITE` | Topography in IFC2x3, where the terrain hangs off the site |
+| `IFCSPACE` | Room volumes |
+
+Which class topography lands in depends on the schema version and the authoring software's IFC export mapping — some export topography geometry as `IfcSite`, others as `IfcGeographicElement` — so both cases are covered. They are still listed — switch one on to show it. The choice sticks for the rest of the session; a model loaded afterwards comes in with its own topography and spaces hidden.
+
+`IFCBUILDINGELEMENTPROXY` is **not** hidden by default. Some IFC2x3 exports put terrain there too, but it is also the catch-all for any element the authoring software has no specific IFC class for, so hiding it would take real building geometry with it. Switch it off manually if your export needs it.
+
+:::
+
+### Select, hide, isolate
+
+Every row in both views supports the same three actions:
+
+| Action | How | Effect |
+|--------|-----|--------|
+| **Select** | Click the row | Highlights the element(s) in 3D and opens the properties panel |
+| **Hide / show** | The row's switch | Toggles visibility of the row and everything under it |
+| **Isolate** | The crosshair button (appears on hover) | Hides everything else |
+
+These act across **all loaded models**, so isolating `IFCWALL` leaves only walls in a federated set. Use the eye button in the view's toolbar — or **Selection → Show all** in the viewer toolbar — to bring everything back.
+
+The search box at the top of the tab filters both groups at once and opens the branches leading to each match.
+
+**Result:** you can find any element by location or by class, and reduce the scene to just what you are working on.
 
 ## Validate against an IDS file
 
