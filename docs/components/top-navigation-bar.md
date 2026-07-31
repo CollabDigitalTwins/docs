@@ -29,8 +29,8 @@ This component accepts no props. It reads viewer state from `MenusContext` and s
   - `ViewerNames.map` → renders `Geocoder`
   - `ViewerNames.bim` → renders `BIMSearchTool`
   - `ViewerNames.pointcloud` → renders `PCSearchTool`
-- **Sidebar toggle**: A menu button appears when the current viewer is BIM, point cloud, or map. Clicking it calls `toggleInfoSidebar()`.
-- **Auto-hide**: When `openInfo` is true and the viewer needs an info sidebar, the entire NavigationBar returns `null` to avoid visual overlap.
+- **Sidebar toggle**: A menu button appears when the current viewer is BIM, point cloud, or map. Clicking it calls `toggleInfoSidebar()`, which opens the [ViewerSidebar](./viewer-sidebar.md).
+- **Auto-hide**: When `openInfo` is true and the viewer needs a sidebar, the entire NavigationBar returns `null` to avoid visual overlap.
 - **Hover state**: The sidebar toggle button transitions from 70% to 100% opacity on hover.
 
 ## Design Decisions
