@@ -157,12 +157,36 @@ Every row in both views supports the same three actions:
 | **Select** | Click the row | Highlights the element(s) in 3D and opens the properties panel |
 | **Hide / show** | The row's switch | Toggles visibility of the row and everything under it |
 | **Isolate** | The crosshair button (appears on hover) | Hides everything else |
+| **Recolour / fade** | The small circle at the left of the row | Sets a colour and an opacity for the row and everything under it |
 
 These act across **all loaded models**, so isolating `IFCWALL` leaves only walls in a federated set. Use the eye button in the view's toolbar — or **Selection → Show all** in the viewer toolbar — to bring everything back.
 
 The search box at the top of the tab filters both groups at once and opens the branches leading to each match.
 
-**Result:** you can find any element by location or by class, and reduce the scene to just what you are working on.
+### Colour and opacity
+
+Every row carries a small circle at its left. It stays an empty outline until you use it, then fills with whatever colour and opacity you gave that row.
+
+Click it to open the picker: a colour well and an opacity slider. Both are optional and independent, so you can tint a class without fading it, or fade a storey while it keeps its own colours. **Reset** in the picker clears just that row.
+
+Colouring cascades. Tint a storey in the **Spatial** view and everything inside it takes the colour; a wall you had already coloured separately keeps its own, whichever order you set the two in. Setting only an opacity on that wall leaves it the storey's colour and fades it.
+
+The two views can name the same element, since `IFCWALL` and a storey overlap. Whichever view you touched most recently wins the overlap, and undoing that change hands the elements back to the other view.
+
+| Control | Where | Effect |
+|---------|-------|--------|
+| **Reset** | Inside a row's picker | Clears that row |
+| **Reset colours** | The brush button in the view's toolbar | Clears the whole view, leaving the other one alone |
+| **Undo** | `Ctrl+Z` (`Cmd+Z` on macOS) | Steps back one colour or opacity change |
+| **Redo** | `Ctrl+Y`, or `Ctrl+Shift+Z` | Puts the change you just undid back |
+
+Undo and redo cover colour and opacity only, not visibility or selection, and they work anywhere in the viewer rather than only while the Layers tab is open. Inside the search box `Ctrl+Z` edits the text as usual.
+
+A whole slider drag counts as one step, so undoing a fade takes one keystroke rather than one per tick, and redoing it lands where you let go. Making a new change after undoing drops the redo trail, as everywhere else.
+
+Colours last for the session. They are not saved with the model, and they are not shared with anyone else looking at it.
+
+**Result:** you can find any element by location or by class, reduce the scene to just what you are working on, and colour-code what is left.
 
 ## Validate against an IDS file
 
