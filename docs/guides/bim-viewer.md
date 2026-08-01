@@ -68,19 +68,44 @@ The conversion happens once. Subsequent loads stream the cached `.frag` and are 
 
 **Goal:** see inside the model with a clipping plane.
 
-1. Click **Clipping plane** in the toolbar.
-2. Click any face on the model — a section plane appears aligned with that face.
-3. Drag the plane handle to adjust depth.
-4. Click the toolbar icon again (or press **Esc**) to remove it.
+1. Click **Clipping plane** in the toolbar, then **Add clipping plane**.
+2. Double-click any face on the model — a section plane appears aligned with that face.
+3. Drag the arrow handle to adjust depth.
+4. Press **Enter** (or **Cancel add clipping plane**) to finish. The section stays and its arrow is still draggable.
+5. **Backspace** removes the plane under the cursor, **Esc** removes every plane, and **Ctrl+Z** undoes the last change.
 
 **Result:** the model is sliced at your chosen plane and the interior is visible.
 
-## Browse the spatial hierarchy
+## Browse and filter the model
 
-**Goal:** navigate to a specific element via the IFC tree rather than hunting in 3D.
+**Goal:** navigate to elements via a list rather than hunting in 3D, and control what is visible.
 
-1. Open the **Layers** tab in the left panel.
-2. The IFC spatial tree expands as:
+Open the **Layers** tab in the left panel. It holds two collapsible groups, each with a switcher between two views:
+
+| Group | Views | What it lists |
+|-------|-------|---------------|
+| **Drawings** | Floorplans / Elevations | Generated 2D views of the model |
+| **Classifier** | Spatial / IFC Classes | The IFC spatial tree, or every IFC class in the model |
+
+Collapsing one group gives its height to the other, and the divider between them can be dragged.
+
+### Drawings
+
+Selecting a storey generates its floorplan and frames it in the view. Below the drawing, a **Layers** list gives every IFC class in the plan its own visibility switch and colour picker, so you can mute furniture, recolour the structure, and so on.
+
+#### Rooms
+
+Rooms (`IFCSPACE`) get their own **Rooms** layer, drawn the way most authoring software does: a translucent light-blue fill over the room's footprint, an X across it, and the room's name at its centre.
+
+The layer starts **off**, because room fills sit over the linework underneath. Switch it on from the Layers list.
+
+Picking a colour for the layer replaces the light blue and **hides the X** — the cross reads as "unstyled room", so it stops making sense once a room carries a deliberate colour. The name tags stay either way, since they are information rather than styling.
+
+The fill follows the room's real footprint, so an L-shaped room is drawn as an L rather than as its bounding rectangle.
+
+### Spatial
+
+The spatial view is the IFC containment hierarchy, rooted at each model's building:
 
 <BrowserOnly>
   {() => {
@@ -88,19 +113,13 @@ The conversion happens once. Subsequent loads stream the cached `.frag` and are 
     return (
       <HierarchyTree
         data={{
-          label: 'IfcProject',
+          label: 'IfcBuilding',
           children: [{
-            label: 'IfcSite',
-            children: [{
-              label: 'IfcBuilding',
-              children: [{
-                label: 'IfcBuildingStorey',
-                children: [
-                  { label: 'IfcSpace' },
-                  { label: 'IfcWall / IfcSlab / …' },
-                ],
-              }],
-            }],
+            label: 'IfcBuildingStorey',
+            children: [
+              { label: 'IfcSpace' },
+              { label: 'IfcWall / IfcSlab / …' },
+            ],
           }],
         }}
       />
@@ -108,11 +127,67 @@ The conversion happens once. Subsequent loads stream the cached `.frag` and are 
   }}
 </BrowserOnly>
 
-3. Click any node — the corresponding geometry highlights in the 3D view.
+Rows show each element's **name** (`Basic Wall:Generic 200mm`) with its IFC class beside it. Every loaded model contributes its own building, so a federated set appears as sibling branches in one tree.
 
-This is the fastest way to find a specific room, storey, or system in a large federated model.
+### IFC Classes
 
-**Result:** the selected element is highlighted and the camera centres on it.
+The classes view groups the same elements by what they *are* rather than where they sit — one row per IFC class (`IFCWALL`, `IFCSLAB`, `IFCDOOR`, …) with the number of elements in it. Class names are shown exactly as the IFC defines them, in every language. Only classes that have geometry are listed.
+
+:::note Classes hidden by default
+
+Three classes start hidden, because their geometry envelops the building and would obscure everything behind it:
+
+| Class | Why |
+|-------|-----|
+| `IFCGEOGRAPHICELEMENT` | Topography in IFC4 |
+| `IFCSITE` | Topography in IFC2x3, where the terrain hangs off the site |
+| `IFCSPACE` | Room volumes |
+
+Which class topography lands in depends on the schema version and the authoring software's IFC export mapping — some export topography geometry as `IfcSite`, others as `IfcGeographicElement` — so both cases are covered. They are still listed — switch one on to show it. The choice sticks for the rest of the session; a model loaded afterwards comes in with its own topography and spaces hidden.
+
+`IFCBUILDINGELEMENTPROXY` is **not** hidden by default. Some IFC2x3 exports put terrain there too, but it is also the catch-all for any element the authoring software has no specific IFC class for, so hiding it would take real building geometry with it. Switch it off manually if your export needs it.
+
+:::
+
+### Select, hide, isolate
+
+Every row in both views supports the same three actions:
+
+| Action | How | Effect |
+|--------|-----|--------|
+| **Select** | Click the row | Highlights the element(s) in 3D and opens the properties panel |
+| **Hide / show** | The row's switch | Toggles visibility of the row and everything under it |
+| **Isolate** | The crosshair button (appears on hover) | Hides everything else |
+| **Recolour / fade** | The small circle at the left of the row | Sets a colour and an opacity for the row and everything under it |
+
+These act across **all loaded models**, so isolating `IFCWALL` leaves only walls in a federated set. Use the eye button in the view's toolbar — or **Selection → Show all** in the viewer toolbar — to bring everything back.
+
+The search box at the top of the tab filters both groups at once and opens the branches leading to each match.
+
+### Colour and opacity
+
+Every row carries a small circle at its left. It stays an empty outline until you use it, then fills with whatever colour and opacity you gave that row.
+
+Click it to open the picker: a colour well and an opacity slider. Both are optional and independent, so you can tint a class without fading it, or fade a storey while it keeps its own colours. **Reset** in the picker clears just that row.
+
+Colouring cascades. Tint a storey in the **Spatial** view and everything inside it takes the colour; a wall you had already coloured separately keeps its own, whichever order you set the two in. Setting only an opacity on that wall leaves it the storey's colour and fades it.
+
+The two views can name the same element, since `IFCWALL` and a storey overlap. Whichever view you touched most recently wins the overlap, and undoing that change hands the elements back to the other view.
+
+| Control | Where | Effect |
+|---------|-------|--------|
+| **Reset** | Inside a row's picker | Clears that row |
+| **Reset colours** | The brush button in the view's toolbar | Clears the whole view, leaving the other one alone |
+| **Undo** | `Ctrl+Z` (`Cmd+Z` on macOS) | Steps back one colour or opacity change |
+| **Redo** | `Ctrl+Y`, or `Ctrl+Shift+Z` | Puts the change you just undid back |
+
+Undo and redo cover colour and opacity only, not visibility or selection, and they work anywhere in the viewer rather than only while the Layers tab is open. Inside the search box `Ctrl+Z` edits the text as usual.
+
+A whole slider drag counts as one step, so undoing a fade takes one keystroke rather than one per tick, and redoing it lands where you let go. Making a new change after undoing drops the redo trail, as everywhere else.
+
+Colours last for the session. They are not saved with the model, and they are not shared with anyone else looking at it.
+
+**Result:** you can find any element by location or by class, reduce the scene to just what you are working on, and colour-code what is left.
 
 ## Validate against an IDS file
 
