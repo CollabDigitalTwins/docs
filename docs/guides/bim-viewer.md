@@ -68,10 +68,11 @@ The conversion happens once. Subsequent loads stream the cached `.frag` and are 
 
 **Goal:** see inside the model with a clipping plane.
 
-1. Click **Clipping plane** in the toolbar.
-2. Click any face on the model — a section plane appears aligned with that face.
-3. Drag the plane handle to adjust depth.
-4. Click the toolbar icon again (or press **Esc**) to remove it.
+1. Click **Clipping plane** in the toolbar, then **Add clipping plane**.
+2. Double-click any face on the model — a section plane appears aligned with that face.
+3. Drag the arrow handle to adjust depth.
+4. Press **Enter** (or **Cancel add clipping plane**) to finish. The section stays and its arrow is still draggable.
+5. **Backspace** removes the plane under the cursor, **Esc** removes every plane, and **Ctrl+Z** undoes the last change.
 
 **Result:** the model is sliced at your chosen plane and the interior is visible.
 

@@ -3,7 +3,7 @@ title: BIM Viewer Tools
 description: The toolbar tools available in the BIM viewer — clipping, measurement, inspection, model loading, and more.
 category: components
 status: draft
-last_updated: 2026-07-28
+last_updated: 2026-08-01
 ---
 
 # BIM Viewer Tools
@@ -29,17 +29,21 @@ Source: `@collabdt/core/components/viewers/bim/src/tools/`
 
 Adds section planes to the Three.js scene using `@thatopen/components-front`. Each plane is rendered with a `LineMaterial` outline.
 
+`ClippingTool` is the toolbar UI only. The planes themselves are owned by the `ClippingPlanes` component (`tools/ClippingTool/ClippingPlanes.ts`), which wires the `Clipper` and the cut style once per world and keeps an undo history of every plane change.
+
 ### Behaviour
 
 - Activates via `ToolsContext` dispatch `SET-TOOL` with `tool.id`.
-- Sets the viewer cursor to a crosshair while active.
-- On double-click, a clipping plane is added at the clicked point.
-- Keyboard shortcut clears all planes when active.
+- Sets the viewer cursor to a crosshair while active, and shows the instructions in a persistent toast.
+- On double-click, a clipping plane is added on the front-most face under the cursor. The pick is restricted to model geometry so helper meshes and already-sectioned geometry cannot be picked through.
+- **Enter** finishes and keeps the planes. **Escape** clears every plane and exits. **Backspace** or **Delete** removes the plane under the cursor.
+- Leaving the mode hides the translucent squares but keeps the arrow gizmos, so an existing section can still be dragged.
+- `CTRL+Z` / `CTRL+Y` step through adding, deleting and moving planes. The shortcut is bound in `BimViewer`, which routes it to whichever of the appearance and clipping histories changed last.
 - Deactivates when another tool is selected — planes persist until explicitly removed.
 
 ### Dependencies
 
-`@thatopen/components` (`OBC`), `@thatopen/components-front` (`OBF`), `three.js`
+`@thatopen/components` (`OBC`), `@thatopen/components-front` (`OBF`), `three.js`, `sonner`
 
 ---
 
