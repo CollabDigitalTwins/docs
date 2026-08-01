@@ -29,6 +29,7 @@ Start with [DataMenu](./data-menu.md) — it's the main shell for managing build
 - [Toolbar](./toolbar.md)
 - [UserDetails](./user-details.md)
 - [Viewer](./viewer.md)
+- [ViewerSidebar](./viewer-sidebar.md)
 
 ## Related
 
