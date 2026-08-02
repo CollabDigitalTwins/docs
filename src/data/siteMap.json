@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T01:25:19.686Z",
+  "generatedAt": "2026-08-02T00:39:17.064Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -373,6 +373,12 @@
               "id": "components/viewer",
               "title": "Viewer",
               "slug": "/docs/components/viewer",
+              "primary": null
+            },
+            {
+              "id": "components/viewer-sidebar",
+              "title": "ViewerSidebar",
+              "slug": "/docs/components/viewer-sidebar",
               "primary": null
             }
           ],
