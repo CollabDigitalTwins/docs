@@ -4,7 +4,7 @@ description: The three members of the PluginContext handed to every activate() f
 sidebar_position: 3
 category: plugins
 status: draft
-last_updated: 2026-04-24
+last_updated: 2026-08-06
 ---
 
 # PluginContext API
@@ -32,6 +32,6 @@ Org-level settings loaded from the database at startup. The shape is defined by 
 
 ## `ctx.register(key, item)`
 
-The only way to contribute UI or behaviour to the app. The `key` must be one of the 11 capability keys (see [All 11 capabilities](./all-capabilities.md)). If `key` is not declared in your manifest's `capabilities` array, this throws immediately — by design.
+The only way to contribute UI or behaviour to the app. The `key` must be one of the 6 capability keys (see [Capabilities](./all-capabilities.md)). If `key` is not declared in your manifest's `capabilities` array, this throws immediately — by design.
 
 The `item` shape is determined by the key. TypeScript will enforce the correct shape at compile time.

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02T00:39:17.064Z",
+  "generatedAt": "2026-08-06T20:07:42.254Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -503,7 +503,7 @@
           "pages": [
             {
               "id": "plugins/all-capabilities",
-              "title": "All 11 capabilities",
+              "title": "Capabilities",
               "slug": "/docs/plugins/all-capabilities",
               "primary": null
             },
@@ -520,6 +520,12 @@
               "primary": null
             },
             {
+              "id": "plugins/installing-and-enabling",
+              "title": "Installing and enabling plugins",
+              "slug": "/docs/plugins/installing-and-enabling",
+              "primary": null
+            },
+            {
               "id": "plugins/overview",
               "title": "Overview",
               "slug": "/docs/plugins/overview",
@@ -532,9 +538,9 @@
               "primary": null
             },
             {
-              "id": "plugins/daynight-cycle-example",
-              "title": "Real example: daynight-cycle",
-              "slug": "/docs/plugins/daynight-cycle-example",
+              "id": "plugins/hello-bim-example",
+              "title": "Real example: hello-bim",
+              "slug": "/docs/plugins/hello-bim-example",
               "primary": null
             }
           ],
