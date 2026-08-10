@@ -19,7 +19,7 @@ CDT is one of several platforms in the digital twin space. This page describes h
 | **BIM viewer** | That Open Engine (open) | Limited | Limited | Limited | Native |
 | **Map viewer** | MapLibre + open data | Yes | Yes | ArcGIS | None |
 | **Point clouds** | Potree (open) | No | Yes | Limited | Limited |
-| **Plugin system** | Yes — runtime extension | No | No | Esri SDKs | Limited |
+| **Plugin system** | Yes — open SDK, runtime loading on the roadmap | No | No | Esri SDKs | Limited |
 | **Cost** | Free; pay for hosting | N/A | N/A | License fees | Subscription |
 
 ## When to choose CDT

@@ -1,42 +1,120 @@
 ---
-title: All 11 capabilities
-description: The full capability table — what each extends, required fields, and the props each component receives.
+title: Capabilities
+description: What a plugin can contribute to CDT, the props each contribution receives, and what is planned but not yet rendered.
 sidebar_position: 4
 category: plugins
 status: draft
-last_updated: 2026-04-24
+last_updated: 2026-08-06
 ---
 
-# All 11 capabilities
+# Capabilities
 
-Declare the capability keys you need in `manifest.json`. Call `ctx.register()` with the matching shape.
+A capability is a place in CDT where a plugin can contribute something. Your plugin declares the ones it uses in its manifest, and calls `ctx.register()` once per contribution.
 
-| Capability | Extends | Required fields |
-|------------|---------|-----------------|
+A capability exists in `VALID_CAPABILITIES` **if and only if core renders it.** Declaring one with no consumer is worse than not having it: the plugin registers successfully, nothing appears, and there is nothing to debug. Capabilities that are planned but not yet wired are listed at the bottom, and registering one is a compile error rather than a silent no-op.
+
+## Supported today
+
+| Capability | Where it appears | Required fields |
+|---|---|---|
 | `map.tools` | Map toolbar | `id`, `label`, `icon`, `component` |
-| `sidebar.items` | Sidebar navigation | `id`, `label`, `icon`, `component` |
-| `viewer.panels` | 3D viewer overlay | `id`, `label`, `icon`, `component` |
 | `bim.tools` | BIM toolbar | `id`, `label`, `icon`, `component` |
-| `pointcloud.tools` | Point cloud toolbar | `id`, `label`, `icon`, `component` |
-| `map.layers` | Map layer list | `id`, `label` |
-| `data.collections` | Data menu | `id`, `label`, `listComponent` |
-| `data.columns` | Table column definitions | `id`, `target` |
-| `jobs` | Background job scheduler | `id`, `cron`, `handler` |
-| `commands` | Named command bus | `id`, `handler` |
-| `widgets` | Dashboard widget panel | `id`, `label`, `component` |
+| `pointcloud.tools` | Point-cloud toolbar | `id`, `label`, `icon`, `component` |
+| `map.legends` | Shared legend card, bottom-left of the map | `id`, `title`, `useLegend` |
+| `sidebar.items` | Sidebar navigation | `id`, `label`, `icon`, `component` |
+| `viewer.panels` | Viewer side panel | `id`, `label`, `icon`, `component`, optional `viewers` |
 
-## Toolbar components receive `MapToolProps`
+:::caution `sidebar.items` and `viewer.panels`
+These two are declared and accepted, but core does not render them yet. They are kept because their shape is settled and a plugin can be written against them, but nothing will appear until the host components land. Use a `.tools` capability if you need something visible today.
+:::
 
-Applies to `map.tools`, `bim.tools`, and `pointcloud.tools`:
+## Toolbar capabilities
+
+All three toolbars share one registration shape. Core wraps what you register in the standard toolbar button and dropdown, built from the `label` and `icon` you declared — **you write the panel content, not the chrome.** A plugin that renders its own floating card would end up inside the toolbar strip.
 
 ```ts
+ctx.register('bim.tools', {
+  id: 'spaces',
+  label: 'Spaces',
+  icon: 'Boxes',            // a lucide icon name, or a component
+  component: SpacesPanel,
+  stayActive: true,         // optional: keep the panel open
+})
+```
+
+`icon` may be a lucide icon name as a string — which is what survives a JSON manifest — or a component. An unknown name falls back to a placeholder icon rather than breaking the toolbar.
+
+### What your component receives
+
+Each toolbar passes the viewer it belongs to, as props. The types are bound per capability, so registering a component that expects the BIM viewer under `map.tools` is a compile error.
+
+```ts
+// map.tools
 interface MapToolProps {
   map: import('maplibre-gl').Map | null
 }
+
+// pointcloud.tools
+interface PointCloudToolProps {
+  viewer: unknown   // Potree ships no types; narrow it yourself
+  ready: boolean
+}
+
+// bim.tools
+interface BimToolProps {
+  components: OBC.Components | null
+  world: OBC.World | null
+  fragments: OBC.FragmentsManager | null
+  modelIds: string[]
+
+  selection: ModelIdMap              // live; updates as the user clicks
+  select: (items: ModelIdMap) => Promise<void>
+  clearSelection: () => void
+  fitToSelection: () => Promise<void>
+
+  isolate: (items: ModelIdMap) => Promise<void>
+  setItemsVisible: (items: ModelIdMap, visible: boolean) => Promise<void>
+  showAll: () => Promise<void>
+
+  getItemsOfCategory: (category: string) => Promise<ModelIdMap>
+  getProperties: (items: ModelIdMap, attributes?: string[]) => Promise<BimItemProperties[]>
+}
 ```
 
-**Sidebar, viewer, and widget components** receive no props from the framework — manage their own data via React context or props passed through your own component tree.
+Every handle is nullable: your component can render before the viewer has finished initialising. Guard rather than assert.
 
-:::note Adding a new capability in the future
-Add one entry to `VALID_CAPABILITIES` in `sdk/types.ts`, define its registration interface, and add it to `CapabilityRegistry`. A compile-time parity check in `types.ts` will catch any mismatch between the two lists.
+:::tip Spaces are hidden by default
+`getItemsOfCategory('IFCSPACE')` returns the spaces in the model, but IFC spaces start hidden — they are volumetric and would obscure everything inside them. Listing them is not the same as showing them; call `setItemsVisible(spaces, true)` as well. See [hello-bim](./hello-bim-example.md).
 :::
+
+Colour and opacity overrides are deliberately not exposed. Core routes those through a component that buckets them into one material definition per appearance; per-element painting would exhaust the model's material slots. Use `select` and `isolate` to draw attention to elements instead.
+
+## Map legends
+
+`map.legends` contributes a section to the single shared legend card, rather than a floating box of its own. You supply a hook so the legend can re-read live counts:
+
+```ts
+ctx.register('map.legends', {
+  id: 'my-legend',
+  title: 'Sensors',
+  useLegend: () => ({
+    active: true,               // false: the host omits your section entirely
+    rows: [{ label: 'Warm', color: '#ef9161', count: 12 }],
+  }),
+})
+```
+
+## Planned, not yet available
+
+These are not in `VALID_CAPABILITIES`, and registering one throws:
+
+| Capability | Why it is not here |
+|---|---|
+| `map.layers` | No consumer yet. |
+| `data.collections`, `data.columns` | No consumer yet. |
+| `commands`, `widgets` | No consumer yet. |
+| `jobs` | Needs server-side execution, which a browser-loaded plugin bundle cannot provide at all. Belongs to a separate server-plugin design. |
+
+## Adding a capability
+
+Add one entry to `VALID_CAPABILITIES` in `sdk/types.ts`, define its registration interface, add it to `CapabilityRegistry`, and **add a consumer that reads it**. A compile-time check keeps the two lists in sync; the consumer is what stops it being a capability that registers into a void.
