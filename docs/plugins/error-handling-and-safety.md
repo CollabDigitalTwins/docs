@@ -1,7 +1,7 @@
 ---
 title: Error handling & safety
 description: How the host isolates plugin failures, enforces the manifest contract, and cleans up on unload.
-sidebar_position: 6
+sidebar_position: 7
 category: plugins
 status: draft
 last_updated: 2026-08-06

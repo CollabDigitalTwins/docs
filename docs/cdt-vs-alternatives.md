@@ -19,7 +19,7 @@ CDT is one of several platforms in the digital twin space. This page describes h
 | **BIM viewer** | That Open Engine (open) | Limited | Limited | Limited | Native |
 | **Map viewer** | MapLibre + open data | Yes | Yes | ArcGIS | None |
 | **Point clouds** | Potree (open) | No | Yes | Limited | Limited |
-| **Plugin system** | Yes — open SDK, runtime loading on the roadmap | No | No | Esri SDKs | Limited |
+| **Plugin system** | Yes: open SDK, plus runtime loading on self-hosted | No | No | Esri SDKs | Limited |
 | **Cost** | Free; pay for hosting | N/A | N/A | License fees | Subscription |
 
 ## When to choose CDT
@@ -50,7 +50,7 @@ CDT is **not** the right choice when:
 
 **Does CDT support [feature X from a commercial product]?** Often, but not always. Check the relevant guide and the [GitHub roadmap](https://github.com/CollabDigitalTwins/core/milestones). If a feature is missing and broadly useful, file an issue. If it is narrow, consider a [plugin](./plugins/overview.md).
 
-**Is CDT production-ready?** Yes for federation, visualization, and collaboration use cases. Some advanced features (full IoT device management, alert rules, runtime plugin loading) are still on the roadmap — see the [Changelog](./changelog.md) for what is shipped.
+**Is CDT production-ready?** Yes for federation, visualization, and collaboration use cases. Some advanced features (full IoT device management, alert rules, a plugin marketplace) are still on the roadmap — see the [Changelog](./changelog.md) for what is shipped.
 
 ## Get help deciding
 
