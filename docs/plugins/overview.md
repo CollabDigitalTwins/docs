@@ -16,13 +16,15 @@ The plugin framework lets you add tools, panels and legends to CDT without modif
 
 Two things have to be true before a plugin appears on screen, and they are independent:
 
-1. **The code has to be present.** Today that means the plugin is compiled into `@collabdt/core`.
+1. **The code has to be present.** Either compiled into `@collabdt/core`, or [mounted from a folder](./mounting-a-plugin.md) next to a running CDT platform.
 2. **Someone has to switch it on.** An administrator makes it available to their organization, and each person then chooses whether it runs for them. See [Installing and enabling plugins](./installing-and-enabling.md).
 
-:::note What is supported today
-Plugins are compiled into core and listed in `installed.ts`. **Loading a plugin at runtime — dropping a folder next to a running CDT — is not supported yet.** It is the next major piece of work; until it ships, the way to get a plugin into CDT is to contribute it into core.
+:::note Two ways in, and when to use which
+**Compiled in** — the plugin lives in `@collabdt/core/plugins/<slug>/` and is listed in `installed.ts`. It then exists in every CDT installation. Getting a plugin there means opening a pull request against core and waiting for a release. Once you have tested your plugin locally, you can suggest it to the CDT team via pull request so it becomes part of the core.
 
-Enablement, on the other hand, is fully working: which plugins run, for which organization, for which person, all comes from the database.
+**Mounted** — you build the plugin yourself or get it from someone else and drop the folder next to your deployment. The CDT platform finds it at startup and it appears on the extensions page. No pull request, no release, no rebuilding CDT. This is for people running their own self-hosted CDT, and it is off unless you switch it on.
+
+Mounted plugins are **not** available on the CDT-hosted platform. There, a plugin becomes available by being reviewed and included in a release.
 :::
 
 ## In this section
@@ -30,9 +32,10 @@ Enablement, on the other hand, is fully working: which plugins run, for which or
 1. [Create your first plugin](./create-your-first-plugin.md) — a walkthrough
 2. [PluginContext API](./plugin-context-api.md) — `pluginId`, `config`, `register`
 3. [Capabilities](./all-capabilities.md) — what a plugin can contribute
-4. [Installing and enabling plugins](./installing-and-enabling.md) — the extensions page
-5. [Error handling and safety](./error-handling-and-safety.md) — isolation, guards, cleanup
-6. [Real example: hello-bim](./hello-bim-example.md) — annotated, and shipped in core
+4. [Mounting a plugin](./mounting-a-plugin.md) — loading one without rebuilding CDT
+5. [Installing and enabling plugins](./installing-and-enabling.md) — the extensions page
+6. [Error handling and safety](./error-handling-and-safety.md) — isolation, guards, cleanup
+7. [Real example: hello-bim](./hello-bim-example.md) — annotated, and shipped in core
 
 ## What a plugin can reach
 

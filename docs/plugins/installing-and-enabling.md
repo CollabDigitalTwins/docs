@@ -1,7 +1,7 @@
 ---
 title: Installing and enabling plugins
 description: How the extensions page works — who can make a plugin available, who chooses whether it runs, and how the two combine.
-sidebar_position: 5
+sidebar_position: 6
 category: plugins
 status: draft
 last_updated: 2026-08-06

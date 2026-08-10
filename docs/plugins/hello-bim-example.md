@@ -1,7 +1,7 @@
 ---
 title: 'Real example: hello-bim'
 description: An annotated walk through hello-bim, the worked BIM example that ships with CDT.
-sidebar_position: 7
+sidebar_position: 8
 category: plugins
 status: draft
 last_updated: 2026-08-06

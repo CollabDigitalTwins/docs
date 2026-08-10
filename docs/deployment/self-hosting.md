@@ -187,6 +187,25 @@ The map's search bar resolves addresses and place names through a geocoding prov
 
 **Production note:** the public Photon and Nominatim instances are community-run and rate-limited — fine for evaluation and small pilots, but heavier deployments should run their own Pelias (single provider, best quality) or self-host Photon/Nominatim and point `PHOTON_URL` / `NOMINATIM_URL` at them.
 
+#### Plugins (loading a plugin without rebuilding)
+
+A self-hosted CDT can load plugins from a folder you mount next to it. Leave these unset to keep that off, which is the default.
+
+| Variable | Description |
+|----------|-------------|
+| `PLUGINS_ENABLED` | Set to `true` to scan for and serve mounted plugins. Nothing is loaded unless this is set. |
+| `PLUGINS_DIR` | Where the server looks for plugin folders. Defaults to `/app/plugins`. |
+| `PLUGINS_DEV` | Development only. Re-scans on every request and stops caching bundles, so a rebuild plus a refresh is enough. |
+
+Mount the folder read-only alongside it:
+
+```yaml
+    volumes:
+      - ./plugins:/app/plugins:ro
+```
+
+**A plugin runs with the same access as CDT itself, and there is no sandbox.** Only mount plugins you trust and have read. Mounting one does not run it: an administrator still has to add it on the Extensions page. Full details in [Mounting a plugin](../plugins/mounting-a-plugin.md).
+
 ---
 
 ## Starting the Full Stack

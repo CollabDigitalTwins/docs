@@ -11,8 +11,10 @@ last_updated: 2026-08-06
 
 By the end of this you will have a button in the map toolbar that opens a small panel, translated into three languages.
 
-:::info Where plugins live today
-Plugins are compiled into `@collabdt/core`, under `src/core/plugins/<slug>/`. Loading a plugin at runtime, without rebuilding, is [not supported yet](./overview.md) — so for now, contributing a plugin means opening a pull request against core.
+:::info Where this plugin will live
+This walkthrough builds a plugin compiled into `@collabdt/core`, under `src/core/plugins/<slug>/`. That is the route for a plugin you want present in every CDT installation, and it means opening a pull request against core.
+
+To add a plugin to your own CDT platform without rebuilding anything, build the same code into a folder and [mount it](./mounting-a-plugin.md) instead. The plugin source is identical either way; only how it reaches CDT differs.
 :::
 
 ## 1. Create the folder
