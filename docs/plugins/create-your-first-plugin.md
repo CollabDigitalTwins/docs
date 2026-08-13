@@ -17,6 +17,16 @@ This walkthrough builds a plugin compiled into `@collabdt/core`, under `src/core
 To add a plugin to your own CDT platform without rebuilding anything, build the same code into a folder and [mount it](./mounting-a-plugin.md) instead. The plugin source is identical either way; only how it reaches CDT differs.
 :::
 
+## The fast path
+
+To skip the boilerplate:
+
+```bash
+npx create-cdt-plugin
+```
+
+That writes the manifest, the build configuration, an entry point and a working component for whichever capability you pick, with `hostApi` and the slug already correct. The rest of this page walks through what it generates, which is worth reading once even if you never write those files by hand.
+
 ## 1. Create the folder
 
 ```
