@@ -20,8 +20,6 @@ A model given none of these will invent an API that looks plausible and does not
 - [Capabilities](./all-capabilities.md)
 - [Mounting a plugin](./mounting-a-plugin.md)
 
-If you use Claude Code inside the CDT platform workspace, the `cdt-plugin-authoring` skill already carries all of this, and you can skip the prompt template below.
-
 ## A prompt template
 
 The constraints matter more than the description of what you want, because they cannot be inferred from the plugin folder alone.
