@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-06T20:07:42.254Z",
+  "generatedAt": "2026-08-13T17:20:16.733Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -502,6 +502,12 @@
           "label": "Plugins",
           "pages": [
             {
+              "id": "plugins/building-a-plugin-with-ai",
+              "title": "Building a plugin with AI",
+              "slug": "/docs/plugins/building-a-plugin-with-ai",
+              "primary": null
+            },
+            {
               "id": "plugins/all-capabilities",
               "title": "Capabilities",
               "slug": "/docs/plugins/all-capabilities",
@@ -523,6 +529,12 @@
               "id": "plugins/installing-and-enabling",
               "title": "Installing and enabling plugins",
               "slug": "/docs/plugins/installing-and-enabling",
+              "primary": null
+            },
+            {
+              "id": "plugins/mounting-a-plugin",
+              "title": "Mounting a plugin",
+              "slug": "/docs/plugins/mounting-a-plugin",
               "primary": null
             },
             {
