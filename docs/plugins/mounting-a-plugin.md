@@ -128,8 +128,14 @@ of React breaks hooks outright, and a second copy of three.js crashes the viewer
 Bundling either one into your plugin is the one reliable way to break a CDT
 platform installation, so the runtime does not let you.
 
-If your bundler is configured to inline dependencies, mark those specifiers as
-external so they survive into the built file as plain imports.
+The simplest way to get this right is not to configure it yourself. A plugin
+scaffolded with `create-cdt-plugin` builds through `@collabdt/plugin-kit`'s preset,
+which marks exactly these specifiers external and then fails the build if the plugin
+imports anything else, naming the specifier and why it cannot be used.
+
+If you are configuring your own bundler instead, mark those specifiers as
+external so they survive into the built file as plain imports, and check the built
+file's imports yourself: getting this wrong does not fail loudly.
 
 ## Version compatibility
 

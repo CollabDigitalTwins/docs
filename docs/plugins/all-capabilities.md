@@ -104,6 +104,29 @@ ctx.register('map.legends', {
 })
 ```
 
+## One plugin, several contributions
+
+A plugin is not limited to one contribution. `activate()` may call `ctx.register()` as many times as it needs, and contributions accumulate per capability:
+
+- **Several entries under one capability.** Two `map.tools` registrations give two toolbar buttons, each with its own component and its own panel.
+- **Several capabilities at once.** One plugin can contribute a map tool, a BIM tool and a map legend.
+
+```ts
+// manifest.json: "capabilities": ["map.tools", "map.legends"]
+export function activate(ctx: PluginContext): void {
+  ctx.register('map.tools', { id: 'rooms-inspect', label: 'Inspect', icon: 'Search', component: InspectTool })
+  ctx.register('map.tools', { id: 'rooms-measure', label: 'Measure', icon: 'Ruler', component: MeasureTool })
+  ctx.register('map.legends', { id: 'rooms-legend', title: 'Rooms', useLegend })
+}
+```
+
+Two rules apply:
+
+- **Every capability you register must appear in `manifest.capabilities`.** Registering an undeclared capability throws, and the platform then removes every contribution that plugin made and marks it errored. Activation is all-or-nothing on purpose: a half-registered plugin is harder to diagnose than one that refused to load.
+- **Each entry needs an `id` unique within the plugin.** Contributions are de-duplicated by plugin and id, so reusing an id silently drops the second registration.
+
+The single-file build output is a property of how a plugin is delivered, not a limit on how it is written. Source can span as many files and components as you like. The one thing it does rule out is lazy-loading part of your own plugin: the platform serves exactly one file per plugin, so a code-split chunk would not resolve.
+
 ## Planned, not yet available
 
 These are not in `VALID_CAPABILITIES`, and registering one throws:
