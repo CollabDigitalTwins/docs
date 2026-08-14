@@ -60,14 +60,14 @@ Four failures come up repeatedly. Three of them look like success.
 
 **Emitting a multi-file build.** A model that writes its own build configuration tends to enable code splitting, which produces `dist/index.js` plus sibling chunks. The platform serves exactly one file per plugin, so the chunks fail to resolve and the plugin dies at load. Use the scaffolded `tsup.config.ts` unchanged. It calls a preset that refuses the overrides which would break this, rather than accepting them quietly.
 
-**Letting the slug and the folder name drift apart.** Renaming the folder, or editing `manifest.json`'s name field and assuming the slug followed, gives a folder the scanner skips with a single log line. Nothing appears on the extensions page and nothing explains why.
+**Letting the slug and the folder name drift apart.** Renaming the folder, or editing `manifest.json`'s name field and assuming the slug followed, gives a folder the scanner skips with a single log line. Nothing appears on the plugins page and nothing explains why.
 
 ## Checking the result without reading the code
 
 In order. Each step rules out a different class of failure, and only the last one proves anything.
 
 1. **The build passes.** `npm run build` exits 0. This proves the plugin imports only what the platform can resolve, and that it emits one file.
-2. **The plugin appears under Found on this server** on the extensions page. This proves the folder was discovered: `dist/index.js` exists, the manifest parses, and the slug matches the folder name. If it is missing while others are listed, the server log names the folder and the reason it was skipped.
+2. **The plugin appears under Found on this server** on the plugins page. This proves the folder was discovered: `dist/index.js` exists, the manifest parses, and the slug matches the folder name. If it is missing while others are listed, the server log names the folder and the reason it was skipped.
 3. **It renders once enabled.** This is the only step that proves the plugin works. A red card mentioning the host API means it was built against a different version of the platform.
 
 A plugin that reaches step 2 and fails step 3 is almost always registering under a capability nothing renders.
