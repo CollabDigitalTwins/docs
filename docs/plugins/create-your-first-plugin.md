@@ -161,7 +161,7 @@ Manifests live in a separate file from entries because the translation layer rea
 
 ## 6. See it
 
-Your plugin now exists but is switched off. Open **Extensions** in the sidebar, find it under *Found on this server*, and click **Add to organization**. See [Installing and enabling plugins](./installing-and-enabling.md).
+Your plugin now exists but is switched off. Open **Plugins** in the sidebar, find it under *Found on this server*, and click **Add to organization**. See [Installing and enabling plugins](./installing-and-enabling.md).
 
 ## The rules
 

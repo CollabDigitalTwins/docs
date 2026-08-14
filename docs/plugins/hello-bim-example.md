@@ -133,4 +133,4 @@ No stored data — yet. Writing a room inventory needs the plugin data store, wh
 
 ## Try it
 
-`hello-bim` is compiled into CDT but switched off. Open **Extensions**, add it to your organization, then open the BIM viewer with a model loaded. See [Installing and enabling plugins](./installing-and-enabling.md).
+`hello-bim` is compiled into CDT but switched off. Open **Plugins**, add it to your organization, then open the BIM viewer with a model loaded. See [Installing and enabling plugins](./installing-and-enabling.md).

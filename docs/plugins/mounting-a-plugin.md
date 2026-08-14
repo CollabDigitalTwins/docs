@@ -11,7 +11,7 @@ last_updated: 2026-08-10
 
 You can add a plugin to your own CDT platform deployment without rebuilding it and
 without going through us. You build the plugin, put the folder where the platform
-can see it, and restart. It then appears on the extensions page for an
+can see it, and restart. It then appears on the plugins page for an
 administrator to add.
 
 This is for people running their own CDT platform. It is not available on the
@@ -93,7 +93,7 @@ reports an unreadable directory instead of finding your plugin.
 Mounting a folder does not run anything. Discovery and enablement are separate
 steps, deliberately.
 
-1. Open **Extensions** in the sidebar.
+1. Open **Plugins** in the sidebar.
 2. The plugin appears under **Found on this server**, showing where it was found
    and what access it is asking for.
 3. An administrator clicks **Add to organization**.

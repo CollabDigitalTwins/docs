@@ -1,6 +1,6 @@
 ---
 title: Installing and enabling plugins
-description: How the extensions page works — who can make a plugin available, who chooses whether it runs, and how the two combine.
+description: How the plugins page works — who can make a plugin available, who chooses whether it runs, and how the two combine.
 sidebar_position: 6
 category: plugins
 status: draft
@@ -11,7 +11,7 @@ last_updated: 2026-08-06
 
 A plugin being present in CDT does not mean it runs. Two decisions sit between the code and your screen, and they belong to different people.
 
-Both are made on the **Extensions** page in the sidebar.
+Both are made on the **Plugins** page in the sidebar.
 
 ## The two levels
 
@@ -99,7 +99,7 @@ Removing a plugin from an organization **does not delete what it stored.** An ad
 
 | | Admin | User | Viewer |
 |---|---|---|---|
-| See the extensions page | Yes | Yes | Yes |
+| See the plugins page | Yes | Yes | Yes |
 | Add or remove a plugin | Yes | No | No |
 | Change the default, or lock the choice | Yes | No | No |
 | Turn a plugin on or off for themselves | Yes | Yes | **No** |
