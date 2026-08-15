@@ -62,6 +62,16 @@ CDT follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1
 - [Angular commit message guidelines](https://github.com/angular/angular/blob/main/contributing-docs/commit-message-guidelines.md)
 - [First Contributions practice repo](https://github.com/firstcontributions/first-contributions)
 
+## Authorship
+
+Commits credit the people who wrote them. Do not add an AI assistant as an author or co-author — no `Co-authored-by:` trailer naming an assistant, and no generated-by footer. You are welcome to use an assistant; describe how in the pull request, where it is useful context for reviewers rather than a permanent claim on the contributor record.
+
+`yarn hooks:install` rejects such a trailer before the commit is written, and the **AI attribution** check enforces the same rule on every pull request. To check a branch yourself:
+
+```bash
+node scripts/check-ai-attribution.mjs --range dev..HEAD
+```
+
 ## Semantic versioning
 
 CDT uses `semantic-release` to automate versioning based on commit messages. It runs in CI when commits land on `main` or `beta`.

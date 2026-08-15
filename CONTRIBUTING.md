@@ -104,3 +104,13 @@ export function Counter() {
 - **Bold for UI elements** - "Click the **Create Building** button"
 - **Code for technical terms** - "Use the `ability.can()` method"
 
+## Authorship
+
+Commits credit the people who wrote them. Do not add an AI assistant as an author or co-author — no `Co-authored-by:` trailer naming an assistant, and no generated-by footer. You are welcome to use an assistant; describe how in the pull request, where it is useful context for reviewers rather than a permanent claim on the contributor record.
+
+Enable the repository's git hooks once per clone with `npm run hooks:install` and the trailer is rejected before the commit is written. The **AI attribution** check enforces the same rule on every pull request. To check a branch yourself:
+
+```bash
+node scripts/check-ai-attribution.mjs --range main..HEAD
+```
+
