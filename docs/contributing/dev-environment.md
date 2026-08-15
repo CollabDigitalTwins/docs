@@ -38,6 +38,7 @@ No database or Docker setup is needed to develop core — it's a library.
 git clone https://github.com/<your-fork>/core.git
 cd core
 yarn install     # installs tsup + build deps (takes a few minutes the first time)
+yarn hooks:install   # enables the repo's git hooks
 ```
 
 ## Build, test, lint
@@ -71,7 +72,7 @@ To see a change running inside the full platform:
 1. Fork [CollabDigitalTwins/core](https://github.com/CollabDigitalTwins/core) and clone your fork.
 2. Branch off **`dev`** (the integration branch).
 3. Make your change; run `yarn lint` and `yarn test:unit`.
-4. Commit using [Conventional Commits](./git-workflow.md#commit-message-convention) and open a PR **against `dev`**.
+4. Commit using [Conventional Commits](./git-workflow.md#commit-message-convention), crediting only [human authors](./git-workflow.md#authorship), and open a PR **against `dev`**.
 5. On your first PR you'll be asked to accept the Contributor License Agreement (CLA).
 
 Full details: [Git Workflow](./git-workflow.md) and the repo's
