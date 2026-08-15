@@ -10,7 +10,7 @@ This section is for developers building on top of the Collab Digital Twins platf
 
 ## What you can build
 
-- **Plugins** that extend the platform's UI and behavior at runtime
+- **Plugins** that extend the platform's UI and behaviour, switched on per organization and per user
 - **Integrations** that consume CDT's REST API from external systems
 - **Custom components and hooks** when contributing to the core codebase
 

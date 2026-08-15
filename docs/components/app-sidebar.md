@@ -1,6 +1,6 @@
 ---
 title: AppSidebarContent
-description: Main sidebar navigation component that renders viewer, dataset, and extension menu items based on organization configuration and user role.
+description: Main sidebar navigation component that renders viewer, dataset, and plugin menu items based on organization configuration and user role.
 category: components
 status: draft
 last_updated: 2025-01-14
@@ -8,7 +8,7 @@ last_updated: 2025-01-14
 
 # AppSidebarContent
 
-Renders the primary sidebar navigation for the CDT platform. Displays grouped menu items for 3D viewers (Map, BIM, Point Cloud), datasets (Sites, Buildings, Files, Infrastructure), and extensions. Adapts to organization-specific content restrictions, user roles, and collapsed/expanded sidebar states.
+Renders the primary sidebar navigation for the CDT platform. Displays grouped menu items for 3D viewers (Map, BIM, Point Cloud), datasets (Sites, Buildings, Files, Infrastructure), and plugins. Adapts to organization-specific content restrictions, user roles, and collapsed/expanded sidebar states.
 
 ## Usage
 
