@@ -4,7 +4,7 @@ description: What the CDT plugin framework is, how contributions reach the UI, a
 sidebar_position: 1
 category: plugins
 status: draft
-last_updated: 2026-08-06
+last_updated: 2026-08-15
 ---
 
 import PluginLifecycle from '@site/src/components/PluginLifecycle';
@@ -12,7 +12,9 @@ import PluginZones from '@site/src/components/PluginZones';
 
 # Overview
 
-The plugin framework lets you add tools, panels and legends to CDT without modifying core files. A plugin registers its contributions into a central registry when it activates; the toolbars, sidebar and viewers read from that registry as they render. Core code never changes — only the registry does.
+The plugin framework lets you add tools, panels and legends to CDT without modifying core files. A plugin registers its contributions into a central registry when it activates; the toolbars and the map legend subscribe to that registry and re-render when it changes. Core code never changes — only the registry does.
+
+There are six capabilities, and a contribution appears wherever core already has a consumer for it: the three viewer toolbars and the shared map legend today. `sidebar.items` and `viewer.panels` are accepted by the host but nothing renders them yet — see [Capabilities](./all-capabilities.md).
 
 Two things have to be true before a plugin appears on screen, and they are independent:
 
@@ -36,10 +38,11 @@ Mounted plugins are **not** available on the CDT-hosted platform. There, a plugi
 5. [Installing and enabling plugins](./installing-and-enabling.md) — the plugins page
 6. [Error handling and safety](./error-handling-and-safety.md) — isolation, guards, cleanup
 7. [Real example: hello-bim](./hello-bim-example.md) — annotated, and shipped in core
+8. [Building a plugin with AI](./building-a-plugin-with-ai.md) — prompting one into existence correctly
 
 ## What a plugin can reach
 
-A plugin imports from `@collabdt/core/plugins-sdk` and nothing else. That boundary is enforced by a lint rule, not just documented: reaching into core fails the build.
+A plugin imports from `@collabdt/core/plugins-sdk` and its `/config`, `/messages`, `/store` and `/components` entries, and nothing else. That boundary is enforced by a lint rule, not just documented: reaching into core fails the build.
 
 Through the SDK a plugin gets:
 
@@ -47,14 +50,18 @@ Through the SDK a plugin gets:
 - **The viewers** — the MapLibre map handle; for BIM, the loaded models, the live selection, element queries by IFC class, property reads, visibility and camera framing.
 - **Its own settings and translations**, and the signed-in user's permissions so it can hide what they may not do.
 
-## Security
+## How it fits together
 
-A plugin runs with the same access as CDT itself. There is no sandbox in this version. This is a deliberate, documented trade-off rather than an oversight — see [Error handling and safety](./error-handling-and-safety.md).
+### Lifecycle — from app start to a rendered contribution
 
-### Startup lifecycle — what happens when the app loads
+The host resolves which plugins exist, decides which of them may run for this person, and only then loads and activates each one. The second half runs again whenever an administrator or a user changes what is switched on, so a plugin appears or disappears without a page reload.
 
 <PluginLifecycle />
 
 ### System structure — how the three zones relate
 
 <PluginZones />
+
+## Security
+
+A plugin runs with the same access as CDT itself. There is no sandbox in this version. This is a deliberate, documented trade-off rather than an oversight — see [Error handling and safety](./error-handling-and-safety.md).

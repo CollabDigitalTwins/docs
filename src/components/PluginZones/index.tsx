@@ -1,8 +1,12 @@
 import { useEffect, useState, type CSSProperties, type FC } from 'react';
 import type { Theme, FlowKind } from '../PlatformArchitecture/src/types';
-import { THEMES, kindVar, kindSoft, kindName } from '../PlatformArchitecture/src/theme';
+import { THEMES, kindVar, kindSoft } from '../PlatformArchitecture/src/theme';
 
 const MOBILE_BREAKPOINT = 768;
+
+/* Who owns each box, rather than the platform-wide data-kind names. */
+const roleName = (k: FlowKind): string =>
+  ({ core: 'Host', open: 'Plugin', unstruct: 'Registry', map: 'Core UI' }[k]);
 
 function useIsMobile(): boolean {
   const [isMobile, setIsMobile] = useState(false);
@@ -21,11 +25,12 @@ const Card: FC<{
   title: string;
   sub: string;
   kind: FlowKind;
+  badge?: string;
   hub?: boolean;
   highlight?: boolean;
   chips?: string[];
   wide?: boolean;
-}> = ({ title, sub, kind, hub, highlight, chips, wide }) => (
+}> = ({ title, sub, kind, badge, hub, highlight, chips, wide }) => (
   <div style={{
     position: 'relative',
     background: hub
@@ -93,7 +98,7 @@ const Card: FC<{
         textTransform: 'uppercase',
         whiteSpace: 'nowrap', flexShrink: 0, marginTop: 1,
       }}>
-        {kindName(kind)}
+        {badge ?? roleName(kind)}
       </span>
     </div>
 
@@ -218,10 +223,14 @@ const VArrow: FC<{ label: string; direction?: 'down' | 'up' }> = ({ label, direc
 );
 
 /* ── Capability gating strip ─────────────────────────────────── */
-const CAP_KEYS = [
-  'map.tools', 'bim.tools', 'pointcloud.tools',
-  'sidebar.items', 'viewer.panels', 'map.layers',
-  'data.collections', 'data.columns', 'jobs', 'commands', 'widgets',
+/* VALID_CAPABILITIES in core's sdk/types.ts, in the same order. */
+const CAP_KEYS: Array<{ key: string; rendered: boolean }> = [
+  { key: 'sidebar.items',     rendered: false },
+  { key: 'viewer.panels',     rendered: false },
+  { key: 'map.tools',         rendered: true  },
+  { key: 'bim.tools',         rendered: true  },
+  { key: 'pointcloud.tools',  rendered: true  },
+  { key: 'map.legends',       rendered: true  },
 ];
 
 const CapStrip: FC = () => (
@@ -242,7 +251,7 @@ const CapStrip: FC = () => (
       Capability gating
     </div>
     <div style={{ fontSize: 12, color: 'var(--text-dim)', lineHeight: 1.55, marginBottom: 10 }}>
-      A plugin only gets the APIs it declares in its manifest. Attempting to call{' '}
+      A plugin only gets the capabilities it declares in its manifest. Calling{' '}
       <code style={{
         fontFamily: 'Geist Mono, ui-monospace, monospace',
         fontSize: 11, color: kindVar('open'),
@@ -250,7 +259,8 @@ const CapStrip: FC = () => (
       }}>
         ctx.register()
       </code>{' '}
-      with an undeclared capability throws at runtime.
+      with an undeclared one throws, and the host then drops every contribution that
+      plugin made and marks it errored — activation is all-or-nothing.
     </div>
     <div style={{
       fontFamily: 'Geist Mono, ui-monospace, monospace',
@@ -258,11 +268,11 @@ const CapStrip: FC = () => (
       color: 'var(--text-dim-2)', textTransform: 'uppercase',
       marginBottom: 7,
     }}>
-      All 11 capabilities
+      All six capabilities — hollow: declared, no consumer yet
     </div>
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-      {CAP_KEYS.map(c => (
-        <span key={c} style={{
+      {CAP_KEYS.map(({ key, rendered }) => (
+        <span key={key} style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
           padding: '2px 7px 2px 5px',
           background: 'var(--chip)',
@@ -270,11 +280,15 @@ const CapStrip: FC = () => (
           borderRadius: 5,
           fontSize: 10.5,
           fontFamily: 'Geist Mono, ui-monospace, monospace',
-          color: 'var(--text)',
+          color: rendered ? 'var(--text)' : 'var(--text-dim)',
           whiteSpace: 'nowrap',
         }}>
-          <span style={{ width: 5, height: 5, borderRadius: 2, background: 'var(--text-dim-2)', flexShrink: 0 }} />
-          {c}
+          <span style={{
+            width: 5, height: 5, borderRadius: 2, flexShrink: 0,
+            background: rendered ? 'var(--text-dim-2)' : 'transparent',
+            border: rendered ? undefined : '1px solid var(--text-dim-2)',
+          }} />
+          {key}
         </span>
       ))}
     </div>
@@ -330,11 +344,11 @@ const PluginZones: FC = () => {
             <ZoneBox label="You write this" kind="open">
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <Card kind="open" title="manifest.json"
-                  sub="Declares your plugin's slug and capabilities. Validated before your code runs." />
+                  sub="Declares your plugin's slug, capabilities and hostApi. Validated before your code runs." />
                 <Card kind="open" title="index.ts — activate(ctx)"
                   sub="Your entry point. Calls ctx.register() to contribute UI or behaviour." />
                 <Card kind="open" title="Component files"
-                  sub="React components passed into register(). Rendered by core UI at runtime." />
+                  sub="React components passed into register(). Rendered by core UI inside your plugin's scope." />
               </div>
             </ZoneBox>
 
@@ -346,31 +360,28 @@ const PluginZones: FC = () => {
                   sub="The public contract. Defines every type a plugin author touches." />
                 <FTick />
                 <Card kind="core" highlight title="host/host.ts"
-                  sub="Validates manifests, builds contexts, calls activate(). Errors caught per-plugin." />
+                  sub="Validates the manifest and host API, builds the context, calls activate(). Errors caught per-plugin." />
                 <FTick />
                 <div style={{ marginTop: 8 }}>
                   <Card kind="unstruct" title="PluginRegistry" hub
-                    sub="In-memory map of capability → contributions. The only shared state between plugins and core UI." />
+                    sub="Copy-on-write map of capability → contributions. Hosts subscribe to it; the only shared state." />
                 </div>
               </div>
             </ZoneBox>
 
-            <VArrow label="reads from" direction="up" />
+            <VArrow label="subscribes to" direction="up" />
 
             <ZoneBox label="Core app (unchanged)" kind="map">
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <Card kind="map" title="Toolbar"
-                  sub="Renders every registered tool button."
+                <Card kind="map" title="Toolbars"
+                  sub="Wrap each registered tool in the standard button and dropdown."
                   chips={['map.tools', 'bim.tools', 'pointcloud.tools']} />
-                <Card kind="map" title="Sidebar"
-                  sub="Renders navigation items."
-                  chips={['sidebar.items']} />
-                <Card kind="map" title="Viewer"
-                  sub="Renders floating overlay panels."
-                  chips={['viewer.panels']} />
-                <Card kind="map" title="+ more"
-                  sub="Additional contribution points."
-                  chips={['map.layers', 'data.collections', 'jobs', 'commands', 'widgets']} />
+                <Card kind="map" title="Map legend"
+                  sub="Adds a section to the one shared legend card."
+                  chips={['map.legends']} />
+                <Card kind="core" badge="Pending" title="No consumer yet"
+                  sub="Accepted by the host, but nothing renders them."
+                  chips={['sidebar.items', 'viewer.panels']} />
               </div>
             </ZoneBox>
 
@@ -390,11 +401,11 @@ const PluginZones: FC = () => {
               <ZoneBox label="You write this" kind="open">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
                   <Card kind="open" title="manifest.json"
-                    sub="Declares your plugin's slug and capabilities. Validated before your code runs." />
+                    sub="Declares your plugin's slug, capabilities and hostApi. Validated before your code runs." />
                   <Card kind="open" title="index.ts — activate(ctx)"
                     sub="Your entry point. Calls ctx.register() to contribute UI or behaviour." />
                   <Card kind="open" title="Component files"
-                    sub="React components passed into register(). Rendered by core UI at runtime." />
+                    sub="React components passed into register(). Rendered by core UI inside your plugin's scope." />
                 </div>
               </ZoneBox>
 
@@ -422,32 +433,29 @@ const PluginZones: FC = () => {
                   sub="The public contract. Defines every type a plugin author touches." />
                 <FTick />
                 <Card kind="core" highlight title="host/host.ts"
-                  sub="Validates manifests, builds contexts, calls activate(). Errors caught per-plugin." />
+                  sub="Validates the manifest and host API, builds the context, calls activate(). Errors caught per-plugin." />
                 <FTick />
                 <div style={{ marginTop: 10 }}>
                   <Card kind="unstruct" title="PluginRegistry" hub
-                    sub="In-memory map of capability → contributions. The only shared state between plugins and core UI." />
+                    sub="Copy-on-write map of capability → contributions. Hosts subscribe to it; the only shared state." />
                 </div>
               </div>
 
               {/* ARROW ← reads from */}
-              <HArrow label={'reads\nfrom'} direction="left" />
+              <HArrow label={'subscribes\nto'} direction="left" />
 
               {/* RIGHT — core app zone */}
               <ZoneBox label="Core app (unchanged)" kind="map">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <Card kind="map" title="Toolbar"
-                    sub="Renders every registered tool button."
+                  <Card kind="map" title="Toolbars"
+                    sub="Wrap each registered tool in the standard button and dropdown."
                     chips={['map.tools', 'bim.tools', 'pointcloud.tools']} />
-                  <Card kind="map" title="Sidebar"
-                    sub="Renders navigation items."
-                    chips={['sidebar.items']} />
-                  <Card kind="map" title="Viewer"
-                    sub="Renders floating overlay panels."
-                    chips={['viewer.panels']} />
-                  <Card kind="map" title="+ more"
-                    sub="Additional contribution points."
-                    chips={['map.layers', 'data.collections', 'jobs', 'commands', 'widgets']} />
+                  <Card kind="map" title="Map legend"
+                    sub="Adds a section to the one shared legend card."
+                    chips={['map.legends']} />
+                  <Card kind="core" badge="Pending" title="No consumer yet"
+                    sub="Accepted by the host, but nothing renders them."
+                    chips={['sidebar.items', 'viewer.panels']} />
                 </div>
               </ZoneBox>
             </div>

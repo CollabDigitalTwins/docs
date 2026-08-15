@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type FC } from 'react';
 import type { Theme, FlowKind } from '../PlatformArchitecture/src/types';
-import { THEMES, kindVar, kindSoft, kindName } from '../PlatformArchitecture/src/theme';
+import { THEMES, kindVar, kindSoft } from '../PlatformArchitecture/src/theme';
 
 interface Step {
   num: number;
@@ -9,15 +9,36 @@ interface Step {
   kind: FlowKind;
 }
 
-const STEPS: Step[] = [
-  { num: 1, label: 'App mounts',                  sub: 'Next.js / React',       kind: 'core'    },
-  { num: 2, label: 'PluginHostProvider',           sub: 'CombineProviders',      kind: 'open'    },
-  { num: 3, label: 'Host loops plugins',           sub: 'installed.ts',          kind: 'core'    },
-  { num: 4, label: 'Validate manifest',            sub: 'slug · caps · version', kind: 'core'    },
-  { num: 5, label: 'createPluginContext',          sub: 'scoped to slug',        kind: 'core'    },
-  { num: 6, label: 'activate(ctx) called',         sub: 'your plugin runs',      kind: 'open'    },
-  { num: 7, label: 'ctx.register() → registry',   sub: 'contributions stored',  kind: 'unstruct' },
-  { num: 8, label: 'Toolbar / Sidebar render',     sub: 'reads registry',        kind: 'map'     },
+interface Phase {
+  title: string;
+  steps: Step[];
+}
+
+/* Who owns each step, rather than the platform-wide data-kind names. */
+const roleName = (k: FlowKind): string =>
+  ({ core: 'Host', open: 'Plugin', unstruct: 'Registry', map: 'Core UI' }[k]);
+
+const PHASES: Phase[] = [
+  {
+    title: 'Decide what runs',
+    steps: [
+      { num: 1, label: 'App mounts',            sub: 'Next.js / React',          kind: 'core' },
+      { num: 2, label: 'PluginHostProvider',    sub: 'plugins · enabled · config', kind: 'core' },
+      { num: 3, label: 'Resolve the list',      sub: 'installed.ts + mounted',   kind: 'core' },
+      { num: 4, label: 'Reconcile enablement',  sub: 'org install · user choice', kind: 'core' },
+      { num: 5, label: 'Validate manifest',     sub: 'slug · caps · hostApi',    kind: 'core' },
+    ],
+  },
+  {
+    title: 'Run it and render',
+    steps: [
+      { num: 6,  label: 'createPluginContext',      sub: 'scoped · capability-gated', kind: 'core'     },
+      { num: 7,  label: 'activate(ctx) called',     sub: 'chunk loads, code runs',    kind: 'open'     },
+      { num: 8,  label: 'ctx.register() → registry', sub: 'contributions stored',     kind: 'unstruct' },
+      { num: 9,  label: 'Registry notifies',        sub: 'useSyncExternalStore',      kind: 'unstruct' },
+      { num: 10, label: 'Toolbars, legend render',  sub: 'in PluginScopeProvider',    kind: 'map'      },
+    ],
+  },
 ];
 
 const MOBILE_BREAKPOINT = 768;
@@ -34,6 +55,25 @@ function useIsMobile(): boolean {
   return isMobile;
 }
 
+/* ── Phase caption ─────────────────────────────────────────── */
+const PhaseLabel: FC<{ title: string }> = ({ title }) => (
+  <div style={{
+    display: 'flex', alignItems: 'center', gap: 8,
+    marginBottom: 12,
+  }}>
+    <span style={{
+      fontFamily: 'Geist Mono, ui-monospace, monospace',
+      fontSize: 9, letterSpacing: '0.16em',
+      textTransform: 'uppercase',
+      color: 'var(--text-dim)',
+      whiteSpace: 'nowrap',
+    }}>
+      {title}
+    </span>
+    <div style={{ flex: 1, height: 1, background: 'var(--stroke)' }} />
+  </div>
+);
+
 /* ── Desktop step bubble ───────────────────────────────────── */
 const StepBubble: FC<{ step: Step; last: boolean }> = ({ step, last }) => (
   <div style={{
@@ -44,7 +84,7 @@ const StepBubble: FC<{ step: Step; last: boolean }> = ({ step, last }) => (
     {/* card column */}
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center',
-      minWidth: 84, maxWidth: 116, flex: '0 0 auto',
+      minWidth: 96, maxWidth: 132, flex: '0 0 auto',
     }}>
       {/* step number circle */}
       <div style={{
@@ -89,7 +129,7 @@ const StepBubble: FC<{ step: Step; last: boolean }> = ({ step, last }) => (
         }}>
           {step.label}
         </div>
-        {/* kind badge */}
+        {/* role badge */}
         <span style={{
           fontFamily: 'Geist Mono, ui-monospace, monospace',
           fontSize: 8.5, letterSpacing: '0.12em',
@@ -100,7 +140,7 @@ const StepBubble: FC<{ step: Step; last: boolean }> = ({ step, last }) => (
           textTransform: 'uppercase',
           whiteSpace: 'nowrap',
         }}>
-          {kindName(step.kind)}
+          {roleName(step.kind)}
         </span>
       </div>
 
@@ -196,7 +236,7 @@ const MobileStep: FC<{ step: Step; last: boolean }> = ({ step, last }) => (
             textTransform: 'uppercase',
             whiteSpace: 'nowrap', flexShrink: 0,
           }}>
-            {kindName(step.kind)}
+            {roleName(step.kind)}
           </span>
         </div>
         <div style={{
@@ -209,6 +249,29 @@ const MobileStep: FC<{ step: Step; last: boolean }> = ({ step, last }) => (
         </div>
       </div>
     </div>
+  </div>
+);
+
+/* ── Footnote — the parts that are not a single pass ───────── */
+const Footnote: FC = () => (
+  <div style={{
+    border: '1px solid var(--stroke)',
+    borderRadius: 10,
+    padding: '12px 16px',
+    background: 'linear-gradient(180deg, var(--panel), var(--panel-2))',
+    marginTop: 18,
+    fontSize: 11.5,
+    color: 'var(--text-dim)',
+    lineHeight: 1.55,
+  }}>
+    Steps 4–10 run again whenever enablement or configuration changes, so switching a
+    plugin on or off takes effect without a reload. A plugin that fails validation or
+    throws in <code style={{
+      fontFamily: 'Geist Mono, ui-monospace, monospace',
+      fontSize: 10.5, color: kindVar('open'),
+      background: kindSoft('open'), padding: '1px 5px', borderRadius: 4,
+    }}>activate()</code> is marked errored and has its contributions removed — the
+    plugins after it still load.
   </div>
 );
 
@@ -253,22 +316,40 @@ const PluginLifecycle: FC = () => {
           textTransform: 'uppercase',
           marginBottom: 20,
         }}>
-          Startup lifecycle — what happens when the app loads
+          Lifecycle — from app start to a rendered contribution
         </div>
 
         {isMobile ? (
           <div>
-            {STEPS.map((step, i) => (
-              <MobileStep key={step.num} step={step} last={i === STEPS.length - 1} />
+            {PHASES.map((phase, p) => (
+              <div key={phase.title} style={{ marginTop: p === 0 ? 0 : 18 }}>
+                <PhaseLabel title={phase.title} />
+                {phase.steps.map((step, i) => (
+                  <MobileStep
+                    key={step.num}
+                    step={step}
+                    last={p === PHASES.length - 1 && i === phase.steps.length - 1}
+                  />
+                ))}
+              </div>
             ))}
           </div>
         ) : (
-          <div style={{ display: 'flex', alignItems: 'flex-start', overflow: 'hidden' }}>
-            {STEPS.map((step, i) => (
-              <StepBubble key={step.num} step={step} last={i === STEPS.length - 1} />
+          <div>
+            {PHASES.map((phase, p) => (
+              <div key={phase.title} style={{ marginTop: p === 0 ? 0 : 22 }}>
+                <PhaseLabel title={phase.title} />
+                <div style={{ display: 'flex', alignItems: 'flex-start', overflow: 'hidden' }}>
+                  {phase.steps.map((step, i) => (
+                    <StepBubble key={step.num} step={step} last={i === phase.steps.length - 1} />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}
+
+        <Footnote />
       </div>
     </div>
   );
