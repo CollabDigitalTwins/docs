@@ -1,28 +1,27 @@
 ---
 title: Building a plugin with AI
-description: How to prompt a model to write a CDT platform plugin, what these models reliably get wrong, and how to check the result without reading the code.
-sidebar_position: 9
+description: A prompt template for generating a CDT plugin, the mistakes models commonly make, and how to check the result.
+sidebar_position: 6
 category: plugins
 status: draft
-last_updated: 2026-08-13
+last_updated: 2026-08-17
 ---
 
 # Building a plugin with AI
 
-A CDT platform plugin is a good fit for an AI coding assistant. It is small, it has a narrow interface, and the build refuses most of the ways it can be got wrong. This page is for someone who will prompt a model to write one rather than write it by hand.
+A CDT plugin suits an AI coding assistant well: it is small, the interface is narrow, and the build rejects most of the ways it can go wrong.
 
-## Give the model the right pages
+## Supply the right pages
 
-A model given none of these will invent an API that looks plausible and does not exist. Paste the URLs, or the pages themselves, into your prompt:
+Without them, a model will invent an API that looks plausible and does not exist. Include these URLs, or the pages themselves, in the prompt:
 
 - [Create your first plugin](./create-your-first-plugin.md)
-- [PluginContext API](./plugin-context-api.md)
 - [Capabilities](./all-capabilities.md)
-- [Mounting a plugin](./mounting-a-plugin.md)
+- [Run your plugin](./mounting-a-plugin.md)
 
 ## A prompt template
 
-The constraints matter more than the description of what you want, because they cannot be inferred from the plugin folder alone.
+The constraints matter more than the description of the behaviour, because they cannot be inferred from the plugin folder.
 
 ```text
 Write a CDT platform plugin.
@@ -35,8 +34,10 @@ Scaffold it first, do not hand-write the files:
     --body example --yes
 
 Constraints, all of which are load-bearing:
-- The capability must be one of exactly four: map.tools, bim.tools,
-  pointcloud.tools, map.legends. Nothing else renders. Do not invent one.
+- The capability must be one of exactly these eight: map.tools, bim.tools,
+  pointcloud.tools, map.layers, viewer.legends, viewer.tabs, data.pages,
+  ui.dialogs. Nothing else exists. Do not invent one.
+- Every capability you register must also be listed in manifest.capabilities.
 - Do not import three, @thatopen/components, maplibre-gl or lucide-react as
   runtime values. Viewer instances arrive as props. Icons are named by string.
   Type-only imports of maplibre-gl or @thatopen/components are fine.
@@ -50,30 +51,30 @@ Constraints, all of which are load-bearing:
 Then run npm install and npm run build, and fix anything the import guard reports.
 ```
 
-## What models reliably get wrong here
+## Common failures
 
-Four failures come up repeatedly. Three of them look like success.
+**An invented capability.** `data.columns`, `commands` and `widgets` all read like plausible names. Registering one is a compile error when the scaffolded types are used, but a model that hand-writes the manifest and casts around the types can produce a plugin that builds, loads and displays nothing. When a plugin does not appear after being enabled, check the capability name first.
 
-**Inventing a capability.** `map.layers`, `data.columns` and `commands` all read like things that should exist, and they appear in the platform's own list of capabilities planned for later. A plugin registering one builds, loads, registers without error and shows nothing. There is no log line, because nothing went wrong: the plugin contributed to a surface with no consumer. If a plugin does not appear after being enabled, check the capability name first.
+**Registering something the manifest does not declare.** This is easily introduced when a second surface is added later. CDT rolls back every contribution the plugin made and marks it errored, so the whole plugin disappears rather than only the new part.
 
-**Importing the viewer library directly.** Asked to read the map centre, a model will often reach for `import { Map } from 'maplibre-gl'` rather than taking the viewer as a prop. This is the one failure the tooling catches for you: the build fails and names the specifier. Take the correction at face value rather than working around it, because a second copy of maplibre or three.js in the browser is a crash rather than a size regression.
+**Importing the viewer library directly.** Asked to read the map centre, a model often reaches for `import { Map } from 'maplibre-gl'` instead of taking the viewer as a prop. The build catches this and names the specifier. The correction should be applied as given: a second copy of maplibre or three.js in the browser is a crash, not a size regression.
 
-**Emitting a multi-file build.** A model that writes its own build configuration tends to enable code splitting, which produces `dist/index.js` plus sibling chunks. The platform serves exactly one file per plugin, so the chunks fail to resolve and the plugin dies at load. Use the scaffolded `tsup.config.ts` unchanged. It calls a preset that refuses the overrides which would break this, rather than accepting them quietly.
+**A multi-file build.** A model that writes its own build configuration tends to enable code splitting, producing `dist/index.js` plus sibling chunks. CDT serves exactly one file per plugin, so the chunks fail to resolve and the plugin dies at load. Use the scaffolded `tsup.config.ts` unchanged.
 
-**Letting the slug and the folder name drift apart.** Renaming the folder, or editing `manifest.json`'s name field and assuming the slug followed, gives a folder the scanner skips with a single log line. Nothing appears on the plugins page and nothing explains why.
+**A slug that drifts from the folder name.** Renaming the folder, or editing the manifest's `name` and assuming the slug followed, produces a folder the scanner skips with a single log line.
 
 ## Checking the result without reading the code
 
-In order. Each step rules out a different class of failure, and only the last one proves anything.
+In order. Each step rules out a different class of failure, and only the last one is conclusive.
 
-1. **The build passes.** `npm run build` exits 0. This proves the plugin imports only what the platform can resolve, and that it emits one file.
-2. **The plugin appears under Found on this server** on the plugins page. This proves the folder was discovered: `dist/index.js` exists, the manifest parses, and the slug matches the folder name. If it is missing while others are listed, the server log names the folder and the reason it was skipped.
-3. **It renders once enabled.** This is the only step that proves the plugin works. A red card mentioning the host API means it was built against a different version of the platform.
+1. **`npm run build` exits 0.** This shows the plugin imports only what CDT can resolve, and that it emits one file.
+2. **It appears under Found on this server.** This shows the folder was discovered: `dist/index.js` exists, the manifest parses, and the slug matches the folder name. If it is missing while others are listed, the server log names the folder and the reason.
+3. **It renders once enabled.** The only step that confirms the plugin works. A red card mentioning the host API means it was built against a different version of CDT.
 
-A plugin that reaches step 2 and fails step 3 is almost always registering under a capability nothing renders.
+A plugin that reaches step 2 and fails step 3 is almost always registering a capability that was not declared, or one that does not exist.
 
-## A warning worth reading twice
+## A note on trust
 
-A mounted plugin runs with the same access as the CDT platform itself. There is no sandbox: it is not isolated from the application, its data, or the browser session of whoever has it enabled.
+A plugin runs with the same access as CDT itself. There is no sandbox: it is not isolated from the app, its data, or the browser session of anyone who has it enabled.
 
-This matters more for generated code than for code you wrote, because the usual reason to trust a plugin is having read it. Read what the model produced before mounting it anywhere that holds real data, and treat a plugin from someone else the way you would treat any dependency you are about to give full access to.
+This matters more for generated code than for hand-written code, because the usual basis for trusting a plugin is having read it. Review what the model produced before mounting it anywhere holding real data.

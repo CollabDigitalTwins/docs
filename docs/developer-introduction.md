@@ -24,6 +24,6 @@ This section is for developers building on top of the Collab Digital Twins platf
 
 - **Hooks** — React hooks for accessing platform data ([overview](./hooks/overview.md))
 - **Components** — UI components used across the platform ([overview](./components/overview.md))
-- **Plugin context API** — extension points available to plugins ([reference](./plugins/plugin-context-api.md))
+- **Plugin capabilities** — everything a plugin can add to the app ([reference](./plugins/all-capabilities.md))
 
 **Need Help?** Reach out via our [contact form](https://collabdt.org/En/contact/) or visit the [core repository on GitHub](https://github.com/CollabDigitalTwins/core).
