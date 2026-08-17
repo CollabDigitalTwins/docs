@@ -1,51 +1,46 @@
 ---
 title: Create your first plugin
-description: Build a working CDT plugin — manifest, entry point, component, translations — and see it in the viewer.
+description: Scaffold a working CDT plugin, understand the manifest and the entry point, and get it into the app.
 sidebar_position: 2
 category: plugins
 status: draft
-last_updated: 2026-08-06
+last_updated: 2026-08-17
 ---
 
 # Create your first plugin
 
-By the end of this you will have a button in the map toolbar that opens a small panel, translated into three languages.
+This walkthrough produces a button in the map toolbar that shows where the map is centred, translated into three languages.
 
-:::info Where this plugin will live
-This walkthrough builds a plugin compiled into `@collabdt/core`, under `src/core/plugins/<slug>/`. That is the route for a plugin you want present in every CDT installation, and it means opening a pull request against core.
-
-To add a plugin to your own CDT platform without rebuilding anything, build the same code into a folder and [mount it](./mounting-a-plugin.md) instead. The plugin source is identical either way; only how it reaches CDT differs.
-:::
-
-## The fast path
-
-To skip the boilerplate:
+## 1. Scaffold it
 
 ```bash
 npx create-cdt-plugin
 ```
 
-That writes the manifest, the build configuration, an entry point and a working component for whichever capability you pick, with `hostApi` and the slug already correct. The rest of this page walks through what it generates, which is worth reading once even if you never write those files by hand.
-
-## 1. Create the folder
+The command asks for a name and a surface, then writes a folder that builds and runs. Answer *map tool* to follow along.
 
 ```
-src/core/plugins/hello-map/
+map-centre/
   manifest.json
-  index.ts
-  components/
-    HelloMapTool.tsx
+  package.json
+  tsup.config.ts
+  src/
+    index.ts
+    components/
+      ExampleMap.tsx
 ```
 
-## 2. Write the manifest
+The files can be written by hand, but the build configuration is best left to the scaffold. A misconfigured build is the most common reason a plugin fails to load, and the preset used here fails the build rather than producing something broken.
 
-Everything about your plugin that CDT needs before running any of your code — including your translations, so a small plugin is a single file to write and a single file to hand a translator.
+## 2. The manifest
+
+The manifest holds everything CDT needs before running any plugin code, translations included, so a small plugin is one file to write and one file to hand a translator.
 
 ```json
 {
-  "slug": "hello-map",
-  "name": "Hello Map",
-  "version": "1.0.0",
+  "slug": "map-centre",
+  "name": "Map Centre",
+  "version": "0.1.0",
   "hostApi": 1,
   "description": "Shows where the map is currently centred.",
   "author": "Your name",
@@ -58,118 +53,143 @@ Everything about your plugin that CDT needs before running any of your code — 
     }
   },
   "messages": {
-    "en": { "title": "Hello Map", "copy": "Copy coordinates" },
-    "fr": { "title": "Bonjour la carte", "copy": "Copier les coordonnées" },
-    "es": { "title": "Hola mapa", "copy": "Copiar las coordenadas" }
+    "en": { "title": "Map Centre", "latitude": "Latitude", "longitude": "Longitude" },
+    "fr": { "title": "Centre de la carte", "latitude": "Latitude", "longitude": "Longitude" },
+    "es": { "title": "Centro del mapa", "latitude": "Latitud", "longitude": "Longitud" }
   }
 }
 ```
 
-| Field | Why it matters |
+| Field | Purpose |
 |---|---|
-| `slug` | Your namespace. Contributions, settings, translations and stored data are all keyed by it. |
-| `hostApi` | Which version of the plugin system you built against. CDT refuses to load a mismatch, so an incompatible plugin fails clearly at load instead of confusingly at render. Omitting it is allowed but warned about. |
-| `capabilities` | What you are allowed to register. Registering something you did not declare throws. |
-| `requiredPermissions` | Shown to an administrator before they add your plugin. Be honest here. |
-| `messages` | Optional. Merged under `plugins.<slug>`, so you cannot collide with core or another plugin. |
+| `slug` | The plugin's namespace. It must match the folder name. Settings, translations and stored data are all keyed by it. |
+| `hostApi` | The version of the plugin API the plugin was built against. CDT refuses to load a mismatch rather than failing later in a less obvious place. Use `1`. |
+| `capabilities` | What the plugin may register. Registering an undeclared capability throws. |
+| `requiredPermissions` | Shown to an administrator before the plugin is added. List these accurately. |
+| `configSchema` | Settings an administrator can change without touching code. |
+| `messages` | Optional. Merged under `plugins.<slug>`, so keys cannot collide with those of core or another plugin. |
 
-## 3. Write the entry point
+## 3. The entry point
+
+CDT calls `activate()` once, with a context bound to the plugin. Each contribution is added with `ctx.register()`.
 
 ```ts
-import { HelloMapTool } from './components/HelloMapTool'
+import { MapCentreTool } from './components/MapCentreTool'
 
-import type { PluginContext } from '../sdk/types'
+import type { MapPluginContext } from '@collabdt/plugin-kit/types/map'
 
-export function activate(ctx: PluginContext): void {
+export function activate(ctx: MapPluginContext): void {
   ctx.register('map.tools', {
-    id: 'hello-map',
-    label: 'Hello Map',
+    id: 'map-centre',
+    label: 'Map Centre',
     icon: 'MapPin',
-    component: HelloMapTool,
+    component: MapCentreTool,
     stayActive: true,
   })
 }
 ```
 
-Export `deactivate(ctx)` too if you set up timers or listeners outside React; CDT calls it when the plugin is switched off, then removes your contributions automatically.
+The context has three members:
 
-## 4. Write the component
+| Member | Description |
+|---|---|
+| `ctx.pluginId` | The slug declared in the manifest. |
+| `ctx.config` | The settings an administrator has saved, shaped by `configSchema`. Empty if none are declared. |
+| `ctx.register(key, item)` | The only way to add a contribution. `key` must be a declared capability; the shape of `item` follows from the key, and TypeScript checks it. |
 
-You write the **panel content**. CDT wraps it in the standard toolbar button and dropdown using the `label` and `icon` from your registration.
+The context type is named after the surface — `MapPluginContext` here, `BimPluginContext`, `UiPluginContext` and so on. That binds `register` to the right shapes, so passing a component that expects the BIM viewer to `map.tools` is a compile error rather than a plugin that loads and displays nothing.
+
+A plugin that sets up timers or listeners outside React should also export `deactivate(ctx)`. CDT calls it when the plugin is switched off, then removes the contributions automatically.
+
+```ts
+export function deactivate(ctx: MapPluginContext): void {
+  // clear intervals, remove listeners
+}
+```
+
+## 4. The component
+
+The component supplies the **panel content**. CDT wraps it in the standard toolbar button and dropdown, using the `label` and `icon` from the registration.
 
 ```tsx
 'use client'
 
-import * as React from 'react'
+import { Separator } from '@collabdt/core/plugins-sdk/components'
+import { usePluginConfig } from '@collabdt/core/plugins-sdk/config'
+import { usePluginTranslations } from '@collabdt/core/plugins-sdk/messages'
+import { useEffect, useState } from 'react'
 
-import { Button, Separator } from '../../sdk/components'
-import { usePluginConfig } from '../../sdk/config'
-import { usePluginTranslations } from '../../sdk/messages'
+import type { MapToolProps, ToolbarToolProps } from '@collabdt/plugin-kit/types/map'
 
-import type { MapToolProps } from '../../sdk/mapViewer'
-import type { ToolbarToolProps } from '../../sdk/types'
-
-export function HelloMapTool({ map }: ToolbarToolProps & MapToolProps) {
+export function MapCentreTool({ map }: ToolbarToolProps & MapToolProps) {
   const t = usePluginTranslations()
   const { decimals = 5 } = usePluginConfig<{ decimals?: number }>()
-  const [view, setView] = React.useState<{ lat: number; lng: number } | null>(null)
+  const [centre, setCentre] = useState<{ lat: number; lng: number } | null>(null)
 
-  React.useEffect(() => {
-    if (!map) return                       // nullable: guard, do not assert
+  useEffect(() => {
+    if (!map) return
 
     const read = () => {
-      const c = map.getCenter()
-      setView({ lat: c.lat, lng: c.lng })
+      const { lat, lng } = map.getCenter()
+      setCentre({ lat, lng })
     }
 
     read()
     map.on('move', read)
-    return () => { map.off('move', read) } // always clean up
+    return () => { map.off('move', read) }
   }, [map])
 
   return (
     <div className="w-60 p-1">
-      <p className="px-2 py-1 text-sm font-medium">{t('title', 'Hello Map')}</p>
+      <p className="px-2 py-1 text-sm font-medium">{t('title', 'Map Centre')}</p>
       <Separator className="my-1" />
-      {view
-        ? <p className="px-2 py-1 text-sm tabular-nums">{view.lat.toFixed(decimals)}, {view.lng.toFixed(decimals)}</p>
-        : <p className="px-2 py-1 text-sm text-muted-foreground">Waiting for the map…</p>}
+      {centre ? (
+        <p className="px-2 py-1 text-sm tabular-nums">
+          {centre.lat.toFixed(decimals)}, {centre.lng.toFixed(decimals)}
+        </p>
+      ) : (
+        <p className="px-2 py-1 text-sm text-muted-foreground">
+          {t('waiting', 'Waiting for the map…')}
+        </p>
+      )}
     </div>
   )
 }
 ```
 
-Three habits worth copying:
+Three practices to follow:
 
-- **Guard the viewer handle.** It is null until the viewer finishes initialising.
-- **Clean up every listener.** A leaked `move` handler keeps firing after the user switches viewers.
-- **Pass a fallback to `t()`.** The second argument is used when your plugin has no translation for that key — so an untranslated plugin still reads correctly rather than showing a raw key.
+- **Guard the viewer handle.** `map` is null until the viewer has initialised, so check it rather than asserting it.
+- **Remove every listener on cleanup.** A leaked `move` handler keeps firing after the viewer changes.
+- **Pass a fallback to `t()`.** The second argument is used when a key has no translation, so the plugin still reads correctly in an untranslated language.
 
-## 5. Register it
+## 5. Run it
 
-Add the manifest to `src/core/plugins/manifests.ts`, then pair it with a **dynamic import** in `installed.ts`:
-
-```ts
-export const INSTALLED_PLUGINS: PluginSource[] = [
-  { manifest: manifestFor('hello-map'), entry: () => import('./hello-map') },
-]
+```bash
+npm install && npm run build
 ```
 
-The dynamic import matters. `installed.ts` is reachable from every route, so a static import would pull your components — and for a BIM plugin, the whole 3D engine — into the initial bundle. A thunk defers that until your plugin activates, so it lands in its own chunk.
-
-Manifests live in a separate file from entries because the translation layer reads manifests without importing any plugin components.
-
-## 6. See it
-
-Your plugin now exists but is switched off. Open **Plugins** in the sidebar, find it under *Found on this server*, and click **Add to organization**. See [Installing and enabling plugins](./installing-and-enabling.md).
+Then load the plugin into CDT and enable it — see [Run your plugin](./mounting-a-plugin.md).
 
 ## The rules
 
-- **Import only from `../sdk/*` and your own files.** Not from core, not from the plugin host. This is enforced by a lint rule that fails the build, because a plugin that reaches into core works in-repo and breaks the moment it becomes a standalone bundle.
-- **`ctx.register()` is the only way to contribute.** Once per contribution, during `activate`.
-- **Use the components from `../sdk/components`.** They are the approved subset.
+- **Import only from `@collabdt/core/plugins-sdk/*`, `@collabdt/plugin-kit/types/*`, `react` and the plugin's own files.** The build fails on anything else, and names what it rejected.
+- **`ctx.register()` is the only way to add a contribution,** and only during `activate`.
+- **Use the components from `@collabdt/core/plugins-sdk/components`.** They are the approved set, and they match the rest of the app.
+
+:::note Contributing a plugin to core instead
+A plugin can also live inside `@collabdt/core`, at `src/core/plugins/<slug>/`, which places it in every CDT installation, including the hosted platform. That route means a pull request against core and waiting for a release, so it is worth building and testing the plugin as a mounted one first.
+
+The source is nearly identical. A plugin inside core imports from `../../sdk/*` rather than from the two packages above, is listed in `manifests.ts`, and is paired with a dynamic import in `installed.ts`:
+
+```ts
+export const INSTALLED_PLUGINS: PluginSource[] = [
+  { manifest: manifestFor('map-centre'), entry: () => import('./map-centre') },
+]
+```
+:::
 
 ## Next
 
-- [Capabilities](./all-capabilities.md) — everything you can register, and what each receives
-- [hello-bim](./hello-bim-example.md) — a fuller example that reads a BIM model
+- [Capabilities](./all-capabilities.md) — everything a plugin can add, and what each contribution receives
+- [Example: one plugin, several surfaces](./hello-map-example.md) — a plugin with six of them
