@@ -23,7 +23,7 @@ import { ViewerNames } from '@collabdt/core/types';
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `viewer` | `ViewerNames` | Yes | — | Determines which set of tools to display (`map`, `bim`, or `pointcloud`). |
+| `viewer` | `ViewerKey` | Yes | — | Determines which set of tools to display (`map`, `bim`, or `pointcloud`). A plugin page key (`plugin:<id>:<page>`) renders nothing. |
 
 ## Behaviour
 

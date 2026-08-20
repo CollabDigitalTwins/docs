@@ -9,7 +9,7 @@ last_updated: 2026-08-17
 
 # Run your plugin
 
-A plugin can be added to a self-hosted CDT deployment without rebuilding it. Build the plugin, place the folder where CDT can see it, restart, and add it on the Plugins page.
+A plugin can be added to a self-hosted CDT deployment without rebuilding it. Build the plugin, place the folder where CDT can see it, and add it on the Plugins page. A restart is only needed when `PLUGINS_DEV` is off — see [The development loop](#the-development-loop).
 
 This applies to self-hosted deployments. On the CDT-hosted platform, a plugin becomes available by being reviewed and included in a release.
 
@@ -20,7 +20,8 @@ A plugin runs with the same access as CDT itself, and there is no sandbox. Only 
 ## 1. Build it
 
 ```bash
-npm install && npm run build
+npm install
+npm run build
 ```
 
 That produces `dist/index.js` — a single file, which is what CDT serves to the browser. The resulting folder looks like this:
@@ -83,9 +84,11 @@ CDT publishes an import map that points a plugin's imports at CDT's own instance
 Available at runtime:
 
 - `react`, `react-dom`, `react/jsx-runtime`
-- `@collabdt/core/plugins-sdk`, and its `/components`, `/config`, `/messages`, `/state`, `/store` and `/ui` entries
+- `@collabdt/core/plugins-sdk`, and its `/components`, `/config`, `/data`, `/messages`, `/state`, `/store` and `/ui` entries
 
-That list is exactly what CDT resolves. `usePluginBimAppearance`, `usePluginPermissions` and the SDK's data hooks are not in it, so they are currently available only to a plugin compiled into core.
+That list is exactly what CDT resolves. `usePluginBimAppearance` is not in it, so painting BIM elements is currently available only to a plugin compiled into core.
+
+Types for the data hooks come from `@collabdt/plugin-kit/types/data`, which declares the record fields the SDK commits to. Core's schema carries more columns than that; the kit widens a record when a plugin needs one.
 
 Not available: `@thatopen/components`, `three`, `maplibre-gl`, `lucide-react`. None are needed — viewer instances arrive as props and icons are named by string — and a second copy of React or three.js in the page is a crash rather than a size regression. Type-only imports of `maplibre-gl` and `@thatopen/components` are fine, and `@collabdt/plugin-kit/types/*` provides those types without importing either package.
 

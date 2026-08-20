@@ -17,7 +17,9 @@ This walkthrough produces a button in the map toolbar that shows where the map i
 npx create-cdt-plugin
 ```
 
-The command asks for a name and a surface, then writes a folder that builds and runs. Answer *map tool* to follow along.
+The command asks for a name and which surfaces to contribute to, then writes a folder that builds and runs. The surface question is a multi-select, so a plugin that spans several is one answer rather than a later rewrite — pick just *Map toolbar* to follow along.
+
+Scripting it instead of answering prompts? `--surface` is repeatable and takes a comma-separated list: `--surface bim.tools,viewer.tabs`.
 
 ```
 map-centre/
@@ -44,6 +46,7 @@ The manifest holds everything CDT needs before running any plugin code, translat
   "hostApi": 1,
   "description": "Shows where the map is currently centred.",
   "author": "Your name",
+  "icon": "MapPin",
   "capabilities": ["map.tools"],
   "requiredPermissions": [],
   "configSchema": {
@@ -67,6 +70,7 @@ The manifest holds everything CDT needs before running any plugin code, translat
 | `capabilities` | What the plugin may register. Registering an undeclared capability throws. |
 | `requiredPermissions` | Shown to an administrator before the plugin is added. List these accurately. |
 | `configSchema` | Settings an administrator can change without touching code. |
+| `icon` | Optional. A [lucide](https://lucide.dev/icons/) icon name, shown beside the plugin on the Plugins page. A name that is not an icon, or none at all, shows a puzzle piece. |
 | `messages` | Optional. Merged under `plugins.<slug>`, so keys cannot collide with those of core or another plugin. |
 
 ## 3. The entry point
@@ -98,6 +102,18 @@ The context has three members:
 | `ctx.register(key, item)` | The only way to add a contribution. `key` must be a declared capability; the shape of `item` follows from the key, and TypeScript checks it. |
 
 The context type is named after the surface — `MapPluginContext` here, `BimPluginContext`, `UiPluginContext` and so on. That binds `register` to the right shapes, so passing a component that expects the BIM viewer to `map.tools` is a compile error rather than a plugin that loads and displays nothing.
+
+Each of those aliases binds **one** viewer. A plugin that touches two names the slots itself, which is what the scaffolder writes when you pick surfaces in more than one viewer:
+
+```ts
+import type { PluginContext } from '@collabdt/plugin-kit/types/ui'
+import type { MapToolProps } from '@collabdt/plugin-kit/types/map'
+import type { BimToolProps } from '@collabdt/plugin-kit/types/bim'
+
+type Ctx = PluginContext<MapToolProps, BimToolProps>
+```
+
+The order is map, BIM, point cloud, legend, and trailing slots you do not use can be left off. Reaching for `MapPluginContext & BimPluginContext` instead does not work: the second viewer's component ends up checked against a registration bound to `unknown`.
 
 A plugin that sets up timers or listeners outside React should also export `deactivate(ctx)`. CDT calls it when the plugin is switched off, then removes the contributions automatically.
 
@@ -166,7 +182,8 @@ Three practices to follow:
 ## 5. Run it
 
 ```bash
-npm install && npm run build
+npm install
+npm run build
 ```
 
 Then load the plugin into CDT and enable it — see [Run your plugin](./mounting-a-plugin.md).
