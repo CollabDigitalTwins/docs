@@ -216,7 +216,7 @@ function useRoomRows(): DataPageRows<Room> {
 
 A column renders its raw value unless given a `render`. Values that are not strings, numbers or booleans render empty rather than `[object Object]`.
 
-The data behind a plugin page belongs to the plugin, so the permission subject to check is `PluginRecord`. A plugin compiled into core can use `usePluginPermissions()` to hide controls the person may not use. Either way the server re-checks every write, so a rejected one should be handled visibly rather than prevented only by hiding a control.
+The data behind a plugin page belongs to the plugin, so the permission subject to check is `PluginRecord`. Use `usePluginPermissions()` from `@collabdt/core/plugins-sdk/data` to hide controls the person may not use. Either way the server re-checks every write, so a rejected one should be handled visibly rather than prevented only by hiding a control.
 
 ## Viewer sidebar tabs
 
@@ -232,7 +232,13 @@ ctx.register('viewer.tabs', {
 })
 ```
 
-Import `ViewerNames` from `@collabdt/core/plugins-sdk`; it is exported as a value so that a tab or a legend can name its viewers.
+Import `ViewerNames` from `@collabdt/core/plugins-sdk`; it is exported as a value so that a tab or a legend can name its viewers. A mounted plugin built against `@collabdt/plugin-kit` spells them as plain strings instead — `viewers: ['map', 'bim']`, typed as `PluginViewerTarget`.
+
+:::tip Say where it goes
+Omitting `viewers` means every viewer, which is rarely a location anyone chose. `create-cdt-plugin` now writes the list explicitly, taken from the viewer surfaces you scaffolded with — pick `bim.tools` and a tab, and you get `viewers: ['bim']`.
+
+Only `'map'`, `'bim'` and `'pointcloud'` host tabs and legends. Any other name — a typo like `'BIM'`, or a `ViewerNames` member such as `settings` that is a route rather than a viewer — renders nowhere; the platform logs a warning naming the plugin and the value.
+:::
 
 The component receives no props. It renders inside the panel, so it should fill the width and let the panel scroll.
 
@@ -262,6 +268,38 @@ Two consequences of CDT owning the dialog stack:
 
 - **A dialog outlives whatever opened it.** One opened from a map tool's panel stays on screen after that panel closes.
 - **A plugin can only open its own dialogs.** The plugin id comes from the scope CDT established, so naming another plugin's dialog id addresses nothing.
+
+## Reading platform data
+
+Buildings, sites, sensors, comments and files come from `@collabdt/core/plugins-sdk/data`. A plugin goes through the same request path as the rest of CDT, so it inherits the signed-in user's session, the organization scoping and the shared cache — there is no second data path and no way past the tenant boundary.
+
+```tsx
+import { useBuildings, useSensorsByBuilding } from '@collabdt/core/plugins-sdk/data'
+
+function Panel() {
+  const { buildings, isLoading } = useBuildings()
+  const { sensors } = useSensorsByBuilding(buildings[0]?.id ?? null)
+
+  if (isLoading) return null
+  return <p>{sensors.length} sensors</p>
+}
+```
+
+Every read hook returns its payload plus `isLoading` and `isError`. A list hook returns `[]` before it resolves rather than `undefined`, so it can be mapped straight away; a single-record hook returns `null`.
+
+| Read | Hook |
+|---|---|
+| Buildings | `useBuildings`, `useBuilding`, `useBuildingsByOsm`, `useBuildingOsmIds` |
+| Sites | `useSites`, `useSite` |
+| Infrastructure | `useInfrastructures`, `useInfrastructure` |
+| Organization | `useOrganization`, `useOrganizationByName` |
+| Files | `useFiles`, `useFile`, `useFilesByBuildingId`, `useFilesBySiteId`, `useDownloadFile` |
+| Sensors | `useSensors`, `useSensor`, `useSensorsByBuilding`, `useSensorsByAuthor`, `useSensorTypes`, `useSensorType` |
+| Comments | `useComments`, `useComment`, `useCommentsByBuilding`, `useCommentsByAuthor` |
+
+Buildings and sites are read-only to a plugin: they are canonical asset records, so changing one is a change to CDT rather than to a plugin. Sensors and comments are the domains plugins are expected to author, and they have `useCreateSensor`, `useCreateComment` and `useDeleteComments`. A plugin's own records go in `usePluginStore`.
+
+Types come from `@collabdt/plugin-kit/types/data`, which declares the fields the SDK commits to rather than every column CDT's schema carries.
 
 ## Where to keep state
 
