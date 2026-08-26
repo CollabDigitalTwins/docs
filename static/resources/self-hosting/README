@@ -10,7 +10,7 @@
   <p>
     <a href="https://collabdt.org">Website</a> ·
     <a href="https://docs.collabdt.org/docs/deployment/self-hosting/">Self-Hosting Docs</a> ·
-    <a href="https://app.collabdt.org">Hosted Platform</a>
+    <a href="https://github.com/CollabDigitalTwins/core">CDT Core Github Repo</a>
   </p>
 
   <br />
@@ -18,6 +18,7 @@
   <img src="https://img.shields.io/badge/license-AGPL%203.0-orange?style=flat-square" alt="License" />
   <img src="https://img.shields.io/badge/deployment-self--hosted-orange?style=flat-square" alt="Self-hosted" />
   <img src="https://img.shields.io/badge/data-sovereign-orange?style=flat-square" alt="Data Sovereign" />
+  <img src="https://img.shields.io/badge/%40collabdt%2Fcore-0.8.2-orange?style=flat-square" alt="@collabdt/core 0.8.2" />
 
   <br /><br />
 
@@ -47,7 +48,9 @@ The stack is defined in [`docker-compose.public.yml`](docker-compose.public.yml)
 | `cdt` | `ghcr.io/…/cdt-image` | The platform itself — API and web UI |
 
 The two one-shot services run on every startup and are safe to re-run: they skip buckets that
-already exist and migrations that have already been applied.
+already exist and migrations that have already been applied. The `:latest` images documented
+here currently ship `@collabdt/core` 0.8.2. `org-logos` is world-readable by design — logos are
+served straight from it — so put nothing else in that bucket.
 
 ---
 
@@ -97,7 +100,7 @@ The app is ready when the log prints `Ready in …` and `docker compose ps` show
 | **CDT platform** | **http://localhost:6012** | The app. This is the one you want. |
 | MinIO console | http://localhost:9001 | Browse stored files; log in with `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` |
 | MinIO API | http://localhost:9000 | Not for browsing — presigned upload/download URLs point here |
-| PostgreSQL | `localhost:5433` | Mapped off 5432 so it won't collide with a local Postgres |
+| PostgreSQL | `localhost:5433` | Mapped off 5432 so it won't collide with a local Postgres — see [Database access](#database-access) |
 
 Port 6012 is fixed by the compose file (`6012:3000`). If you change it, change `AUTH_URL` and
 `ALLOWED_ORIGIN` in `.env` to match — sign-in breaks otherwise.
@@ -133,6 +136,29 @@ service before the app starts. Your data lives in named volumes and survives the
 
 ---
 
+## Changing environment variables
+
+After editing `.env`, recreate the app container — `restart` is not enough:
+
+```bash
+docker compose -f docker-compose.public.yml up -d
+```
+
+Environment variables are fixed when a container is *created*, so `docker compose restart cdt`
+brings back the same container with the same stale values. Only `up -d` notices the changed config
+and replaces it, recreating just what changed and leaving your data volumes alone. Verify with:
+
+```bash
+docker compose -f docker-compose.public.yml exec cdt sh -c 'echo $YOUR_VARIABLE'
+```
+
+The `cdt` service loads the whole file via `env_file: .env`, so a new variable needs no compose
+edit. The one-shot `migrate` service re-runs (safe — applied migrations are skipped), and if you
+changed `AUTH_SECRET` every session cookie becomes undecryptable
+(`JWTSessionError: no matching decryption secret`) until users clear cookies and sign in again.
+
+---
+
 ## Everyday commands
 
 ```bash
@@ -143,7 +169,7 @@ docker compose -f docker-compose.public.yml ps
 docker compose -f docker-compose.public.yml logs -f
 docker compose -f docker-compose.public.yml logs -f cdt
 
-# Restart just the app
+# Restart just the app (does not pick up .env changes — see "Changing environment variables")
 docker compose -f docker-compose.public.yml restart cdt
 
 # Stop everything, keep all data
@@ -159,6 +185,50 @@ docker compose -f docker-compose.public.yml exec cdt sh
 
 Application logs are also written to a `logs/` folder beside the compose file via a bind mount, so
 they survive container restarts.
+
+---
+
+## Database access
+
+Stock PostgreSQL 15 with PostGIS, so any Postgres client works. Nothing extra runs by default.
+
+| | |
+|---|---|
+| Host / port | `localhost:5433` from your machine, `postgres:5432` inside the compose network |
+| Credentials | `POSTGRES_DB` / `POSTGRES_USER` / `POSTGRES_PASSWORD` from your `.env` |
+
+> [!WARNING]
+> **On a server, close these ports first.** The compose file publishes Postgres (`5433`) and the
+> MinIO console (`9001`) on *every* interface, so on a public host the database is reachable behind
+> nothing but `POSTGRES_PASSWORD`. Prefix both with `127.0.0.1:` in the compose file, or firewall
+> them, and connect through an SSH tunnel instead.
+
+**SQL shell** — `psql` is already in the container:
+
+```bash
+docker compose -f docker-compose.public.yml exec postgres sh -c 'psql -U $POSTGRES_USER -d $POSTGRES_DB'
+```
+
+The single quotes keep `$POSTGRES_USER` unexpanded so it resolves inside the container; this form
+works in bash and PowerShell alike. Prisma creates tables in PascalCase, so quote them:
+`select * from "User";` works, `select * from User;` does not.
+
+**GUI clients** — point DBeaver, pgAdmin, TablePlus, or DataGrip at `localhost:5433`.
+
+**Prisma Studio** — a schema-aware row browser, run only when you want it:
+
+```bash
+docker compose -f docker-compose.public.yml run --rm -p 127.0.0.1:5555:5555 migrate yarn prisma studio --port 5555 --hostname 0.0.0.0 --browser none
+```
+
+Open http://localhost:5555; Ctrl-C stops it and `--rm` removes the container. It has no login and
+full read/write on every table, `User` and `Account` included — keep the `127.0.0.1:` prefix and
+reach it remotely over an SSH tunnel (`ssh -L 5555:localhost:5555 you@server`). Edits bypass the
+app, so tenant scoping and the Postgres↔MinIO pairing are not enforced; treat it as read-mostly.
+
+> [!NOTE]
+> PowerShell: keep each command on one line (`\` continuations fail), and prefix with `--%` when a
+> `-c "..."` payload contains quotes.
 
 ---
 
