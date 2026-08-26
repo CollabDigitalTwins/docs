@@ -82,7 +82,7 @@ That said, Podman compatibility is best-effort. Networking behavior, `depends_on
 
 Before starting the stack, create a `.env` file in the same directory as your compose file. Download the example below as a starting point, save it as `.env`, then fill in the values described in the sections that follow.
 
-<a href="/resources/env.example" download="env.example" className="button button--primary">⬇ Download env.example</a>
+<a href="/resources/self-hosting/env.example" download="env.example" className="button button--primary">⬇ Download env.example</a>
 
 If you cloned the CDT repository, you can instead copy the bundled example:
 
@@ -168,6 +168,28 @@ Leave these unset to disable Google login entirely.
 | `AUTH_GOOGLE_ID` | Google OAuth client ID |
 | `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
 
+#### Basemaps (imagery, terrain and buildings)
+
+The map draws its satellite imagery, terrain elevation, label fonts, administrative boundaries and 3D building footprints from [MapTiler](https://cloud.maptiler.com). Set `MAPTILER_KEY` to your own key so the CDT platform bills tiles to your account and nobody else's:
+
+1. Sign up at [cloud.maptiler.com](https://cloud.maptiler.com) — the free tier covers evaluation and small pilots.
+2. Copy the key from your account's *API keys* page.
+3. Restrict its allowed origins to your deployment's domain, so a copied key cannot be used elsewhere.
+4. Set `MAPTILER_KEY` in your `.env`.
+
+Leave it unset and the map still works, with each source falling back to a key-free provider:
+
+| Source | With `MAPTILER_KEY` | Without |
+|--------|---------------------|---------|
+| Satellite imagery | MapTiler Satellite | [Esri World Imagery](https://www.esri.com/) |
+| Terrain and hillshade | MapTiler Terrain RGB | Open [terrain tiles](https://registry.opendata.aws/terrain-tiles/) (terrarium) |
+| Label fonts | MapTiler fonts | OpenMapTiles font CDN |
+| Building footprints, country and region borders | Your key | MapTiler's placeholder key — **answers on `localhost` only** |
+
+The last row is why a keyless production deployment loses interactive buildings and global borders while a keyless local install keeps them. Subdivision borders for the organization's own country come from a key-free source either way.
+
+**Production note:** set your own key. The placeholder is MapTiler's public demo credential, intended for local development, and it will not serve tiles from your domain.
+
 #### Geocoding (address search)
 
 The map's search bar resolves addresses and place names through a geocoding provider. CDT selects one from the environment, so a self-hosted deployment can run entirely key-free if preferred. Providers are tried in priority order:
@@ -212,7 +234,11 @@ Mount the folder read-only alongside it:
 
 Download the compose file and place it in the same directory as your `.env`:
 
-<a href="/resources/docker-compose.public.yml" download="docker-compose.public.yml" className="button button--primary">⬇ Download docker-compose.public.yml</a>
+<a href="/resources/self-hosting/docker-compose.public.yml" download="docker-compose.public.yml" className="button button--primary">⬇ Download docker-compose.public.yml</a>
+&nbsp;
+<a href="/resources/self-hosting/README" download="README.md" className="button button--secondary">⬇ Download README.md</a>
+
+The README is a standalone quick reference for the folder you just created — start, update, and everyday commands, port map, and troubleshooting — for when the docs site is not at hand.
 
 From that directory, start the stack:
 

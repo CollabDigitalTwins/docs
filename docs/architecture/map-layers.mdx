@@ -24,7 +24,7 @@ export const MapLayers = () => (
   <>
     <CountryLayer />
     <OpenDataLayers />
-    <BuildingLayer />
+    <BuildingLayer maptilerKey={maptilerKey} />
     <CommentLayer />
     <SensorLayers />
     <FileLayers />
@@ -39,18 +39,25 @@ Render order affects visual stacking but click priority is controlled separately
 
 ### CountryLayer
 
-Renders country and administrative boundary outlines from a tile source. Used as a base reference layer. Does not register a click handler.
+Renders country, region and subdivision boundary outlines, and tracks which administrative subdivision the camera is looking at. Does not register a click handler.
 
-**Source:** External tile provider (configured per organization via `mapStyles`).
+Country and region borders come from MapTiler's vector tiles on the deployment's `MAPTILER_KEY`, falling back to MapTiler's localhost-only placeholder key. Subdivision polygons for the organization's own country come from ArcGIS World Administrative Divisions and need no key, so subdivision borders render on every deployment and on every base style.
+
+`currentLocation.countrySubdivision` follows the **camera**, not the pointer: after each `moveend` the layer resolves the polygon under the camera target and commits its ISO 3166-2 code, also writing it to the `countrySubdivision` URL parameter. Hovering only thickens the border of the subdivision under the cursor, and only above zoom 10 — there is no fill, so imagery is never tinted. Subdivision borders are hidden above zoom 15, where building-scale detail takes over; the invisible hit-test polygons remain at every zoom, so camera tracking keeps working past that point. When the camera target falls outside the loaded polygons — over water, or in another country — the last resolved value is kept. An organization with a fixed `countrySubdivision` or `municipality` skips all of this: those values are pushed into `currentLocation` once and the layer renders nothing.
+
+**Sources:** `openmaptiles-boundaries` (MapTiler vector tiles), `admin-subdivisions-source` (ArcGIS GeoJSON).
 
 ---
 
 ### BuildingLayer (`BuildingLayer`)
 
-Renders CDT buildings on the 3D MapTiler base layer. Highlights a building when selected and hides buildings whose IFC model is loaded in the BIM viewer (to avoid visual overlap).
+Renders CDT buildings as 3D extrusions. Highlights a building when selected and hides buildings whose IFC model is loaded in the BIM viewer (to avoid visual overlap).
+
+The layer brings its own building tile source (`cdt-buildings`, from MapTiler's buildings tileset on the deployment's `MAPTILER_KEY`), so buildings are interactive on **every** base style rather than only the MapTiler ones. Without a key it reuses a buildings-capable vector source already present in the style (`openmaptiles`, `maptiler_planet`, `carto`) and otherwise falls back to MapTiler's localhost-only placeholder key.
 
 **Data:** `useBuildings()` — all buildings for the active organization.  
 **Layer ID:** `maptiler-3d-buildings`  
+**Prop:** `maptilerKey` — passed down from `MapViewer` through `MapLayers`.  
 **Click priority:** `BuildingLayersClickPriority = 100`  
 **On click:** Opens a `MapFeaturePopoverMenu` with building details.
 

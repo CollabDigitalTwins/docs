@@ -1,0 +1,211 @@
+<div align="center">
+  <br />
+  <img src="https://docs.collabdt.org/img/cdt-logo.svg" alt="Collab Digital Twins Logo" height="72" />
+  <br /><br />
+
+  <h1>COLLAB DIGITAL TWINS</h1>
+
+  <p><strong>Democratizing Digital Twin Technologies</strong></p>
+
+  <p>
+    <a href="https://collabdt.org">Website</a> ·
+    <a href="https://docs.collabdt.org/docs/deployment/self-hosting/">Self-Hosting Docs</a> ·
+    <a href="https://app.collabdt.org">Hosted Platform</a>
+  </p>
+
+  <br />
+
+  <img src="https://img.shields.io/badge/license-AGPL%203.0-orange?style=flat-square" alt="License" />
+  <img src="https://img.shields.io/badge/deployment-self--hosted-orange?style=flat-square" alt="Self-hosted" />
+  <img src="https://img.shields.io/badge/data-sovereign-orange?style=flat-square" alt="Data Sovereign" />
+
+  <br /><br />
+
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker" />
+  <img src="https://img.shields.io/badge/PostGIS-336791?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL + PostGIS" />
+  <img src="https://img.shields.io/badge/MinIO-C72E49?style=flat-square&logo=minio&logoColor=white" alt="MinIO" />
+
+  <br /><br />
+  <hr />
+  <br />
+</div>
+
+## What this is
+
+A self-hosted deployment of the CDT platform. Everything runs from pre-built images on the
+GitHub Container Registry — no source code, no build tooling, no Node.js on the host. The only
+things you supply are Docker and a `.env` file.
+
+The stack is defined in [`docker-compose.public.yml`](docker-compose.public.yml):
+
+| Service | Image | Purpose |
+|---|---|---|
+| `postgres` | `postgis/postgis:15-3.4` | Relational + geospatial database |
+| `minio` | `minio/minio` | Object storage for BIM, point clouds, GIS files |
+| `minio-init` | `minio/mc` | One-shot: creates the `org-logos` bucket, then exits |
+| `migrate` | `ghcr.io/…/cdt-migrate` | One-shot: runs `prisma migrate deploy`, then exits |
+| `cdt` | `ghcr.io/…/cdt-image` | The platform itself — API and web UI |
+
+The two one-shot services run on every startup and are safe to re-run: they skip buckets that
+already exist and migrations that have already been applied.
+
+---
+
+## Prerequisites
+
+- **Docker Desktop** (Windows/macOS) or **Docker Engine + Compose** (Linux) —
+  [install instructions](https://docs.docker.com/get-started/get-docker/). Podman Compose also
+  works; the compose file already carries the `:Z` volume flags it needs.
+- A `.env` file in this directory. Start from the
+  [example](https://docs.collabdt.org/resources/self-hosting/env.example) and see
+  [Environment Configuration](https://docs.collabdt.org/docs/deployment/self-hosting/#environment-configuration)
+  for what each variable does.
+
+> [!IMPORTANT]
+> **Docker has to be running before any command below.** On Windows and macOS that means
+> launching Docker Desktop and waiting until the whale icon reports **Engine running** — the
+> daemon is not started by the CLI. If it isn't up you'll get:
+>
+> ```
+> error during connect: ... The system cannot find the file specified.
+> ```
+>
+> That message means Docker, not CDT. Start Docker Desktop and re-run.
+
+---
+
+## Start the stack
+
+```bash
+docker compose -f docker-compose.public.yml up -d
+```
+
+First run pulls several GB of images and initializes the database — give it a few minutes.
+Watch it come up with:
+
+```bash
+docker compose -f docker-compose.public.yml logs -f cdt
+```
+
+The app is ready when the log prints `Ready in …` and `docker compose ps` shows `cdt` as
+`healthy`.
+
+### Where to open it
+
+| What | URL | Notes |
+|---|---|---|
+| **CDT platform** | **http://localhost:6012** | The app. This is the one you want. |
+| MinIO console | http://localhost:9001 | Browse stored files; log in with `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` |
+| MinIO API | http://localhost:9000 | Not for browsing — presigned upload/download URLs point here |
+| PostgreSQL | `localhost:5433` | Mapped off 5432 so it won't collide with a local Postgres |
+
+Port 6012 is fixed by the compose file (`6012:3000`). If you change it, change `AUTH_URL` and
+`ALLOWED_ORIGIN` in `.env` to match — sign-in breaks otherwise.
+
+---
+
+## First run — create your organization
+
+A fresh install has no organization and no users. Open the platform URL and you are redirected to
+`/organization-config`, a one-time setup form that asks for:
+
+- **Organization name** — 3–63 characters, lowercase letters, numbers, dots and hyphens (e.g. `my-org`)
+- **Organization title and description** — what people see in the UI
+- **Languages, viewers, and data types** — what to enable for this organization
+- **Admin name, email, and password** — the first administrator account
+
+Submitting takes you to the sign-in page. The setup form is reachable only while no organization
+exists; afterwards it redirects to sign-in. Change the admin password after first login if the
+credentials were shared with anyone during setup.
+
+---
+
+## Update to the latest release
+
+```bash
+docker compose -f docker-compose.public.yml pull
+docker compose -f docker-compose.public.yml up -d
+```
+
+`pull` fetches the newest images; `up -d` recreates only the containers whose image changed and
+leaves the rest running. Pending database migrations are applied automatically by the `migrate`
+service before the app starts. Your data lives in named volumes and survives the upgrade.
+
+---
+
+## Everyday commands
+
+```bash
+# Status of every service
+docker compose -f docker-compose.public.yml ps
+
+# Follow logs (all services, or one)
+docker compose -f docker-compose.public.yml logs -f
+docker compose -f docker-compose.public.yml logs -f cdt
+
+# Restart just the app
+docker compose -f docker-compose.public.yml restart cdt
+
+# Stop everything, keep all data
+docker compose -f docker-compose.public.yml down
+
+# Shell inside the app container
+docker compose -f docker-compose.public.yml exec cdt sh
+```
+
+> [!WARNING]
+> `down -v` deletes the `postgres_data` and `minio_data` volumes — every organization, model,
+> and uploaded file is gone with them. Only use it when you deliberately want a clean slate.
+
+Application logs are also written to a `logs/` folder beside the compose file via a bind mount, so
+they survive container restarts.
+
+---
+
+## Plugins
+
+Plugins are **off by default**, and none are mounted by the compose file. A mounted plugin runs on
+the main thread with the same access as CDT itself — there is no sandbox — so only mount plugins
+you trust and have read.
+
+To enable them, set `PLUGINS_ENABLED=true` in `.env`, create a `plugins/` folder beside the compose
+file with one sub-folder per plugin (each containing a `manifest.json` and `dist/index.js`), and add
+the read-only mount to the `cdt` service:
+
+```yaml
+    volumes:
+      - ./logs:/app/logs
+      - ./plugins:/app/plugins:ro
+```
+
+Read-only means a plugin cannot rewrite itself or its neighbours. Mounting one does not run it: an
+administrator still has to add it on the **Plugins** page, and each user switches it on for
+themselves. Full details in the
+[plugin guide](https://docs.collabdt.org/docs/plugins/mounting-a-plugin/).
+
+---
+
+## Troubleshooting
+
+**Uploads or downloads fail in the browser.** `MINIO_URL` must be a hostname the *browser* can
+reach, because it is embedded in presigned URLs. `http://minio:9000` is the internal Docker
+network name and will never resolve from a browser. Use `http://host.docker.internal:9000` on
+Docker Desktop, your LAN IP on Linux, or your public hostname on a server.
+
+**reCAPTCHA rejects login on localhost.** Add `localhost` as an allowed domain in the
+[reCAPTCHA console](https://www.google.com/recaptcha/admin).
+
+**Port already in use.** Something else holds 6012, 9000, 9001, or 5433. Free the port or change
+the left-hand side of the mapping in the compose file.
+
+**`migrate` exits with an error.** Check `DATABASE_URL` first — it must point at the `postgres`
+service on the internal port (`postgresql://user:pass@postgres:5432/db`), not `localhost:5433`.
+
+For DNS, TLS, reverse proxy, and multi-user deployment, see the
+[full self-hosting guide](https://docs.collabdt.org/docs/deployment/self-hosting/).
+
+---
+
+## License
+
+AGPL-3.0. Collab Digital Twins is a Canadian not-for-profit open-source project.
