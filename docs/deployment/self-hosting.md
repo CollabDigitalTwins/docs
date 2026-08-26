@@ -236,7 +236,7 @@ Download the compose file and place it in the same directory as your `.env`:
 
 <a href="/resources/self-hosting/docker-compose.public.yml" download="docker-compose.public.yml" className="button button--primary">⬇ Download docker-compose.public.yml</a>
 &nbsp;
-<a href="/resources/self-hosting/README" download="README.md" className="button button--secondary">⬇ Download README.md</a>
+<a href="/resources/self-hosting/README" download="README.md" className="button button--primary">⬇ Download README.md</a>
 
 The README is a standalone quick reference for the folder you just created — start, update, and everyday commands, port map, and troubleshooting — for when the docs site is not at hand.
 
