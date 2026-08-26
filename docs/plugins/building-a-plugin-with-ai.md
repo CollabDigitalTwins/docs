@@ -31,7 +31,7 @@ What it should do:
   <describe the behaviour>
 
 Scaffold it first, do not hand-write the files:
-  npx create-cdt-plugin --mode external --name "<Name>" --surface <capability> \
+  npx create-cdt-plugin --name "<Name>" --surface <capability> \
     --body example --yes
 
 Constraints, all of which are load-bearing:

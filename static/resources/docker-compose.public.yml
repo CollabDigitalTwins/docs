@@ -124,6 +124,9 @@ services:
       # MinIO Public URLs (for server-side config)
       MINIO_BUCKET_URL: ${MINIO_BUCKET_URL}
 
+      # Basemaps
+      MAPTILER_KEY: ${MAPTILER_KEY}
+
       # Geocoding Service
       GEOCODE_EARTH_API_KEY: ${GEOCODE_EARTH_API_KEY}
       GEOCODER_URL: ${GEOCODER_URL}
