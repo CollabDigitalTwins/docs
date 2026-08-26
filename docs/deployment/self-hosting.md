@@ -82,7 +82,7 @@ That said, Podman compatibility is best-effort. Networking behavior, `depends_on
 
 Before starting the stack, create a `.env` file in the same directory as your compose file. Download the example below as a starting point, save it as `.env`, then fill in the values described in the sections that follow.
 
-<a href="/resources/env.example" download="env.example" className="button button--primary">⬇ Download env.example</a>
+<a href="/resources/self-hosting/env.example" download="env.example" className="button button--primary">⬇ Download env.example</a>
 
 If you cloned the CDT repository, you can instead copy the bundled example:
 
@@ -234,7 +234,11 @@ Mount the folder read-only alongside it:
 
 Download the compose file and place it in the same directory as your `.env`:
 
-<a href="/resources/docker-compose.public.yml" download="docker-compose.public.yml" className="button button--primary">⬇ Download docker-compose.public.yml</a>
+<a href="/resources/self-hosting/docker-compose.public.yml" download="docker-compose.public.yml" className="button button--primary">⬇ Download docker-compose.public.yml</a>
+&nbsp;
+<a href="/resources/self-hosting/README" download="README.md" className="button button--secondary">⬇ Download README.md</a>
+
+The README is a standalone quick reference for the folder you just created — start, update, and everyday commands, port map, and troubleshooting — for when the docs site is not at hand.
 
 From that directory, start the stack:
 
