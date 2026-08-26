@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T12:11:45.145Z",
+  "generatedAt": "2026-08-20T18:38:59.418Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -520,21 +520,9 @@
               "primary": null
             },
             {
-              "id": "plugins/error-handling-and-safety",
-              "title": "Error handling & safety",
-              "slug": "/docs/plugins/error-handling-and-safety",
-              "primary": null
-            },
-            {
-              "id": "plugins/installing-and-enabling",
-              "title": "Installing and enabling plugins",
-              "slug": "/docs/plugins/installing-and-enabling",
-              "primary": null
-            },
-            {
-              "id": "plugins/mounting-a-plugin",
-              "title": "Mounting a plugin",
-              "slug": "/docs/plugins/mounting-a-plugin",
+              "id": "plugins/hello-map-example",
+              "title": "Example: one plugin, several surfaces",
+              "slug": "/docs/plugins/hello-map-example",
               "primary": null
             },
             {
@@ -544,15 +532,9 @@
               "primary": null
             },
             {
-              "id": "plugins/plugin-context-api",
-              "title": "PluginContext API",
-              "slug": "/docs/plugins/plugin-context-api",
-              "primary": null
-            },
-            {
-              "id": "plugins/hello-bim-example",
-              "title": "Real example: hello-bim",
-              "slug": "/docs/plugins/hello-bim-example",
+              "id": "plugins/mounting-a-plugin",
+              "title": "Run your plugin",
+              "slug": "/docs/plugins/mounting-a-plugin",
               "primary": null
             }
           ],

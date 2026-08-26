@@ -226,7 +226,7 @@ Mount the folder read-only alongside it:
       - ./plugins:/app/plugins:ro
 ```
 
-**A plugin runs with the same access as CDT itself, and there is no sandbox.** Only mount plugins you trust and have read. Mounting one does not run it: an administrator still has to add it on the Plugins page. Full details in [Mounting a plugin](../plugins/mounting-a-plugin.md).
+**A plugin runs with the same access as CDT itself, and there is no sandbox.** Only mount plugins you trust and have read. Mounting one does not run it: an administrator still has to add it on the Plugins page. Full details in [Run your plugin](../plugins/mounting-a-plugin.md).
 
 ---
 

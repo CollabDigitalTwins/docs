@@ -1,67 +1,55 @@
 ---
 title: Overview
-description: What the CDT plugin framework is, how contributions reach the UI, and what is supported today.
+description: What a CDT plugin is, where one can appear in the app, and the two ways to get one running.
 sidebar_position: 1
 category: plugins
 status: draft
-last_updated: 2026-08-15
+last_updated: 2026-08-17
 ---
 
-import PluginLifecycle from '@site/src/components/PluginLifecycle';
-import PluginZones from '@site/src/components/PluginZones';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 
-# Overview
+# Plugins
 
-The plugin framework lets you add tools, panels and legends to CDT without modifying core files. A plugin registers its contributions into a central registry when it activates; the toolbars and the map legend subscribe to that registry and re-render when it changes. Core code never changes — only the registry does.
+A plugin adds functionalities to the CDT platform without changing CDT core. A plugin is a folder holding a manifest and some React components; the app picks it up and renders its contributions alongside the core.
 
-There are six capabilities, and a contribution appears wherever core already has a consumer for it: the three viewer toolbars and the shared map legend today. `sidebar.items` and `viewer.panels` are accepted by the host but nothing renders them yet — see [Capabilities](./all-capabilities.md).
+A plugin declares what it adds, and CDT calls its `activate()` function once at start-up. Everything else — the toolbar button, the panel frame, the dialog overlay, the page layout — is handled by the app. The plugin supplies the contents.
 
-Two things have to be true before a plugin appears on screen, and they are independent:
+<BrowserOnly>
+  {() => {
+    const PluginSurfaces = require('@site/src/components/PluginSurfaces').default;
+    return <PluginSurfaces />;
+  }}
+</BrowserOnly>
 
-1. **The code has to be present.** Either compiled into `@collabdt/core`, or [mounted from a folder](./mounting-a-plugin.md) next to a running CDT platform.
-2. **Someone has to switch it on.** An administrator makes it available to their organization, and each person then chooses whether it runs for them. See [Installing and enabling plugins](./installing-and-enabling.md).
+A single plugin can use as many of these as it needs — `hello-map` ships with CDT and uses six. See [Capabilities](./all-capabilities.md) for what each one receives.
 
-:::note Two ways in, and when to use which
-**Compiled in** — the plugin lives in `@collabdt/core/plugins/<slug>/` and is listed in `installed.ts`. It then exists in every CDT installation. Getting a plugin there means opening a pull request against core and waiting for a release. Once you have tested your plugin locally, you can suggest it to the CDT team via pull request so it becomes part of the core.
+## Getting a plugin running
 
-**Mounted** — you build the plugin yourself or get it from someone else and drop the folder next to your deployment. The CDT platform finds it at startup and it appears on the plugins page. No pull request, no release, no rebuilding CDT. This is for people running their own self-hosted CDT, and it is off unless you switch it on.
+Two conditions must be met, and they are separate on purpose.
 
-Mounted plugins are **not** available on the CDT-hosted platform. There, a plugin becomes available by being reviewed and included in a release.
-:::
+**1. The code has to be present.** Either a built plugin folder sits next to a CDT deployment, or the plugin is compiled into `@collabdt/core` and ships with every installation.
 
-## In this section
+|  | Mounted next to a deployment | Compiled into core |
+|---|---|---|
+| Intended for | Anyone self-hosting CDT | Plugins useful to every installation |
+| How it gets in | Build it, add the folder, restart | A pull request to core, then a release |
+| Available on the CDT-hosted platform | No | Yes |
 
-1. [Create your first plugin](./create-your-first-plugin.md) — a walkthrough
-2. [PluginContext API](./plugin-context-api.md) — `pluginId`, `config`, `register`
-3. [Capabilities](./all-capabilities.md) — what a plugin can contribute
-4. [Mounting a plugin](./mounting-a-plugin.md) — loading one without rebuilding CDT
-5. [Installing and enabling plugins](./installing-and-enabling.md) — the plugins page
-6. [Error handling and safety](./error-handling-and-safety.md) — isolation, guards, cleanup
-7. [Real example: hello-bim](./hello-bim-example.md) — annotated, and shipped in core
-8. [Building a plugin with AI](./building-a-plugin-with-ai.md) — prompting one into existence correctly
+Mounting is the place to start. A plugin that turns out to be broadly useful can then be submitted to core as a pull request.
 
-## What a plugin can reach
-
-A plugin imports from `@collabdt/core/plugins-sdk` and its `/config`, `/messages`, `/store` and `/components` entries, and nothing else. That boundary is enforced by a lint rule, not just documented: reaching into core fails the build.
-
-Through the SDK a plugin gets:
-
-- **Data** — buildings, sites, sensors, comments, files, through the same hooks core uses, so it inherits authentication and organization scoping automatically.
-- **The viewers** — the MapLibre map handle; for BIM, the loaded models, the live selection, element queries by IFC class, property reads, visibility and camera framing.
-- **Its own settings and translations**, and the signed-in user's permissions so it can hide what they may not do.
-
-## How it fits together
-
-### Lifecycle — from app start to a rendered contribution
-
-The host resolves which plugins exist, decides which of them may run for this person, and only then loads and activates each one. The second half runs again whenever an administrator or a user changes what is switched on, so a plugin appears or disappears without a page reload.
-
-<PluginLifecycle />
-
-### System structure — how the three zones relate
-
-<PluginZones />
+**2. The plugin has to be enabled.** An administrator adds it to their organization on the **Plugins** page, and each person then chooses whether it runs for them. Nothing runs merely because the code is present.
 
 ## Security
 
-A plugin runs with the same access as CDT itself. There is no sandbox in this version. This is a deliberate, documented trade-off rather than an oversight — see [Error handling and safety](./error-handling-and-safety.md).
+A plugin runs with the same access as CDT itself. There is no sandbox: it can read anything the signed-in person can read and call any endpoint they can call.
+
+Treat a plugin as any other dependency being granted full access, and read it before mounting it. This is why plugin loading is off unless explicitly enabled, and why an administrator must still add a plugin before it runs.
+
+## In this section
+
+1. [Create your first plugin](./create-your-first-plugin.md) — a working plugin, start to finish
+2. [Capabilities](./all-capabilities.md) — everything a plugin can add, and what each contribution receives
+3. [Run your plugin](./mounting-a-plugin.md) — building, loading and enabling one
+4. [Example: one plugin, several surfaces](./hello-map-example.md) — how the surfaces work together
+5. [Building a plugin with AI](./building-a-plugin-with-ai.md) — a prompt, and the mistakes to expect

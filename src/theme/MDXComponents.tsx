@@ -6,7 +6,6 @@
   import CardFooter from '@site/src/components/Card/CardFooter';
   import CardHeader from '@site/src/components/Card/CardHeader';
   import CardImage from '@site/src/components/Card/CardImage';
-  import PluginArchitecture from '@site/src/components/PluginArchitecture';
   import AudienceNotice from '@site/src/components/AudienceNotice';
   export default {
     // Reusing the default mapping
@@ -16,6 +15,5 @@
     CardBody,
     CardFooter,
     CardImage,
-    PluginArchitecture,
     AudienceNotice,
   };
