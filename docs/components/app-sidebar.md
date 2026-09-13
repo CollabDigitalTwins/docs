@@ -1,16 +1,11 @@
 ---
 title: AppSidebarContent
 description: Main sidebar navigation component that renders viewer, dataset, and plugin menu items based on organization configuration and user role.
-category: components
-status: draft
-last_updated: 2025-01-14
 ---
 
 # AppSidebarContent
 
-Renders the primary sidebar navigation for the CDT platform. Displays grouped menu items for 3D viewers (Map, BIM), datasets (Sites, Buildings, Files, Infrastructure), and plugins. Adapts to organization-specific content restrictions, user roles, and collapsed/expanded sidebar states.
-
-## Usage
+The primary sidebar navigation. It renders grouped menu items for the 3D viewers (Map, BIM), the datasets (Sites, Buildings, Files, Infrastructure) and plugins, adapting to organization content restrictions, user roles, and the collapsed or expanded sidebar state.
 
 ```tsx
 import { AppSidebarContent } from '@collabdt/core/core/components/AppSidebarContent';
@@ -21,41 +16,30 @@ import { AppSidebarContent } from '@collabdt/core/core/components/AppSidebarCont
 />
 ```
 
-## Props
-
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `organization` | `Organization` | Yes | — | The current organization object containing name, logo, allowed viewers, and language settings. |
-| `countrySubdivisionsData` | `Record<string, string>` | No | `undefined` | Mapping of country subdivision codes to names, used to populate map context. |
+| `organization` | `Organization` | Yes | — | The current organization: name, logo, allowed viewers and language settings |
+| `countrySubdivisionsData` | `Record<string, string>` | No | `undefined` | Subdivision codes to names, used to populate map context |
 
 ## Behaviour
 
-- On mount, dispatches `SET_ORGANIZATION` to `AppConfigContext` and optionally `SET_COUNTRY_SUBDIVISIONS` to `MapContext`.
-- Clicking a menu item calls `handleChangeViewer`, which resets selected item/site/file state, sets view to `'table'`, and updates `currentViewer` in menus state.
-- Menu items are filtered by `organization.appContent` (if defined) and by user role via `accessibleTo`.
-- Collapsed state hides text labels and centers icons; on mobile, the sidebar sheet open state determines layout.
-- Footer displays language switcher (if organization supports multiple languages) and service links (e.g., support email).
-- Active viewer is visually highlighted with primary color styling.
+On mount it dispatches `SET_ORGANIZATION` to `AppConfigContext` and, when `countrySubdivisionsData` is given, `SET_COUNTRY_SUBDIVISIONS` to `MapContext`.
 
-## Design Decisions
+Clicking a menu item calls `handleChangeViewer`, which resets the selected item, site and file state, sets the view to `'table'`, and updates `currentViewer` in menus state. The active viewer is highlighted in the primary colour.
 
-AppSidebarContent is responsible for navigation and organization context — it controls which viewers are available, who can see them, and dispatches the viewer change when a user clicks a menu item.
+Collapsed state hides text labels and centres the icons; on mobile the sidebar sheet's open state determines the layout instead. The footer shows a language switcher when the organization supports more than one language, plus service links such as a support email.
 
-Menu items are defined as three static arrays (`viewerItems`, `datasetItems`, `managementItems`) rather than one flat list. This grouping maps directly to the three sidebar sections rendered in the UI, and makes it easy to add, remove, or reorder items within a section without affecting the others. Commented-out items (Land, Users, Feedback) are intentionally left in place as placeholders for features that are partially implemented or pending — removing them entirely would lose the context of where they belong.
+## Design decisions
 
-Viewer availability is controlled by `appContent` on the Organization model. If `appContent` is empty, all viewers are shown; otherwise the list is filtered to only what the organization has enabled. This filtering happens at the item level via `.filter(item => appContent.includes(item.id))` so the sidebar automatically reflects each organization's configuration without any additional logic.
+AppSidebarContent owns navigation and organization context: which viewers are available, who can see them, and the dispatch that changes viewer on click.
+
+Menu items are three static arrays, `viewerItems`, `datasetItems` and `managementItems`, rather than one flat list. The grouping maps directly onto the three sidebar sections, so items can be added, removed or reordered within a section without affecting the others. Commented-out items (Land, Users, Feedback) are left in place on purpose as placeholders for features that are partially implemented or pending; deleting them would lose the record of where they belong.
+
+Viewer availability is controlled by `appContent` on the Organization model. An empty `appContent` shows every viewer; otherwise the list is filtered to what the organization has enabled, item by item via `.filter(item => appContent.includes(item.id))`, so the sidebar reflects each organization's configuration with no extra logic.
 
 The list itself comes from `resolveAppContent(organization)` in `src/core/utils/appContent.ts`, which the sidebar shares with any other entry point into a viewer, notably the map building popover's tool row. Keeping one implementation matters because a tool that navigates to a viewer the sidebar hides is a dead end: the user arrives somewhere they cannot navigate back to. `resolveAppContent` always includes `map` and treats an unconfigured `appContent` as "everything", so an organization that never set the field keeps the full app.
 
-Role-based visibility is handled via the `accessibleTo` field on `MenuItem` and the `canRenderItem` callback, which checks the current user's role against the allowed roles for each item. This is intentionally separate from CASL — it controls whether a nav item is visible at all, while CASL controls what actions are available once inside a viewer.
-
-The `handleChangeViewer` function is exported so it can be called from other parts of the app (e.g. map interactions, HeaderButtons) that need to trigger a viewer change without going through the sidebar directly. It always resets selected item, site, file, and view state to prevent stale detail views carrying over between viewers.
-
-Collapsed/expanded state drives label visibility and layout adjustments throughout. On mobile, the sheet open state is treated as expanded so labels render correctly when the drawer is visible — this is handled by the `isCollapsed` derived value rather than reading `sidebarState` directly.
-
-## Permissions
-
-Menu items can be restricted by role using the `accessibleTo` property. Items are rendered only if the user's role matches one of the allowed roles.
+Role-based visibility is separate from CASL, and deliberately so: the `accessibleTo` field on `MenuItem` and the `canRenderItem` callback decide whether a nav item is visible at all, while CASL decides what actions are available once inside a viewer.
 
 ```tsx
 {
@@ -66,12 +50,12 @@ Menu items can be restricted by role using the `accessibleTo` property. Items ar
 }
 ```
 
+`handleChangeViewer` is exported so other parts of the app, such as map interactions and `HeaderButtons`, can trigger a viewer change without going through the sidebar. It always resets the selected item, site, file and view state, so a stale detail view cannot carry over between viewers.
+
+Collapsed and expanded state drives label visibility and layout throughout, through an `isCollapsed` derived value rather than `sidebarState` directly. On mobile the sheet's open state counts as expanded, so labels render correctly while the drawer is visible.
+
 ## Related
 
-- [Sidebar UI Components](/docs/components/app-sidebar)
-- [LanguageSwitch](/docs/components/overview)
-- [Logo](/docs/components/overview)
-- [useMenusContext](/docs/hooks/ui)
-- [useUserRole](/docs/hooks/users)
-- [Organization Data Model](/docs/architecture/data-model#organization)
-- [ViewerNames](/docs/components/overview)
+- [useMenusContext](../hooks/ui.md)
+- [useUserRole](../hooks/users.md)
+- [Organization data model](../architecture/data-model.mdx#organization)

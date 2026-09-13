@@ -2,9 +2,6 @@
 title: Capabilities
 description: Everything a CDT plugin can add, the fields each registration needs, and the props each contribution receives.
 sidebar_position: 3
-category: plugins
-status: draft
-last_updated: 2026-08-17
 ---
 
 # Capabilities
@@ -70,20 +67,18 @@ interface BimToolProps {
 }
 ```
 
-`ModelIdMap` is `{ [modelId]: Set<localId> }` — keyed by model, because more than one can be loaded at once.
+`ModelIdMap` is `{ [modelId]: Set<localId> }`, keyed by model, because more than one can be loaded at once.
 
 Every handle is nullable, since a component can render before the viewer has finished initialising. Guard rather than assert.
 
-:::tip IFC spaces start hidden
-`getItemsOfCategory('IFCSPACE')` finds the spaces whether or not they are visible, and they are hidden by default, being volumetric solids that would obscure everything inside them. Call `setItemsVisible(spaces, true)` as well.
-:::
+`getItemsOfCategory('IFCSPACE')` finds spaces whether or not they are visible, and they are hidden by default, being volumetric solids that would obscure everything inside them. Anything acting on one calls `setItemsVisible(spaces, true)` as well.
 
 ## Colouring elements
 
 Colour and opacity come from a hook rather than from `BimToolProps`, because they are scoped to the calling plugin. That also makes painting available from a sidebar tab, not only from a `bim.tools` panel.
 
 :::note
-`usePluginBimAppearance` is currently resolvable only from a plugin compiled into core. It is not among the entries CDT publishes to a mounted plugin — see [What a plugin can import](./mounting-a-plugin.md#what-a-plugin-can-import).
+`usePluginBimAppearance` is currently resolvable only from a plugin compiled into core. It is not among the entries CDT publishes to a mounted plugin, see [What a plugin can import](./mounting-a-plugin.md#what-a-plugin-can-import).
 :::
 
 ```tsx
@@ -124,7 +119,7 @@ ctx.register('viewer.legends', {
 
 ## Drawing on the map
 
-`map.layers` registers a component CDT mounts for as long as the map exists. It renders `null` — everything it does goes through the map handle.
+`map.layers` registers a component CDT mounts for as long as the map exists. It renders `null`: everything it does goes through the map handle.
 
 ```ts
 ctx.register('map.layers', { id: 'markers', component: MarkersLayer })
@@ -166,7 +161,7 @@ Three common mistakes:
 
 - **Re-add on `styledata`, not only once.** Switching the basemap replaces the style and silently drops every source and layer added before it.
 - **Guard both cleanup calls.** The style can be torn down before cleanup runs, and removing a layer that is already gone throws. A source left behind makes the next mount fail on a duplicate id.
-- **`maplibre-gl` cannot be imported,** so `new maplibregl.Marker()` and `new maplibregl.Popup()` are unavailable. A GeoJSON source with a circle or symbol layer does the same job and pans and zooms on the GPU for free. A popup can be built by portalling an element into `map.getContainer()` and positioning it with `map.project()`.
+- **`maplibre-gl` cannot be imported as a runtime value,** so `new maplibregl.Marker()` and `new maplibregl.Popup()` are unavailable. The platform shims four packages this way — `three`, `@thatopen/components`, `maplibre-gl` and `lucide-react` — because a second copy of any of them breaks the viewer. Type-only imports are fine and expected. A GeoJSON source with a circle or symbol layer does the same job and pans and zooms on the GPU for free. A popup can be built by portalling an element into `map.getContainer()` and positioning it with `map.project()`.
 
 Update features with `setData` rather than removing and re-adding the layer, or they flicker on every change.
 
@@ -225,12 +220,12 @@ ctx.register('viewer.tabs', {
 })
 ```
 
-Import `ViewerNames` from `@collabdt/core/plugins-sdk`; it is exported as a value so that a tab or a legend can name its viewers. A mounted plugin built against `@collabdt/plugin-kit` spells them as plain strings instead — `viewers: ['map', 'bim']`, typed as `PluginViewerTarget`.
+Import `ViewerNames` from `@collabdt/core/plugins-sdk`; it is exported as a value so that a tab or a legend can name its viewers. A mounted plugin built against `@collabdt/plugin-kit` spells them as plain strings instead: `viewers: ['map', 'bim']`, typed as `PluginViewerTarget`.
 
-:::tip Say where it goes
-Omitting `viewers` means every viewer, which is rarely a location anyone chose. `create-cdt-plugin` now writes the list explicitly, taken from the viewer surfaces you scaffolded with — pick `bim.tools` and a tab, and you get `viewers: ['bim']`.
+:::caution Say where it goes
+Omitting `viewers` means every viewer, which is rarely a location anyone chose. `create-cdt-plugin` writes the list explicitly, taken from the viewer surfaces you scaffolded with: pick `bim.tools` and a tab, and you get `viewers: ['bim']`.
 
-Only `'map'` and `'bim'` host tabs and legends. Any other name — a typo like `'BIM'`, or a `ViewerNames` member such as `settings` that is a route rather than a viewer — renders nowhere; the platform logs a warning naming the plugin and the value.
+Only `'map'` and `'bim'` host tabs and legends. Any other name, a typo like `'BIM'` or a `ViewerNames` member such as `settings` that is a route rather than a viewer, renders nowhere; the platform logs a warning naming the plugin and the value.
 :::
 
 The component receives no props. It renders inside the panel, so it should fill the width and let the panel scroll.
@@ -264,7 +259,7 @@ Two consequences of CDT owning the dialog stack:
 
 ## Reading platform data
 
-Buildings, sites, sensors, comments and files come from `@collabdt/core/plugins-sdk/data`. A plugin goes through the same request path as the rest of CDT, so it inherits the signed-in user's session, the organization scoping and the shared cache — there is no second data path and no way past the tenant boundary.
+Buildings, sites, sensors, comments and files come from `@collabdt/core/plugins-sdk/data`. A plugin goes through the same request path as the rest of CDT, so it inherits the signed-in user's session, the organization scoping and the shared cache. There is no second data path and no way past the tenant boundary.
 
 ```tsx
 import { useBuildings, useSensorsByBuilding } from '@collabdt/core/plugins-sdk/data'

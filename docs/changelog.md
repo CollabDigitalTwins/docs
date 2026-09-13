@@ -35,7 +35,7 @@ docker compose run --rm migrate
 docker compose up -d
 ```
 
-Always run migrations before bringing up the new application version. For details and rollback, see [Production Deployment → Updates and migrations](./deployment/production.md#updates-and-migrations).
+Always run migrations before bringing up the new application version. For details and rollback, see [Self-Hosting → Upgrading](./deployment/self-hosting.md#upgrading).
 
 ## Past releases
 
@@ -47,5 +47,5 @@ If an upgrade introduces a regression, file an issue with the previous and curre
 
 ## Related
 
-- [Production Deployment](./deployment/production.md)
+- [Self-Hosting](./deployment/self-hosting.md)
 - [Git Workflow → Semantic versioning](./contributing/git-workflow.md#semantic-versioning)

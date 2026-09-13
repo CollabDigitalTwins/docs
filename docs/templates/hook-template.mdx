@@ -1,70 +1,61 @@
 ---
 title: useResource hooks
 description: One-line description of what these hooks manage.
-category: hooks
-status: draft
-last_updated: YYYY-MM-DD
 ---
 
 # useResource hooks
 
-Brief description of what data domain these hooks cover, where in the app they're used, and the underlying fetching strategy (SWR, mutation, etc.).
+One or two sentences on what this data domain covers and where it is used. Do not restate the SWR conventions: link to them instead.
 
-## Hooks
+See [Shared conventions](../hooks/overview.md#shared-conventions) for the loading, error, and mutation fields every hook returns.
 
 | Hook | Description |
 |------|-------------|
+| `useResources` | <!-- description --> |
 | `useResource` | <!-- description --> |
 | `useCreateResource` | <!-- description --> |
 
----
+## `useResources()`
 
-## `useResource`
+<!-- What it fetches, named as its return field: "Fetches all X as `resources: Resource[]`." -->
 
-<!-- Brief description — what it fetches and what it returns. -->
-
-### Signature
-
-```ts
-function useResource(params: ResourceParams): UseResourceReturn
+```tsx
+const { resources, isLoading } = useResources();
 ```
 
-### Parameters
+## `useResource(id)`
 
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `orgId` | `string` | Yes | <!-- description --> |
+<!-- Inline the parameter rather than tabling it: "Fetches one X by `id` (`number | null`)." -->
 
-### Returns
+<!-- Only table the return fields that are SPECIFIC to this hook. Never repeat isLoading / isError / isMutating — they are in Shared conventions. -->
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `data` | `Resource[]` | <!-- description --> |
-| `isLoading` | `boolean` | SWR loading state |
-| `error` | `Error \| undefined` | SWR error state |
-
-### Example
+| `resource` | `Resource \| null` | The fetched record, or null if not loaded |
+| `updateResource` | `(arg: Partial<Resource>) => Promise<Resource>` | Mutation trigger |
 
 ```tsx
-const { data: resources, isLoading } = useResource({ orgId });
-
-if (isLoading) return <Skeleton />;
+const { resource, isLoading, updateResource } = useResource(id);
 ```
 
-### Notes
+<!-- State cache revalidation as one sentence: "A successful update revalidates `["resource", id]` and `["resources"]`." -->
 
-<!-- TODO: Caching behaviour, revalidation triggers, or non-obvious SWR config. -->
+## `useCreateResource()`
 
----
-
-## `useCreateResource`
-
-<!-- TODO: Fill in mutation behaviour, optimistic updates if any, and error handling. -->
-
----
+<!-- "Creates a X. Returns `createResource: (arg) => Promise<Resource>`, and revalidates the list on success." -->
 
 ## Related
 
-- <!-- Corresponding API route -->
-- <!-- Components that use these hooks -->
-- <!-- Relevant data model -->
+- <!-- data model anchor -->
+- <!-- the guide or component that uses these -->
+
+<!--
+STYLE RULES for this section — follow them or the page will not match the rest of the docs:
+- No `### Signature` / `### Parameters` / `### Returns` / `### Example` / `### Notes` headings.
+  Put the signature in the H2 (`## \`useResource(id)\``) and let prose and one table carry the rest.
+- No "Parameters: None." stubs. Omit the section.
+- No single-row tables. Inline a lone parameter as prose.
+- Never repeat what Shared conventions already states.
+- Use the package's real import form: `@collabdt/core/core/hooks/...`.
+- Keep em-dashes rare; a comma, colon or period is usually right.
+-->

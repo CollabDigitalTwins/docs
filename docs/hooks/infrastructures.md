@@ -1,16 +1,13 @@
 ---
 title: useInfrastructure hooks
 description: SWR-based hooks for fetching, creating, updating, and deleting infrastructure records.
-category: hooks
-status: draft
-last_updated: 2025-01-14
 ---
 
 # useInfrastructure hooks
 
-Hooks for managing infrastructure data throughout the application. Built on SWR for caching and revalidation, with mutation hooks for create, update, and delete operations. All hooks are accessed through the core hooks provider and delegate to an ApiAdapter for actual API calls.
+Hooks for infrastructure records.
 
-## Hooks
+See [Shared conventions](./overview.md#shared-conventions) for the loading, error, and mutation fields every hook returns.
 
 | Hook | Description |
 |------|-------------|
@@ -19,31 +16,9 @@ Hooks for managing infrastructure data throughout the application. Built on SWR 
 | `useCreateInfrastructure` | Creates a new infrastructure record |
 | `useDeleteInfrastructure` | Deletes an infrastructure record by ID |
 
----
+## `useInfrastructures()`
 
-## `useInfrastructures`
-
-Fetches the complete list of infrastructure records. Returns an empty array while loading or if no data exists.
-
-### Signature
-
-```ts
-function useInfrastructures(): UseInfrastructuresReturn
-```
-
-### Parameters
-
-None.
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `infrastructures` | `Infrastructure[]` | Array of infrastructure records, defaults to empty array |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
-### Example
+Fetches the complete list as `infrastructures: Infrastructure[]`.
 
 ```tsx
 const { infrastructures, isLoading, isError } = useInfrastructures();
@@ -54,37 +29,14 @@ if (isError) return <ErrorMessage />;
 return <InfrastructureList items={infrastructures} />;
 ```
 
----
+## `useInfrastructure(infrastructureId)`
 
-## `useInfrastructure`
-
-Fetches a single infrastructure record by ID. Also provides an update mutation that revalidates both the individual record and the list cache on success.
-
-### Signature
-
-```ts
-function useInfrastructure(infrastructureId: number): UseInfrastructureReturn
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `infrastructureId` | `number` | Yes | The ID of the infrastructure to fetch |
-
-### Returns
+Fetches a single record by `infrastructureId` (`number`), and provides an update mutation.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `infrastructure` | `Infrastructure \| null` | The infrastructure record, or null if not loaded |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-| `updateInfrastructure` | `(arg: Partial<Infrastructure>) => Promise<Infrastructure>` | Mutation trigger to update the record |
-| `isMutating` | `boolean` | Whether an update is in progress |
-| `updateError` | `Error \| undefined` | Error from the last update attempt |
-| `updatedData` | `Infrastructure \| undefined` | Response data from successful update |
-
-### Example
+| `infrastructure` | `Infrastructure \| null` | The record, or null if not loaded |
+| `updateInfrastructure` | `(arg: Partial<Infrastructure>) => Promise<Infrastructure>` | Mutation trigger |
 
 ```tsx
 const { infrastructure, isLoading, updateInfrastructure, isMutating } = useInfrastructure(42);
@@ -94,32 +46,11 @@ const handleSave = async (changes: Partial<Infrastructure>) => {
 };
 ```
 
----
+A successful update revalidates both the individual record and the list.
 
-## `useCreateInfrastructure`
+## `useCreateInfrastructure()`
 
-Creates a new infrastructure record. Revalidates the infrastructure list cache on success.
-
-### Signature
-
-```ts
-function useCreateInfrastructure(): UseCreateInfrastructureReturn
-```
-
-### Parameters
-
-None.
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `createInfrastructure` | `(arg: Partial<Infrastructure>) => Promise<Infrastructure>` | Mutation trigger to create a record |
-| `isMutating` | `boolean` | Whether creation is in progress |
-| `createError` | `Error \| undefined` | Error from the last create attempt |
-| `createdData` | `Infrastructure \| undefined` | The newly created infrastructure record |
-
-### Example
+Creates a record. Returns `createInfrastructure: (arg: Partial<Infrastructure>) => Promise<Infrastructure>`, and revalidates the list on success.
 
 ```tsx
 const { createInfrastructure, isMutating, createError } = useCreateInfrastructure();
@@ -130,34 +61,11 @@ const handleCreate = async (data: Partial<Infrastructure>) => {
 };
 ```
 
----
+## `useDeleteInfrastructure(infrastructureId?)`
 
-## `useDeleteInfrastructure`
+Deletes a record. The optional `infrastructureId` (`number`) only seeds the SWR cache key; the ID to delete is passed to the trigger.
 
-Deletes an infrastructure record by ID. Manually revalidates the infrastructure list cache after deletion.
-
-### Signature
-
-```ts
-function useDeleteInfrastructure(infrastructureId?: number): UseDeleteInfrastructureReturn
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `infrastructureId` | `number` | No | Optional ID used for SWR cache key |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `deleteInfrastructure` | `(id: number) => Promise<void>` | Function to delete an infrastructure by ID |
-| `isMutating` | `boolean` | Whether deletion is in progress |
-| `deleteError` | `Error \| undefined` | Error from the last delete attempt |
-| `deletedData` | `unknown` | Response data from successful deletion |
-
-### Example
+Returns `deleteInfrastructure: (id: number) => Promise<void>`, plus `deletedData: unknown`, and revalidates the list after deletion.
 
 ```tsx
 const { deleteInfrastructure, isMutating } = useDeleteInfrastructure();
@@ -169,9 +77,7 @@ const handleDelete = async (id: number) => {
 };
 ```
 
----
-
 ## Related
 
 - [Data model: Infrastructure](/docs/architecture/data-model#infrastructure)
-- [Hooks provider](/docs/hooks/overview)
+- [Concepts: IFC infrastructure types](/docs/concepts/ifc-infrastructure-types)

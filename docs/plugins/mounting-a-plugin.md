@@ -2,19 +2,16 @@
 title: Run your plugin
 description: Build a plugin, load it into a running CDT deployment, enable it, and diagnose it when it does not appear.
 sidebar_position: 4
-category: plugins
-status: draft
-last_updated: 2026-08-17
 ---
 
 # Run your plugin
 
-A plugin can be added to a self-hosted CDT deployment without rebuilding it. Build the plugin, place the folder where CDT can see it, and add it on the Plugins page. A restart is only needed when `PLUGINS_DEV` is off — see [The development loop](#the-development-loop).
+A plugin can be added to a self-hosted CDT deployment without rebuilding it. Build the plugin, place the folder where CDT can see it, and add it on the Plugins page. A restart is only needed when `PLUGINS_DEV` is off, see [The development loop](#the-development-loop).
 
 This applies to self-hosted deployments. On the CDT-hosted platform, a plugin becomes available by being reviewed and included in a release.
 
 :::warning
-A plugin runs with the same access as CDT itself, and there is no sandbox. Only mount plugins that are trusted and have been read. See [Security](./overview.md#security).
+Only mount plugins that are trusted and have been read. See [Security](./overview.md#security).
 :::
 
 ## 1. Build it
@@ -24,7 +21,7 @@ npm install
 npm run build
 ```
 
-That produces `dist/index.js` — a single file, which is what CDT serves to the browser. The resulting folder looks like this:
+That produces `dist/index.js`, a single file, which is what CDT serves to the browser. The resulting folder looks like this:
 
 ```
 plugins/
@@ -48,7 +45,7 @@ services:
       - ./plugins:/app/plugins:ro
 ```
 
-Then `docker compose up -d`. The mount is read-only on purpose: CDT only ever reads a plugin.
+Then `docker compose up -d`. The mount is read-only on purpose: CDT only ever reads a plugin. Under Docker, run the build on the host rather than inside the container.
 
 | Variable | Default | Effect |
 |---|---|---|
@@ -90,9 +87,9 @@ That list is exactly what CDT resolves. `usePluginBimAppearance` is not in it, s
 
 Types for the data hooks come from `@collabdt/plugin-kit/types/data`, which declares the record fields the SDK commits to. Core's schema carries more columns than that; the kit widens a record when a plugin needs one.
 
-Not available: `@thatopen/components`, `three`, `maplibre-gl`, `lucide-react`. None are needed — viewer instances arrive as props and icons are named by string — and a second copy of React or three.js in the page is a crash rather than a size regression. Type-only imports of `maplibre-gl` and `@thatopen/components` are fine, and `@collabdt/plugin-kit/types/*` provides those types without importing either package.
+Not available: `@thatopen/components`, `three`, `maplibre-gl`, `lucide-react`. None are needed, since viewer instances arrive as props and icons are named by string, and a second copy of React or three.js in the page is a crash rather than a size regression. Type-only imports of `maplibre-gl` and `@thatopen/components` are fine, and `@collabdt/plugin-kit/types/*` provides those types without importing either package.
 
-The scaffolded `tsup.config.ts` handles this. It calls `@collabdt/plugin-kit`'s preset, which marks exactly these specifiers external and then fails the build on anything else, naming what it rejected. A hand-configured bundler must mark them external too, and the built file's imports should be checked directly, since getting this wrong does not fail loudly.
+The scaffolded `tsup.config.ts` handles this. It calls `@collabdt/plugin-kit`'s preset, which marks exactly these specifiers external and then fails the build on anything else, naming what it rejected. A guard failure is a real problem in the plugin, never something to work around: the preset refuses overrides of `entry`, `outDir`, `format`, `external` and `onSuccess` for that reason. A hand-configured bundler must mark the same specifiers external, emit a single file, and have its imports checked directly, since getting this wrong does not fail loudly.
 
 ## Version compatibility
 
