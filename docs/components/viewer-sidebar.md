@@ -19,9 +19,9 @@ This component was called `InfoSidebar` before `@collabdt/core@0.4.5`, and `View
 You rarely render `ViewerSidebar` yourself — `SidebarProvider` mounts it inside the resizable overlay. You reach for `ViewerSidebarShell` when building or changing a viewer's sidebar:
 
 ```tsx
-import { ViewerSidebarShell } from '@collabdt/core/components/ui/ViewerSidebar/Shell';
+import { ViewerSidebarShell } from '@collabdt/core/core/components/ui/ViewerSidebar/Shell';
 
-import type { ViewerSidebarTab } from '@collabdt/core/components/ui/ViewerSidebar/sidebarTabs';
+import type { ViewerSidebarTab } from '@collabdt/core/core/components/ui/ViewerSidebar/sidebarTabs';
 
 export function BimSidebar({ organization }) {
   const tabs: ViewerSidebarTab[] = [

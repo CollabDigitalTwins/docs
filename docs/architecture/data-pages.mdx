@@ -1,0 +1,479 @@
+---
+sidebar_position: 12
+displayed_sidebar: developerSidebar
+title: Data Pages
+description: "How the buildings, sites, and files pages are built: one route, one Viewer, one DataMenu, and the path from a table row back to Prisma."
+category: architecture
+status: draft
+last_updated: 2026-09-13
+---
+
+<AudienceNotice home="developers" also="deployment" />
+
+# Data Pages
+
+Buildings, sites, and files are the screens most people spend their time in. This page explains
+how they are built, where their data comes from, and how to add another one.
+
+## Start here: there is only one page
+
+There is no `/buildings` route, no `/sites` route, and no `/files` route. Looking for them is the
+most common wrong turn in this codebase, because the App Router usually implies a folder per page.
+
+The entire authenticated application is a single route — `src/app/[instance]/page.tsx` — which
+renders a single `<Viewer>`. `Viewer` reads a `viewer` search param and swaps what is on screen:
+
+```
+/ottawa?viewer=buildings   → buildings table → row click → BuildingDetails
+/ottawa?viewer=sites       → sites table     → row click → SiteDetails
+/ottawa?viewer=files       → files table     → row click → FileDetails
+/ottawa?viewer=map | bim | infrastructure | users | extensions | settings
+/ottawa?viewer=plugin:<pluginId>:<pageId>
+```
+
+Buildings, sites, files, infrastructure and users are not five pages. They are **one component,
+`DataMenu`, in five modes.** Moving between them changes a search param, not a route.
+
+`cdt-na` is a thin host: routes, Prisma, adapters, auth. All of the page UI lives in
+`@collabdt/core`.
+
+## The whole chain
+
+```
+?viewer=buildings
+└─ src/app/[instance]/page.tsx            server component
+   │  auth() → session-vs-URL org check → organizationService.getOrganizationByName
+   └─ <Viewer organization={…}>           core/components/viewers/Viewer.tsx
+      │  viewer = searchParams.get('viewer') || ViewerNames.map
+      │  isViewerAllowed(viewer, organization.appContent)
+      │  two-way sync: URL ↔ MenusContext.currentViewer
+      └─ <DataMenu currentViewer>         next/dynamic, ssr: false
+         ├─ VIEWER_CONFIG                 Data/utils/viewerConfig.ts
+         ├─ useViewerData                 Data/utils/useViewerData.ts
+         ├─ useColumns / use*Headers      Data/utils/Columns.tsx, Headers.tsx
+         ├─ view 'table'  → <DataTable> + HeaderButtons + FilterButtons + MoreOptions
+         └─ view 'detail' → BuildingDetails | SiteDetails | FileDetails | …
+
+   ↑ data arrives in the browser, never as server props
+   useBuildings()                         core/hooks/buildings/buildings.ts
+   └─ createBuildingHooks(adapter)        SWR, key ["buildings"]
+      └─ CoreHooksProvider                core/hooks/provider.tsx
+         └─ createHttpAdapter({ baseUrl: '/api' })    cdt-na/src/hooks/httpAdapter.ts
+            └─ GET /api/buildings         cdt-na/src/app/api/buildings/route.ts
+               ├─ getRequestAbility()     session → userId, organizationId, CASL ability
+               ├─ organizationService.getBuildingsFromOrg(ctx.organizationId)
+               └─ adaptPrismaBuildingToCore     src/app/adapters/prismaToCore.ts
+                  → { buildings: [...] }        envelope, unwrapped by the adapter
+```
+
+The important structural fact: **no building, site, or file data is fetched on the server.** The
+server component loads the organization and nothing else. Everything a data page shows arrives in
+the browser over SWR.
+
+## The server component
+
+`src/app/[instance]/page.tsx` runs before any of the UI exists. In order, it:
+
+1. Resolves the tenant from the route — `const { instance: orgName } = await params` (async in
+   Next 15).
+2. Calls `auth()`; no session redirects to `/${orgName}/auth/signin`.
+3. **Re-checks the tenant**, even though middleware already did:
+
+```tsx
+// src/app/[instance]/page.tsx
+
+const sessionOrgName = (session.user as { organizationName?: string })?.organizationName
+if (sessionOrgName && sessionOrgName !== orgName && !isPlatformAdmin(sessionEmail)) {
+  redirect(`/${sessionOrgName}`);
+}
+```
+
+4. Loads the organization with `organizationService.getOrganizationByName(orgName)`, guarded so a
+   database outage redirects to a maintenance page rather than throwing. A missing organization
+   redirects to `/instance-not-found`.
+5. Reads server-only environment values (`MINIO_BUCKET_URL`, `MARTIN_SERVER_URL`,
+   `POINTCLOUD_API_URL`, `MAPTILER_KEY`, geocoder keys) and passes them down as props. This is the
+   only way those reach the client — they are never bundled.
+6. Renders the shell: `PluginAwareAppProvider` → `SidebarProvider` → `AppSidebar` + `Viewer`.
+
+:::warning The URL is not a credential
+The `[instance]` segment says which organization is being **viewed**. It never says which
+organization the viewer **belongs to** — that comes from the session. The check above is
+deliberately redundant with middleware, because a tenant boundary should not depend on matcher
+configuration staying correct.
+:::
+
+## Viewer selection and org gating
+
+`Viewer` is where "routing" for data pages actually happens.
+
+```tsx
+// core/components/viewers/Viewer.tsx
+
+const searchParams = useSearchParams()
+const viewer = (searchParams.get('viewer') as ViewerKey) || ViewerNames.map
+```
+
+The requested viewer is gated per organization before it renders:
+
+```ts
+// core/components/viewers/viewerAccess.ts
+
+export function isViewerAllowed(viewer: ViewerKey, appContent: Organization['appContent']): boolean {
+  if (parsePluginViewerKey(viewer) !== null) return true
+
+  return appContent.length === 0 || appContent.includes(viewer as ViewerNames)
+}
+```
+
+`organization.appContent` is a Prisma enum array listing the pages an organization gets; an empty
+array means "all of them". A disallowed viewer falls back to the map and the param is stripped
+from the URL.
+
+`ViewerNames` mirrors the Prisma `appContent` enum, which is why a plugin page cannot be a member
+of it. Plugin pages use a separate key space and are gated by plugin enablement instead:
+
+```ts
+type ViewerKey = ViewerNames | `plugin:${string}`
+```
+
+`Viewer` keeps the URL and `MenusContext.currentViewer` in sync in both directions — the sidebar
+changes context, the context writes the URL, and a pasted URL writes the context. A ref guards
+against the two effects looping.
+
+### Why the data pages are lazily loaded
+
+`DataMenu`, `BimViewer`, `PluginsManager` and `PluginDataPageHost` are all
+`next/dynamic({ ssr: false })` with a shared loading fallback. The reason is bundle weight, noted
+in the source:
+
+```tsx
+// Code-split: map-only sessions must not pay for @thatopen or the Potree stack.
+```
+
+`DataMenu` in particular reaches `BimViewer` through `FilePreview`, so importing it statically
+would undo the split. These dynamic fallbacks are the app's real loading UI — there is no
+`loading.tsx` anywhere.
+
+`MapViewer` is the exception: it stays mounted and is toggled with `display`, so the map does not
+have to rebuild its WebGL context every time you visit a data page and come back.
+
+## The DataMenu shell
+
+`DataMenu` renders all five entity types. Its props are small, because everything specific to an
+entity is looked up rather than passed:
+
+```tsx
+import { DataMenu } from '@collabdt/core/core/components/viewers/Data/DataMenu'
+
+<DataMenu currentViewer={ViewerNames.buildings} organization={organization} />
+```
+
+Three lookups do the specialization:
+
+| Piece | File | Role |
+|---|---|---|
+| `VIEWER_CONFIG` | `Data/utils/viewerConfig.ts` | Static registry: `{ titleKey, icon, dataType }` per viewer |
+| `useViewerData` | `Data/utils/useViewerData.ts` | Picks the right dataset, applies search and filters |
+| `use*Headers` | `Data/utils/Headers.tsx` | The field tree that defines the detail view |
+
+`VIEWER_CONFIG` is what you extend to add a page:
+
+```ts
+// core/components/viewers/Data/utils/viewerConfig.ts
+
+export const VIEWER_CONFIG: Partial<Record<ViewerNames, ViewerConfig>> = {
+  [ViewerNames.buildings]: { titleKey: 'buildingHeader', icon: Building2, dataType: DataTypes.building },
+  [ViewerNames.sites]:     { titleKey: 'siteHeader',     icon: BoxSelect,  dataType: DataTypes.site },
+  [ViewerNames.files]:     { titleKey: 'fileHeader',     icon: GalleryVerticalEnd, dataType: DataTypes.file },
+  // …
+}
+```
+
+`titleKey` is a key in the `DataMenu` i18n namespace; `dataType` is the `DataTypes` value that
+`MoreOptions` and the permission checks switch on.
+
+### Where page state lives
+
+This trips people up, so it is worth being explicit. Three different places hold state, and only
+one of them is the URL:
+
+| State | Lives in | Survives a reload? |
+|---|---|---|
+| `viewer`, `buildingId` | URL search params | Yes |
+| `view` (`'table'` / `'detail'`), `selectedItem`, `selectedSite`, `selectedFile`, `selectedUser`, `rowsPerPage` | `MenusContext` | No |
+| `searchTerm`, `activeFilters`, `filters`, `editing` | `DataMenu` component state | No |
+
+**A detail view and a set of filters are therefore not shareable or bookmarkable.** You can link
+someone to the buildings page; you cannot link them to a filtered buildings page, or to one
+building's detail view.
+
+## Table view
+
+The table is `DataTable` — a TanStack Table wrapper — fed by `useViewerData`:
+
+```ts
+const { filteredData, filtersOptions, isLoading } = useViewerData({
+  currentViewer, buildings, sites, infrastructures, files, users,
+  loadingFlags, searchTerm, activeFilters, filters, userEmail,
+})
+```
+
+`useViewerData` switches on `currentViewer` and returns `{ data, filteredData, filtersOptions,
+isLoading }`. Each case decides its own search behaviour: buildings search a named field list
+(`buildingName`, `buildingMunicipality`, `buildingAddress`, …), while sites search every value on
+the record. The files case also maps the raw `DbFile[]` into `FileRow[]` — formatting size as
+`"12.500 MB"`, resolving the uploader, and parsing the position — so the files table renders a
+display model rather than the database record. The original row stays available as
+`FileRow.metadata`.
+
+Around the table:
+
+- **`HeaderButtons`** — creation entry points, "view all on map", compare toggle.
+- **`FilterButtons`** — advanced filtering over `FilterState` (field, operator, value).
+- **`MoreOptions`** — the per-row trailing menu, switched on `DataTypes`.
+- **Compare tray** — lives in `BuildingsContext`, holds at most 3 items, FIFO. Reset whenever
+  `currentViewer` changes.
+
+Clicking a row sets the matching `selected*` value and calls `setView('detail')`.
+
+## Detail view
+
+The detail view is defined declaratively. `Headers.tsx` exports `useBuildingHeaders()`,
+`useSiteHeaders()` and `useInfrastructureHeaders()`, each returning a tab → subsection → field
+tree:
+
+```ts
+type BuildingTabSection = {
+  title: string                    // tab
+  subsections: {
+    title: string                  // subheader
+    fields: { label: React.ReactNode; property: keyof BuildingWithRelations }[]
+    specialLayout?: string
+  }[]
+}
+```
+
+The tab strip is derived from it mechanically, in both `DataMenu` and the panel itself:
+
+```ts
+const tabOptions = buildingHeaders.map(section => ({
+  key: section.title.toLowerCase().replaceAll(/\s/g, '-'),
+  label: section.title,
+}))
+```
+
+Building tabs today: Building Information, Building Units, Building Projects, Energy Data,
+Environmental Data, Maintenance Data, Financial Data, Risk Considerations, Regulatory Compliance.
+
+**Adding a field to a detail page is three edits: `Headers.tsx`, the adapter, and Prisma.** No
+component changes.
+
+### The panel contract
+
+`BuildingDetails`, `SiteDetails`, `FileDetails`, `InfrastructureDetails` and `UserDetails` all
+share one shape — a `forwardRef` exposing `saveChanges`, so the header's Save button can drive a
+panel it does not own:
+
+```tsx
+export type BuildingDetailsRef = {
+  saveChanges: () => Promise<void>
+}
+
+const BuildingDetails = React.forwardRef<BuildingDetailsRef, BuildingDetailsProps>((props, ref) => {
+  React.useImperativeHandle(ref, () => ({ saveChanges: handleSaveChanges }), [/* … */])
+  // …
+})
+```
+
+`DataMenu` owns `editing` / `activeChanges`, renders `DetailActions`, and calls
+`ref.current?.saveChanges()` on save.
+
+Two conventions inside the panels:
+
+- **A negative id means unsaved.** `AddBuilding` seeds a record with `id: -1`; the panel sees
+  `selectedItem.id < 0`, auto-enables edit mode, and routes the save to `createBuilding` instead of
+  `updateBuilding`.
+- **Attached files are resolved by column, not by join.** `DbFile` carries a wide set of flat
+  foreign keys (`attachedFilesBuildingId`, `buildingPermitsIssuedBuildingId`,
+  `fireSafetyBuildingId`, …). A file "tag" maps to one of those columns through
+  `buildingTagToAttachmentField` / `siteTagToAttachmentField` in `prisma/services/file.ts`, which
+  is how each tab shows only its own documents.
+
+## Where the data comes from
+
+Core does not know how to make a request. It declares a port — `ApiAdapter` — and the host
+supplies the implementation. The seam is mounted once:
+
+```tsx
+// cdt-na/src/app/app-providers.tsx
+
+const adapter = React.useMemo(() => createHttpAdapter({ baseUrl: "/api" }), []);
+return <CoreHooksProvider adapter={adapter}>{children}</CoreHooksProvider>;
+```
+
+`CoreHooksProvider` builds one hook bag per adapter (`createBuildingHooks`, `createSiteHooks`,
+`createFileHooks`, …), and the convenience wrappers components import are thin:
+
+```ts
+// core/hooks/buildings/buildings.ts
+
+export const useBuildings = () => useCoreHooks().building.useBuildings();
+export const useBuilding = (id: number | null) => useCoreHooks().building.useBuilding(id);
+```
+
+### SWR keys are arrays, not URLs
+
+This is deliberate — the cache is keyed on identity, not on the endpoint that happened to serve
+it, so the adapter can change without invalidating the cache contract:
+
+```ts
+const key = ["buildings"];            // no endpoint string
+const key = id ? ["building", id] : null;   // null disables the request
+```
+
+Mutations revalidate keys, including keys owned by other hooks:
+
+```ts
+void mutate(["building", id]);
+void mutate(["buildings"]);
+void mutate(["filesByBuilding", id, ""]);
+```
+
+### Response envelopes
+
+Every route handler returns a named envelope — `{ building }`, `{ sites }`, `{ newFile }` — and
+the adapter unwraps it with a `??` chain:
+
+```ts
+// cdt-na/src/hooks/httpAdapter.ts
+
+const data = await res.json();
+return (
+  data?.users ?? data?.user ??
+  data?.files ?? data?.file ??
+  data?.sites ?? data?.site ??
+  data?.buildings ?? data?.building ??
+  /* … */ data
+) as T;
+```
+
+A new entity must either reuse an existing key or extend that chain, or its responses arrive as
+the raw envelope object.
+
+The adapter also centralises auth failure: a `401` redirects to the sign-in page for the current
+instance and throws, so no caller processes a half-authenticated response.
+
+### The server side of a request
+
+Every handler opens the same way:
+
+```ts
+// src/app/api/buildings/route.ts
+
+const ctx = await getRequestAbility();
+if ("errorResponse" in ctx) return ctx.errorResponse;
+if (!ctx.ability.can('read', 'Building')) return forbidAction();
+
+const buildings = await organizationService.getBuildingsFromOrg(ctx.organizationId)
+const coreBuildings = buildings.map(adaptPrismaBuildingToCore)
+```
+
+`getRequestAbility()` resolves the session, derives `userId` and `organizationId` **from the
+session**, and builds a CASL ability from the user's role permissions. The organization id never
+comes from the request body or the URL — that is the tenant boundary.
+
+`prismaToCore.ts` is the serialization edge: `Date → ISO string`, `null | undefined → null` (or
+`[]` for array fields), relations flattened. It exists so core types never depend on Prisma's
+generated client.
+
+:::note No Next-layer caching
+There is no `revalidate`, `dynamic`, `unstable_cache`, `revalidateTag` or `revalidatePath`
+anywhere in `cdt-na/src`. Pages are dynamic because `auth()` reads cookies. Caching is SWR in the
+browser, plus a memcache layer for open-data datasets. If you are looking for route-segment cache
+configuration, there isn't any.
+:::
+
+## Adding a new data page
+
+Two paths. Pick the plugin one unless the entity genuinely belongs to every deployment.
+
+### A. As a plugin (preferred)
+
+A plugin contributes a `data.pages` registration and core does the rest: the page gets a
+`plugin:<pluginId>:<pageId>` viewer key, a sidebar entry beside Buildings and Sites, and a frame
+that mirrors the built-in one via `PluginDataPageHost`. Nothing in core or the host needs to
+change, and the page ships and upgrades independently.
+
+See [Plugins](../plugins/overview.md) and [All capabilities](../plugins/all-capabilities.md).
+
+### B. As a built-in entity
+
+Mirror the Infrastructure vertical. Host side, in `cdt-na`:
+
+1. **Prisma model** with an organization foreign key (or a join table, as buildings use). Migrate.
+   :::warning
+   `prisma/` is owned — check before editing the schema. See the repository contributor guide.
+   :::
+2. **Service** — `prisma/services/<entity>.ts`, a class plus an exported singleton. **Scope every
+   method by `organizationId`**, including update and delete, not just the list query.
+3. **Adapter** — `adaptPrisma<Entity>ToCore()` in `src/app/adapters/prismaToCore.ts`, plus a case
+   in `prismaToCore.test.ts`.
+4. **Routes** — `api/<entities>/route.ts`, `api/<entities>/[id]/route.ts`,
+   `api/<entities>/create/route.ts`. Each opens with the `getRequestAbility()` preamble and returns
+   a named envelope.
+5. **Permissions** — add the subject to the role seed so roles can be granted it.
+6. **Adapter methods** — implement the new port methods in `src/hooks/httpAdapter.ts` and add the
+   envelope key to the `??` chain.
+
+Core side, in `core-local`:
+
+7. **Type** in `core/types/dbTypes.ts`, exported from the barrel.
+8. **Port methods** on `ApiAdapter`; **hooks** in `core/hooks/<entities>/` using array SWR keys;
+   register the bag in `CoreHooksProvider`.
+9. **`ViewerNames` member** — and the matching Prisma `appContent` enum value, since the two mirror
+   each other.
+10. **`VIEWER_CONFIG` entry**, a sidebar nav item, and i18n keys in the `DataMenu` namespace.
+11. **Table and detail** — a `useViewerData` case, columns in `Columns.tsx`, a
+    `use<Entity>Headers()` tree in `Headers.tsx`, and a `<Entity>Details` panel following the
+    `forwardRef` / `saveChanges` contract.
+12. **Two dispatch sites** — add the viewer to the `ViewerNames` list in `Viewer.tsx` and to the
+    detail branch in `DataMenu.tsx`.
+
+Gate every action with CASL: creation entry points in `HeaderButtons`, edit and save in
+`DetailActions`.
+
+### What not to do
+
+Do not add `src/app/[instance]/<entity>/[id]/page.tsx`. Nothing in the codebase reads entity data
+server-side, the sidebar and `Viewer` URL-sync machinery assume the single-page `?viewer=` model,
+and the provider tree is mounted only in `[instance]/page.tsx`. A route segment would render
+outside all of it.
+
+## Gotchas
+
+- **Detail views and filters are not linkable.** Only `viewer` and `buildingId` are in the URL.
+- **`DataMenu` fetches all five datasets on mount**, regardless of `currentViewer` — buildings,
+  sites, infrastructures, files and users. Worth knowing before blaming one page for load time.
+- **Tab keys are derived from translated titles.** `section.title.toLowerCase().replaceAll(…)`
+  runs on the output of `t(...)`, so a tab key is not a stable identifier across locales. Do not
+  persist one or compare it against a hardcoded string.
+- **`DataTable` is not purely presentational.** It reads `rowsPerPage` from `MenusContext` and
+  touches `MapContext` for empty-state messaging, so it cannot be rendered outside those providers.
+- **Import depth matters.** Use deep imports — `@collabdt/core/core/components/...` — for anything
+  heavy. Core applies the same rule internally: the `ui` barrel drags heavy modules into the eager
+  map bundle.
+- **Permission checks in the UI are for UX only.** Every one of them is re-checked server-side in
+  the route handler.
+
+## Related
+
+- [Frontend Architecture](./frontend.mdx) — stack, viewers, providers
+- [State Management](./state-management.mdx) — the context and reducer pattern
+- [Data Model](./data-model.mdx) — `Building`, `Site`, `DbFile` field reference
+- [Data Layer](./data-layer.mdx) — Prisma, PostGIS, MinIO
+- [RESTful API Design](./api-design.mdx) — URI and status-code conventions
+- [DataMenu](../components/data-menu.md) — component-level reference
+- [DataTable](../components/data-table.md)
+- [BuildingDetails](../components/building-details.md) · [SiteDetails](../components/site-details.md) · [FilePreview](../components/file-details.md)
+- [Hooks](../hooks/overview.md) — the SWR hook surface

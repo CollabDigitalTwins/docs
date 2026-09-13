@@ -101,10 +101,10 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 Import the context, destructure `state` and `dispatch`, and call `dispatch` on interaction. The component does not know how the state changes — only that an action occurred.
 
 ```tsx
-import { MapStyleContext } from '@collabdt/core/store/Map/context'
+import { MapContext } from '@collabdt/core/core/store/Map/context'
 
 export default function MapStyleMenu() {
-  const { state, dispatch } = useContext(MapStyleContext)
+  const { state, dispatch } = useContext(MapContext)
 
   return (
     <div onClick={() => dispatch({ type: 'UPDATE_MAP_STYLE', payload: { name: 'streets' } })}>
