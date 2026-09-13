@@ -1,15 +1,13 @@
 ---
 sidebar_position: 3
-title: Point Clouds in the BIM Viewer
+title: Point Clouds
 description: Upload a LAS, LAZ or E57 scan, convert it to a streaming octree, and place it alongside your IFC models.
 ---
 
-# Point Clouds in the BIM Viewer
+# Point Clouds
 
-Point clouds load in the **BIM viewer**, in the same scene as your IFC models. There is no
-separate point cloud viewer — the standalone one was retired once the BIM viewer could stream
-clouds itself, so a scan and a model now share one camera, one clipping set and one
-measurement tool.
+Point clouds are one of the things the **BIM viewer** renders, in the same scene as your IFC
+models. A scan and a model share one camera, one clipping set and one measurement tool.
 
 ## Goal
 

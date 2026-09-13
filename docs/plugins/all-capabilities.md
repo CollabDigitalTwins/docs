@@ -27,7 +27,7 @@ Each `id` must be unique within the plugin. Reusing one silently drops the secon
 
 ## Toolbar tools
 
-The three toolbars share one registration shape. The plugin supplies the panel content; CDT supplies the button and the dropdown around it.
+The two toolbars share one registration shape. The plugin supplies the panel content; CDT supplies the button and the dropdown around it.
 
 ```ts
 ctx.register('bim.tools', {
