@@ -269,7 +269,7 @@ const MultiViewerStack: FC = () => {
   const viewers = (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
       gap: isMobile ? 10 : 14,
     }}>
       <Card
@@ -283,19 +283,11 @@ const MultiViewerStack: FC = () => {
       <Card
         kind="unstruct"
         title="BIM Viewer"
-        sub="IFC engine for building models, property sets, IDS, BCF, and DXF."
+        sub="IFC engine for building models, property sets, IDS, BCF, DXF, and LiDAR / photogrammetry point clouds with octree LOD streaming."
         chips={[
           { label: 'That Open Engine', logo: <TocLogo size={14} /> },
           { label: 'Three.js', logo: <ThreeLogo size={14} /> },
-        ]}
-      />
-      <Card
-        kind="open"
-        title="Point Cloud Viewer"
-        sub="LiDAR / photogrammetry rendering with octree LOD streaming."
-        chips={[
           { label: 'Potree', logo: <PotreeLogo size={14} /> },
-          { label: 'Three.js', logo: <ThreeLogo size={14} /> },
         ]}
       />
     </div>
@@ -346,7 +338,7 @@ const MultiViewerStack: FC = () => {
         overflow: 'hidden',
       }}>
         {viewers}
-        {isMobile ? <SimpleArrow /> : <BranchArrows columns={3} mode="merge" />}
+        {isMobile ? <SimpleArrow /> : <BranchArrows columns={2} mode="merge" />}
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',

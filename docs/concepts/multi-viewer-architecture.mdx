@@ -23,25 +23,25 @@ The map viewer is the entry point for any CDT project. It provides geographic co
 
 ### BIM Viewer
 **Library:** [That Open Company Engine](https://thatopen.com/) (web-ifc + Three.js)  
-**Data types:** IFC, IDS, BCF, DXF, glTF/GLB, FBX, OBJ  
+**Data types:** IFC, IDS, BCF, DXF, glTF/GLB, FBX, OBJ, LAS/LAZ/E57  
 **Scale:** Building → storey → element
 
 The BIM viewer is designed for detailed interrogation of building models. It provides access to the full IFC schema — geometry, properties, spatial hierarchy, classification — alongside coordination tools (BCF topics, IDS validation, clipping planes, measurements). Models uploaded here are stored in the database and appear in the map viewer at their geographic position automatically.
 
-### Point clouds, inside the BIM viewer
+#### Point clouds
 **Library:** [potree-core](https://github.com/tentone/potree-core) (Three.js-based)  
 **Data types:** LAS, LAZ, E57  
 **Scale:** Building → site → urban area
 
-Reality capture datasets that would be impractical to load in a GIS tool render inside the BIM viewer rather than in a viewer of their own. Tile-based streaming and LOD keep billions of points interactive, and because the cloud is an object in the BIM scene it shares that scene's camera, clipping planes and measurement tools — which is what makes as-built against design a single comparison rather than two windows.
+Reality capture datasets that would be impractical to load in a GIS tool are another kind of content the BIM viewer draws. Tile-based streaming and LOD keep billions of points interactive, and because a cloud is an object in the BIM scene it shares that scene's camera, clipping planes and measurement tools — which is what makes as-built against design a single comparison rather than two windows.
 
-Uploads are converted server-side into a Potree octree; see the [point cloud guide](../guides/point-cloud-viewer.md).
+Uploads are converted server-side into a Potree octree; see the [point cloud guide](../guides/point-clouds.md).
 
 ---
 
 ## Shared Infrastructure
 
-All three viewers draw from the same backend:
+Both viewers draw from the same backend:
 
 <BrowserOnly>
   {() => {

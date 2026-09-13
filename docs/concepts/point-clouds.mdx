@@ -41,7 +41,7 @@ CDT accepts LAS, LAZ and E57 on upload. Whichever you send, the file is converte
 
 ## How CDT Renders Point Clouds
 
-Point clouds render inside the **BIM viewer**, through [potree-core](https://github.com/tentone/potree-core) — a WebGL renderer for large point clouds, driven as an ordinary object in the BIM scene's Three.js graph. It uses an **octree-based level-of-detail (LOD)** system:
+Point clouds render in the **BIM viewer**, through [potree-core](https://github.com/tentone/potree-core) — a WebGL renderer for large point clouds, driven as an ordinary object in the BIM scene's Three.js graph. It uses an **octree-based level-of-detail (LOD)** system:
 
 1. The dataset is pre-organized into a spatial tree of tiles at multiple detail levels
 2. The viewer requests only the tiles covering the current viewport and camera distance
@@ -76,4 +76,4 @@ Each dataset has its own visibility toggle, placement and opacity.
 
 A point cloud and one or more IFC models occupy the same BIM scene, enabling comparison of design model against physical reality at element level. A cloud is positioned with the same placement editor the models use, and that placement is stored on the file record.
 
-See the [point cloud guide](../guides/point-cloud-viewer) for upload and navigation instructions.
+See the [point cloud guide](../guides/point-clouds) for upload and navigation instructions.

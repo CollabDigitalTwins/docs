@@ -15,7 +15,7 @@ const HOSTED: { title: string; sub: string; chips: string[] }[] = [
   {
     title: 'Toolbars',
     sub: 'Panel content inside the standard button and dropdown.',
-    chips: ['map.tools', 'bim.tools', 'pointcloud.tools'],
+    chips: ['map.tools', 'bim.tools'],
   },
   {
     title: 'The map',
@@ -45,7 +45,7 @@ const HOSTED: { title: string; sub: string; chips: string[] }[] = [
 ];
 
 const CAPABILITIES = [
-  'map.tools', 'bim.tools', 'pointcloud.tools', 'map.layers',
+  'map.tools', 'bim.tools', 'map.layers',
   'viewer.legends', 'viewer.tabs', 'data.pages', 'ui.dialogs',
 ];
 
