@@ -1,16 +1,11 @@
 ---
 title: InfrastructureDetails
 description: Displays and edits infrastructure properties in a tabbed detail view.
-category: components
-status: draft
-last_updated: 2025-01-13
 ---
 
 # InfrastructureDetails
 
-Tabbed detail panel for viewing and editing infrastructure records. Appears in the data viewer when an infrastructure item is selected. Supports both viewing mode and editing mode, with automatic edit mode activation for new (unsaved) infrastructure.
-
-## Usage
+The tabbed detail panel for an infrastructure record, shown in the data viewer when an infrastructure item is selected. It follows the [detail panel contract](./overview.md#shared-conventions): every prop is optional, `saveChanges` is exposed through a ref, and a record with an `id` below zero enters edit mode automatically.
 
 ```tsx
 import InfrastructureDetails from '@collabdt/core/core/components/viewers/Data/infrastructureDetails/InfrastructureDetails';
@@ -28,54 +23,19 @@ const detailsRef = useRef<InfrastructureDetailsRef>(null);
   setActiveTab={setActiveTab}
 />
 
-// Save from parent
 await detailsRef.current?.saveChanges();
 ```
 
-## Props
-
-| Prop | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| `selectedInfrastructure` | `InfrastructureWithAssociatedBuildings` | No | — | The infrastructure record to display |
-| `setSelectedInfrastructure` | `(infrastructure: InfrastructureWithAssociatedBuildings) => void` | No | — | Callback to update the selected infrastructure after save |
-| `editing` | `boolean` | No | `false` | Whether the form is in edit mode |
-| `setEditing` | `(editing: boolean) => void` | No | — | Callback to toggle edit mode |
-| `setActiveChanges` | `(editing: boolean) => void` | No | — | Callback to signal unsaved changes exist |
-| `infrastructures` | `InfrastructureWithAssociatedBuildings[]` | No | — | <!-- description --> |
-| `activeTab` | `string` | No | — | The currently selected tab key |
-| `setActiveTab` | `(tab: string) => void` | No | `() => {}` | Callback when tab selection changes |
-
-## Ref Methods
-
-| Method | Return Type | Description |
-|--------|-------------|-------------|
-| `saveChanges` | `Promise<void>` | Persists edits via create or update API, then exits edit mode |
+The entity-specific props are `selectedInfrastructure` (`InfrastructureWithAssociatedBuildings`), `setSelectedInfrastructure` (`(infrastructure: InfrastructureWithAssociatedBuildings) => void`) and `infrastructures` (`InfrastructureWithAssociatedBuildings[]`, undocumented).
 
 ## Behaviour
 
-- Tabs are generated dynamically from `useInfrastructureHeaders()`.
-- Fields render differently based on type: text inputs, textareas, date pickers, checkboxes, file uploads, and enum selects.
-- New infrastructure records (id < 0) automatically enter edit mode on mount.
-- On save, calls `createInfrastructure` for new records or `updateInfrastructure` for existing ones.
-- Displays toast notifications on success or failure.
-- API errors are processed through `handleApiError` for consistent error handling.
+Tabs are generated from `useInfrastructureHeaders()`. Fields render by type as text inputs, textareas, date pickers, checkboxes, file uploads or enum selects. Saving calls `createInfrastructure` for new records and `updateInfrastructure` for existing ones, then reports the outcome as a toast; API errors go through `handleApiError`.
 
-## Design Decisions
-
-<!-- TODO: Why was this component built this way? Note any tradeoffs, constraints, or alternatives considered. -->
-
-## Permissions
-
-Individual field inputs are disabled based on CASL permissions. The `FieldRenderer` child component checks permissions before enabling edits.
-
-```tsx
-{ability.can('update', 'Infrastructure') && <Input ... />}
-```
+Individual inputs are disabled without `update` on the `Infrastructure` subject; `FieldRenderer` does the check. See [Shared conventions](./overview.md#shared-conventions).
 
 ## Related
 
-- [FieldRenderer](/docs/components/overview) — renders individual form fields
-- [AddInfrastructure](/docs/components/infrastructure-details) — dialog for initiating new infrastructure creation
-- [useInfrastructure](/docs/hooks/infrastructures) — SWR hook for fetching and mutating infrastructure
-- [useCreateInfrastructure](/docs/hooks/infrastructures) — SWR hook for creating infrastructure
-- [Infrastructure](/docs/architecture/data-model#infrastructure) — Prisma model definition
+- [AddInfrastructure](./data-menu.md) — the dialog that starts a new infrastructure record
+- [useInfrastructure / useCreateInfrastructure](../hooks/infrastructures.md)
+- [Infrastructure data model](../architecture/data-model.mdx#infrastructure)

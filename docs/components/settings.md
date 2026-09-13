@@ -1,20 +1,13 @@
 ---
 title: Settings Components
 description: Account, organization, and user management panels available in the Settings viewer.
-category: components
-status: draft
-last_updated: 2026-04-23
 ---
 
 import BrowserOnly from '@docusaurus/BrowserOnly';
 
 # Settings Components
 
-The settings viewer (`ViewerNames.settings`) contains three panels accessible from a sidebar. Each panel is a self-contained component in `@collabdt/core/components/settings/src/`.
-
-Source: `@collabdt/core/components/settings/`
-
-## Panels
+The settings viewer (`ViewerNames.settings`) holds three panels reached from a sidebar. Each is a self-contained component in `@collabdt/core/components/settings/src/`.
 
 | Component | Tab key | Description |
 |-----------|---------|-------------|
@@ -22,61 +15,35 @@ Source: `@collabdt/core/components/settings/`
 | `OrganizationSettingsPanel` | `organization` | View and edit organization branding and configuration |
 | `UsersSettingsPanel` | `users` | Manage organization users and roles |
 
----
+`SettingsTabKey` is `'account' | 'users' | 'organization'`.
 
 ## `AccountSettingsPanel`
 
-Displays the current user's profile fields (name, email, etc.) with an edit mode. Also shows the user's role and supports avatar upload.
+Shows the current user's profile fields with an edit mode, along with their role, and supports avatar upload.
 
-### Behaviour
+It reads `session.user.id` from the NextAuth `useSession`, then fetches the full `User` record with `useUser(id)` and the role with `useUserRole(id)`. In edit mode only changed fields are sent to `updateUser`. Avatar upload goes through `useUploadFileToUser`, and password changes are handled by a nested `ChangePassword` sub-component.
 
-- Reads `session.user.id` via NextAuth `useSession`.
-- Fetches the full `User` record via `useUser(id)` and the role via `useUserRole(id)`.
-- In edit mode, only changed fields are sent to `updateUser`.
-- Filtered fields not shown in the UI: `id`, `imageFileId`, `image`, `password`, `emailVerified`, `createdAt`, `updatedAt`, `organizationId`, `accounts`, `organization`.
-- Avatar upload uses `useUploadFileToUser`.
-- Password change is handled by a nested `ChangePassword` sub-component.
-
-### Permissions
-
-Reads `ability` from `usePermissions()`. Editing is only available when `ability.can("update", "User")`.
-
----
+These fields are filtered out of the UI: `id`, `imageFileId`, `image`, `password`, `emailVerified`, `createdAt`, `updatedAt`, `organizationId`, `accounts`, `organization`.
 
 ## `OrganizationSettingsPanel`
 
-Displays and edits the current user's organization record. Supports branding, map defaults, language configuration, and logo/favicon upload.
+Displays and edits the current user's organization record, covering branding, map defaults, language configuration, and logo and favicon upload.
 
-### Behaviour
+It fetches the organization with `useOrganization(userOrganizationId)` and tracks `editingValues` as a partial `Organization` diff, so only changed fields reach `updateOrganization`. Logo and favicon are uploaded to a public MinIO bucket through `uploadOrganizationLogoToPublicBucket`. The subdivision dropdown is populated from `countrySubdivisionsData` on `MapContext`.
 
-- Fetches the organization via `useOrganization(userOrganizationId)`.
-- Tracks `editingValues` as a partial `Organization` diff — only changed fields are sent to `updateOrganization`.
-- Logo and favicon are uploaded to a public MinIO bucket via `uploadOrganizationLogoToPublicBucket`.
-- `countrySubdivisionsData` from `MapContext` is used to populate the subdivision dropdown.
-
-### Permissions
-
-Requires `ability.can("update", "Organization")`. The panel renders in read-only mode for users without this permission.
-
----
+Without `update` on `Organization` the panel renders read-only.
 
 ## `UsersSettingsPanel`
 
-Renders the `DataMenu` component scoped to `ViewerNames.users`. This reuses the standard data table/management UI rather than implementing a separate list.
+Renders `DataMenu` scoped to `ViewerNames.users`, reusing the standard data table and management UI instead of a separate list:
 
 ```tsx
 export default function UsersSettingsPanel() {
   return (
-    <DataMenu currentViewer={ViewerNames.users} height="h-full" hideTitle hideFrame />
+    <DataMenu currentViewer={ViewerNames.users} height="h-full" hideFrame hideTitle />
   )
 }
 ```
-
-### Permissions
-
-Visibility and actions within `DataMenu` are gated by the user's CASL permissions for the `User` subject.
-
----
 
 ## Layout structure
 
@@ -99,9 +66,17 @@ Visibility and actions within `DataMenu` are gated by the user's CASL permission
   }}
 </BrowserOnly>
 
-`SettingsTabKey` type: `'account' | 'users' | 'organization'`
+## Permissions
 
-## Key Files
+Each panel reads `ability` from `usePermissions()`; see [Shared conventions](./overview.md#shared-conventions).
+
+| Panel | Required permission |
+|-------|---------------------|
+| Account | `read User` (always visible); `update User` to edit |
+| Organization | `read Organization`; `update Organization` to edit |
+| Users | Controlled by `DataMenu` / `read User`, gated on the `User` subject |
+
+## Key files
 
 | File | Role |
 |------|------|
@@ -111,14 +86,6 @@ Visibility and actions within `DataMenu` are gated by the user's CASL permission
 | `@collabdt/core/components/settings/src/SettingsSidebar.tsx` | Tab navigation |
 | `@collabdt/core/components/settings/src/types.ts` | `SettingsTabKey` type |
 | `@collabdt/core/components/settings/src/ChangePassword.tsx` | Password change sub-component |
-
-## Permissions
-
-| Panel | Required permission |
-|-------|---------------------|
-| Account | `read User` (always visible); `update User` to edit |
-| Organization | `read Organization`; `update Organization` to edit |
-| Users | Controlled by `DataMenu` / `read User` |
 
 ## Related
 

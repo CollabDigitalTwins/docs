@@ -6,7 +6,7 @@ sidebar_position: 2
 
 # Services
 
-This page is the configuration reference for every container in the CDT stack. Each service has its own section with prerequisites, installation notes, configuration, and integration details. For an overview of how the services fit together and how to start the stack, see [Self-Hosting Overview](./overview.md).
+This page is the configuration reference for every container in the CDT stack. Each service has its own section with prerequisites, installation notes, configuration, and integration details. For an overview of how the services fit together and how to start the stack, see the [Self-Hosting guide](./self-hosting.md).
 
 All services start together via the project's `docker-compose.yml`:
 
@@ -306,6 +306,6 @@ npx prisma studio
 
 ## Related
 
-- [Self-Hosting Overview](./overview.md)
+- [Self-Hosting](./self-hosting.md)
 - [CDT Hosted (SaaS)](./cdt-hosted.md)
 - [Architecture Overview](../architecture/overview.mdx)

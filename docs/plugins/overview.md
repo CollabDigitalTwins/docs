@@ -2,18 +2,15 @@
 title: Overview
 description: What a CDT plugin is, where one can appear in the app, and the two ways to get one running.
 sidebar_position: 1
-category: plugins
-status: draft
-last_updated: 2026-08-17
 ---
 
 import BrowserOnly from '@docusaurus/BrowserOnly';
 
 # Plugins
 
-A plugin adds functionalities to the CDT platform without changing CDT core. A plugin is a folder holding a manifest and some React components; the app picks it up and renders its contributions alongside the core.
+A plugin adds functionality to the CDT platform without changing CDT core. It is a folder holding a manifest and some React components; the app picks it up and renders its contributions alongside the core.
 
-A plugin declares what it adds, and CDT calls its `activate()` function once at start-up. Everything else — the toolbar button, the panel frame, the dialog overlay, the page layout — is handled by the app. The plugin supplies the contents.
+A plugin declares what it adds, and CDT calls its `activate()` function once at start-up. The toolbar button, the panel frame, the dialog overlay and the page layout are all handled by the app. The plugin supplies the contents.
 
 <BrowserOnly>
   {() => {
@@ -22,7 +19,7 @@ A plugin declares what it adds, and CDT calls its `activate()` function once at 
   }}
 </BrowserOnly>
 
-A single plugin can use as many of these as it needs — `hello-map` ships with CDT and uses six. See [Capabilities](./all-capabilities.md) for what each one receives.
+A single plugin can use as many of these as it needs; `hello-map` ships with CDT and uses six. See [Capabilities](./all-capabilities.md) for what each one receives.
 
 ## Getting a plugin running
 
@@ -48,9 +45,11 @@ Treat a plugin as any other dependency being granted full access, and read it be
 
 ## In this section
 
-1. [Create your first plugin](./create-your-first-plugin.md) — a working plugin, start to finish
-2. [Capabilities](./all-capabilities.md) — everything a plugin can add, and what each contribution receives
-3. [Run your plugin](./mounting-a-plugin.md) — building, loading and enabling one
-4. [Example: one plugin, several surfaces](./hello-map-example.md) — how the surfaces work together
-5. [Mounted plugins in practice](./mounted-plugins-in-practice.md) — what a runtime-loaded plugin can and cannot reach
-6. [Building a plugin with AI](./building-a-plugin-with-ai.md) — a prompt, and the mistakes to expect
+Read in this order:
+
+1. [Create your first plugin](./create-your-first-plugin.md)
+2. [Capabilities](./all-capabilities.md)
+3. [Run your plugin](./mounting-a-plugin.md)
+4. [Example: one plugin, several surfaces](./hello-map-example.md)
+5. [Mounted plugins in practice](./mounted-plugins-in-practice.md)
+6. [Building a plugin with AI](./building-a-plugin-with-ai.md)

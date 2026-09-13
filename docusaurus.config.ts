@@ -53,6 +53,7 @@ const config: Config = {
   projectName: 'docs', // Usually your repo name.
 
   onBrokenLinks: 'throw',
+  onBrokenAnchors: 'throw',
   markdown: { hooks: { onBrokenMarkdownLinks: 'warn' } },
 
   // Even if you don't use internationalization, you can use this field to set

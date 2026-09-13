@@ -1,16 +1,11 @@
 ---
 title: BuildingDetails
 description: Displays and edits detailed building information across multiple tabbed sections.
-category: components
-status: draft
-last_updated: 2025-01-13
 ---
 
 # BuildingDetails
 
-Renders a tabbed detail view for a building record. Supports viewing, editing, and creating buildings with fields organized into sections like general info, units, energy, environmental, and attached files. Exposes a `saveChanges` method via `forwardRef` for parent-controlled saves.
-
-## Usage
+The tabbed detail panel for a building record, with fields organized into sections such as general info, units, energy, environmental, and attached files. It follows the [detail panel contract](./overview.md#shared-conventions): every prop is optional, `saveChanges` is exposed through a ref, and a `selectedItem.id` below zero means a new record.
 
 ```tsx
 import BuildingDetails, { BuildingDetailsRef } from '@collabdt/core/core/components/viewers/Data/buildingDetails/BuildingDetails';
@@ -28,50 +23,23 @@ const detailsRef = React.useRef<BuildingDetailsRef>(null);
   setActiveTab={setActiveTab}
 />
 
-// Trigger save from parent
 await detailsRef.current?.saveChanges();
 ```
 
-## Props
-
-| Prop | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| `selectedItem` | `Building` | No | — | The building record to display or edit. |
-| `setSelectedItem` | `(building: Building) => void` | No | — | Callback to update the selected building in parent state. |
-| `editing` | `boolean` | No | `false` | Whether the component is in edit mode. |
-| `setEditing` | `(editing: boolean) => void` | No | — | Callback to toggle edit mode. |
-| `setActiveChanges` | `(editing: boolean) => void` | No | — | Callback to signal unsaved changes exist. |
-| `buildings` | `Building[]` | No | — | <!-- description --> |
-| `activeTab` | `string` | No | — | The currently active tab key. |
-| `setActiveTab` | `(tab: string) => void` | No | `() => {}` | Callback when tab selection changes. |
-
-## Ref Methods
-
-| Method | Signature | Description |
-|--------|-----------|-------------|
-| `saveChanges` | `() => Promise<void>` | Persists edits—creates new buildings (ID < 0) or updates existing ones. |
+The entity-specific props are `selectedItem` (`Building`), `setSelectedItem` (`(building: Building) => void`) and `buildings` (`Building[]`, undocumented).
 
 ## Behaviour
 
-- **Tab navigation**: Sections are derived from `useBuildingHeaders()`. Clicking a tab updates `activeTab` and renders the corresponding fields.
-- **Edit mode**: When `editing` is true, fields render as inputs via `FieldRenderer`. Changes are tracked in local `editingValues` state and surfaced to the parent via `setActiveChanges`.
-- **New building flow**: If `selectedItem.id < 0`, the component auto-enables edit mode and calls `createBuilding` on save.
-- **File handling**: Attached files are fetched via `useFilesByBuildingId` and organized by tag into relational properties (e.g. `buildingMaintenanceRecords`). File uploads trigger SWR revalidation.
-- **Loading/error states**: Uses `handleApiError` to surface hook errors as toasts. Shows a loading spinner in `TabSidebar` when files are loading.
-- **Optimistic updates**: After save, `selectedItem` is updated locally with the API response before SWR revalidates.
+Sections come from `useBuildingHeaders()`; clicking a tab updates `activeTab` and renders that section's fields. In edit mode `FieldRenderer` turns each field into an input, changes accumulate in local `editingValues` state, and `setActiveChanges` reports them to the parent. A new building (`id < 0`) auto-enables edit mode and saves through `createBuilding`.
 
+Attached files are fetched with `useFilesByBuildingId` and grouped by tag into relational properties such as `buildingMaintenanceRecords`; an upload triggers SWR revalidation, and `TabSidebar` shows a spinner while files load.
 
-## Permissions
+After a save, `selectedItem` is updated locally from the API response before SWR revalidates.
 
-Editing controls are gated by CASL. The `FieldRenderer` disables inputs when the user lacks update permission.
-
-```tsx
-{ability.can("update", "Building") && <input ... />}
-```
+Editing controls are gated on `update` for the `Building` subject; see [Shared conventions](./overview.md#shared-conventions).
 
 ## Related
 
-- [AddBuilding](/docs/components/building-details) — Dialog for initiating new building creation
-- [FieldRenderer](/docs/components/overview) — Renders individual form fields based on type
-- [useBuilding / useCreateBuilding](/docs/hooks/buildings) — Data fetching and mutation hooks
-- [Building data model](/docs/architecture/data-model#building) — Prisma schema and type definitions
+- [AddBuilding](./data-menu.md) — the dialog that starts a new building
+- [useBuilding / useCreateBuilding](../hooks/buildings.md)
+- [Building data model](../architecture/data-model.mdx#building)

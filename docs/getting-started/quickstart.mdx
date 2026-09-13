@@ -2,125 +2,85 @@
 sidebar_position: 2
 displayed_sidebar: userSidebar
 title: Quickstart
-description: Your first 30 minutes with CDT — sign in, explore the map, add a building, upload an IFC model, and add a teammate.
+description: "Your first 30 minutes with CDT: sign in, explore the map, add a building, upload an IFC model, and add a teammate."
 ---
 
 <AudienceNotice home="users" also="deployment" />
 
 # Quickstart
 
-This walkthrough takes you from a fresh CDT account to a working digital twin in roughly 30 minutes. By the end you will have explored the platform on a map, added a building, uploaded an IFC model, and invited a teammate to collaborate.
+This walkthrough takes you from a fresh CDT account to a working digital twin in roughly 30 minutes: exploring the platform on a map, adding a building, uploading an IFC model, and inviting a teammate.
 
 ## Before you start
 
-You need:
+You need an account on a CDT instance, with the URL from your administrator, and a modern browser with WebGL enabled. A sample IFC file is useful for step 4 — public test files are at the [buildingSMART sample repository](https://github.com/buildingSMART/Sample-Test-Files).
 
-- An account on a CDT instance, with the URL provided by your administrator.
-- A modern browser (Chrome, Edge, Firefox, or Safari) with WebGL enabled
-- Optional: a sample IFC file. Public test files are available from the [buildingSMART sample repository](https://github.com/buildingSMART/Sample-Test-Files)
-
-If you do not have an account yet, your organization's administrator can invite you, or you can create an instance using the [Installation guide](./installation.mdx).
-
----
+No account yet? Your organization's administrator can invite you, or you can create an instance using the [Installation guide](./installation.mdx).
 
 ## Step 1 — Sign in (≈ 2 minutes)
 
-**Goal:** confirm your account works and reach the main interface.
-
 1. Open your CDT URL in a browser.
 2. Sign in with your email and password, or with Google if your administrator has enabled OAuth.
-3. You will receive a MFA code by email or authenticator app. Enter it to complete sign-in. This step will be skipped using cookies on subsequent visits from the same browser.
-4. CDT opens to the **Map Viewer**, centred on your organization's default map view.
+3. Enter the MFA code sent by email or authenticator app. Cookies skip this on later visits from the same browser.
+4. CDT opens to the **Map Viewer**, centred on your organization's default view.
 
-**Result:** you see a map filling the viewport, a left sidebar with navigation icons, and a top toolbar with search and tools.
-
----
+You should see a map filling the viewport, a left sidebar of navigation icons, and a top toolbar with search and tools.
 
 ## Step 2 — Explore the map (≈ 5 minutes)
 
-**Goal:** orient yourself in the spatial environment that anchors all CDT data.
+1. **Pan and zoom** with mouse drag and scroll wheel. Hold right-click and drag to tilt and rotate in 3D.
+2. **Search a location** by typing a Canadian address or place name in the top-left search bar.
+3. **Toggle a data layer** by clicking the **Datasets** icon in the bottom toolbar and adding one, for example "Statistics Canada — Census tracts". It appears on the map immediately.
+4. **Inspect a feature** by clicking any building footprint or layer feature to see its attributes in a side panel.
 
-1. **Pan and zoom** with mouse drag and scroll wheel. Hold right-click and drag to tilt and rotate the camera in 3D.
-2. **Search a location** — type a Canadian address or place name in the top-left search bar and select a result.
-3. **Toggle a data layer** — click the **Datasets** icon in the bottom toolbar, browse the catalogue, and add a layer (for example, "Statistics Canada — Census tracts"). The layer appears on the map immediately.
-4. **Inspect a feature** — click any building footprint or layer feature to see its full attribute data in a side panel.
-
-**Result:** you can navigate the map and read open-data attributes for any feature you click.
-
-For more on the map, see the [Map Viewer guide](../guides/map-viewer.md).
-
----
+See the [Map Viewer guide](../guides/map-viewer.md) for more.
 
 ## Step 3 — Add a building (≈ 5 minutes)
 
-**Goal:** create your first asset record in the platform.
-
 1. Open the **Buildings** view from the left sidebar.
 2. Click **Add Building**.
-3. Fill in:
-   - **Name** — for example, *Test Building 1*
-   - **Type** — pick a category from the dropdown
-   - **Location** — drop a pin on the map, or paste latitude/longitude
+3. Fill in a **Name** (for example *Test Building 1*), a **Type** from the dropdown, and a **Location** by dropping a pin on the map or pasting latitude/longitude.
 4. Click **Save**.
 
-**Result:** the building appears in the buildings list and as a marker on the map. Clicking it opens the **Building Details** panel.
+The building appears in the buildings list and as a marker on the map. Clicking it opens the **Building Details** panel.
 
-For full coverage, see [Managing Buildings & Sites](../guides/buildings-and-sites.md).
-
----
+See [Buildings & Sites](../guides/buildings-and-sites.md) for full coverage.
 
 ## Step 4 — Upload an IFC model (≈ 8 minutes)
 
-**Goal:** attach a 3D BIM model to your building and view it in the BIM viewer.
-
 1. Open the building you just created.
 2. Switch to the **Map** or **BIM** viewer.
-3. Use the **Add tool** in the toolbar to add your IFC file onto the panel, or click **Upload** and select it. Small files (under 50 MB) finish in under a minute; larger files take longer. You can also use the File section on the app sidebar to manage uploads and see progress.
-4. Once processing is complete, switch to the **BIM Viewer** from the left sidebar and select your file.
-5. Use **left-click + drag** to orbit, **right-click + drag** to pan, and the scroll wheel to zoom. Click any element to see its IFC property sets in the right panel.
+3. Use the **Add tool** in the toolbar to drop your IFC onto the panel, or click **Upload** and select it. Files under 50 MB finish in under a minute; larger ones take longer. The File section in the app sidebar also manages uploads and shows progress.
+4. Once processing completes, switch to the **BIM Viewer** from the left sidebar and select your file.
+5. Orbit with **left-click + drag**, pan with **right-click + drag**, and zoom with the scroll wheel. Click any element to see its IFC property sets in the right panel.
 
-**Result:** your IFC model loads in the browser, navigable in 3D, with full property-set inspection. The platform converts the file to Fragments format on upload, so subsequent loads are fast.
+The platform converts the file to Fragments on upload, so subsequent loads are fast.
 
-For more, see the [BIM Viewer guide](../guides/bim-viewer.md).
-
----
+See the [BIM Viewer guide](../guides/bim-viewer.md) for more.
 
 ## Step 5 — Add a teammate (≈ 5 minutes)
 
-**Goal:** share what you have built with another user in your organization. This step requires the **Admin** role.
+This step requires the **Admin** role.
 
 1. Open **Settings → Users** from the left sidebar.
 2. Click **Add User**.
 3. In the **Create New User** dialog, fill in **Name**, **Email**, **Role** (Viewer / User / Admin), and a **Temporary Password** to share with them.
 4. Click **Create User**.
 
-The teammate appears in the users list and can sign in with the temporary password.
+The teammate appears in the users list and can sign in with the temporary password, scoped to their role's permissions.
 
-**Result:** another user can now access the building and IFC model you uploaded, scoped to the permissions of their role.
-
-For the full role reference, see [Managing roles and permissions](../authorization/managing-roles.mdx).
-
----
+See [Managing roles and permissions](../authorization/managing-roles.mdx) for the full role reference.
 
 ## Verify everything works
 
-You should now be able to:
+You should now be able to sign in and reach the Map Viewer, pan and search the map, toggle an open-data layer and click features for attributes, see your new building in the list and on the map, open your IFC model in the BIM viewer and inspect element properties, and see your invited teammate in the members list.
 
-- ✅ Sign in and reach the Map Viewer
-- ✅ Pan, zoom, and search the map
-- ✅ Toggle an open-data layer and click features for attributes
-- ✅ See your new building on the map and in the buildings list
-- ✅ Open your IFC model in the BIM viewer and inspect element properties
-- ✅ See an invited teammate in the members list
-
-If any step did not work as expected, see the [Troubleshooting page](./troubleshooting.mdx).
+If any step did not work, see [Troubleshooting](./troubleshooting.mdx).
 
 ## Next steps
 
-Pick the path that matches what you want to do next:
-
-- **Keep exploring as a user** — read the [Guides](../guides/map-viewer.md) for the Map, BIM and Datasets views.
+- **Keep exploring as a user** — the [Guides](../guides/overview.md) cover the Map, BIM and Datasets views.
 - **Build on the platform** — start with the [Developer Introduction](../developer-introduction.md) and [Plugins overview](../plugins/overview.md).
-- **Self-host CDT** — see the [Self-Hosting guide](../deployment/self-hosting.md) and [Environment variables reference](./environment-variables.mdx).
+- **Self-host CDT** — see [Self-Hosting](../deployment/self-hosting.md) and the [Environment variables reference](./environment-variables.mdx).
 
-Need help? Reach out via the [contact form](https://collabdt.org/En/#contact) or the [core repository on GitHub](https://github.com/CollabDigitalTwins/core).
+Need help? Use the [contact form](https://collabdt.org/En/#contact) or the [core repository on GitHub](https://github.com/CollabDigitalTwins/core).

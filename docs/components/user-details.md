@@ -1,16 +1,11 @@
 ---
 title: UserDetails
 description: Displays and edits user account information including name, email, role, avatar, and timestamps.
-category: components
-status: draft
-last_updated: 2025-01-13
 ---
 
 # UserDetails
 
-Displays detailed user information in a read-only or editable form. Used in admin panels to view existing users or create new ones. Supports avatar upload, role selection, and password entry for new users.
-
-## Usage
+The detail panel for a user account, used in admin panels to view existing users or create new ones. It follows the [detail panel contract](./overview.md#shared-conventions) but has no tabs: every prop is optional, and `saveChanges` creates the user when `id < 0` and patches the existing record otherwise.
 
 ```tsx
 import UserDetails, { UserDetailsRef } from '@collabdt/core/core/components/viewers/Data/userDetails/UserDetails';
@@ -27,52 +22,30 @@ const detailsRef = useRef<UserDetailsRef>(null);
   onCreated={() => refetchUsers()}
 />
 
-// Save programmatically
 await detailsRef.current?.saveChanges();
 ```
 
-## Props
-
-| Prop | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| `selectedUser` | `Partial<User>` | No | — | The user to display or edit. A negative `id` indicates a new user. |
-| `setSelectedUser` | `(user: User) => void` | No | — | Callback to update the selected user in parent state. |
-| `editing` | `boolean` | No | `false` | Enables edit mode for fields. |
-| `setEditing` | `(editing: boolean) => void` | No | — | Callback to toggle edit mode externally. |
-| `setActiveChanges` | `(hasChanges: boolean) => void` | No | — | Notifies parent when unsaved changes exist. |
-| `users` | `User[]` | No | — | <!-- description --> |
-| `hideTitle` | `boolean` | No | — | Hides the "User Details" heading when true. |
-| `onDelete` | `() => void` | No | — | <!-- description --> |
-| `onCreated` | `() => void` | No | — | Called after a new user is successfully created. |
-
-## Ref Methods
-
-| Method | Signature | Description |
-|--------|-----------|-------------|
-| `saveChanges` | `() => Promise<void>` | Validates and persists edits. Creates the user if `id < 0`, otherwise patches the existing user. |
+| Prop | Type | Description |
+|------|------|-------------|
+| `selectedUser` | `Partial<User>` | The user to display or edit. A negative `id` indicates a new user. |
+| `setSelectedUser` | `(user: User) => void` | Updates the selected user in parent state. |
+| `users` | `User[]` | Undocumented. |
+| `hideTitle` | `boolean` | Hides the "User Details" heading when true. |
+| `onDelete` | `() => void` | Undocumented. |
+| `onCreated` | `() => void` | Called after a new user is successfully created. |
 
 ## Behaviour
 
-- **New user mode**: When `selectedUser.id` is negative, the component renders a creation form with name, email, role, and password fields.
-- **Password validation**: Requires 12–65 characters with uppercase, lowercase, digit, and special character. Inline feedback shows strength.
-- **Role selection**: Populated from `useOrganizationRoles` based on the current session's organization.
-- **Avatar upload**: In edit mode, clicking the avatar opens a file picker. The image uploads to MinIO via a presigned URL and associates with the user.
-- **Loading states**: The submit button shows a spinner while the request is in flight.
-- **Error states**: Validation errors and API failures surface via `toast.error`.
+When `selectedUser.id` is negative the component renders a creation form with name, email, role and password fields. Passwords must be 12 to 65 characters with an uppercase letter, a lowercase letter, a digit and a special character; inline feedback shows strength as the user types. Roles come from `useOrganizationRoles` for the current session's organization.
 
+In edit mode, clicking the avatar opens a file picker; the image uploads to MinIO through a presigned URL and is associated with the user. The submit button shows a spinner while a request is in flight, and validation errors and API failures surface through `toast.error`.
 
-## Permissions
+`AddUser` is a modal wrapper around this panel for quick user creation, and `UserMoreOptions` provides bulk import and export actions.
 
-```tsx
-{ability.can("update", "Role") && <UserDetails editing={true} ... />}
-```
-
-Role updates and avatar changes require the `update` action on the `Role` subject.
+Role updates and avatar changes require `update` on the `Role` subject; see [Shared conventions](./overview.md#shared-conventions).
 
 ## Related
 
-- [AddUser](/docs/components/user-details) — modal wrapper for quick user creation
-- [UserMoreOptions](/docs/components/user-details) — bulk import/export actions
-- [useCreateUser](/docs/hooks/users) — mutation hook for creating users
-- [useUserRole](/docs/hooks/users) — fetches a user's current role
-- [User data model](/docs/architecture/data-model#user)
+- [Settings Components](./settings.md) — `UsersSettingsPanel`, where this panel is reached
+- [useCreateUser / useUserRole](../hooks/users.md)
+- [User data model](../architecture/data-model.mdx#user)

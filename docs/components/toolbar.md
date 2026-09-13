@@ -1,16 +1,11 @@
 ---
 title: Toolbar
 description: Renders a context-sensitive toolbar at the bottom of a viewer with tools specific to that viewer type.
-category: components
-status: draft
-last_updated: 2024-01-15
 ---
 
 # Toolbar
 
-Renders a floating toolbar anchored to the bottom center of the viewport. The toolbar displays different tool sets depending on which viewer is active (map or BIM). Each tool is rendered as a `ToolbarButton` within a `Menubar` container.
-
-## Usage
+A floating toolbar anchored to the bottom centre of the viewport, showing a different tool set depending on which viewer is active. Each tool renders as a `ToolbarButton` inside a `Menubar`, and all of them are wrapped in a `SubmenuProvider` so tools can carry nested submenus.
 
 ```tsx
 import { Toolbar } from '@collabdt/core/core/components/Toolbar';
@@ -19,37 +14,19 @@ import { ViewerNames } from '@collabdt/core/types';
 <Toolbar viewer={ViewerNames.map} />
 ```
 
-## Props
+`viewer` (`ViewerKey`, required) selects the tool set: `ViewerNames.map` loads `useMapToolbarTools()` and `ViewerNames.bim` loads `useBimToolbarTools()`. A plugin page key (`plugin:<id>:<page>`), an unknown viewer, or an empty tool set all render nothing.
 
-| Prop | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| `viewer` | `ViewerKey` | Yes | — | Determines which set of tools to display (`map` or `bim`). A plugin page key (`plugin:<id>:<page>`) renders nothing. |
+See [Shared conventions](./overview.md#shared-conventions) for permissions.
 
-## Behaviour
+## Design decisions
 
-- Renders nothing if the `viewer` value doesn't match a known viewer type or if the corresponding tool set is empty.
-- Tools are loaded dynamically based on the viewer:
-  - `ViewerNames.map` → `useMapToolbarTools()`
-  - `ViewerNames.bim` → `useBimToolbarTools()`
-- The toolbar is positioned fixed at the bottom center of the screen with `pointer-events-none` on the container (individual buttons handle their own pointer events).
-- Wraps all toolbar buttons in a `SubmenuProvider` to support tools with nested submenus.
+Toolbar is deliberately thin and stateless: it receives the active viewer and renders the matching tool set, nothing more. Tool definitions and behaviour live in viewer-specific files (`mapTools`, `bimToolbar`), so adding or changing a viewer's tools never touches this component.
 
-## Design Decisions
+Only spatial viewers get a toolbar. Data viewers like Buildings, Sites and Files return `null`, because their actions belong in `HeaderButtons` and `DetailActions` instead; persistent floating tool access is something only map and BIM need.
 
-Toolbar is intentionally a thin, stateless component — it receives the active viewer and renders the appropriate tool set, nothing more. All tool definitions and their behaviour live in viewer-specific files (`mapTools`, `bimToolbar`) rather than in Toolbar itself, so adding or changing tools for a viewer never requires touching this component.
-
-The toolbar only renders for viewers that have tools (`map`, `bim`). Data viewers like Buildings, Sites, and Files return `null` — their actions live in `HeaderButtons` and `DetailActions` instead. This is a deliberate separation: spatial viewers need persistent, floating tool access; data viewers do not.
-
-The toolbar is positioned fixed at the bottom-center of the screen and sits above the viewer content via `z-10`. `pointer-events-none` is set on the container so the toolbar doesn't block map interaction in the areas between buttons — `pointer-events-auto` is restored on individual buttons inside `ToolbarButton`.
-
-## Permissions
-
-No CASL permission checks in this component.
+The toolbar is fixed at the bottom centre and sits above viewer content via `z-10`. The container sets `pointer-events-none` so it does not block map interaction in the gaps between buttons, and `ToolbarButton` restores `pointer-events-auto` on each button.
 
 ## Related
 
-- [ToolbarButton](/docs/components/toolbar) — Renders individual tool buttons
-- [Menubar](https://ui.shadcn.com/docs/components/radix/menubar) — Container component for the toolbar
-- [SubmenuProvider](/docs/components/toolbar) — Context provider for submenu state
-- [useMapToolbarTools](/docs/components/toolbar) — Tool definitions for the map viewer
-- [useBimToolbarTools](/docs/components/toolbar) — Tool definitions for the BIM viewer
+- [BIM Viewer Tools](./bim-tools.md) — the tools `useBimToolbarTools()` supplies
+- [Menubar](https://ui.shadcn.com/docs/components/radix/menubar) — the container primitive

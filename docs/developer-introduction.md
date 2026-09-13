@@ -1,29 +1,19 @@
 ---
 sidebar_position: 1
 title: Introduction for Developers
-description: Build on the CDT platform — APIs, hooks, components, plugins, and architecture.
+description: Build on the CDT platform with plugins, APIs, hooks, and components.
 ---
 
 # Introduction for Developers
 
-This section is for developers building on top of the Collab Digital Twins platform — extending it with plugins, integrating with its APIs, or contributing to its core.
+For developers extending Collab Digital Twins with plugins, integrating it with other systems, or contributing to its core.
 
-## What you can build
-
-- **Plugins** that extend the platform's UI and behaviour, switched on per organization and per user
-- **Integrations** that consume CDT's REST API from external systems
-- **Custom components and hooks** when contributing to the core codebase
+You can build **plugins** that add UI and behaviour, switched on per organization and per user; **integrations** that consume the REST API from external systems; and **components and hooks** contributed back to the core codebase.
 
 ## Where to start
 
-- New to the platform? Skim the [Concepts](./concepts/digital-twins.mdx) section first to understand digital twins, BIM, GIS, and the open standards CDT builds on.
-- Want to extend the UI? Start with [Plugins](./plugins/overview.md) and [Create your first plugin](./plugins/create-your-first-plugin.md).
-- Working in the core repo? See [Architecture](./architecture/overview.mdx) and [Contributing](./contributing/index.md).
+- New to the platform? Skim [Concepts](./concepts/digital-twins.mdx) for digital twins, BIM, GIS, and the open standards CDT builds on.
+- Extending the UI? Start with [Plugins](./plugins/overview.md), then [Create your first plugin](./plugins/create-your-first-plugin.md) and the [capability reference](./plugins/all-capabilities.md).
+- Working in the core? See [Architecture](./architecture/overview.mdx), the [hooks](./hooks/overview.md) and [components](./components/overview.md) references, and [Contributing](./contributing/index.md).
 
-## Key resources
-
-- **Hooks** — React hooks for accessing platform data ([overview](./hooks/overview.md))
-- **Components** — UI components used across the platform ([overview](./components/overview.md))
-- **Plugin capabilities** — everything a plugin can add to the app ([reference](./plugins/all-capabilities.md))
-
-**Need Help?** Reach out via our [contact form](https://collabdt.org/En/contact/) or visit the [core repository on GitHub](https://github.com/CollabDigitalTwins/core).
+Need help? Use the [contact form](https://collabdt.org/En/contact/) or the [core repository on GitHub](https://github.com/CollabDigitalTwins/core).
