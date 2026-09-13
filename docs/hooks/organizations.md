@@ -1,54 +1,28 @@
 ---
 title: useOrganization hooks
 description: Hooks for fetching and updating organization data and roles.
-category: hooks
-status: draft
-last_updated: 2025-01-14
 ---
 
 # useOrganization hooks
 
-Hooks for fetching organization details, looking up organizations by name, and retrieving organization roles. Built on SWR for caching and revalidation. These hooks are created via a factory function (`createOrganizationHooks`) that accepts an API adapter, then re-exported as standalone hooks via the core hooks provider.
+Hooks for fetching organization details, looking up organizations by name, and retrieving organization roles.
 
-## Hooks
+See [Shared conventions](./overview.md#shared-conventions) for the loading, error, and mutation fields every hook returns.
 
 | Hook | Description |
 |------|-------------|
-| `useOrganization` | Fetches a single organization by ID and provides an update mutation. |
-| `useOrganizationByName` | Fetches a single organization by its name. |
-| `useOrganizationRoles` | Fetches all roles associated with an organization. |
+| `useOrganization` | Fetches a single organization by ID and provides an update mutation |
+| `useOrganizationByName` | Fetches a single organization by its name |
+| `useOrganizationRoles` | Fetches all roles associated with an organization |
 
----
+## `useOrganization(id)`
 
-## `useOrganization`
-
-Fetches organization data by ID. Also exposes a mutation function to update the organization, with automatic cache invalidation on success.
-
-### Signature
-
-```ts
-function useOrganization(id: string | null): UseOrganizationReturn
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `id` | `string \| null` | Yes | Organization ID. Pass `null` to skip fetching. |
-
-### Returns
+Fetches an organization by `id` (`string | null`), and provides an update mutation.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `organization` | `Organization \| null` | The fetched organization, or `null` if not loaded. |
-| `isLoading` | `boolean` | SWR loading state. |
-| `isError` | `Error \| undefined` | SWR error state. |
-| `updateOrganization` | `(arg: Partial<Organization>) => Promise<Organization>` | Mutation trigger to update the organization. |
-| `isMutating` | `boolean` | Whether an update mutation is in progress. |
-| `updateError` | `Error \| undefined` | Error from the most recent update attempt. |
-| `updatedData` | `Organization \| undefined` | Data returned from the most recent successful update. |
-
-### Example
+| `organization` | `Organization \| null` | The fetched organization, or `null` if not loaded |
+| `updateOrganization` | `(arg: Partial<Organization>) => Promise<Organization>` | Mutation trigger |
 
 ```tsx
 const { organization, isLoading, updateOrganization, isMutating } = useOrganization(orgId);
@@ -60,36 +34,11 @@ const handleRename = async () => {
 };
 ```
 
+A successful update invalidates `["organization", id]` and, if the name changed, `["organizationByName", name]`.
 
-On successful update, the hook invalidates both the `["organization", id]` cache key and, if the name changed, the `["organizationByName", name]` key.
+## `useOrganizationByName(name)`
 
----
-
-## `useOrganizationByName`
-
-Fetches organization data by name. Read-only — no mutation capability.
-
-### Signature
-
-```ts
-function useOrganizationByName(name: string | null): UseOrganizationByNameReturn
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `name` | `string \| null` | Yes | Organization name. Pass `null` to skip fetching. |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `organization` | `Organization \| null` | The fetched organization, or `null` if not loaded. |
-| `isLoading` | `boolean` | SWR loading state. |
-| `isError` | `Error \| undefined` | SWR error state. |
-
-### Example
+Fetches an organization by `name` (`string | null`), as `organization: Organization | null`. Read-only, with no mutation.
 
 ```tsx
 const { organization, isLoading } = useOrganizationByName("acme-corp");
@@ -98,33 +47,9 @@ if (isLoading) return <Spinner />;
 if (!organization) return <NotFound />;
 ```
 
----
+## `useOrganizationRoles(orgId)`
 
-## `useOrganizationRoles`
-
-Fetches all roles defined for an organization.
-
-### Signature
-
-```ts
-function useOrganizationRoles(orgId: string | null): UseOrganizationRolesReturn
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `orgId` | `string \| null` | Yes | Organization ID. Pass `null` to skip fetching. |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `organizationRoles` | `Role[]` | Array of roles for the organization. Empty array if not loaded. |
-| `isLoading` | `boolean` | SWR loading state. |
-| `isError` | `Error \| undefined` | SWR error state. |
-
-### Example
+Fetches all roles defined for an organization (`string | null`), as `organizationRoles: Role[]`.
 
 ```tsx
 const { organizationRoles, isLoading } = useOrganizationRoles(orgId);
@@ -140,10 +65,7 @@ return (
 );
 ```
 
----
-
 ## Related
 
 - [Data Model: Organization](/docs/architecture/data-model#organization)
-- [Data Model: Role](/docs/architecture/data-model#organization)
 - [Hooks Provider](/docs/hooks/overview)

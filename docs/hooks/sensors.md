@@ -1,54 +1,25 @@
 ---
 title: useSensor hooks
 description: SWR-based hooks for fetching, creating, updating, and deleting sensor data.
-category: hooks
-status: draft
-last_updated: 2025-01-14
 ---
 
 # useSensor hooks
 
-These hooks manage sensor data throughout the application. They use SWR for data fetching with automatic caching and revalidation. The hooks are created via a factory pattern (`createSensorHooks`) that accepts an API adapter, allowing for different data sources. Components import hooks directly from `@collabdt/core/hooks/sensors/sensors.ts`.
+Hooks for sensor data, including filtering by building and by author.
 
-## Hooks
+See [Shared conventions](./overview.md#shared-conventions) for the loading, error, and mutation fields every hook returns.
 
 | Hook | Description |
 |------|-------------|
 | `useSensors` | Fetches all sensors |
-| `useSensor` | Fetches a single sensor by ID; includes update and delete mutations |
+| `useSensor` | Fetches a single sensor by ID, with update and delete mutations |
 | `useSensorsByBuilding` | Fetches sensors filtered by building ID |
 | `useSensorsByAuthor` | Fetches sensors filtered by author ID |
-| `useCreateSensor` | Mutation hook for creating a new sensor |
+| `useCreateSensor` | Creates a new sensor |
 
----
+## `useSensors()`
 
-## `useSensors`
-
-Fetches all sensors from the API adapter. Returns an empty array while loading or if no sensors exist.
-
-### Signature
-
-```ts
-function useSensors(): {
-  sensors: Sensor[];
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-None.
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `sensors` | `Sensor[]` | Array of all sensors, defaults to empty array |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
-### Example
+Fetches all sensors as `sensors: Sensor[]`.
 
 ```tsx
 const { sensors, isLoading } = useSensors();
@@ -58,51 +29,17 @@ if (isLoading) return <Skeleton />;
 return <SensorList sensors={sensors} />;
 ```
 
----
+## `useSensor(id)`
 
-## `useSensor`
-
-Fetches a single sensor by ID. Also provides `updateSensor` and `deleteSensor` mutation functions. Passing `null` disables the fetch.
-
-### Signature
-
-```ts
-function useSensor(id: number | null): {
-  sensor: Sensor | null;
-  isLoading: boolean;
-  isError: Error | undefined;
-  updateSensor: (arg: Partial<Sensor>) => Promise<Sensor>;
-  isMutating: boolean;
-  updateError: Error | undefined;
-  updatedData: Sensor | undefined;
-  deleteSensor: () => Promise<Sensor>;
-  isDeleting: boolean;
-  deleteError: Error | undefined;
-}
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `id` | `number \| null` | Yes | Sensor ID to fetch, or `null` to disable fetching |
-
-### Returns
+Fetches a single sensor by `id` (`number | null`), with update and delete mutations.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `sensor` | `Sensor \| null` | The fetched sensor, or `null` if loading/not found |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-| `updateSensor` | `(arg: Partial<Sensor>) => Promise<Sensor>` | Trigger function to update the sensor |
-| `isMutating` | `boolean` | True while update mutation is in progress |
-| `updateError` | `Error \| undefined` | Error from update mutation |
-| `updatedData` | `Sensor \| undefined` | Returned data from successful update |
-| `deleteSensor` | `() => Promise<Sensor>` | Trigger function to delete the sensor |
-| `isDeleting` | `boolean` | True while delete mutation is in progress |
-| `deleteError` | `Error \| undefined` | Error from delete mutation |
-
-### Example
+| `sensor` | `Sensor \| null` | The fetched sensor, or `null` if not loaded |
+| `updateSensor` | `(arg: Partial<Sensor>) => Promise<Sensor>` | Update trigger |
+| `deleteSensor` | `() => Promise<Sensor>` | Delete trigger |
+| `isDeleting` | `boolean` | Whether a delete is in progress |
+| `deleteError` | `Error \| undefined` | Error from the delete mutation |
 
 ```tsx
 const { sensor, isLoading, updateSensor, deleteSensor } = useSensor(sensorId);
@@ -116,120 +53,29 @@ const handleDelete = async () => {
 };
 ```
 
-### Notes
+A successful update revalidates the individual sensor key, the all-sensors list, and the building- and author-specific lists, including the previous values when either changed.
 
-On successful update, the hook revalidates:
-- The individual sensor cache key
-- The all-sensors list
-- Building-specific and author-specific sensor lists (both previous and new values if changed)
+A successful delete drops the sensor from its individual key without revalidating it, then revalidates the all-sensors list and any associated building and author lists.
 
-On successful delete, the hook:
-- Removes the sensor from its individual cache key without revalidation
-- Revalidates the all-sensors list and any associated building/author lists
+## `useSensorsByBuilding(buildingId)`
 
----
-
-## `useSensorsByBuilding`
-
-Fetches sensors filtered by building ID. Passing `null` disables the fetch.
-
-### Signature
-
-```ts
-function useSensorsByBuilding(buildingId: number | null): {
-  sensors: Sensor[];
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `buildingId` | `number \| null` | Yes | Building ID to filter by, or `null` to disable fetching |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `sensors` | `Sensor[]` | Array of sensors for the building, defaults to empty array |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
-### Example
+Fetches sensors for a building (`number | null`) as `sensors: Sensor[]`.
 
 ```tsx
 const { sensors, isLoading } = useSensorsByBuilding(selectedBuildingId);
 ```
 
----
+## `useSensorsByAuthor(authorId)`
 
-## `useSensorsByAuthor`
-
-Fetches sensors filtered by author ID. Passing `null` disables the fetch.
-
-### Signature
-
-```ts
-function useSensorsByAuthor(authorId: number | null): {
-  sensors: Sensor[];
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `authorId` | `number \| null` | Yes | Author ID to filter by, or `null` to disable fetching |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `sensors` | `Sensor[]` | Array of sensors by the author, defaults to empty array |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
-### Example
+Fetches sensors by an author (`number | null`) as `sensors: Sensor[]`.
 
 ```tsx
 const { sensors, isLoading } = useSensorsByAuthor(currentUserId);
 ```
 
----
+## `useCreateSensor()`
 
-## `useCreateSensor`
-
-Mutation hook for creating a new sensor. On success, revalidates the all-sensors list and any associated building/author lists.
-
-### Signature
-
-```ts
-function useCreateSensor(): {
-  createSensor: (arg: { sensorData: Partial<Sensor> }) => Promise<Sensor>;
-  isMutating: boolean;
-  createError: Error | undefined;
-  createdData: Sensor | undefined;
-}
-```
-
-### Parameters
-
-None.
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `createSensor` | `(arg: { sensorData: Partial<Sensor> }) => Promise<Sensor>` | Trigger function to create a sensor |
-| `isMutating` | `boolean` | True while creation is in progress |
-| `createError` | `Error \| undefined` | Error from create mutation |
-| `createdData` | `Sensor \| undefined` | The newly created sensor on success |
-
-### Example
+Creates a sensor. Returns `createSensor: (arg: { sensorData: Partial<Sensor> }) => Promise<Sensor>`, and revalidates the all-sensors list plus any associated building and author lists on success.
 
 ```tsx
 const { createSensor, isMutating } = useCreateSensor();
@@ -244,10 +90,8 @@ const handleCreate = async () => {
 };
 ```
 
----
-
 ## Related
 
 - [Sensor data model](/docs/architecture/data-model#sensor)
-- [Building hooks](/docs/hooks/buildings)
-- [Sensors & IoT Data guide](/docs/guides/sensors-and-iot): Data URL, data formats, and units
+- [Sensor type hooks](/docs/hooks/sensor-types)
+- [Sensors & IoT Data guide](/docs/guides/sensors-and-iot) — Data URL, data formats, and units

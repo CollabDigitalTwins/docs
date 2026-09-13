@@ -1,57 +1,28 @@
 ---
 title: useOpenDataPortals hooks
 description: SWR-based hooks for fetching and creating open data portal records.
-category: hooks
-status: draft
-last_updated: 2025-01-14
 ---
 
 # useOpenDataPortals hooks
 
-These hooks provide read and create access to open data portal records. Read hooks support queries by ID, municipality, country subdivision, dataset group, and name; `useCreateOpenDataPortal` adds new portals. All hooks use SWR (mutations use SWR Mutation) for caching and revalidation, and are created via a factory function that accepts an `ApiAdapter` for dependency injection.
+Read and create access to open data portal records, with queries by ID, municipality, country subdivision, dataset group, and name.
 
-## Hooks
+See [Shared conventions](./overview.md#shared-conventions) for the loading, error, and mutation fields every hook returns.
 
 | Hook | Description |
 |------|-------------|
 | `useOpenDataPortals` | Fetches all open data portals |
 | `useOpenDataPortalById` | Fetches a single portal by numeric ID |
 | `useCreateOpenDataPortal` | Creates a new open data portal record |
-| `useOpenDataPortalsByMunicipality` | Fetches portals filtered by municipality name |
-| `useOpenDataPortalsByMunicipalityAndCountrySubdivision` | Fetches portals filtered by both municipality and country subdivision |
-| `useOpenDataPortalsByCountrySubdivision` | Fetches portals filtered by country subdivision (province/territory) |
-| `useOpenDataPortalsByGroup` | Fetches portals filtered by dataset group |
-| `useOpenDataPortalsByName` | Fetches portals filtered by portal name |
+| `useOpenDataPortalsByMunicipality` | Filters by municipality name |
+| `useOpenDataPortalsByMunicipalityAndCountrySubdivision` | Filters by both municipality and country subdivision |
+| `useOpenDataPortalsByCountrySubdivision` | Filters by province or territory |
+| `useOpenDataPortalsByGroup` | Filters by dataset group |
+| `useOpenDataPortalsByName` | Filters by portal name |
 
----
+## `useOpenDataPortals()`
 
-## `useOpenDataPortals`
-
-Fetches all open data portal records. Returns an empty array while loading or on error.
-
-### Signature
-
-```ts
-function useOpenDataPortals(): {
-  openDataPortals: OpenDataPortal[];
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-None.
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `openDataPortals` | `OpenDataPortal[]` | Array of portal records, defaults to `[]` |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
-### Example
+Fetches all portal records as `openDataPortals: OpenDataPortal[]`.
 
 ```tsx
 const { openDataPortals, isLoading } = useOpenDataPortals();
@@ -67,37 +38,9 @@ return (
 );
 ```
 
----
+## `useOpenDataPortalById(id)`
 
-## `useOpenDataPortalById`
-
-Fetches a single open data portal by its numeric ID. Passes `null` as the SWR key when `id` is `null`, preventing the fetch.
-
-### Signature
-
-```ts
-function useOpenDataPortalById(id: number | null): {
-  openDataPortal: OpenDataPortal | null;
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `id` | `number \| null` | Yes | Portal ID to fetch, or `null` to skip |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `openDataPortal` | `OpenDataPortal \| null` | Portal record or `null` if not found/loading |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
-### Example
+Fetches one portal by `id` (`number | null`) as `openDataPortal: OpenDataPortal | null`.
 
 ```tsx
 const { openDataPortal, isLoading } = useOpenDataPortalById(selectedPortalId);
@@ -105,37 +48,25 @@ const { openDataPortal, isLoading } = useOpenDataPortalById(selectedPortalId);
 if (!openDataPortal) return null;
 ```
 
----
+## The filter hooks
 
-## `useCreateOpenDataPortal`
+Five hooks share one shape: each takes its filter value, skips the request when any argument is `null`, and returns `openDataPortals: OpenDataPortal[]`.
 
-Creates a new open data portal record. Built on SWR Mutation: it returns a trigger function plus the mutation state, and revalidates the portal list on success.
+| Hook | Parameters |
+|------|------------|
+| `useOpenDataPortalsByMunicipality` | `municipality: string \| null` |
+| `useOpenDataPortalsByMunicipalityAndCountrySubdivision` | `municipality: string \| null`, `countrySubdivision: string \| null` |
+| `useOpenDataPortalsByCountrySubdivision` | `countrySubdivision: string \| null` — province or territory code |
+| `useOpenDataPortalsByGroup` | `group: DatasetGroup \| null` |
+| `useOpenDataPortalsByName` | `name: string \| null` |
 
-### Signature
-
-```ts
-function useCreateOpenDataPortal(): {
-  createOpenDataPortal: (data: Partial<OpenDataPortal>) => Promise<OpenDataPortal>;
-  isMutating: boolean;
-  createError: Error | undefined;
-  createdData: OpenDataPortal | undefined;
-};
+```tsx
+const { openDataPortals, isLoading } = useOpenDataPortalsByCountrySubdivision("ON");
 ```
 
-### Parameters
+## `useCreateOpenDataPortal()`
 
-None. Pass the new portal's fields to the returned `createOpenDataPortal` trigger when you call it.
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `createOpenDataPortal` | `(data: Partial<OpenDataPortal>) => Promise<OpenDataPortal>` | Trigger that creates the portal and resolves to the created record |
-| `isMutating` | `boolean` | SWR Mutation in-flight state |
-| `createError` | `Error \| undefined` | Error thrown by the mutation, if any |
-| `createdData` | `OpenDataPortal \| undefined` | The most recently created record |
-
-### Example
+Creates a portal. Returns `createOpenDataPortal: (data: Partial<OpenDataPortal>) => Promise<OpenDataPortal>`, and revalidates the portal list on success.
 
 ```tsx
 const { createOpenDataPortal, isMutating } = useCreateOpenDataPortal();
@@ -146,167 +77,10 @@ async function handleCreate() {
     countrySubdivision: "ON",
     municipality: "Ottawa",
   });
-  console.log("Created portal", portal.id);
 }
 ```
-
----
-
-## `useOpenDataPortalsByMunicipality`
-
-Fetches portals filtered by municipality name. Skips the request when `municipality` is `null`.
-
-### Signature
-
-```ts
-function useOpenDataPortalsByMunicipality(municipality: string | null): {
-  openDataPortals: OpenDataPortal[];
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `municipality` | `string \| null` | Yes | Municipality name to filter by, or `null` to skip |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `openDataPortals` | `OpenDataPortal[]` | Filtered portal records |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
----
-
-## `useOpenDataPortalsByMunicipalityAndCountrySubdivision`
-
-Fetches portals filtered by both municipality and country subdivision. Skips the request when either parameter is `null`.
-
-### Signature
-
-```ts
-function useOpenDataPortalsByMunicipalityAndCountrySubdivision(
-  municipality: string | null,
-  countrySubdivision: string | null
-): {
-  openDataPortals: OpenDataPortal[];
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `municipality` | `string \| null` | Yes | Municipality name to filter by |
-| `countrySubdivision` | `string \| null` | Yes | Province/territory code to filter by |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `openDataPortals` | `OpenDataPortal[]` | Filtered portal records |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
----
-
-## `useOpenDataPortalsByCountrySubdivision`
-
-Fetches portals filtered by country subdivision (province/territory). Skips the request when `countrySubdivision` is `null`.
-
-### Signature
-
-```ts
-function useOpenDataPortalsByCountrySubdivision(countrySubdivision: string | null): {
-  openDataPortals: OpenDataPortal[];
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `countrySubdivision` | `string \| null` | Yes | Province/territory code to filter by |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `openDataPortals` | `OpenDataPortal[]` | Filtered portal records |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
----
-
-## `useOpenDataPortalsByGroup`
-
-Fetches portals filtered by dataset group. Skips the request when `group` is `null`.
-
-### Signature
-
-```ts
-function useOpenDataPortalsByGroup(group: DatasetGroup | null): {
-  openDataPortals: OpenDataPortal[];
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `group` | `DatasetGroup \| null` | Yes | Dataset group enum value to filter by |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `openDataPortals` | `OpenDataPortal[]` | Filtered portal records |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
----
-
-## `useOpenDataPortalsByName`
-
-Fetches portals filtered by portal name. Skips the request when `name` is `null`.
-
-### Signature
-
-```ts
-function useOpenDataPortalsByName(name: string | null): {
-  openDataPortals: OpenDataPortal[];
-  isLoading: boolean;
-  isError: Error | undefined;
-}
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `name` | `string \| null` | Yes | Portal name to search for |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `openDataPortals` | `OpenDataPortal[]` | Filtered portal records |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
----
 
 ## Related
 
 - [OpenDataPortal data model](/docs/architecture/data-model#opendataportal)
-- [DatasetGroup type](/docs/architecture/data-model)
+- [Concepts: Open data portals](/docs/concepts/open-data-portals)
