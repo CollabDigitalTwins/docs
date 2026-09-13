@@ -1,16 +1,13 @@
 ---
 title: BIM Viewer Tools
 description: The toolbar tools available in the BIM viewer — clipping, measurement, inspection, model loading, and more.
-category: components
-status: draft
-last_updated: 2026-08-31
 ---
 
 # BIM Viewer Tools
 
 The BIM viewer toolbar is built from a list of `Tool` objects defined in `useBimToolbarTools()`. Each tool is a React component rendered in a `ToolbarSubmenu` and activated/deactivated via `ToolsContext`.
 
-Source: `@collabdt/core/components/viewers/bim/src/tools/`
+Source: `@collabdt/core/core/components/viewers/bim/src/tools/`
 
 ## Available Tools
 
@@ -220,7 +217,7 @@ One editor places everything in the BIM scene: fragment models, loaded 3D object
 point clouds. It is not a toolbar tool — it has no entry of its own and is started from whatever
 is being placed.
 
-Source: `@collabdt/core/components/viewers/bim/src/Placement/`
+Source: `@collabdt/core/core/components/viewers/bim/src/Placement/`
 
 ### The scene registry
 
@@ -248,8 +245,8 @@ deleting a row removes the object, and placing a file marks its row visible.
 
 ### Entry points
 
-- **Sidebar row menu** — the `move` action on a Files, Models or Point Clouds row.
-- **Right-click in the viewport** — `useViewportContextMenu` picks whatever is under the cursor,
+- **Sidebar row menu**: the `move` action on a Files, Models or Point Clouds row.
+- **Right-click in the viewport**: `useViewportContextMenu` picks whatever is under the cursor,
   nearest hit wins, and opens the same card of actions. Right-clicking empty space opens nothing.
 
 The hook owns the right button, not the `contextmenu` event: `camera-controls` trucks the camera
@@ -311,8 +308,8 @@ stored value is absolute rather than a multiplier, matching `Position3DCard`.
 
 :::warning
 There is no `scale` column yet, so an object's or DXF's scale applies live but does not survive a
-reload. The ask is recorded in `knowledge/Plans/2026-08-27-pointclouds-in-bim-viewer.md`; once the
-column exists it is one line in `objectTarget.commit`, plus the adapter, the type and the load path.
+reload. Once the column exists it is one line in `objectTarget.commit`, plus the adapter, the type
+and the load path.
 :::
 
 ### Animation
@@ -373,28 +370,28 @@ and applies the mode afterwards. Setting the mode before attaching silently lose
 
 | File | Role |
 |------|------|
-| `@collabdt/core/components/viewers/bim/src/tools/bimToolbar.ts` | Tool list definition |
-| `@collabdt/core/components/viewers/bim/src/tools/ClippingTool/ClippingTool.tsx` | Clipping plane and section box tool |
-| `@collabdt/core/components/viewers/bim/src/tools/AddToBim/index.tsx` | Add content sub-menu |
-| `@collabdt/core/components/viewers/bim/src/tools/InspectBimTool.tsx` | Element inspection |
-| `@collabdt/core/components/viewers/bim/src/tools/measureBimTool.tsx` | Measurement submenu and hint card |
-| `@collabdt/core/components/viewers/bim/src/BimMeasurements/BimMeasurementManager.ts` | Owns the four measurement components; exclusive activation, world binding, event wiring |
-| `@collabdt/core/components/viewers/bim/src/BimMeasurements/measurementSettings.ts` | Snap tuning, units and the per-mode snap-class table |
-| `@collabdt/core/components/viewers/bim/src/BimSidebar/src/SettingsTab/src/MeasurementSettings.tsx` | Colour, units, precision, snap range and marker size controls |
-| `@collabdt/core/components/viewers/bim/src/tools/FitCameraTool.tsx` | Fit camera |
-| `@collabdt/core/components/viewers/bim/src/Placement/PlacementEditor.ts` | One placement session: gizmo, pivot, exclusivity, commit |
-| `@collabdt/core/components/viewers/bim/src/Placement/placementTarget.ts` | The `PlacementTarget` port and capability narrowing |
-| `@collabdt/core/components/viewers/bim/src/Placement/PlacementPanel.tsx` | The numeric card, gated by capabilities |
-| `@collabdt/core/components/viewers/bim/src/Placement/useViewportContextMenu.ts` | Sole owner of the canvas `contextmenu` event |
-| `@collabdt/core/components/viewers/bim/src/SceneObjects/sceneObjectRegistry.ts` | The one index of scene objects, keyed by file id |
-| `@collabdt/core/components/viewers/bim/src/Placement/pickSceneObject.ts` | Nearest registered object under the ray, models and drawings alike |
-| `@collabdt/core/components/viewers/bim/src/Placement/contextMenuGesture.ts` | Click-versus-pan decision for the right button |
-| `@collabdt/core/components/viewers/bim/src/SceneObjects/index.ts` | `BimSceneObjects`, the component wrapper around the registry |
-| `@collabdt/core/components/viewers/bim/src/lib/sceneContent.ts` | `sceneObjectForFile` / `isFileInScene` |
-| `@collabdt/core/components/viewers/bim/src/ModelManager/modelAnimation.ts` | Clip, speed and play state; decides when frames are needed |
-| `@collabdt/core/components/viewers/bim/src/Placement/AnimationPanel.tsx` | Clip, play/pause and speed controls |
-| `@collabdt/core/components/viewers/bim/src/Placement/AnimationSession.ts` | Which model's playback panel is open |
-| `@collabdt/core/components/viewers/bim/src/tools/shareBimTool.tsx` | Share camera position |
+| `@collabdt/core/core/components/viewers/bim/src/tools/bimToolbar.ts` | Tool list definition |
+| `@collabdt/core/core/components/viewers/bim/src/tools/ClippingTool/ClippingTool.tsx` | Clipping plane and section box tool |
+| `@collabdt/core/core/components/viewers/bim/src/tools/AddToBim/index.tsx` | Add content sub-menu |
+| `@collabdt/core/core/components/viewers/bim/src/tools/InspectBimTool.tsx` | Element inspection |
+| `@collabdt/core/core/components/viewers/bim/src/tools/measureBimTool.tsx` | Measurement submenu and hint card |
+| `@collabdt/core/core/components/viewers/bim/src/BimMeasurements/BimMeasurementManager.ts` | Owns the four measurement components; exclusive activation, world binding, event wiring |
+| `@collabdt/core/core/components/viewers/bim/src/BimMeasurements/measurementSettings.ts` | Snap tuning, units and the per-mode snap-class table |
+| `@collabdt/core/core/components/viewers/bim/src/BimSidebar/src/SettingsTab/src/MeasurementSettings.tsx` | Colour, units, precision, snap range and marker size controls |
+| `@collabdt/core/core/components/viewers/bim/src/tools/FitCameraTool.tsx` | Fit camera |
+| `@collabdt/core/core/components/viewers/bim/src/Placement/PlacementEditor.ts` | One placement session: gizmo, pivot, exclusivity, commit |
+| `@collabdt/core/core/components/viewers/bim/src/Placement/placementTarget.ts` | The `PlacementTarget` port and capability narrowing |
+| `@collabdt/core/core/components/viewers/bim/src/Placement/PlacementPanel.tsx` | The numeric card, gated by capabilities |
+| `@collabdt/core/core/components/viewers/bim/src/Placement/useViewportContextMenu.ts` | Sole owner of the canvas `contextmenu` event |
+| `@collabdt/core/core/components/viewers/bim/src/SceneObjects/sceneObjectRegistry.ts` | The one index of scene objects, keyed by file id |
+| `@collabdt/core/core/components/viewers/bim/src/Placement/pickSceneObject.ts` | Nearest registered object under the ray, models and drawings alike |
+| `@collabdt/core/core/components/viewers/bim/src/Placement/contextMenuGesture.ts` | Click-versus-pan decision for the right button |
+| `@collabdt/core/core/components/viewers/bim/src/SceneObjects/index.ts` | `BimSceneObjects`, the component wrapper around the registry |
+| `@collabdt/core/core/components/viewers/bim/src/lib/sceneContent.ts` | `sceneObjectForFile` / `isFileInScene` |
+| `@collabdt/core/core/components/viewers/bim/src/ModelManager/modelAnimation.ts` | Clip, speed and play state; decides when frames are needed |
+| `@collabdt/core/core/components/viewers/bim/src/Placement/AnimationPanel.tsx` | Clip, play/pause and speed controls |
+| `@collabdt/core/core/components/viewers/bim/src/Placement/AnimationSession.ts` | Which model's playback panel is open |
+| `@collabdt/core/core/components/viewers/bim/src/tools/shareBimTool.tsx` | Share camera position |
 
 ## Permissions
 

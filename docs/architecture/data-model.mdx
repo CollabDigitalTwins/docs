@@ -3,16 +3,13 @@ sidebar_position: 9
 displayed_sidebar: developerSidebar
 title: Data Model
 description: "Core domain types used across the CDT platform: buildings, sites, infrastructure, sensors, files, users, organizations, and their enumerations."
-category: architecture
-status: draft
-last_updated: 2026-04-23
 ---
 
 <AudienceNotice home="developers" also="deployment" />
 
 # Data Model
 
-CDT's domain types are defined in `@collabdt/core/types/dbTypes.ts` and shared across hooks, API adapters, and components. Every entity maps directly to a Prisma model on the backend.
+CDT's domain types are defined in `@collabdt/core/core/types/dbTypes.ts` and shared across hooks, API adapters, and components. Every entity maps directly to a Prisma model on the backend.
 
 ## Entities
 
@@ -206,9 +203,9 @@ Both share the same phase vocabulary:
 
 | File | Role |
 |------|------|
-| `@collabdt/core/types/dbTypes.ts` | All domain interfaces and enums |
-| `@collabdt/core/types/datasetTypes.ts` | Dataset and tile layer types |
-| `@collabdt/core/types/global.ts` | Shared utility types (`Position`, etc.) |
+| `@collabdt/core/core/types/dbTypes.ts` | All domain interfaces and enums |
+| `@collabdt/core/core/types/datasetTypes.ts` | Dataset and tile layer types |
+| `@collabdt/core/core/types/global.ts` | Shared utility types (`Position`, etc.) |
 
 ## Related
 

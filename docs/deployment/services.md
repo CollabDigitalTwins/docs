@@ -27,13 +27,8 @@ docker compose run --rm migrate
 
 ### Installation
 
-The image is pulled automatically when the Compose stack starts. On a fresh database, run Prisma migrations once after PostgreSQL is healthy:
-
-```bash
-docker compose run --rm migrate
-```
-
-This creates all required application tables. If the `postgres_data` volume already exists from a previous deployment, skip this step.
+The image is pulled automatically when the Compose stack starts. On a fresh database, run the migrations described above once PostgreSQL is healthy. That creates
+all required application tables. If the `postgres_data` volume already exists from a previous deployment, skip this step.
 
 After migrations, the database contains schema only. Seed initial data as needed by restoring a database dump, executing SQL `INSERT` statements from CSV/JSON datasets, or running dedicated seeding scripts.
 
@@ -120,7 +115,7 @@ The Node application connects to MinIO using these environment variables:
 | `MINIO_USE_SSL` | `true` in production |
 | `S3_ACCESS_KEY` | Access key |
 | `S3_ACCESS_SECRET` | Secret key |
-| `NEXT_PUBLIC_MINIO_BUCKET_URL` | Public bucket base URL |
+| `MINIO_BUCKET_URL` | Public bucket base URL |
 
 ## Martin / PostGIS
 
@@ -193,45 +188,14 @@ http://localhost:6012
 
 A container health check validates that the application responds on its internal HTTP endpoint.
 
-The Node service depends on PostgreSQL being healthy. On first deployment, run migrations before the application starts serving traffic:
-
-```bash
-docker compose run --rm migrate
-```
+The Node service depends on PostgreSQL being healthy, and migrations must be applied before it
+starts serving traffic.
 
 ### Configuration
 
-The application is configured entirely through environment variables in the `.env` file at the project root. The table below mirrors the keys present in the current `.env` template — values marked sensitive must be set to secure values for your environment. **Do not commit real secrets to source control.**
-
-| Key | Purpose |
-|-----|---------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `MINIO_ENDPOINT` | MinIO hostname |
-| `MINIO_USE_SSL` | `true` in production |
-| `MINIO_REGION` | S3 region (typically `us-east-1`) |
-| `MINIO_URL` | Full MinIO base URL |
-| `S3_ACCESS_KEY` | MinIO access key |
-| `S3_ACCESS_SECRET` | MinIO secret key |
-| `AUTH_SECRET` | NextAuth.js signing secret |
-| `AUTH_TRUST_HOST` | `true` when behind a reverse proxy |
-| `AUTH_URL` | Public domain name of the application |
-| `AUTH_GOOGLE_ID` | Google OAuth client ID |
-| `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
-| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Google reCAPTCHA site key (public) |
-| `NEXT_PUBLIC_RECAPTCHA_SECRET_KEY` | Google reCAPTCHA secret key |
-| `EMAIL_HOST` | SMTP hostname (e.g. `smtp.resend.com`) |
-| `EMAIL_PORT` | SMTP port (e.g. `465`) |
-| `EMAIL_FROM` | Sender address |
-| `EMAIL_USER` | SMTP username |
-| `EMAIL_PASS` | SMTP password |
-| `MEMCACHE_SERVER` | Memcache server address |
-| `MEMCACHE_USERNAME` | Memcache username |
-| `MEMCACHE_PASSWORD` | Memcache password |
-| `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` | Geocode Earth API key for address search |
-| `NEXT_PUBLIC_MARTIN_SERVER_URL` | Martin tile server base URL |
-| `NEXT_PUBLIC_MINIO_BUCKET_URL` | MinIO bucket public base URL |
-| `NEXT_PUBLIC_ORGANIZATIONAL_DATASETS_URL` | Open datasets base URL |
-| `NEXT_PUBLIC_POINTCLOUD_API_URL` | Point cloud API base URL |
+The application reads its entire configuration from the `.env` file at the project root. Every key
+is documented in the [Environment variables reference](../getting-started/environment-variables.mdx),
+which is the single source of truth for names, defaults and production guidance.
 
 ### Integration
 
@@ -245,7 +209,7 @@ External service dependencies:
 |---------|-----------|---------|
 | PostgreSQL | `DATABASE_URL` | All application data |
 | MinIO | `S3_ACCESS_KEY` / `S3_ACCESS_SECRET` | Asset storage |
-| Martin | `NEXT_PUBLIC_MARTIN_SERVER_URL` | Map tile consumption |
+| Martin | `MARTIN_SERVER_URL` | Map tile consumption |
 
 Notable libraries:
 

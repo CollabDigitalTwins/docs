@@ -13,6 +13,7 @@ See [Shared conventions](./overview.md#shared-conventions) for the loading, erro
 |------|-------------|
 | `useFiles` | Fetches all files |
 | `useFile` | Fetches a single file by ID, with update mutation |
+| `useUpdateFile` | The update mutation on its own |
 | `useFilesByBuildingId` | Fetches files attached to a building, optionally filtered by tag |
 | `useFilesBySiteId` | Fetches files attached to a site, optionally filtered by tag |
 | `useUploadFileToBuilding` | Uploads a file and attaches it to a building |
@@ -50,6 +51,8 @@ const handleRename = async (newName: string) => {
 ```
 
 A successful update revalidates the file cache, the files list, and any associated building or site file list, based on the file's `attachedFilesBuildingId` or `attachedFilesSiteId`.
+
+`useUpdateFile()` is also exported standalone, for updating a file you have not fetched with `useFile`.
 
 ## `useFilesByBuildingId(buildingId, tag?)` and `useFilesBySiteId(siteId, tag?)`
 

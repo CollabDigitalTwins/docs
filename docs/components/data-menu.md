@@ -9,7 +9,7 @@ The container that renders a searchable, filterable data table for buildings, si
 
 ```tsx
 import { DataMenu } from '@collabdt/core/core/components/viewers/Data/DataMenu';
-import { ViewerNames } from '@collabdt/core/types';
+import { ViewerNames } from '@collabdt/core/core/types/dbTypes';
 
 <DataMenu
   currentViewer={ViewerNames.buildings}

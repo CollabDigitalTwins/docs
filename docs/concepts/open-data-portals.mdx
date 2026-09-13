@@ -12,7 +12,7 @@ CDT can connect to external open data portals and display their datasets as vect
 
 ## Portal registry
 
-Portals are stored in the database and exposed via the hooks in `@collabdt/core/hooks/openDataPortals/`. The map viewer queries portals filtered by municipality and country subdivision (ISO 3166-2 code) to surface the most relevant datasets for the visible area.
+Portals are stored in the database and exposed via the hooks in `@collabdt/core/core/hooks/openDataPortals/`. The map viewer queries portals filtered by municipality and country subdivision (ISO 3166-2 code) to surface the most relevant datasets for the visible area.
 
 ```ts
 const { openDataPortals } = useOpenDataPortalsByMunicipalityAndCountrySubdivision(
@@ -50,10 +50,10 @@ Portals are tagged with a `DatasetGroup`:
 
 | File | Role |
 |------|------|
-| `@collabdt/core/hooks/openDataPortals/openDataPortals.ts` | Hook exports |
-| `@collabdt/core/hooks/openDataPortals/createOpenDataPortalHooks.ts` | SWR hook implementations |
-| `@collabdt/core/types/dbTypes.ts` | `OpenDataPortal`, `DatasetGroup`, `DataManagementSystem` types |
-| `@collabdt/core/components/viewers/map/src/MapLayers/src/OpenDataLayers/` | Map layer that renders portal datasets |
+| `@collabdt/core/core/hooks/openDataPortals/openDataPortals.ts` | Hook exports |
+| `@collabdt/core/core/hooks/openDataPortals/createOpenDataPortalHooks.ts` | SWR hook implementations |
+| `@collabdt/core/core/types/dbTypes.ts` | `OpenDataPortal`, `DatasetGroup`, `DataManagementSystem` types |
+| `@collabdt/core/core/components/viewers/map/src/MapLayers/src/OpenDataLayers/` | Map layer that renders portal datasets |
 
 ## Gotchas
 

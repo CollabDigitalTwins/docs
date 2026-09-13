@@ -35,6 +35,8 @@ Collection hooks default their array to `[]`, so a list is safe to map over whil
 
 **Skipping a fetch.** Any hook taking an id accepts `null` to skip fetching, which is how you defer a request until a selection exists.
 
+**Reaching the hook bag directly.** `useCoreHooks()` returns every domain's hooks, which is what the convenience wrappers call. Prefer the wrappers; reach for `useCoreHooks()` only when you need a domain chosen at runtime.
+
 **Cache keys** are arrays (`["buildings"]`, `["building", id]`). Where a mutation revalidates keys beyond its own, the hook's page says which.
 
 ## In this section
@@ -45,11 +47,13 @@ Collection hooks default their array to `[]`, so a list is safe to map over whil
 - [useInfrastructure hooks](./infrastructures.md)
 - [useOpenDataPortals hooks](./open-data-portals.md)
 - [useOrganization hooks](./organizations.md)
+- [usePlugin hooks](./plugins.md)
 - [ApiAdapter Interface](./ports.md)
 - [useSensorType hooks](./sensor-types.md)
 - [useSensor hooks](./sensors.md)
 - [useSite hooks](./sites.md)
-- [useIsMobile hook](./ui.md)
+- [UI hooks](./ui.md)
+- [Viewer hooks](./viewer.md)
 - [useUser hooks](./users.md)
 
 ## Related

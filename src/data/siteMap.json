@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-13T14:35:51.129Z",
+  "generatedAt": "2026-09-13T16:52:06.248Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -428,6 +428,12 @@
               "primary": null
             },
             {
+              "id": "hooks/ui",
+              "title": "UI hooks",
+              "slug": "/docs/hooks/ui",
+              "primary": null
+            },
+            {
               "id": "hooks/buildings",
               "title": "useBuilding hooks",
               "slug": "/docs/hooks/buildings",
@@ -452,12 +458,6 @@
               "primary": null
             },
             {
-              "id": "hooks/ui",
-              "title": "useIsMobile hook",
-              "slug": "/docs/hooks/ui",
-              "primary": null
-            },
-            {
               "id": "hooks/open-data-portals",
               "title": "useOpenDataPortals hooks",
               "slug": "/docs/hooks/open-data-portals",
@@ -467,6 +467,12 @@
               "id": "hooks/organizations",
               "title": "useOrganization hooks",
               "slug": "/docs/hooks/organizations",
+              "primary": null
+            },
+            {
+              "id": "hooks/plugins",
+              "title": "usePlugin hooks",
+              "slug": "/docs/hooks/plugins",
               "primary": null
             },
             {
@@ -491,6 +497,12 @@
               "id": "hooks/users",
               "title": "useUser hooks",
               "slug": "/docs/hooks/users",
+              "primary": null
+            },
+            {
+              "id": "hooks/viewer",
+              "title": "Viewer hooks",
+              "slug": "/docs/hooks/viewer",
               "primary": null
             }
           ],

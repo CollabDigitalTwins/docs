@@ -9,7 +9,7 @@ A floating toolbar anchored to the bottom centre of the viewport, showing a diff
 
 ```tsx
 import { Toolbar } from '@collabdt/core/core/components/Toolbar';
-import { ViewerNames } from '@collabdt/core/types';
+import { ViewerNames } from '@collabdt/core/core/types/dbTypes';
 
 <Toolbar viewer={ViewerNames.map} />
 ```

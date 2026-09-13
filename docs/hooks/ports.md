@@ -142,7 +142,27 @@ updateInfrastructure(id: number, patch: Partial<Infrastructure>): Promise<Infras
 deleteInfrastructure(id: number): Promise<Infrastructure>
 ```
 
+## Plugins
+
+Installation state, per-user settings, and the plugin key-value store. `PluginInstallation`,
+`PluginUserSetting` and `PluginRecord` come from `@collabdt/core/core/types/plugins`.
+
+```ts
+listPluginInstallations(): Promise<PluginInstallation[]>
+upsertPluginInstallation(pluginId: string, patch: Partial<PluginInstallation>): Promise<PluginInstallation>
+deletePluginInstallation(pluginId: string): Promise<void>
+listPluginUserSettings(): Promise<PluginUserSetting[]>
+upsertPluginUserSetting(pluginId: string, patch: Partial<PluginUserSetting>): Promise<PluginUserSetting>
+listPluginRecords(pluginId: string, collection: string): Promise<PluginRecord[]>
+putPluginRecord(pluginId: string, collection: string, key: string, data: unknown): Promise<PluginRecord>
+deletePluginRecord(pluginId: string, collection: string, key: string): Promise<void>
+```
+
+The user-settings methods take no user id. The server resolves the current user from the session,
+so a client cannot read or write another user's settings.
+
 ## Related
 
 - [Data model](/docs/architecture/data-model)
+- [Plugin hooks](./plugins.md)
 - [Hooks overview](./overview.md)

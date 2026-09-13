@@ -5,7 +5,7 @@ description: Sign-in screen and shared auth layout.
 
 # Authentication Components
 
-The authentication screens live in `@collabdt/core/components/authentication/`.
+The authentication screens live in `@collabdt/core/core/components/authentication/`.
 
 ## `AuthPage`
 

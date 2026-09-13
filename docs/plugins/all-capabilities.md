@@ -161,7 +161,7 @@ Three common mistakes:
 
 - **Re-add on `styledata`, not only once.** Switching the basemap replaces the style and silently drops every source and layer added before it.
 - **Guard both cleanup calls.** The style can be torn down before cleanup runs, and removing a layer that is already gone throws. A source left behind makes the next mount fail on a duplicate id.
-- **`maplibre-gl` cannot be imported,** so `new maplibregl.Marker()` and `new maplibregl.Popup()` are unavailable. A GeoJSON source with a circle or symbol layer does the same job and pans and zooms on the GPU for free. A popup can be built by portalling an element into `map.getContainer()` and positioning it with `map.project()`.
+- **`maplibre-gl` cannot be imported as a runtime value,** so `new maplibregl.Marker()` and `new maplibregl.Popup()` are unavailable. The platform shims four packages this way — `three`, `@thatopen/components`, `maplibre-gl` and `lucide-react` — because a second copy of any of them breaks the viewer. Type-only imports are fine and expected. A GeoJSON source with a circle or symbol layer does the same job and pans and zooms on the GPU for free. A popup can be built by portalling an element into `map.getContainer()` and positioning it with `map.project()`.
 
 Update features with `setData` rather than removing and re-adding the layer, or they flicker on every change.
 

@@ -8,7 +8,7 @@ displayed_sidebar: userSidebar
 
 # IFC Infrastructure Types
 
-CDT's `Infrastructure` entity supports civil engineering assets across multiple IFC 4.x domains and CityGML. The type system lives in `@collabdt/core/types/dbTypes.ts` as a set of enumerations that map to IFC schema concepts; the hooks for reading and writing infrastructure records are in `@collabdt/core/hooks/infrastructures/infrastructures.ts`.
+CDT's `Infrastructure` entity supports civil engineering assets across multiple IFC 4.x domains and CityGML. The type system lives in `@collabdt/core/core/types/dbTypes.ts` as a set of enumerations that map to IFC schema concepts; the hooks for reading and writing infrastructure records are in `@collabdt/core/core/hooks/infrastructures/infrastructures.ts`.
 
 Two top-level enums set the domain when you create or classify an asset: `InfrastructureType` (the broad category) and `IfcInfrastructureDomain` (the specific IFC schema domain). Additional type-specific enums then apply depending on the domain, so `ifcRoadType` is only meaningful when `ifcDomain = IfcRoad`.
 

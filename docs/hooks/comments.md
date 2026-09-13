@@ -13,6 +13,7 @@ See [Shared conventions](./overview.md#shared-conventions) for the loading, erro
 |------|-------------|
 | `useComments` | Fetches all comments |
 | `useComment` | Fetches a single comment by ID, with update and delete mutations |
+| `useDeleteComments` | The delete mutation on its own |
 | `useCommentsByBuilding` | Fetches comments associated with a specific building |
 | `useCommentsByAuthor` | Fetches comments written by a specific author |
 | `useCreateComment` | Creates a new comment |
@@ -60,6 +61,8 @@ const handleDelete = async () => {
 ```
 
 A successful update or delete invalidates the single-comment key, the all-comments list, and any building- or author-specific lists that apply.
+
+`useDeleteComments()` is also exported standalone, for deleting comments you have not fetched with `useComment`.
 
 ## `useCommentsByBuilding(buildingId)`
 

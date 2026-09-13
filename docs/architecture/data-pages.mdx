@@ -3,9 +3,6 @@ sidebar_position: 12
 displayed_sidebar: developerSidebar
 title: Data Pages
 description: "How the buildings, sites, and files pages are built: one route, one Viewer, one DataMenu, and the path from a table row back to Prisma."
-category: architecture
-status: draft
-last_updated: 2026-09-13
 ---
 
 <AudienceNotice home="developers" also="deployment" />
@@ -20,7 +17,7 @@ how they are built, where their data comes from, and how to add another one.
 There is no `/buildings` route, no `/sites` route, and no `/files` route. Looking for them is the
 most common wrong turn in this codebase, because the App Router usually implies a folder per page.
 
-The entire authenticated application is a single route — `src/app/[instance]/page.tsx` — which
+The entire authenticated application is a single route, `src/app/[instance]/page.tsx`, which
 renders a single `<Viewer>`. `Viewer` reads a `viewer` search param and swaps what is on screen:
 
 ```
@@ -74,7 +71,7 @@ the browser over SWR.
 
 `src/app/[instance]/page.tsx` runs before any of the UI exists. In order, it:
 
-1. Resolves the tenant from the route — `const { instance: orgName } = await params` (async in
+1. Resolves the tenant from the route: `const { instance: orgName } = await params` (async in
    Next 15).
 2. Calls `auth()`; no session redirects to `/${orgName}/auth/signin`.
 3. **Re-checks the tenant**, even though middleware already did:
@@ -93,12 +90,12 @@ if (sessionOrgName && sessionOrgName !== orgName && !isPlatformAdmin(sessionEmai
    redirects to `/instance-not-found`.
 5. Reads server-only environment values (`MINIO_BUCKET_URL`, `MARTIN_SERVER_URL`,
    `POINTCLOUD_API_URL`, `MAPTILER_KEY`, geocoder keys) and passes them down as props. This is the
-   only way those reach the client — they are never bundled.
+   only way those reach the client; they are never bundled.
 6. Renders the shell: `PluginAwareAppProvider` → `SidebarProvider` → `AppSidebar` + `Viewer`.
 
 :::warning The URL is not a credential
 The `[instance]` segment says which organization is being **viewed**. It never says which
-organization the viewer **belongs to** — that comes from the session. The check above is
+organization the viewer **belongs to**. That comes from the session. The check above is
 deliberately redundant with middleware, because a tenant boundary should not depend on matcher
 configuration staying correct.
 :::
@@ -137,7 +134,7 @@ of it. Plugin pages use a separate key space and are gated by plugin enablement 
 type ViewerKey = ViewerNames | `plugin:${string}`
 ```
 
-`Viewer` keeps the URL and `MenusContext.currentViewer` in sync in both directions — the sidebar
+`Viewer` keeps the URL and `MenusContext.currentViewer` in sync in both directions: the sidebar
 changes context, the context writes the URL, and a pasted URL writes the context. A ref guards
 against the two effects looping.
 
@@ -152,7 +149,7 @@ in the source:
 ```
 
 `DataMenu` in particular reaches `BimViewer` through `FilePreview`, so importing it statically
-would undo the split. These dynamic fallbacks are the app's real loading UI — there is no
+would undo the split. These dynamic fallbacks are the app's real loading UI; there is no
 `loading.tsx` anywhere.
 
 `MapViewer` is the exception: it stays mounted and is toggled with `display`, so the map does not
@@ -210,7 +207,7 @@ building's detail view.
 
 ## Table view
 
-The table is `DataTable` — a TanStack Table wrapper — fed by `useViewerData`:
+The table is `DataTable`, a TanStack Table wrapper, fed by `useViewerData`:
 
 ```ts
 const { filteredData, filtersOptions, isLoading } = useViewerData({
@@ -222,17 +219,17 @@ const { filteredData, filtersOptions, isLoading } = useViewerData({
 `useViewerData` switches on `currentViewer` and returns `{ data, filteredData, filtersOptions,
 isLoading }`. Each case decides its own search behaviour: buildings search a named field list
 (`buildingName`, `buildingMunicipality`, `buildingAddress`, …), while sites search every value on
-the record. The files case also maps the raw `DbFile[]` into `FileRow[]` — formatting size as
-`"12.500 MB"`, resolving the uploader, and parsing the position — so the files table renders a
+the record. The files case also maps the raw `DbFile[]` into `FileRow[]`, formatting size as
+`"12.500 MB"`, resolving the uploader, and parsing the position, so the files table renders a
 display model rather than the database record. The original row stays available as
 `FileRow.metadata`.
 
 Around the table:
 
-- **`HeaderButtons`** — creation entry points, "view all on map", compare toggle.
-- **`FilterButtons`** — advanced filtering over `FilterState` (field, operator, value).
-- **`MoreOptions`** — the per-row trailing menu, switched on `DataTypes`.
-- **Compare tray** — lives in `BuildingsContext`, holds at most 3 items, FIFO. Reset whenever
+- **`HeaderButtons`**: creation entry points, "view all on map", compare toggle.
+- **`FilterButtons`**: advanced filtering over `FilterState` (field, operator, value).
+- **`MoreOptions`**: the per-row trailing menu, switched on `DataTypes`.
+- **Compare tray**: lives in `BuildingsContext`, holds at most 3 items, FIFO. Reset whenever
   `currentViewer` changes.
 
 Clicking a row sets the matching `selected*` value and calls `setView('detail')`.
@@ -272,7 +269,7 @@ component changes.
 ### The panel contract
 
 `BuildingDetails`, `SiteDetails`, `FileDetails`, `InfrastructureDetails` and `UserDetails` all
-share one shape — a `forwardRef` exposing `saveChanges`, so the header's Save button can drive a
+share one shape, a `forwardRef` exposing `saveChanges`, so the header's Save button can drive a
 panel it does not own:
 
 ```tsx
@@ -302,7 +299,7 @@ Two conventions inside the panels:
 
 ## Where the data comes from
 
-Core does not know how to make a request. It declares a port — `ApiAdapter` — and the host
+Core does not know how to make a request. It declares a port, `ApiAdapter`, and the host
 supplies the implementation. The seam is mounted once:
 
 ```tsx
@@ -324,7 +321,7 @@ export const useBuilding = (id: number | null) => useCoreHooks().building.useBui
 
 ### SWR keys are arrays, not URLs
 
-This is deliberate — the cache is keyed on identity, not on the endpoint that happened to serve
+This is deliberate: the cache is keyed on identity, not on the endpoint that happened to serve
 it, so the adapter can change without invalidating the cache contract:
 
 ```ts
@@ -342,7 +339,7 @@ void mutate(["filesByBuilding", id, ""]);
 
 ### Response envelopes
 
-Every route handler returns a named envelope — `{ building }`, `{ sites }`, `{ newFile }` — and
+Every route handler returns a named envelope (`{ building }`, `{ sites }`, `{ newFile }`) and
 the adapter unwraps it with a `??` chain:
 
 ```ts
@@ -381,7 +378,7 @@ const coreBuildings = buildings.map(adaptPrismaBuildingToCore)
 
 `getRequestAbility()` resolves the session, derives `userId` and `organizationId` **from the
 session**, and builds a CASL ability from the user's role permissions. The organization id never
-comes from the request body or the URL — that is the tenant boundary.
+comes from the request body or the URL. That is the tenant boundary.
 
 `prismaToCore.ts` is the serialization edge: `Date → ISO string`, `null | undefined → null` (or
 `[]` for array fields), relations flattened. It exists so core types never depend on Prisma's
@@ -413,17 +410,17 @@ Mirror the Infrastructure vertical. Host side, in the consuming app:
 
 1. **Prisma model** with an organization foreign key (or a join table, as buildings use). Migrate.
    :::warning
-   `prisma/` is owned — check before editing the schema. See the repository contributor guide.
+   `prisma/` is owned: check before editing the schema. See the repository contributor guide.
    :::
-2. **Service** — `prisma/services/<entity>.ts`, a class plus an exported singleton. **Scope every
+2. **Service**: `prisma/services/<entity>.ts`, a class plus an exported singleton. **Scope every
    method by `organizationId`**, including update and delete, not just the list query.
-3. **Adapter** — `adaptPrisma<Entity>ToCore()` in `src/app/adapters/prismaToCore.ts`, plus a case
+3. **Adapter**: `adaptPrisma<Entity>ToCore()` in `src/app/adapters/prismaToCore.ts`, plus a case
    in `prismaToCore.test.ts`.
-4. **Routes** — `api/<entities>/route.ts`, `api/<entities>/[id]/route.ts`,
+4. **Routes**: `api/<entities>/route.ts`, `api/<entities>/[id]/route.ts`,
    `api/<entities>/create/route.ts`. Each opens with the `getRequestAbility()` preamble and returns
    a named envelope.
-5. **Permissions** — add the subject to the role seed so roles can be granted it.
-6. **Adapter methods** — implement the new port methods in `src/hooks/httpAdapter.ts` and add the
+5. **Permissions**: add the subject to the role seed so roles can be granted it.
+6. **Adapter methods**: implement the new port methods in `src/hooks/httpAdapter.ts` and add the
    envelope key to the `??` chain.
 
 Core side, in `@collabdt/core`:
@@ -431,13 +428,13 @@ Core side, in `@collabdt/core`:
 7. **Type** in `core/types/dbTypes.ts`, exported from the barrel.
 8. **Port methods** on `ApiAdapter`; **hooks** in `core/hooks/<entities>/` using array SWR keys;
    register the bag in `CoreHooksProvider`.
-9. **`ViewerNames` member** — and the matching Prisma `appContent` enum value, since the two mirror
+9. **`ViewerNames` member**, plus the matching Prisma `appContent` enum value, since the two mirror
    each other.
 10. **`VIEWER_CONFIG` entry**, a sidebar nav item, and i18n keys in the `DataMenu` namespace.
-11. **Table and detail** — a `useViewerData` case, columns in `Columns.tsx`, a
+11. **Table and detail**: a `useViewerData` case, columns in `Columns.tsx`, a
     `use<Entity>Headers()` tree in `Headers.tsx`, and a `<Entity>Details` panel following the
     `forwardRef` / `saveChanges` contract.
-12. **Two dispatch sites** — add the viewer to the `ViewerNames` list in `Viewer.tsx` and to the
+12. **Two dispatch sites**: add the viewer to the `ViewerNames` list in `Viewer.tsx` and to the
     detail branch in `DataMenu.tsx`.
 
 Gate every action with CASL: creation entry points in `HeaderButtons`, edit and save in
@@ -453,14 +450,14 @@ outside all of it.
 ## Gotchas
 
 - **Detail views and filters are not linkable.** Only `viewer` and `buildingId` are in the URL.
-- **`DataMenu` fetches all five datasets on mount**, regardless of `currentViewer` — buildings,
+- **`DataMenu` fetches all five datasets on mount**, regardless of `currentViewer`: buildings,
   sites, infrastructures, files and users. Worth knowing before blaming one page for load time.
 - **Tab keys are derived from translated titles.** `section.title.toLowerCase().replaceAll(…)`
   runs on the output of `t(...)`, so a tab key is not a stable identifier across locales. Do not
   persist one or compare it against a hardcoded string.
 - **`DataTable` is not purely presentational.** It reads `rowsPerPage` from `MenusContext` and
   touches `MapContext` for empty-state messaging, so it cannot be rendered outside those providers.
-- **Import depth matters.** Use deep imports — `@collabdt/core/core/components/...` — for anything
+- **Import depth matters.** Use deep imports (`@collabdt/core/core/components/...`) for anything
   heavy. Core applies the same rule internally: the `ui` barrel drags heavy modules into the eager
   map bundle.
 - **Permission checks in the UI are for UX only.** Every one of them is re-checked server-side in
