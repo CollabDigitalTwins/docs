@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-13T11:46:40.493Z",
+  "generatedAt": "2026-09-13T12:34:50.596Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -228,6 +228,12 @@
               "primary": "developerSidebar"
             },
             {
+              "id": "architecture/data-pages",
+              "title": "Data Pages",
+              "slug": "/docs/architecture/data-pages",
+              "primary": "developerSidebar"
+            },
+            {
               "id": "architecture/frontend",
               "title": "Frontend Architecture",
               "slug": "/docs/architecture/frontend",
@@ -317,7 +323,7 @@
             },
             {
               "id": "components/file-details",
-              "title": "FilePreview",
+              "title": "File Components",
               "slug": "/docs/components/file-details",
               "primary": null
             },

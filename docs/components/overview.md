@@ -10,7 +10,7 @@ Custom React components built for the CDT platform. This section covers componen
 
 Components are organized by feature area: `authentication/`, `settings/`, `viewers/`, and `ui/` for shared UI elements. Top-level components like `Toolbar`, `AppSidebar`, and `DataTable` are the main entry points for the platform shell.
 
-Start with [DataMenu](./data-menu.md) — it's the main shell for managing building, site, file, and infrastructure data, and references several other components.
+Start with [DataMenu](./data-menu.md) — the main shell for managing building, site, file, and infrastructure data. For how those pages fit together end to end, see [Data Pages](../architecture/data-pages.mdx).
 
 ## In this section
 
@@ -20,7 +20,7 @@ Start with [DataMenu](./data-menu.md) — it's the main shell for managing build
 - [BuildingDetails](./building-details.md)
 - [DataMenu](./data-menu.md)
 - [DataTable](./data-table.md)
-- [FilePreview](./file-details.md)
+- [File Components](./file-details.md)
 - [InfrastructureDetails](./infrastructure-details.md)
 - [NavigationBar](./top-navigation-bar.md)
 - [Settings Components](./settings.md)

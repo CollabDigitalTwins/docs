@@ -13,7 +13,7 @@ A container component that renders a searchable, filterable data table for vario
 ## Usage
 
 ```tsx
-import { DataMenu } from '@collabdt/core/components/menus/DataMenu';
+import { DataMenu } from '@collabdt/core/core/components/viewers/Data/DataMenu';
 import { ViewerNames } from '@collabdt/core/types';
 
 <DataMenu
@@ -98,6 +98,7 @@ If you are adding a new viewer with edit/create actions, the pattern is: add the
 
 ## Related
 
+- [Data Pages](/docs/architecture/data-pages) — how these pages are assembled
 - [BuildingDetails](/docs/components/building-details)
 - [SiteDetails](/docs/components/site-details)
 - [InfrastructureDetails](/docs/components/infrastructure-details)

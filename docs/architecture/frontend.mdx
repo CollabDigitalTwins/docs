@@ -78,19 +78,38 @@ const compose = providers =>
       }
   )
 
-export const AppProvider = compose([
-  AppConfigProvider,
+// PluginHostProvider is deliberately NOT in this list: it takes props, and
+// `compose` only threads `children`. It wraps the composed tree below instead, so
+// it stays the innermost provider (plugins can read every store above it).
+const InnerProviders = compose([
   BimProvider,
   MapProvider,
   MenusProvider,
   ToolsProvider,
   ContentProvider,
   DatasetsProvider,
+  MapSitesProvider,
   FilesProvider,
   BuildingsProvider,
   PermissionsProvider,
 ])
+
+export function AppProvider({ children, runtimeConfig, plugins, enabledSlugs, configs }) {
+  return (
+    <AppConfigProvider runtimeConfig={runtimeConfig}>
+      <InnerProviders>
+        <PluginHostProvider plugins={plugins} enabledSlugs={enabledSlugs} configs={configs}>
+          {children}
+          <PluginDialogHost />
+        </PluginHostProvider>
+      </InnerProviders>
+    </AppConfigProvider>
+  )
+}
 ```
+
+`AppConfigProvider` sits outside the composed set because it takes a `runtimeConfig` prop, and
+`PluginHostProvider` sits inside it for the same reason — `compose` only threads `children`.
 
 `AppProvider` is rendered once at the application root and gives every component access to every context without prop drilling. See [State Management](./state-management.mdx) for the full pattern (state, actions, reducers, and consumption).
 
@@ -105,36 +124,44 @@ export const AppProvider = compose([
 | **MenusProvider** | Sidebar/toolbar menu open/closed state | `useMenus()` |
 | **ToolsProvider** | Active tool per viewer (measure, annotate, etc.) | `useTools()` |
 | **ContentProvider** | Which panel is shown, current view mode | `useContent()` |
-| **DatasetsProvider** | Available datasets, active layers, metadata | `useDatasets()` |
-| **FilesProvider** | Upload queue, progress, error state | `useFiles()` |
-| **BuildingsProvider** | Selected building, cached properties | `useBuildings()` |
-| **CommentsProvider** | Threads, annotations, real-time updates | `useComments()` |
+| **DatasetsProvider** | Available datasets, active layers, metadata | `useDatasetContext()` |
+| **MapSitesProvider** | Site geometries drawn on the map | `MapSitesContext` |
+| **FilesProvider** | Upload queue, progress, error state | `useFilesContext()` |
+| **BuildingsProvider** | Selected building, cached properties, compare tray | `useBuildingsContext()` |
+
+`MenusProvider` is the one most relevant to the data pages — besides menu state it owns
+`currentViewer`, the `table`/`detail` toggle, and the current selection for every entity type.
+See [Data Pages](./data-pages.mdx).
 
 ## Data Fetching
 
 ### Client-Side: SWR
 
-Fetches use **SWR** (stale-while-revalidate) for smart caching and background revalidation:
+Fetches use **SWR** (stale-while-revalidate) for smart caching and background revalidation. The
+hooks live in `@collabdt/core`, behind a port: core declares an `ApiAdapter` interface and the
+host application supplies the implementation, mounted once at the app root.
 
-```typescript
-// src/hooks/api.ts - thin wrapper around SWR
+```tsx
+// cdt-na/src/app/app-providers.tsx
 
-import useSWR from 'swr';
-
-const fetcher = (url: string) => fetch(`/api${url}`).then(r => r.json());
-
-export function useBuildings() {
-  const { data, error, isLoading } = useSWR('/buildings', fetcher);
-  return { buildings: data, error, isLoading };
-}
-
-export function useBuilding(id: string) {
-  const { data, error } = useSWR(id ? `/buildings/${id}` : null, fetcher);
-  return { building: data, error };
-}
+const adapter = React.useMemo(() => createHttpAdapter({ baseUrl: "/api" }), []);
+return <CoreHooksProvider adapter={adapter}>{children}</CoreHooksProvider>;
 ```
 
-All API calls normalize through `/api` — the HTTP adapter masks server/client boundaries.
+Components import thin convenience wrappers, never SWR directly:
+
+```ts
+// @collabdt/core/core/hooks/buildings/buildings.ts
+
+export const useBuildings = () => useCoreHooks().building.useBuildings();
+export const useBuilding = (id: number | null) => useCoreHooks().building.useBuilding(id);
+```
+
+SWR keys are **arrays, not URL strings** (`["buildings"]`, `["building", id]`), so the cache is
+keyed on identity rather than on the endpoint that served it. Mutations revalidate by key.
+
+All API calls normalize through `/api` — the HTTP adapter masks server/client boundaries. See
+[Data Pages](./data-pages.mdx) for the full path from a table row back to Prisma.
 
 ### Real-Time: WebSocket (Future)
 
@@ -159,47 +186,60 @@ Both viewers share the same chrome:
     return (
       <HierarchyTree
         data={{
-          label: 'src/components/',
+          label: 'core-local/src/core/components/',
           children: [
             {
               label: 'viewers/',
               children: [
-                { label: 'MapViewer.tsx' },
-                { label: 'BimViewer.tsx' },
-              ],
-            },
-            {
-              label: 'panels/',
-              children: [
-                { label: 'Sidebar.tsx' },
-                { label: 'DetailsPanel.tsx' },
-                { label: 'ToolsPanel.tsx' },
+                { label: 'Viewer.tsx' },
+                { label: 'viewerAccess.ts' },
+                { label: 'map/' },
+                { label: 'bim/' },
+                { label: 'plugins/' },
+                {
+                  label: 'Data/',
+                  children: [
+                    { label: 'DataMenu.tsx' },
+                    { label: 'buildingDetails/' },
+                    { label: 'siteDetails/' },
+                    { label: 'files/' },
+                    { label: 'details/' },
+                    { label: 'utils/' },
+                  ],
+                },
               ],
             },
             {
               label: 'ui/',
               children: [
-                { label: 'Button.tsx' },
-                { label: 'Dialog.tsx' },
-                { label: 'Tabs.tsx' },
+                { label: 'DataTable.tsx' },
+                { label: 'Sidebar.tsx' },
+                { label: 'FilesManager/' },
+                { label: 'ViewerSidebar/' },
                 { label: '…' },
               ],
             },
-            {
-              label: 'features/',
-              children: [
-                { label: 'buildings/' },
-                { label: 'collaboration/' },
-                { label: 'datasets/' },
-                { label: '…' },
-              ],
-            },
+            { label: 'authentication/' },
+            { label: 'settings/' },
+            { label: 'organizationConfig/' },
+            { label: 'Toolbar.tsx' },
+            { label: 'AppSidebarContent.tsx' },
           ],
         }}
       />
     );
   }}
 </BrowserOnly>
+
+## Data Pages
+
+Buildings, sites, files, infrastructure and users are **not separate routes**. The whole
+authenticated app is one route — `src/app/[instance]/page.tsx` — rendering one `<Viewer>` that
+swaps content based on a `?viewer=` search param. All five entity pages are the same component,
+`DataMenu`, in different modes.
+
+See [Data Pages](./data-pages.mdx) for the full anatomy, the path from a table row back to Prisma,
+and the recipe for adding a page.
 
 ## Internationalization
 

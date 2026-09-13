@@ -80,10 +80,10 @@ export const BuildingsProvider: React.FC<React.PropsWithChildren> = ({ children 
 Import the context and destructure `state` and `dispatch` with `useContext`:
 
 ```tsx
-import { MapStyleContext } from '@collabdt/core/store/Map/context'
+import { MapContext } from '@collabdt/core/core/store/Map/context'
 
 export default function MapStyleMenu() {
-  const { state, dispatch } = useContext(MapStyleContext)
+  const { state, dispatch } = useContext(MapContext)
 
   return (
     <button onClick={() => dispatch({ type: 'UPDATE_MAP_STYLE', payload: { name: 'streets' } })}>
