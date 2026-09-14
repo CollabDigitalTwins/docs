@@ -1,16 +1,11 @@
 ---
 title: Viewer
 description: Root component that orchestrates viewer switching between map, BIM, and data views based on URL parameters.
-category: components
-status: draft
-last_updated: 2025-01-14
 ---
 
 # Viewer
 
-Root viewer component that manages switching between different visualization modes (map, BIM) and data management views (buildings, sites, files, etc.). Synchronizes the active viewer with URL search parameters and validates viewer availability based on organization settings.
-
-## Usage
+The root viewer component. It switches between visualization modes (map, BIM) and data management views (buildings, sites, files, and so on), keeps the active viewer in sync with the `?viewer=` URL parameter, and validates the requested viewer against organization settings.
 
 ```tsx
 import { Viewer } from '@collabdt/core/core/components/viewers/Viewer';
@@ -18,43 +13,28 @@ import { Viewer } from '@collabdt/core/core/components/viewers/Viewer';
 <Viewer organization={organization} />
 ```
 
-## Props
-
-| Prop | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| `organization` | `Organization` | Yes | — | The organization object containing `appContent` (available viewers) and `languages` configuration. |
+`organization` (`Organization`, required) supplies `appContent`, the list of available viewers, and `languages`, whose first entry becomes the default language on mount.
 
 ## Behaviour
 
-- **Initial mount**: Reads `viewer` from URL search params, defaults to `map` if not present or invalid.
-- **Viewer validation**: Checks if the requested viewer is allowed by `organization.appContent`. Falls back to `map` if not.
-- **URL sync**: When the viewer changes via context (sidebar, toolbar), updates the URL. When URL changes directly, updates context.
-- **Circular update prevention**: Uses a ref to prevent infinite loops between URL and context synchronization.
-- **Language switching**: Sets the default language from `organization.languages[0]` on mount.
-- **Conditional rendering**: Map viewer is always mounted but hidden when inactive (preserves state). The BIM viewer mounts/unmounts on demand.
-- **Sidebar trigger**: Displays `SidebarTrigger` only for the map and BIM viewers.
+On mount, Viewer reads `viewer` from the URL search params and falls back to `map` when it is missing or not permitted by `organization.appContent`. Thereafter the URL and context stay in sync in both directions, and `SidebarTrigger` renders only for the map and BIM viewers.
 
-## Design Decisions
- 
-Viewer is the top-level routing and layout component for the platform — it owns the relationship between the URL (`?viewer=`) and the active viewer state in context, and decides which viewer component to render.
- 
-The core design choice is a **two-way sync between URL and context** rather than treating one as the single source of truth. This is necessary because viewer changes can come from two directions — direct URL navigation (browser back/forward, shared links) and in-app actions (sidebar, HeaderButtons). A `isUpdatingRef` flag prevents the two `useEffect`s from triggering each other in a loop when one initiates a change.
- 
-The MapViewer is always mounted but hidden via `display: none` when not active. This is intentional — MapLibre is expensive to initialise and tear down, so keeping it mounted preserves map state (position, loaded layers, datasets) when the user switches to another viewer and back. All other viewers mount and unmount normally.
- 
-`appContent` on the Organization model controls which viewers are available for a given instance. If the URL contains a viewer that isn't in `appContent`, Viewer silently falls back to the map and updates the URL — so viewer availability is enforced at the routing level rather than inside each individual viewer component.
- 
-The `isMounted` flag ensures the URL-to-context sync only runs after the initial mount, avoiding a race condition where the URL and context briefly disagree on first load.
+## Design decisions
 
-## Permissions
+Viewer is the top-level routing and layout component: it owns the relationship between the URL and the active viewer state in context, and decides which viewer component to render.
 
-No permissions are necessary here.
+The core choice is a two-way sync between URL and context rather than treating one as the single source of truth, because viewer changes arrive from two directions: direct URL navigation (browser back and forward, shared links) and in-app actions (sidebar, `HeaderButtons`). An `isUpdatingRef` flag stops the two `useEffect`s triggering each other in a loop when one initiates a change. An `isMounted` flag keeps the URL-to-context sync from running on the first render, where the URL and context would briefly disagree.
+
+The MapViewer is always mounted and merely hidden with `display: none` when inactive. MapLibre is expensive to initialise and tear down, so staying mounted preserves map state (position, loaded layers, datasets) across a switch away and back. Every other viewer mounts and unmounts normally.
+
+`appContent` on the Organization model controls which viewers an instance offers. A URL naming a viewer outside `appContent` silently falls back to the map and rewrites the URL, so availability is enforced at the routing level instead of inside each viewer.
+
+See [Shared conventions](./overview.md#shared-conventions) for permissions.
 
 ## Related
 
-- [MapViewer](/docs/components/viewer) — Map visualization component
-- [BimViewer](/docs/components/viewer) — BIM model viewer
-- [DataMenu](/docs/components/data-menu) — Data management views
-- [Toolbar](/docs/components/toolbar) — Viewer toolbar controls
-- [MenusContext](/docs/architecture/state-management) — State management for current viewer
-- [BuildingsContext](/docs/architecture/state-management) — Building selection state
+- [Map Viewer](../guides/map-viewer.md)
+- [BIM Viewer](../guides/bim-viewer.md)
+- [DataMenu](./data-menu.md) — data management views
+- [Toolbar](./toolbar.md) — viewer toolbar controls
+- [State Management](../architecture/state-management.mdx) — `MenusContext` and `BuildingsContext`

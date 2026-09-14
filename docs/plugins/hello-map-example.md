@@ -2,9 +2,6 @@
 title: 'Example: one plugin, several surfaces'
 description: How hello-map contributes six surfaces over one set of data, and how hello-bim reads and paints a BIM model.
 sidebar_position: 5
-category: plugins
-status: draft
-last_updated: 2026-08-17
 ---
 
 # Example: one plugin, several surfaces
@@ -98,7 +95,7 @@ The map tool calls `add()`. The layer, the legend, the tab, the page and the dia
 
 The split is the part to copy: **markers are records, a selection is not.** `usePluginStore` writes to the database, so markers survive a reload and everyone in the organization sees them. `usePluginState` is in-memory, so the current selection and the open popup cost nothing and start clean when the plugin is enabled again. See [Where to keep state](./all-capabilities.md#where-to-keep-state).
 
-Writes should be wrapped so that a rejected save is visible. A `store.put` that fails on permissions is otherwise indistinguishable from a dead button:
+Wrap writes so that a rejected save is visible. A `store.put` that fails on permissions is otherwise indistinguishable from a dead button:
 
 ```ts
 try {
@@ -186,7 +183,7 @@ await select({ [space.modelId]: new Set([space.localId]) })
 await fitToSelection()
 ```
 
-`selection` is live. It updates when someone clicks in the viewport or uses a sidebar tree, not only when the plugin selects something — so a list can highlight the current space without tracking clicks itself.
+`selection` is live. It updates when someone clicks in the viewport or uses a sidebar tree, not only when the plugin selects something, so a list can highlight the current space without tracking clicks itself.
 
 ### The model is never written to
 

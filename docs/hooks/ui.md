@@ -1,44 +1,21 @@
 ---
-title: useIsMobile hook
-description: Detects whether the current viewport is mobile-sized based on a breakpoint.
-category: hooks
-status: draft
-last_updated: 2025-01-14
+title: UI hooks
+description: Viewport, tab strip, and sidebar layout hooks.
 ---
 
-# useIsMobile hook
+# UI hooks
 
-A client-side hook that tracks viewport width and returns a boolean indicating whether the device is below the mobile breakpoint (768px). Uses `window.matchMedia` for efficient resize detection without polling.
-
-## Hooks
+Layout hooks that read the environment rather than platform data, so they return plain values instead of the SWR shape.
 
 | Hook | Description |
 |------|-------------|
-| `useIsMobile` | Returns `true` when viewport width is below 768px |
+| `useIsMobile` | Whether the viewport is below the mobile breakpoint |
+| `useCompactTabStrip` | Whether a tab strip should drop its labels to fit |
+| `useResizableSidebarWidth` | Drag-to-resize state for the sidebar |
 
----
+## `useIsMobile()`
 
-## `useIsMobile`
-
-Tracks viewport width using a media query listener and returns whether the current window is mobile-sized.
-
-### Signature
-
-```ts
-function useIsMobile(): boolean
-```
-
-### Parameters
-
-None.
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| (return value) | `boolean` | `true` if viewport width is below 768px, `false` otherwise |
-
-### Example
+Tracks viewport width with `window.matchMedia` and returns `true` below the mobile breakpoint, using a media-query change listener rather than a resize handler.
 
 ```tsx
 import { useIsMobile } from '@collabdt/core/core/hooks/ui/use-mobile';
@@ -50,15 +27,37 @@ function Header() {
 }
 ```
 
-### Notes
+The breakpoint constant `MOBILE_BREAKPOINT` is 768px and is not configurable. The initial render returns `false`, because the internal `undefined` state is coerced with `!!isMobile`; on the server `window` is undefined, so a server render is always `false`.
 
-- Initial render returns `false` (the `undefined` state is coerced to `false` via `!!isMobile`).
-- The breakpoint constant `MOBILE_BREAKPOINT` is set to 768px and is not configurable.
-- Uses `matchMedia` change event listener rather than window resize for better performance.
-<!-- TODO: Document SSR behaviour — initial server render will always return false since window is undefined. -->
+## `useCompactTabStrip(ref, itemCount, minItemWidth?)`
 
----
+Returns `true` when the element in `ref` cannot give each of its `itemCount` tabs at least `minItemWidth` pixels, so the strip should render icons without labels. `minItemWidth` defaults to the platform's minimum tab label width.
+
+```tsx
+const ref = React.useRef<HTMLDivElement>(null);
+const compact = useCompactTabStrip(ref, tabs.length);
+```
+
+It starts `true` and measures after mount, so a strip never flashes overflowing labels on first paint.
+
+## `useResizableSidebarWidth()`
+
+Drag-to-resize state for the sidebar.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `width` | `number` | Current width in px. Only meaningful when `canResize` is true |
+| `isResizing` | `boolean` | True while a drag is in progress, for cursor and no-select styling |
+| `canResize` | `boolean` | Desktop only. Mobile uses a fixed drawer width |
+| `startResize` | `(e: React.PointerEvent) => void` | Attach to the drag handle's `onPointerDown` |
+
+```tsx
+const { width, isResizing, canResize, startResize } = useResizableSidebarWidth();
+```
+
+The width is restored from storage after mount rather than during render, which avoids a server/client mismatch on first paint.
 
 ## Related
 
 - [Components: Sidebar](/docs/components/app-sidebar)
+- [Components: Viewer sidebar](/docs/components/viewer-sidebar)

@@ -1,9 +1,6 @@
 ---
 title: ViewerSidebar
 description: The shared sidebar shell for the map and BIM viewers, including the tab strip and tab panels.
-category: components
-status: draft
-last_updated: 2026-07-31
 ---
 
 # ViewerSidebar
@@ -11,12 +8,10 @@ last_updated: 2026-07-31
 The left-hand sidebar that overlays a spatial viewer. `ViewerSidebar` picks the sidebar for whichever viewer is active; each viewer's sidebar then declares its tabs and hands them to `ViewerSidebarShell`, which renders the building header, the tab strip and the active tab's panel.
 
 :::info Renamed in 0.4.5
-This component was called `InfoSidebar` before `@collabdt/core@0.4.5`, and `ViewerSidebarShell` replaced `InfoSidebarContainer`. There is no deprecated alias — see the [changelog](../changelog.md) for the migration. The `useSidebar()` API is unchanged: `toggleInfoSidebar`, `openInfo` and `setOpenInfo` keep their names.
+This component was called `InfoSidebar` before `@collabdt/core@0.4.5`, and `ViewerSidebarShell` replaced `InfoSidebarContainer`. There is no deprecated alias; see the [changelog](../changelog.md) for the migration. The `useSidebar()` API is unchanged: `toggleInfoSidebar`, `openInfo` and `setOpenInfo` keep their names.
 :::
 
-## Usage
-
-You rarely render `ViewerSidebar` yourself — `SidebarProvider` mounts it inside the resizable overlay. You reach for `ViewerSidebarShell` when building or changing a viewer's sidebar:
+You rarely render `ViewerSidebar` yourself: `SidebarProvider` mounts it inside the resizable overlay. You reach for `ViewerSidebarShell` when building or changing a viewer's sidebar:
 
 ```tsx
 import { ViewerSidebarShell } from '@collabdt/core/core/components/ui/ViewerSidebar/Shell';
@@ -33,9 +28,7 @@ export function BimSidebar({ organization }) {
 }
 ```
 
-## Props
-
-### `ViewerSidebarShell`
+## `ViewerSidebarShell` props
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
@@ -55,7 +48,7 @@ export function BimSidebar({ organization }) {
 - **Tab state lives in the store.** The shell reads `selectedTab` from `MenusContext` and dispatches `SET_SIDEBAR_SELECTED_TAB`. A viewer never wires this up itself.
 - **Only the active tab's `content` is mounted.** Switching tabs unmounts the previous panel, so a viewer-coupled panel does not keep subscriptions alive in the background.
 - **`selectedTab` survives a viewer switch, so it may name a tab the new viewer does not have.** When that happens the shell falls back to the first available tab and dispatches the correction, rather than rendering an empty body. Example: Sensors is active in the map, the user switches to the BIM viewer, which does not offer it, and lands on Files.
-- **Disabled tabs are absent, not empty.** `enabled: false` removes the tab button. Gate on the declaration, not inside the panel — a tab the user can select but that renders nothing is a worse outcome than no tab.
+- **Disabled tabs are absent, not empty.** `enabled: false` removes the tab button. Gate on the declaration, not inside the panel: a tab the user can select but that renders nothing is a worse outcome than no tab.
 
 ## The tab strip
 
@@ -75,7 +68,7 @@ That threshold is measured, not a breakpoint. `useCompactTabStrip` observes the 
 
 ## Accessibility
 
-The strip is a `role="tablist"` of `<button role="tab">` elements: `aria-selected` tracks the active tab, `aria-controls` points at the panel, and the panel carries `role="tabpanel"` with `aria-labelledby` back to its button. Focus is roving — the strip is one tab stop, and Left/Right move between tabs with Home/End jumping to the ends. Every tab keeps an `aria-label` even when its visible text is hidden, so icon-only mode is not a screen-reader regression.
+The strip is a `role="tablist"` of `<button role="tab">` elements: `aria-selected` tracks the active tab, `aria-controls` points at the panel, and the panel carries `role="tabpanel"` with `aria-labelledby` back to its button. Focus is roving: the strip is one tab stop, and Left/Right move between tabs with Home/End jumping to the ends. Every tab keeps an `aria-label` even when its visible text is hidden, so icon-only mode is not a screen-reader regression.
 
 ## Tab panels
 
@@ -84,14 +77,11 @@ The strip is a `role="tablist"` of `<button role="tab">` elements: `aria-selecte
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
 | `children` | `React.ReactNode` | Yes | — | Panel content. |
-| `variant` | `'sections' \| 'scroll'` | No | `'sections'` | `sections` does not scroll — its children manage their own overflow. `scroll` is a single padded, scrolling stack, used by the settings tabs. |
+| `variant` | `'sections' \| 'scroll'` | No | `'sections'` | `sections` does not scroll; its children manage their own overflow. `scroll` is a single padded, scrolling stack, used by the settings tabs. |
 | `search` | `{ value, onChange, placeholder? }` | No | — | Renders a `SearchInput` above the content. |
 | `className` | `string` | No | — | Merged with `cn`, so a utility here overrides the variant's default (e.g. `space-y-4`). |
 
-Two tabs are fully shared and need no per-viewer copy:
-
-- **`SensorsTab`** — identical for every viewer; `SensorsSection` resolves the active viewer itself.
-- **`CommunicationTab`** — takes an optional `topics` node rendered above the comments. The BIM viewer passes its BCF topics list; the map viewer passes nothing.
+Two tabs are fully shared and need no per-viewer copy. `SensorsTab` is identical for every viewer, because `SensorsSection` resolves the active viewer itself. `CommunicationTab` takes an optional `topics` node rendered above the comments: the BIM viewer passes its BCF topics list, the map viewer passes nothing.
 
 ## Adding a tab to a viewer
 
@@ -99,9 +89,9 @@ Two tabs are fully shared and need no per-viewer copy:
 2. Build the panel body wrapped in `ViewerSidebarPanel`.
 3. Add `{ id, content }` to that viewer's `tabs` array, with `enabled` if it is permission-gated.
 
-Nothing else changes — the strip, the icon, the keyboard handling and the fallback behaviour all come from the shell.
+Nothing else changes: the strip, the icon, the keyboard handling and the fallback behaviour all come from the shell.
 
-## Design Decisions
+## Design decisions
 
 Each viewer sidebar had its own `TabSelector`, and the BIM and map copies were byte-identical. Consolidating them into `ViewerSidebarShell` plus a declarative tab list means the tab strip, its accessibility, and the store wiring have one implementation, and adding a tab to a viewer is a one-line change.
 

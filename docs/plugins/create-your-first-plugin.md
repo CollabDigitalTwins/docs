@@ -2,9 +2,6 @@
 title: Create your first plugin
 description: Scaffold a working CDT plugin, understand the manifest and the entry point, and get it into the app.
 sidebar_position: 2
-category: plugins
-status: draft
-last_updated: 2026-08-17
 ---
 
 # Create your first plugin
@@ -17,7 +14,7 @@ This walkthrough produces a button in the map toolbar that shows where the map i
 npx create-cdt-plugin
 ```
 
-The command asks for a name and which surfaces to contribute to, then writes a folder that builds and runs. The surface question is a multi-select, so a plugin that spans several is one answer rather than a later rewrite — pick just *Map toolbar* to follow along.
+The command asks for a name and which surfaces to contribute to, then writes a folder that builds and runs. The surface question is a multi-select, so a plugin that spans several is one answer rather than a later rewrite. Pick just *Map toolbar* to follow along.
 
 Scripting it instead of answering prompts? `--surface` is repeatable and takes a comma-separated list: `--surface bim.tools,viewer.tabs`.
 
@@ -99,9 +96,9 @@ The context has three members:
 |---|---|
 | `ctx.pluginId` | The slug declared in the manifest. |
 | `ctx.config` | The settings an administrator has saved, shaped by `configSchema`. Empty if none are declared. |
-| `ctx.register(key, item)` | The only way to add a contribution. `key` must be a declared capability; the shape of `item` follows from the key, and TypeScript checks it. |
+| `ctx.register(key, item)` | The only way to add a contribution, and only during `activate`. `key` must be a declared capability; the shape of `item` follows from the key, and TypeScript checks it. |
 
-The context type is named after the surface — `MapPluginContext` here, `BimPluginContext`, `UiPluginContext` and so on. That binds `register` to the right shapes, so passing a component that expects the BIM viewer to `map.tools` is a compile error rather than a plugin that loads and displays nothing.
+The context type is named after the surface: `MapPluginContext` here, `BimPluginContext`, `UiPluginContext` and so on. That binds `register` to the right shapes, so passing a component that expects the BIM viewer to `map.tools` is a compile error rather than a plugin that loads and displays nothing.
 
 Each of those aliases binds **one** viewer. A plugin that touches two names the slots itself, which is what the scaffolder writes when you pick surfaces in more than one viewer:
 
@@ -179,20 +176,11 @@ Three practices to follow:
 - **Remove every listener on cleanup.** A leaked `move` handler keeps firing after the viewer changes.
 - **Pass a fallback to `t()`.** The second argument is used when a key has no translation, so the plugin still reads correctly in an untranslated language.
 
+Use the components from `@collabdt/core/plugins-sdk/components`. They are the approved set, and they match the rest of the app. What a plugin may import beyond them is a fixed list: see [What a plugin can import](./mounting-a-plugin.md#what-a-plugin-can-import).
+
 ## 5. Run it
 
-```bash
-npm install
-npm run build
-```
-
-Then load the plugin into CDT and enable it — see [Run your plugin](./mounting-a-plugin.md).
-
-## The rules
-
-- **Import only from `@collabdt/core/plugins-sdk/*`, `@collabdt/plugin-kit/types/*`, `react` and the plugin's own files.** The build fails on anything else, and names what it rejected.
-- **`ctx.register()` is the only way to add a contribution,** and only during `activate`.
-- **Use the components from `@collabdt/core/plugins-sdk/components`.** They are the approved set, and they match the rest of the app.
+Build the plugin, load it into CDT and enable it: see [Run your plugin](./mounting-a-plugin.md).
 
 :::note Contributing a plugin to core instead
 A plugin can also live inside `@collabdt/core`, at `src/core/plugins/<slug>/`, which places it in every CDT installation, including the hosted platform. That route means a pull request against core and waiting for a release, so it is worth building and testing the plugin as a mounted one first.
@@ -205,8 +193,3 @@ export const INSTALLED_PLUGINS: PluginSource[] = [
 ]
 ```
 :::
-
-## Next
-
-- [Capabilities](./all-capabilities.md) — everything a plugin can add, and what each contribution receives
-- [Example: one plugin, several surfaces](./hello-map-example.md) — a plugin with six of them

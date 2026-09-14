@@ -1,16 +1,13 @@
 ---
 title: useUser hooks
 description: Hooks for fetching, creating, updating, and deleting users, plus role and password management.
-category: hooks
-status: draft
-last_updated: 2025-01-14
 ---
 
 # useUser hooks
 
-These hooks manage user data throughout the application, including user CRUD operations, role assignments, and password verification/changes. Built on SWR for data fetching with automatic caching and revalidation, and useSWRMutation for mutations. Password-related hooks use React state directly rather than SWR.
+Hooks for user records, role assignment, and password management. The two password hooks use React state rather than SWR, so they return `error: Error | null` instead of `isError`.
 
-## Hooks
+See [Shared conventions](./overview.md#shared-conventions) for the loading, error, and mutation fields the other hooks return.
 
 | Hook | Description |
 |------|-------------|
@@ -21,31 +18,9 @@ These hooks manage user data throughout the application, including user CRUD ope
 | `useVerifyPassword` | Verifies a user's current password |
 | `useChangePassword` | Changes a user's password |
 
----
+## `useUsers()`
 
-## `useUsers`
-
-Fetches all users from the API.
-
-### Signature
-
-```ts
-function useUsers(): UseUsersReturn
-```
-
-### Parameters
-
-None.
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `users` | `User[]` | Array of users, defaults to empty array |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-
-### Example
+Fetches all users as `users: User[]`.
 
 ```tsx
 const { users, isLoading, isError } = useUsers();
@@ -56,41 +31,17 @@ if (isError) return <ErrorMessage />;
 return <UserTable users={users} />;
 ```
 
+## `useUser(userId)`
 
----
-
-## `useUser`
-
-Fetches a single user by ID. Also provides `updateUser` and `deleteUser` mutations.
-
-### Signature
-
-```ts
-function useUser(userId: string): UseUserReturn
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `userId` | `string` | Yes | The user's unique identifier |
-
-### Returns
+Fetches a single user by `userId` (`string`), with update and delete mutations.
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `user` | `User \| null` | The fetched user, or null if not loaded |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-| `updateUser` | `(arg: Partial<User>) => Promise<User>` | Triggers user update mutation |
-| `isMutating` | `boolean` | True while update is in progress |
-| `updateError` | `Error \| undefined` | Error from update mutation |
-| `updatedData` | `User \| undefined` | Response data from successful update |
-| `deleteUser` | `() => Promise<void>` | Triggers user deletion |
-| `isDeleting` | `boolean` | True while delete is in progress |
-| `deleteError` | `Error \| undefined` | Error from delete mutation |
-
-### Example
+| `updateUser` | `(arg: Partial<User>) => Promise<User>` | Update trigger |
+| `deleteUser` | `() => Promise<void>` | Delete trigger |
+| `isDeleting` | `boolean` | Whether a delete is in progress |
+| `deleteError` | `Error \| undefined` | Error from the delete mutation |
 
 ```tsx
 const { user, isLoading, updateUser, deleteUser } = useUser(userId);
@@ -105,36 +56,11 @@ const handleDelete = async () => {
 };
 ```
 
-### Notes
+A successful update revalidates both the individual user cache and the users list. A delete clears the individual cache without revalidating it, then revalidates the list.
 
-On successful update, revalidates both the individual user cache and the users list. On delete, clears the individual user cache without revalidation and revalidates the users list.
+## `useCreateUser()`
 
----
-
-## `useCreateUser`
-
-Creates a new user.
-
-### Signature
-
-```ts
-function useCreateUser(): UseCreateUserReturn
-```
-
-### Parameters
-
-None.
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `createUser` | `(arg: { userData: Partial<User> }) => Promise<User>` | Triggers user creation |
-| `isMutating` | `boolean` | True while creation is in progress |
-| `createError` | `Error \| undefined` | Error from create mutation |
-| `createdData` | `User \| undefined` | The newly created user |
-
-### Example
+Creates a user. Returns `createUser: (arg: { userData: Partial<User> }) => Promise<User>`, and revalidates the users list on success.
 
 ```tsx
 const { createUser, isMutating, createError } = useCreateUser();
@@ -145,41 +71,9 @@ const handleSubmit = async (formData: Partial<User>) => {
 };
 ```
 
-### Notes
+## `useUserRole(userId)`
 
-On success, revalidates the users list cache.
-
----
-
-## `useUserRole`
-
-Fetches a user's role and provides a mutation to update it.
-
-### Signature
-
-```ts
-function useUserRole(userId: string): UseUserRoleReturn
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `userId` | `string` | Yes | The user's unique identifier |
-
-### Returns
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `userRole` | `Role \| null` | The user's current role, or null if not loaded |
-| `isLoading` | `boolean` | SWR loading state |
-| `isError` | `Error \| undefined` | SWR error state |
-| `updateUserRole` | `(arg: { roleId: number }) => Promise<Role>` | Triggers role update |
-| `isMutating` | `boolean` | True while update is in progress |
-| `updatedData` | `Role \| undefined` | Response data from successful update |
-| `updateError` | `Error \| undefined` | Error from update mutation |
-
-### Example
+Fetches a user's role (`userRole: Role | null`) and provides `updateUserRole: (arg: { roleId: number }) => Promise<Role>`.
 
 ```tsx
 const { userRole, updateUserRole, isMutating } = useUserRole(userId);
@@ -189,38 +83,18 @@ const handleRoleChange = async (roleId: number) => {
 };
 ```
 
-### Notes
+A successful update revalidates the user role cache, the individual user cache, and the users list.
 
-On success, revalidates the user role cache, individual user cache, and users list.
+## `useVerifyPassword(userId)`
 
----
-
-## `useVerifyPassword`
-
-Verifies a user's current password. Uses React state instead of SWR.
-
-### Signature
-
-```ts
-function useVerifyPassword(userId: string): UseVerifyPasswordReturn
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `userId` | `string` | Yes | The user's unique identifier |
-
-### Returns
+Verifies a user's current password.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `verifyPassword` | `(password: string) => Promise<boolean>` | Verifies the password, returns true if valid |
-| `isLoading` | `boolean` | True while verification is in progress |
-| `error` | `Error \| null` | Error from verification attempt |
-| `isValid` | `boolean \| null` | Result of last verification, null if not yet verified |
-
-### Example
+| `verifyPassword` | `(password: string) => Promise<boolean>` | Returns true if the password is valid |
+| `isLoading` | `boolean` | Whether verification is in progress |
+| `error` | `Error \| null` | Error from the verification attempt |
+| `isValid` | `boolean \| null` | Result of the last verification, null if not yet verified |
 
 ```tsx
 const { verifyPassword, isLoading, isValid } = useVerifyPassword(userId);
@@ -233,34 +107,16 @@ const handleVerify = async () => {
 };
 ```
 
----
+## `useChangePassword(userId)`
 
-## `useChangePassword`
-
-Changes a user's password. Uses React state instead of SWR.
-
-### Signature
-
-```ts
-function useChangePassword(userId: string): UseChangePasswordReturn
-```
-
-### Parameters
-
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `userId` | `string` | Yes | The user's unique identifier |
-
-### Returns
+Changes a user's password.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `changePassword` | `(oldPassword: string, newPassword: string) => Promise<void>` | Changes the user's password |
-| `isLoading` | `boolean` | True while change is in progress |
-| `error` | `Error \| null` | Error from change attempt |
-| `success` | `boolean` | True if password was changed successfully |
-
-### Example
+| `changePassword` | `(oldPassword: string, newPassword: string) => Promise<void>` | Changes the password |
+| `isLoading` | `boolean` | Whether the change is in progress |
+| `error` | `Error \| null` | Error from the change attempt |
+| `success` | `boolean` | True once the password has been changed |
 
 ```tsx
 const { changePassword, isLoading, error, success } = useChangePassword(userId);
@@ -274,10 +130,7 @@ if (success) {
 }
 ```
 
----
-
 ## Related
 
 - [Data model: User](/docs/architecture/data-model#user)
-- [Data model: Role](/docs/architecture/data-model#organization)
-- [Hook provider](/docs/hooks/overview)
+- [Authorization: Managing roles](/docs/authorization/managing-roles)

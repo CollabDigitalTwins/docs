@@ -10,34 +10,9 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 
 # Multi-Viewer Architecture
 
-CDT exposes data through two specialized viewers — Map and BIM — each optimized for a different data type and scale. They are not separate applications; they share the same underlying project data, coordinate system, and storage layer, and can be used in combination within a single session.
+CDT exposes data through two specialized viewers, Map and BIM, each optimized for a different data type and scale. They are not separate applications: they share the same project data, coordinate system, and storage layer, and can be used in combination within a single session. Point clouds are drawn inside the BIM viewer rather than in a viewer of their own.
 
-## The Two Viewers
-
-### Map Viewer
-**Library:** [MapLibre GL JS](https://maplibre.org/)  
-**Data types:** GeoJSON, WMS/WMTS, vector tiles, OpenStreetMap, georeferenced BIM models  
-**Scale:** National → municipal → site
-
-The map viewer is the entry point for any CDT project. It provides geographic context — the coordinate system that everything else is positioned within. Open data layers from federal, provincial, and municipal sources are stacked here. Buildings from the platform's database appear as interactive features on the map. Georeferenced IFC models are overlaid as Three.js layers synchronized with the MapLibre camera.
-
-### BIM Viewer
-**Library:** [That Open Company Engine](https://thatopen.com/) (web-ifc + Three.js)  
-**Data types:** IFC, IDS, BCF, DXF, glTF/GLB, FBX, OBJ, LAS/LAZ/E57  
-**Scale:** Building → storey → element
-
-The BIM viewer is designed for detailed interrogation of building models. It provides access to the full IFC schema — geometry, properties, spatial hierarchy, classification — alongside coordination tools (BCF topics, IDS validation, clipping planes, measurements). Models uploaded here are stored in the database and appear in the map viewer at their geographic position automatically.
-
-#### Point clouds
-**Library:** [potree-core](https://github.com/tentone/potree-core) (Three.js-based)  
-**Data types:** LAS, LAZ, E57  
-**Scale:** Building → site → urban area
-
-Reality capture datasets that would be impractical to load in a GIS tool are another kind of content the BIM viewer draws. Tile-based streaming and LOD keep billions of points interactive, and because a cloud is an object in the BIM scene it shares that scene's camera, clipping planes and measurement tools — which is what makes as-built against design a single comparison rather than two windows.
-
-Uploads are converted server-side into a Potree octree; see the [point cloud guide](../guides/point-clouds.md).
-
----
+The [map viewer](../guides/map-viewer.md) is the entry point for any CDT project and supplies the geographic context everything else is positioned within. The [BIM viewer](../guides/bim-viewer.md) is for detailed interrogation of building models, with access to the full IFC schema alongside coordination tools. Models uploaded in the BIM viewer appear in the map viewer at their geographic position automatically, and [point clouds](./point-clouds.mdx) loaded beside them share the BIM scene's camera, clipping planes, and measurement tools.
 
 ## Shared Infrastructure
 
@@ -50,31 +25,29 @@ Both viewers draw from the same backend:
   }}
 </BrowserOnly>
 
-- **PostgreSQL + PostGIS** — stores building and site records, user metadata, sensor readings, BCF topics, and spatial queries
-- **MinIO** — stores binary assets: IFC files, Fragments, point clouds, media uploads. S3-compatible, versioned, Canadian-hosted
-- **Martin** — generates vector tiles from PostGIS on demand for the map viewer
-- **Next.js API** — validates all writes, runs the IFC → Fragments conversion pipeline, enforces role-based access control
-
----
+| Service | Role |
+|---|---|
+| **PostgreSQL + PostGIS** | Building and site records, user metadata, sensor readings, BCF topics, and spatial queries |
+| **MinIO** | Binary assets: IFC files, Fragments, point clouds, media uploads. S3-compatible, versioned, Canadian-hosted |
+| **Martin** | Generates vector tiles from PostGIS on demand for the map viewer |
+| **Next.js API** | Validates all writes, runs the IFC to Fragments conversion pipeline, enforces role-based access control |
 
 ## Coordinate System Alignment
 
-Everything in CDT is anchored to **WGS 84** (EPSG:4326). When you upload an IFC file, the server reads its georeferencing information (IfcSite, IfcMapConversion) and stores the longitude/latitude origin. When the file is loaded in the map viewer, the Three.js scene is positioned at those coordinates and the camera is synchronized — so the building appears at its correct location on the globe.
+Everything in CDT is anchored to **WGS 84** (EPSG:4326). When you upload an IFC file, the server reads its georeferencing information (IfcSite, IfcMapConversion) and stores the longitude/latitude origin. When the file is loaded in the map viewer, the Three.js scene is positioned at those coordinates and the camera is synchronized, so the building appears at its correct location on the globe.
 
-Point clouds with GPS coordinates are treated the same way. Local Cartesian files (XYZ-only, no geographic reference) are stored with their Building's coordinate and displayed in the BIM viewer with an explicit local origin.
+Point clouds with GPS coordinates are treated the same way. Local Cartesian files (XYZ-only, with no geographic reference) are stored with their Building's coordinate and displayed in the BIM viewer with an explicit local origin.
 
-Proj4js handles reprojection for incoming open data that arrives in local coordinate systems (MTM, UTM, provincial variants), converting to WGS 84 before rendering.
-
----
+Incoming open data that arrives in local coordinate systems is reprojected to WGS 84 before rendering; see [GIS & Map Data](./gis-and-map-data.mdx#coordinate-reference-systems).
 
 ## How the Viewers Interact
 
 A typical workflow moves between both:
 
-1. **Map Viewer** — find the site, stack open data layers (zoning, flood zones, transit) for context
-2. **Buildings panel** — select a building to open its asset list
-3. **BIM Viewer** — load the IFC model, inspect properties, validate against IDS, create BCF topics for coordination
-4. **BIM Viewer** — load a LiDAR scan of the same building alongside the model, and compare as-built dimensions against it
-5. **Map Viewer** — return to urban scale, the model visible in its geographic context alongside GIS layers
+1. **Map viewer:** find the site, stack open data layers (zoning, flood zones, transit) for context.
+2. **Buildings panel:** select a building to open its asset list.
+3. **BIM viewer:** load the IFC model, inspect properties, validate against IDS, create BCF topics for coordination.
+4. **BIM viewer:** load a LiDAR scan of the same building alongside the model and compare as-built dimensions against it.
+5. **Map viewer:** return to urban scale, with the model visible in its geographic context alongside GIS layers.
 
 The share tool in each viewer generates a URL encoding the full viewer state (location, zoom, active assets, camera position), so any view can be handed to a collaborator who arrives at the exact same position.

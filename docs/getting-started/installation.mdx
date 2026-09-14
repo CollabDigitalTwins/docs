@@ -103,15 +103,8 @@ The application is available at `http://localhost:3000`.
 
 Open `http://localhost:3000`. You should see the CDT sign-in screen. Sign in with the credentials your administrator provided, then complete the [Quickstart](./quickstart.mdx) to confirm the full stack works end-to-end.
 
-## Troubleshooting common issues
+## Troubleshooting
 
-| Symptom | Likely cause | Fix |
-|---------|--------------|-----|
-| `EADDRINUSE: address already in use :::3000` | Another process is on port 3000 | Stop the other process or run `yarn dev -p 3001` |
-| `Error: Cannot find module 'next'` after install | Install was incomplete | Delete `node_modules` and `yarn.lock` (or `package-lock.json`), then reinstall |
-| `Prisma migrate` fails with `connect ECONNREFUSED` | PostgreSQL is not running or `DATABASE_URL` is wrong | Confirm `docker compose ps` shows postgres healthy and that the URL host/port match |
-| `unsupported engine` warning during install | Node.js version is older than 18 | Upgrade Node.js — use `nvm` or download from [nodejs.org](https://nodejs.org) |
-| Sign-in returns 500 with `AUTH_SECRET` errors | `AUTH_SECRET` is missing or too short | Set it to at least 32 random characters in `.env` |
-| Map renders blank | `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` or Martin URL is missing | Set the values in `.env` or accept reduced functionality for local dev |
+The [Troubleshooting page](./troubleshooting.mdx) covers the common install failures: port 3000 already in use, a missing `next` module after an incomplete install, `prisma migrate` refusing to connect, an `unsupported engine` warning on old Node, `AUTH_SECRET` errors at sign-in, and a blank map.
 
-If your issue is not listed here, see the broader [Troubleshooting page](./troubleshooting.mdx) or open an issue on [GitHub](https://github.com/CollabDigitalTwins/core/issues).
+If your issue is not there, open an issue on [GitHub](https://github.com/CollabDigitalTwins/core/issues).

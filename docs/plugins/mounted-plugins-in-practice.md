@@ -2,16 +2,13 @@
 title: Mounted plugins in practice
 description: What a runtime-loaded plugin can and cannot reach, and the patterns that work around each limit.
 sidebar_position: 6
-category: plugins
-status: draft
-last_updated: 2026-09-10
 ---
 
 # Mounted plugins in practice
 
-[The previous example](./hello-map-example.md) is compiled into CDT. A **mounted** plugin — built to a `dist/index.js`, dropped in a folder and loaded at runtime, as described in [Run your plugin](./mounting-a-plugin.md) — is how a plugin written outside the CDT repo arrives, and it is the only route available to a self-hosted deployment.
+[The previous example](./hello-map-example.md) is compiled into CDT. A **mounted** plugin, built to a `dist/index.js` and loaded at runtime as described in [Run your plugin](./mounting-a-plugin.md), is how a plugin written outside the core repository arrives, and it is the only route available to a self-hosted deployment.
 
-The difference matters more than it sounds. A mounted plugin resolves a fixed list of imports, receives viewer handles only where the platform passes them as props, and never joins the message catalog. Everything on this page follows from those three facts, and none of it applies to a plugin compiled into core.
+A mounted plugin resolves a fixed list of imports, receives viewer handles only where the platform passes them as props, and never joins the message catalog. Everything on this page follows from those three facts, and none of it applies to a plugin compiled into core.
 
 The examples come from a plugin that classifies IFC spaces across seven surfaces, but the constraints are the same whatever a mounted plugin does.
 
@@ -53,7 +50,7 @@ CDT renders a toolbar contribution inside a dropdown, which unmounts its childre
 
 ## Reaching past the SDK with the handles you are given
 
-The props a viewer surface receives carry more than the SDK wraps. `getProperties` forwards attributes and nothing else, which leaves out three things a model-reading plugin usually needs: a durable IFC `GlobalId` — the `Guid` in an attributes read is a numeric index local to the model, not the 22-character identifier — quantities such as floor area, and spatial containment. All of them are reachable through the raw `fragments` handle on the same props:
+The props a viewer surface receives carry more than the SDK wraps. `getProperties` forwards attributes and nothing else, which leaves out three things a model-reading plugin usually needs: a durable IFC `GlobalId` (the `Guid` in an attributes read is a numeric index local to the model, not the 22-character identifier), quantities such as floor area, and spatial containment. All of them are reachable through the raw `fragments` handle on the same props:
 
 ```tsx
 const model = fragments.list.get(modelId)
@@ -72,11 +69,9 @@ const data = await model.getItemsData(localIds, {
 
 `@thatopen/components` may be imported for its **types**: type imports erase, so the built bundle still imports nothing outside the published list. Importing it as a runtime value is a build error, and rightly so.
 
-The shapes that come back are not stable across IFC versions — a quantity sits at a different depth in IFC2X3 than in IFC4 — so walk them defensively, with a depth cap, and treat a missing value as a normal model rather than a failure. Plenty of real exports carry no quantities at all.
+The shapes that come back are not stable across IFC versions. A quantity sits at a different depth in IFC2X3 than in IFC4, so walk them defensively, with a depth cap, and treat a missing value as a normal model rather than a failure. Plenty of real exports carry no quantities at all.
 
-:::tip Some categories start hidden
-`getItemsOfCategory('IFCSPACE')` finds spaces whether or not they are visible, and they are hidden by default. Anything acting on one calls `setItemsVisible(items, true)` first.
-:::
+`getItemsOfCategory('IFCSPACE')` finds spaces whether or not they are visible, and they are hidden by default, so anything acting on one calls `setItemsVisible(items, true)` first.
 
 ## Keeping a record in step with itself
 
@@ -100,7 +95,7 @@ Any plugin storing more than one field per record wants this.
 
 ## Reading platform data
 
-The data hooks work exactly as they do for a compiled-in plugin — this is what `@collabdt/core/plugins-sdk/data` is for:
+The data hooks work exactly as they do for a compiled-in plugin, which is what `@collabdt/core/plugins-sdk/data` is for:
 
 ```tsx
 const { buildings } = useBuildings()
@@ -124,11 +119,11 @@ ctx.register('data.pages', {
 })
 ```
 
-Strings inside components are unaffected — `usePluginTranslations()` takes an inline English fallback at each call, which is why every example passes one.
+Strings inside components are unaffected: `usePluginTranslations()` takes an inline English fallback at each call, which is why every example passes one.
 
 ## A data page row is a bag of unknowns
 
-`CapabilityRegistry` pins a `data.pages` row to `Record<string, unknown>`, so a typed row cannot cross the registration under `strict: true` — which is what the scaffolder emits. Build the rows with a type of your own and narrow inside each column:
+`CapabilityRegistry` pins a `data.pages` row to `Record<string, unknown>`, so a typed row cannot cross the registration under `strict: true`, which is what the scaffolder emits. Build the rows with a type of your own and narrow inside each column:
 
 ```tsx
 export function useRows(): DataPageRows<Record<string, unknown>> {
@@ -156,12 +151,12 @@ await model.resetHighlight(localIds)        // back to the model's own colours
 
 Four things to get right:
 
-- **`preserveOriginalMaterial` must stay `false`.** At `true` fragments skips deduplication and spends one of the model's ~65 500 material slots per element per call. At `false` a colour costs one slot however many elements wear it — so bucket elements by colour and make one call per bucket.
+- **`preserveOriginalMaterial` must stay `false`.** At `true` fragments skips deduplication and spends one of the model's ~65 500 material slots per element per call. At `false` a colour costs one slot however many elements wear it, so bucket elements by colour and make one call per bucket.
 - **Convert sRGB to linear.** `new THREE.Color(hex)`, which is what core passes on its own path, converts into the renderer's working space. Passing raw sRGB values gives visibly different colours from the rest of the app.
 - **Show before painting.** A hidden category stays hidden, so paint it without `setItemsVisible(items, true)` and you have coloured something invisible.
-- **Paint is a change to the model, not to your component.** It outlives the toolbar panel that applied it — which is the only reason a colour survives the dropdown closing — so do not clear it in a cleanup function, and give the user a way to turn it off.
+- **Paint is a change to the model, not to your component.** It outlives the toolbar panel that applied it, which is the only reason a colour survives the dropdown closing, so do not clear it in a cleanup function, and give the user a way to turn it off.
 
-This bypasses core's own `ElementAppearance`, so plugin paint and the Layers tab's colouring overwrite each other, and CTRL+Z does not undo the plugin's. For a plugin painting a category the sidebar trees rarely touch — spaces, say — that is an acceptable trade; for anything else, prefer being compiled in and using `usePluginBimAppearance`.
+This bypasses core's own `ElementAppearance`, so plugin paint and the Layers tab's colouring overwrite each other, and CTRL+Z does not undo the plugin's. For a plugin painting a category the sidebar trees rarely touch, spaces say, that is an acceptable trade; for anything else, prefer being compiled in and using `usePluginBimAppearance`.
 
 ## When mounting is the wrong answer
 

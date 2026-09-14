@@ -1,20 +1,15 @@
 ---
 title: DataMenu
 description: Multi-purpose data management panel that displays tables of buildings, sites, infrastructure, files, or users with search, filtering, and detail views.
-category: components
-status: draft
-last_updated: 2025-01-14
 ---
 
 # DataMenu
 
-A container component that renders a searchable, filterable data table for various entity types (buildings, sites, infrastructure, files, users). Supports row selection for comparison, inline navigation to detail views, and CRUD operations through child detail components.
-
-## Usage
+The container that renders a searchable, filterable data table for buildings, sites, infrastructure, files or users, with row selection for comparison, navigation to detail views, and CRUD through child detail components.
 
 ```tsx
 import { DataMenu } from '@collabdt/core/core/components/viewers/Data/DataMenu';
-import { ViewerNames } from '@collabdt/core/types';
+import { ViewerNames } from '@collabdt/core/core/types/dbTypes';
 
 <DataMenu
   currentViewer={ViewerNames.buildings}
@@ -30,55 +25,40 @@ import { ViewerNames } from '@collabdt/core/types';
 />
 ```
 
-## Props
-
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `currentViewer` | `ViewerNames` | Yes | — | Determines which entity type to display: `buildings`, `sites`, `infrastructure`, `files`, or `users`. |
-| `height` | `string` | No | `'h-full'` | Tailwind height class for the container. |
-| `hideFrame` | `boolean` | No | `false` | Removes background, padding, and shadow styling when `true`. |
-| `hideTitle` | `boolean` | No | `false` | Hides the header title row with icon. |
-| `hideActions` | `boolean` | No | `false` | <!-- description --> |
+| `currentViewer` | `ViewerNames` | Yes | — | Which entity type to display: `buildings`, `sites`, `infrastructure`, `files` or `users` |
+| `height` | `string` | No | `'h-full'` | Tailwind height class for the container |
+| `hideFrame` | `boolean` | No | `false` | Removes background, padding and shadow styling |
+| `hideTitle` | `boolean` | No | `false` | Hides the header title row with its icon |
+| `hideActions` | `boolean` | No | `false` | Undocumented. |
 
 ## Behaviour
 
-**Table View**
-- Displays a `DataTable` populated with data from the relevant SWR hook (`useBuildings`, `useSites`, etc.)
-- Search input filters rows by name/address fields
-- `FilterButtons` applies advanced filters; `HeaderButtons` provides compare mode toggle and entity creation
-- Clicking a row navigates to the detail view for that entity
-- In compare mode, clicking a row toggles selection (max 3 items); checkboxes appear in leading cells
+**Table view.** A `DataTable` is populated from the relevant SWR hook (`useBuildings`, `useSites`, and so on). The search input filters rows by name and address fields, `FilterButtons` applies advanced filters, and `HeaderButtons` provides the compare toggle and entity creation. Clicking a row opens its detail view, except in compare mode, where clicking toggles selection to a maximum of three items and checkboxes appear in the leading cells.
 
-**Detail View**
-- Shows the appropriate detail component (`BuildingDetails`, `SiteDetails`, etc.) based on `currentViewer`
-- Breadcrumb updates to show the selected entity name
-- `DetailActions` controls edit/save/cancel flow
-- Save triggers `saveChanges()` on the detail component ref; success/failure toasts display via `sonner`
-- Back navigation clears selection and returns to table view
+**Detail view.** The detail component for `currentViewer` is rendered (`BuildingDetails`, `SiteDetails`, and so on), the breadcrumb shows the selected entity's name, and `DetailActions` drives the edit, save and cancel flow. Save calls `saveChanges()` on the detail component's ref and reports the outcome through `sonner`. Back navigation clears the selection and returns to the table.
 
-**Loading & Errors**
-- While data loads, `isLoading` is passed to `DataTable` for skeleton rendering
-- API errors are handled through `handleApiError`, which displays error toasts
+**Loading and errors.** `isLoading` is passed through to `DataTable` for skeleton rendering, and API errors go through `handleApiError`, which raises error toasts.
 
-**State Reset**
-- Switching `currentViewer` resets compare mode and clears selected items
-- Switching selected item ID resets the active tab in detail views
+**State reset.** Changing `currentViewer` resets compare mode and clears selected items; changing the selected item ID resets the active tab in detail views.
 
-## Design Decisions
- 
-DataMenu is intentionally an orchestration-only component — it manages state, wires context, and handles layout, but delegates all entity-specific logic to focused sub-components and utilities. This makes it easier to extend: adding a new viewer type only requires touching the relevant utility or sub-component rather than editing the core file.
- 
-- **`viewerConfig.ts`** — viewer-specific metadata (icon, i18n title key, DataTypes value) lives in a static config map. Adding a new viewer means adding one entry here.
-- **`useViewerData`** — all per-viewer data selection, search, and filter logic is encapsulated in this hook, keeping DataMenu agnostic to how each viewer's data is shaped.
-- **`DetailHeader`** — entity title rendering is isolated here. Each entity type follows the same `name || fallback` pattern, and new entities add one small sub-component.
-- **`DetailActions`** — button logic, label resolution, and all CASL permission checks live here. DataMenu passes behaviour via callbacks and keeps state ownership to itself.
-The key tradeoff: `DetailActions` has a wide props interface because it needs both selected items (for labels and MoreOptions) and callbacks (to trigger upstream state changes). Lifting this state into context was considered but rejected to keep the permissions and edit flow easy to trace.
+## Design decisions
 
----
+DataMenu is orchestration only. It manages state, wires context and handles layout, and delegates every entity-specific concern to a focused sub-component or utility, so adding a viewer type means touching those rather than this file.
+
+| Piece | Responsibility |
+|-------|----------------|
+| `viewerConfig.ts` | Static map of viewer metadata (icon, i18n title key, DataTypes value). A new viewer is one entry. |
+| `useViewerData` | Per-viewer data selection, search and filter logic, keeping DataMenu agnostic to each viewer's data shape. |
+| `DetailHeader` | Entity title rendering. Each entity follows the same `name \|\| fallback` pattern; a new entity adds one small sub-component. |
+| `DetailActions` | Button logic, label resolution and all CASL permission checks. DataMenu passes behaviour in as callbacks and keeps ownership of state. |
+
+The tradeoff is that `DetailActions` has a wide props interface, because it needs both the selected items (for labels and `MoreOptions`) and the callbacks that trigger upstream state changes. Lifting that state into context was considered and rejected, to keep the permissions and edit flow easy to trace.
 
 ## Permissions
 
-DataMenu itself does not gate rendering on any CASL ability check — it always renders for any authenticated user. Permission enforcement happens at the action level inside child components:
+DataMenu itself gates nothing and renders for any authenticated user. Enforcement happens at the action level in its children:
 
 | Action | Subject | Where enforced |
 |--------|---------|----------------|
@@ -94,20 +74,10 @@ DataMenu itself does not gate rendering on any CASL ability check — it always 
 | `delete` | `User` | `DetailActions` → via `MoreOptions` |
 | `update` | `Site` | `MoreOptions` → Delete Site |
 
-If you are adding a new viewer with edit/create actions, the pattern is: add the `ability.can()` check inside `DetailActions` for the edit/save buttons, and inside `HeaderButtons` for any creation entry point.
+When adding a viewer with edit or create actions, put the `ability.can()` check inside `DetailActions` for the edit and save buttons, and inside `HeaderButtons` for any creation entry point.
 
 ## Related
 
-- [Data Pages](/docs/architecture/data-pages) — how these pages are assembled
-- [BuildingDetails](/docs/components/building-details)
-- [SiteDetails](/docs/components/site-details)
-- [InfrastructureDetails](/docs/components/infrastructure-details)
-- [UserDetails](/docs/components/user-details)
-- [FileDetails](/docs/components/file-details)
-- [DataTable](/docs/components/data-table)
-- [useBuildings](/docs/hooks/buildings)
-- [useSites](/docs/hooks/sites)
-- [useInfrastructures](/docs/hooks/infrastructures)
-- [useFiles](/docs/hooks/files)
-- [useUsers](/docs/hooks/users)
-- [useViewerData](/docs/hooks/overview)
+- [Data Pages](../architecture/data-pages.mdx) — how these pages are assembled
+- [DataTable](./data-table.md)
+- [useBuildings](../hooks/buildings.md), [useSites](../hooks/sites.md), [useInfrastructures](../hooks/infrastructures.md), [useFiles](../hooks/files.md), [useUsers](../hooks/users.md)

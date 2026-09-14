@@ -13,6 +13,13 @@ CDT is configured entirely through environment variables. This page documents ev
 
 Variables are grouped by subsystem.
 
+:::note No `NEXT_PUBLIC_` prefixes
+None of these use Next.js's `NEXT_PUBLIC_` prefix, including the ones the browser ultimately needs.
+The server reads them and passes the values to the client through a runtime config object, which
+keeps them out of the JavaScript bundle. Adding the prefix to a secret, such as
+`RECAPTCHA_SECRET_KEY`, would inline it into code served to every visitor.
+:::
+
 ## Database
 
 | Variable | Description | Example |
@@ -34,7 +41,7 @@ Variables are grouped by subsystem.
 | `MINIO_URL` | Full base URL the backend uses to reach MinIO. | `https://minio.example.com` |
 | `S3_ACCESS_KEY` | Access key for the application service account. | `cdt-app` |
 | `S3_ACCESS_SECRET` | Secret for the access key. | `…` |
-| `NEXT_PUBLIC_MINIO_BUCKET_URL` | Public base URL the browser uses to download assets. | `https://cdn.example.com` |
+| `MINIO_BUCKET_URL` | Public base URL the browser uses to download assets. | `https://cdn.example.com` |
 
 ## Authentication (NextAuth)
 
@@ -62,25 +69,36 @@ Required for sending multi-factor authentication codes at sign-in.
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `NEXT_PUBLIC_GEOCODE_EARTH_API_KEY` | Geocode Earth API key for address search (hosted Pelias). Highest-quality results; used when set. Optional — see the geocoder fallback below. | `ge-…` |
-| `NEXT_PUBLIC_GEOCODER_URL` | Base URL of a self-hosted Pelias-compatible geocoder (no key, same response format). Used when no Geocode Earth key is set. | `https://pelias.example.com` |
-| `NEXT_PUBLIC_PHOTON_URL` | Photon autocomplete endpoint for the key-free public fallback. Defaults to the public instance. | `https://photon.komoot.io` |
-| `NEXT_PUBLIC_NOMINATIM_URL` | Nominatim reverse-geocoding endpoint for the key-free public fallback. Defaults to the public instance. | `https://nominatim.openstreetmap.org` |
-| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Google reCAPTCHA v3 public site key for the sign-in form. | `…` |
-| `NEXT_PUBLIC_RECAPTCHA_SECRET_KEY` | reCAPTCHA secret key. | `…` |
+| `GEOCODE_EARTH_API_KEY` | Geocode Earth API key for address search (hosted Pelias). Highest-quality results; used when set. Optional — see the geocoder fallback below. | `ge-…` |
+| `GEOCODER_URL` | Base URL of a self-hosted Pelias-compatible geocoder (no key, same response format). Used when no Geocode Earth key is set. | `https://pelias.example.com` |
+| `PHOTON_URL` | Photon autocomplete endpoint for the key-free public fallback. Defaults to the public instance. | `https://photon.komoot.io` |
+| `NOMINATIM_URL` | Nominatim reverse-geocoding endpoint for the key-free public fallback. Defaults to the public instance. | `https://nominatim.openstreetmap.org` |
+| `RECAPTCHA_SITE_KEY` | Google reCAPTCHA v3 public site key for the sign-in form. | `…` |
+| `RECAPTCHA_SECRET_KEY` | reCAPTCHA secret key. | `…` |
 
-**Geocoder provider selection:** the geocoder variables resolve in priority order — Geocode Earth (if a key is set) → self-hosted Pelias (`NEXT_PUBLIC_GEOCODER_URL`) → free public OpenStreetMap services (Photon for autocomplete, Nominatim for reverse). Address search therefore works out of the box with no key; set a key or self-hosted URL for higher quality and to avoid the public instances' rate limits. See [Self-Hosting → Geocoding](../deployment/self-hosting.md#geocoding-address-search) for the full table.
+**Geocoder provider selection:** the geocoder variables resolve in priority order — Geocode Earth (if a key is set) → self-hosted Pelias (`GEOCODER_URL`) → free public OpenStreetMap services (Photon for autocomplete, Nominatim for reverse). Address search therefore works out of the box with no key; set a key or self-hosted URL for higher quality and to avoid the public instances' rate limits. See [Self-Hosting → Geocoding](../deployment/self-hosting.md#geocoding-address-search) for the full table.
 
 ## Tile and asset URLs
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `NEXT_PUBLIC_MARTIN_SERVER_URL` | Public base URL of the Martin tile server. | `https://tiles.example.com` |
-| `NEXT_PUBLIC_ORGANIZATIONAL_DATASETS_URL` | Base URL for organization-published GeoJSON datasets. | `https://data.example.com/datasets` |
-| `NEXT_PUBLIC_POINTCLOUD_API_URL` | Base URL of the point cloud conversion and streaming service. Required to upload or render point clouds in the BIM viewer. | `https://pointcloud.example.com` |
+| `MARTIN_SERVER_URL` | Public base URL of the Martin tile server. | `https://tiles.example.com` |
+| `POINTCLOUD_API_URL` | Base URL of the point cloud conversion and streaming service. Required to upload or render point clouds in the BIM viewer. | `https://pointcloud.example.com` |
 | `MAPTILER_KEY` | Your deployment's own [MapTiler](https://cloud.maptiler.com) key, used for satellite imagery, terrain elevation, map fonts, administrative boundaries and building footprints. Optional — see the basemap fallback below. | `INSERT_YOUR_OWN_API_KEY` |
 
 **Basemap provider selection:** with `MAPTILER_KEY` set, the CDT platform requests imagery, elevation, fonts and building tiles from MapTiler on that key, and every built-in style is available. Unset, each source falls back to a key-free provider — Esri World Imagery for satellite, the open terrarium tiles for elevation, the OpenMapTiles font CDN for labels — and building footprints and administrative boundaries fall back to MapTiler's placeholder key, which only answers on `localhost`. The map therefore works out of the box for local development; production deployments should set their own key. See [Self-Hosting → Basemaps](../deployment/self-hosting.md#basemaps-imagery-terrain-and-buildings).
+
+## Platform and operations
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `CDT_TILES_DATABASE_URL` | Connection string for the PostGIS database Martin reads tiles from. | `postgresql://cdt:secret@postgres:5432/tiles` |
+| `PLATFORM_ADMIN_EMAILS` | Optional comma-separated list granting cross-organization access. Read in edge middleware, so a change needs a redeploy. | `admin@example.com` |
+| `SELF_HOSTED` | Marks the deployment as self-hosted. | `true` |
+| `SOCRATA_APP_TOKEN` | Raises rate limits when fetching from Socrata-based open data portals. | `…` |
+| `RESEND_WEBHOOK_SECRET` | Verifies inbound Resend delivery webhooks. | `…` |
+| `MAINTENANCE_BASE_URL` | Where users are redirected if the database is unreachable. | `https://status.example.com` |
+| `LOG_LEVEL` | Server log verbosity. | `info` |
 
 ## Caching
 
@@ -100,7 +118,7 @@ A handful of variables behave differently between local development and producti
 | `AUTH_TRUST_HOST` | unset or `false` | `true` (when behind a proxy) |
 | `AUTH_URL` | `http://localhost:3000` | `https://your-domain` |
 | `MINIO_ENDPOINT` | `localhost` | public hostname |
-| `NEXT_PUBLIC_MINIO_BUCKET_URL` | `http://localhost:9000` | public CDN URL |
+| `MINIO_BUCKET_URL` | `http://localhost:9000` | public CDN URL |
 
 ## Security notes
 

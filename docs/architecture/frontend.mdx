@@ -142,7 +142,7 @@ hooks live in `@collabdt/core`, behind a port: core declares an `ApiAdapter` int
 host application supplies the implementation, mounted once at the app root.
 
 ```tsx
-// cdt-na/src/app/app-providers.tsx
+// host app: src/app/app-providers.tsx
 
 const adapter = React.useMemo(() => createHttpAdapter({ baseUrl: "/api" }), []);
 return <CoreHooksProvider adapter={adapter}>{children}</CoreHooksProvider>;
@@ -186,7 +186,7 @@ Both viewers share the same chrome:
     return (
       <HierarchyTree
         data={{
-          label: 'core-local/src/core/components/',
+          label: '@collabdt/core: src/core/components/',
           children: [
             {
               label: 'viewers/',

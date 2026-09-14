@@ -2,41 +2,34 @@
 sidebar_position: 8
 displayed_sidebar: userSidebar
 title: Organizations and Multi-tenancy
-description: How CDT scopes data, users, and permissions per organization — and what that means for self-hosted and shared deployments.
+description: How CDT scopes data, users, and permissions per organization, and what that means for self-hosted and shared deployments.
 ---
 
 <AudienceNotice home="users" also="developers" />
 
 # Organizations and Multi-tenancy
 
-CDT is a **multi-tenant** platform: a single deployment can host many organizations, and each organization's data is isolated from the others. This page explains how that isolation works and why it shapes nearly every design decision in the platform.
+CDT is a **multi-tenant** platform: a single deployment can host many organizations, and each organization's data is isolated from the others.
 
 ## What an Organization is
 
-An **Organization** is the top-level container in CDT. Everything else — users, buildings, sites, files, sensors, comments, roles — belongs to one organization. There is no concept of a "global" record. If a building exists, it exists *inside* an organization.
+An **Organization** is the top-level container. Users, buildings, sites, files, sensors, comments and roles all belong to one organization; there is no "global" record. If a building exists, it exists *inside* an organization. A user belongs to exactly one organization, and an organization has many users.
 
-A typical organization corresponds to:
-
-- A university department or research group
-- A municipal department or government agency
-- An engineering or architecture firm
-- A community of practice or open project
-
-A user belongs to exactly one organization, and an organization has many users.
+A typical organization corresponds to a university department or research group, a municipal department or government agency, an engineering or architecture firm, or a community of practice or open project.
 
 ## Why multi-tenancy matters
 
-Three properties follow from multi-tenancy, and each one shapes the platform:
+Three properties follow from multi-tenancy, and each one shapes the platform.
 
 **Data isolation.** Two organizations sharing the same CDT instance never see each other's records.
 
-**Scoped permissions.** Each user has one role inside their organization. The role determines what they can do within that organization. See [Authorization Overview](../authorization/overview.mdx) for the full model.
+**Scoped permissions.** Each user has one role inside their organization, and the role determines what they can do within it. See [Authorization Overview](../authorization/overview.mdx) for the full model.
 
-**Per-organization configuration.** Map defaults, branding, and integration credentials are configured per organization. Two organizations on the same instance can present completely different starting experiences.
+**Per-organization configuration.** Map defaults, branding, and integration credentials are configured per organization, so two organizations on the same instance can present completely different starting experiences.
 
 ## How isolation is enforced
 
-Three layers cooperate to enforce isolation:
+Three layers cooperate, so a successful sign-in in one organization cannot read or modify data in any other:
 
 | Layer | What it does |
 |-------|--------------|
@@ -44,20 +37,9 @@ Three layers cooperate to enforce isolation:
 | **API** | Every request is scoped to the user's organization. Requests for records in a different organization are rejected. |
 | **Database** | Records belong to one organization, and that link cannot be empty. |
 
-Together these mean that a successful sign-in in one organization cannot read or modify data in any other.
-
 ## When you would create a new Organization
 
-Self-hosting a CDT instance, you create a new organization for any group with:
-
-- Different membership lists
-- Different permission expectations
-- Different data ownership
-- Different branding or starting map
-
-Two teams within the same department might share an organization. Two municipal departments with separate data-handling policies should not.
-
-## Relationship to CDT Hosted
+Self-hosting a CDT instance, create a new organization for any group with different membership lists, different permission expectations, different data ownership, or different branding and starting map. Two teams within the same department might share an organization; two municipal departments with separate data-handling policies should not.
 
 On the hosted CDT platform, every customer is one organization. On self-hosted instances, organizations let you slice a single deployment among multiple groups without running multiple servers.
 
