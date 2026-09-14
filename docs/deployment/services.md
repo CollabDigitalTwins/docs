@@ -69,7 +69,7 @@ The hostname `postgres` resolves through Docker Compose internal networking. Por
 
 ## MinIO
 
-**Image:** `minio/minio:latest`
+**Image:** `quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z`
 **Purpose:** S3-compatible object storage for unstructured digital twin assets — BIM models, point clouds, GIS data, images, and videos.
 
 ### Installation
