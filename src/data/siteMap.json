@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-13T17:51:16.124Z",
+  "generatedAt": "2026-09-14T17:48:12.292Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -33,6 +33,12 @@
               "id": "concepts/maturity-model",
               "title": "Digital Twin Maturity Model",
               "slug": "/docs/concepts/maturity-model",
+              "primary": "userSidebar"
+            },
+            {
+              "id": "concepts/gaussian-splats",
+              "title": "Gaussian Splats",
+              "slug": "/docs/concepts/gaussian-splats",
               "primary": "userSidebar"
             },
             {
