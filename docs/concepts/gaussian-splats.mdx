@@ -1,0 +1,59 @@
+---
+sidebar_position: 5
+displayed_sidebar: userSidebar
+title: Gaussian Splats
+---
+
+<AudienceNotice home="users" also="developers" />
+
+# Gaussian Splats
+
+A **3D Gaussian Splat** represents a scene as millions of small, semi-transparent ellipsoids — "splats" — each with a position, a shape, a colour and an opacity. Instead of storing surfaces, it stores what the scene *looks like* from any direction: colour is encoded with spherical harmonics, so a window can be reflective from one angle and clear from another. The result is reconstructed from ordinary photographs or video, and rendered it is often hard to distinguish from the footage it came from.
+
+Like point clouds, splats come out of reality capture rather than design. Unlike point clouds, they are optimised for appearance rather than measurement.
+
+## Splats or Point Clouds?
+
+Both are captures of physical reality, and the CDT platform renders both in the BIM viewer, in the same scene as your model. They answer different questions.
+
+| | Point cloud | Gaussian splat |
+|---|---|---|
+| **Best for** | Measuring, clash checking, as-built verification | Visual context, stakeholder communication, walkthroughs |
+| **Source** | LiDAR, photogrammetry | Photographs or video |
+| **Each element carries** | An XYZ position, often intensity and classification | Position, shape, opacity, view-dependent colour |
+| **Appearance** | Discrete points; gaps between them at close range | Continuous and photographic, including reflections |
+| **Measurement** | Survey-grade, with known accuracy | Not a survey instrument — treat dimensions as indicative |
+
+Use a point cloud when a number has to be defensible. Use a splat when someone needs to *see* the space. Many projects carry both.
+
+## Formats
+
+The platform accepts **SPZ**, **PLY**, **SPLAT**, **KSPLAT** and **SOG**, and renders whichever you upload directly — there is no conversion step and no waiting.
+
+**SPZ is the format to prefer.** It is a compressed format designed for splats and is dramatically smaller than the equivalent PLY, which means it reaches the viewer faster and uses less memory. PLY is what most training tools export by default and is fully supported, but a large PLY can be many hundreds of megabytes. If your tool can export SPZ, or convert to it, do that before uploading.
+
+## Working With a Splat
+
+Splats are listed under **Models** in the BIM sidebar, next to your 3D geometry. From the row menu you can show or hide one, ghost it, move it, or delete it.
+
+Because splats and your BIM model share a single 3D scene, the model correctly hides the parts of the splat behind it, and the splat hides the parts of the model behind it. Placing a capture against the model is the same operation as placing anything else — select **Move** and use the gizmo to position, rotate and scale it. Splats support **rotation on all three axes**, because captures rarely arrive level, and **proportional scaling** only.
+
+Captures from most training pipelines arrive upside down; the platform corrects for this automatically on load. If yours still looks wrong, rotate it with the gizmo — the placement is saved and restored the next time the building is opened.
+
+## Adjusting How a Splat Looks
+
+The **Settings** tab gains a **Gaussian splats** panel whenever a splat is loaded. Per splat you can change:
+
+- **Opacity** — turn a capture translucent to see the BIM model through it. The quickest way to line one up against the model.
+- **Detail** — how much view-dependent colour is used. Lowering it renders flatter and cheaper; raising it restores reflections and sheen.
+- **Debug tint** — recolours the splat uniformly, which makes its structure and extent easy to read when you are positioning it.
+
+Two further controls apply to every splat at once: **2D splat mode**, which draws flat rather than volumetric splats, and **blur**, which softens them. Both are useful for inspecting a capture rather than presenting it.
+
+## How the Platform Renders Splats
+
+Splats render in the **BIM viewer** through [Spark](https://sparkjs.dev), a WebGL2 splat renderer for Three.js. Each splat is an ordinary object in the BIM scene's Three.js graph, which is why depth, selection and the transform gizmo all behave the same way they do for a model.
+
+Spark draws every splat in the scene in a single pass, sorted back to front, and merges the result with solid geometry using the depth buffer. Sorting runs one frame behind the camera, which is not perceptible in normal use.
+
+WebGL2 is available in effectively every current browser, desktop and mobile, so splats need no special hardware. They are memory-hungry, though: a very large capture, or several at once, will use a lot of GPU memory. If the viewer becomes sluggish, hide the splats you are not using, or re-export the capture as SPZ at a lower splat count.

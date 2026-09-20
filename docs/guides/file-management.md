@@ -21,10 +21,13 @@ Open the building → **Files** tab → **Upload**, then pick one or more files.
 | **BIM models** | IFC |
 | **3D geometry** | glTF, GLB, FBX, OBJ, Collada |
 | **Point clouds** | LAS, LAZ, COPC (`.copc.laz`), E57 |
+| **Gaussian splats** | SPZ, PLY, SPLAT, KSPLAT, SOG |
 | **CAD drawings** | DXF |
 | **GIS data** | GeoJSON |
 | **Documents** | PDF |
 | **Media** | JPG, PNG, MP4, MP3, and other common video/audio formats |
+
+Gaussian splats need no conversion: the viewer reads the uploaded file directly, so they appear under **Models** as soon as the upload finishes. SPZ is the most compact and the fastest to load; PLY is the most common export but the largest.
 
 Point clouds are converted to a Potree octree on upload, producing three files (`metadata.json`, `octree.bin`, `hierarchy.bin`) that the viewer streams. Those are conversion output, not something you upload.
 

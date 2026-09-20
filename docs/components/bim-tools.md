@@ -289,12 +289,13 @@ ends the session and keeps the edit.
 ### What each kind can save
 
 `DbFile` carries `x`, `y`, `z` and `bimRotation` (yaw, radians). Point clouds store a full
-transform in their `pointCloudTransform` JSON. `capabilitiesForFile()` decides what a given file
+transform in their `pointCloudTransform` JSON, and Gaussian splats share that column. `capabilitiesForFile()` decides what a given file
 may change, in one place, so the card, the viewport menu and the adapters cannot disagree.
 
 | Target | Rotation | Scale | Stored as |
 |--------|----------|-------|-----------|
 | Point cloud (`laz`, `las`) | Three axes | Yes | `pointCloudTransform` JSON |
+| Gaussian splat (`spz`, `ply`, …) | Three axes | Yes | `pointCloudTransform` JSON |
 | 3D object (`glb`, `gltf`, `fbx`, `obj`, …) | Yaw only | Yes | `x`, `y`, `z`, `bimRotation` |
 | DXF | Yaw only | Yes | `x`, `y`, `z`, `bimRotation` |
 | BIM model (`frag`, `ifc`) | Yaw only | No | `x`, `y`, `z`, `bimRotation` |

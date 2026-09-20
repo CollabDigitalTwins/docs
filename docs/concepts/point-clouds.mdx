@@ -20,6 +20,8 @@ A BIM model represents design intent; a point cloud represents physical reality.
 
 Including point clouds in a digital twin provides a ground-truth reference that design models can be compared against, documents the building or site at a moment in time for condition assessment and insurance, gives context for spaces that were never modeled in BIM (common in retrofit projects), and enables precise dimensional analysis without physical access.
 
+For a capture optimised for appearance rather than measurement, see [Gaussian Splats](./gaussian-splats.mdx).
+
 ## Formats and Conversion
 
 CDT accepts **LAS**, **LAZ** and **E57** on upload. Whichever you send, the file is converted server-side into a **Potree octree**, a spatial tree of tiles at multiple detail levels, and it is that octree the viewer streams. The original file is kept but never rendered directly, so the upload format affects transfer size and conversion time rather than playback. See the [point cloud guide](../guides/point-clouds.md#supported-formats) for what each format stores.
