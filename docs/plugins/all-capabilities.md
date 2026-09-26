@@ -289,6 +289,8 @@ Buildings and sites are read-only to a plugin: they are canonical asset records,
 
 Types come from `@collabdt/plugin-kit/types/data`, which declares the fields the SDK commits to rather than every column CDT's schema carries.
 
+A `PluginFile`'s place in the BIM viewer is `fileTransformX` / `Y` / `Z` (metres), `fileRotationX` / `Y` / `Z` (radians) and `fileScale` (one uniform number). Its `x`, `y` and `z` are deprecated: the CDT platform no longer writes them, so they are `null` or stale for any file placed since.
+
 ## Where to keep state
 
 Surfaces share state through hooks rather than props. The choice depends on whether the value belongs in a database:

@@ -35,6 +35,8 @@ Each `DataManagementSystem` has an adapter that knows how to fetch and normalise
 
 The adapters normalise external API responses into a common `Dataset` type with `getFeatures()` and `getFields()` methods. The map viewer calls these to build a GeoJSON `Source` and render a `Layer`.
 
+A dataset too large to load whole sets `viewport: { minZoom }`. The map then calls `getFeatures({ bbox, zoom })` for the visible area after every pan or zoom, fetches nothing below `minZoom`, and asks the user to zoom in. An organizational dataset row opts in by putting `minZoom` in its description JSON, and its URL then receives `?bbox=west,south,east,north`.
+
 ## Groups
 
 Portals are tagged with a `DatasetGroup`:

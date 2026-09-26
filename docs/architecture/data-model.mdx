@@ -108,6 +108,20 @@ Key fields:
 | `type` | `string` | MIME category |
 | `lazFileKey` / `potreeFolderKey` | `string?` | Point cloud asset references |
 | `pointCloudUploaded` / `pointCloudPotreeConverted` | `boolean?` | Processing status |
+| `fileTransformX` / `Y` / `Z` | `number?` | Scene-local position, metres |
+| `fileRotationX` / `Y` / `Z` | `number?` | Rotation, radians, XYZ Euler |
+| `fileScale` | `number?` | Uniform scale |
+| `fileSourceUp` | `SourceUpAxis?` | Up axis of the source data (`y` or `z`) |
+| `fileProjectedCRS` | `string?` | Projected CRS, e.g. `EPSG:2169` (an IFC `IfcProjectedCRS.Name`, or a remote dataset's source CRS) |
+| `sourceProj4Def` | `string?` | proj4 definition for a CRS proj4 does not ship; takes precedence over `fileProjectedCRS` |
+| `mapConversionEastings` / `Northings` / `OrthogonalHeight` | `number?` | IFC `IfcMapConversion` offsets |
+| `mapConversionXAxisAbscissa` / `XAxisOrdinate` / `Scale` | `number?` | IFC `IfcMapConversion` rotation and scale |
+| `pointCloudProjection` | `string?` | CRS read from a LAS/LAZ header |
+| `georeferenceSource` | `GeoreferenceSource?` | Where the georeference came from (`ifc`, `lasHeader` or `manual`) |
+| `datasetProvider` / `datasetSource` | `DatasetProvider?` / `string?` | For a remote organizational dataset: the server-side provider and its source key |
+| `countrySubdivision` / `municipality` | `string?` / `string?` | Where an organizational dataset is, as an ISO 3166-2 code (`CA-NS`) and a municipality name (`Halifax`). The Layers tab's Subdivision and Municipality filters read them |
+
+The older `x` / `y` / `z`, `bimRotation`, `scale` and `pointCloudTransform` fields are deprecated: core no longer reads or writes them, and they will be dropped once no plugin depends on them.
 
 ### User
 
@@ -175,6 +189,14 @@ enum ViewerNames {
 enum Language { En = 'En', Fr = 'Fr', Es = 'Es' }
 ```
 
+### DatasetProvider / SourceUpAxis / GeoreferenceSource
+
+```ts
+enum DatasetProvider { evergreen = 'evergreen' }
+enum SourceUpAxis { y = 'y', z = 'z' }
+enum GeoreferenceSource { ifc = 'ifc', lasHeader = 'lasHeader', manual = 'manual' }
+```
+
 ### InfrastructureType
 
 ```ts
@@ -206,6 +228,10 @@ Both share the same phase vocabulary:
 | `@collabdt/core/core/types/dbTypes.ts` | All domain interfaces and enums |
 | `@collabdt/core/core/types/datasetTypes.ts` | Dataset and tile layer types |
 | `@collabdt/core/core/types/global.ts` | Shared utility types (`Position`, etc.) |
+| `@collabdt/core/core/utils/geo/wktToGeometry` | `wktToGeometry(wkt)`: 2D WKT to GeoJSON, `null` for EMPTY, collections or malformed text |
+| `@collabdt/core/core/utils/geo/reprojectGeometry` | `createLonLatProjector({ sourceCrs, sourceProj4Def })` and `reprojectGeometry(geometry, project)`: any proj4 CRS to EPSG:4326 |
+
+Both geo helpers are server-safe, so a route handler can turn tabular spatial rows into map data.
 
 ## Related
 
