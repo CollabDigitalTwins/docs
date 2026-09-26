@@ -68,7 +68,8 @@ Submenu with sub-tools for attaching content to the BIM model:
 | `bim-add-cad` | Import a DXF/CAD file via `AddDxf` |
 | `bim-add-ids` | Import an IDS validation file |
 
-Position is set by clicking in the 3D view, captured as `x, y, z` coordinates relative to the model.
+Position is set by clicking in the 3D view, relative to the model. Comments and sensors store it as
+`x`, `y`, `z`; files store it as `fileTransformX` / `Y` / `Z`.
 
 ---
 
@@ -288,17 +289,19 @@ ends the session and keeps the edit.
 
 ### What each kind can save
 
-`DbFile` carries `x`, `y`, `z` and `bimRotation` (yaw, radians). Point clouds store a full
-transform in their `pointCloudTransform` JSON, and Gaussian splats share that column. `capabilitiesForFile()` decides what a given file
-may change, in one place, so the card, the viewport menu and the adapters cannot disagree.
+Every placeable file stores its scene transform in the same typed `DbFile` columns:
+`fileTransformX/Y/Z` (metres), `fileRotationX/Y/Z` (radians, XYZ Euler), `fileScale` (uniform) and
+`fileSourceUp` (`y` or `z`). `shared/placement/fileTransform` is the only module that maps a placement
+to and from them. `capabilitiesForFile()` decides what a given file may change, in one place, so the
+card, the viewport menu and the adapters cannot disagree.
 
-| Target | Rotation | Scale | Stored as |
-|--------|----------|-------|-----------|
-| Point cloud (`laz`, `las`) | Three axes | Yes | `pointCloudTransform` JSON |
-| Gaussian splat (`spz`, `ply`, …) | Three axes | Yes | `pointCloudTransform` JSON |
-| 3D object (`glb`, `gltf`, `fbx`, `obj`, …) | Yaw only | Yes | `x`, `y`, `z`, `bimRotation` |
-| DXF | Yaw only | Yes | `x`, `y`, `z`, `bimRotation` |
-| BIM model (`frag`, `ifc`) | Yaw only | No | `x`, `y`, `z`, `bimRotation` |
+| Target | Rotation | Scale | Columns written |
+|--------|----------|-------|-----------------|
+| Point cloud (`laz`, `las`) | Three axes | Yes | all transform columns |
+| Gaussian splat (`spz`, `ply`, …) | Three axes | Yes | all transform columns |
+| 3D object (`glb`, `gltf`, `fbx`, `obj`, …) | Yaw only | Yes | `fileTransformX/Y/Z`, `fileRotationY`, `fileScale` |
+| DXF | Yaw only | Yes | `fileTransformX/Y/Z`, `fileRotationY`, `fileScale` |
+| BIM model (`frag`, `ifc`) | Yaw only | No | `fileTransformX/Y/Z`, `fileRotationY` |
 
 Scaling is always **proportional — one number, never per axis**. The gizmo writes only the axis
 being dragged, so `uniformScale()` resolves the three components back to the single value the drag
@@ -307,11 +310,8 @@ meant and the object is re-scaled uniformly.
 A DXF's scale doubles as its drawing-unit conversion (`0.001` for millimetres → metres), so the
 stored value is absolute rather than a multiplier, matching `Position3DCard`.
 
-:::warning
-There is no `scale` column yet, so an object's or DXF's scale applies live but does not survive a
-reload. Once the column exists it is one line in `objectTarget.commit`, plus the adapter, the type
-and the load path.
-:::
+The legacy `x`, `y`, `z`, `bimRotation`, `scale` and `pointCloudTransform` fields are deprecated and
+no longer read or written.
 
 ### Animation
 
