@@ -41,7 +41,7 @@
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--tc-fg-2);
-  background: var(--tc-surface);
+  background: color-mix(in srgb, var(--tc-fg-2) 14%, var(--tc-surface));
   border: 1px solid var(--tc-border);
   border-bottom: 0;
   border-radius: 4px 4px 0 0;
@@ -139,7 +139,7 @@
 }
 
 .link:not(.key):hover .tab {
-  background: var(--tc-surface-hover);
+  background: color-mix(in srgb, var(--tc-fg-2) 14%, var(--tc-surface-hover));
 }
 
 .link:focus-visible {
@@ -156,11 +156,18 @@
 }
 
 .header {
+  border: 0;
   border-top-right-radius: 0;
 }
 
 .header .tab {
-  right: -1px;
+  left: 0;
+  right: 0;
+  border: 0;
+}
+
+.key.header .tab {
+  background: color-mix(in srgb, var(--tc-accent) 7%, var(--tc-surface));
 }
 
 .header .glyph,
