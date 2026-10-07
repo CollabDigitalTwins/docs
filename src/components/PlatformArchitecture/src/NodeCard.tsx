@@ -102,7 +102,7 @@ export const NodeCard: FC<{
       {node.modules && (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${node.modules.length}, minmax(0,1fr))`,
+          gridTemplateColumns: `repeat(${node.modules.length}, auto)`,
           gap: 8, marginTop: 10,
         }}>
           {node.modules.map(m => (

@@ -114,6 +114,11 @@ export const PotreeLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/potree-logo.png" alt="Potree" style={assetLogoStyle(size)} />
 );
 
+/* Spark — Gaussian splat renderer for three.js */
+export const SparkLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/sparkjs.svg" alt="Spark" style={assetLogoStyle(size)} />
+);
+
 /* NextAuth */
 export const NextAuthLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/nextauth.png" alt="NextAuth.js" style={assetLogoStyle(size)} />

@@ -3,13 +3,13 @@ import {
   NextLogo, ReactLogo, TsLogo, TailwindLogo, NodeLogo,
   NextAuthLogo, PrismaLogo, PostgresLogo, PostGisLogo, MinioLogo,
   MapLibreLogo, MartinLogo, DeckLogo, ThreeLogo, PotreeLogo, DockerLogo,
-  ShadcnLogo, TocLogo,
+  ShadcnLogo, TocLogo, SparkLogo,
 } from './logos';
 
 export type TechId =
   | 'next' | 'react' | 'ts' | 'tailwind' | 'shadcn' | 'node'
   | 'nextauth' | 'prisma' | 'postgres' | 'postgis' | 'minio'
-  | 'maplibre' | 'martin' | 'deck' | 'three' | 'toc' | 'potree' | 'docker';
+  | 'maplibre' | 'martin' | 'deck' | 'three' | 'toc' | 'potree' | 'spark' | 'docker';
 
 export type Tech = {
   id: TechId;
@@ -52,6 +52,7 @@ export const TECH_STACK: Tech[] = [
   { id: 'three', name: 'three.js', Logo: ThreeLogo, href: 'https://threejs.org', x: 1080, y: 190, mx: 165, my: 670 },
   { id: 'toc', name: 'That Open Company', Logo: TocLogo, href: 'https://thatopen.com', x: 1130, y: 80, mx: 310, my: 755 },
   { id: 'potree', name: 'Potree', Logo: PotreeLogo, href: 'https://github.com/potree/potree', x: 1110, y: 300, mx: 500, my: 745 },
+  { id: 'spark', name: 'Spark', Logo: SparkLogo, href: 'https://sparkjs.dev', x: 990, y: 320, mx: 70, my: 790 },
 ];
 
 /** Undirected edges expressing meaningful relationships in the stack.
@@ -85,6 +86,8 @@ export const TECH_EDGES: Array<[TechId, TechId]> = [
   // 3D
   ['three', 'toc'],
   ['three', 'potree'],
+  ['three', 'spark'],
+  ['spark', 'potree'],
   ['toc', 'react'],
   // Infra
   ['docker', 'postgres'],

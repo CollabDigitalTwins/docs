@@ -23,6 +23,7 @@ import {
   PrismaLogo,
   ReactLogo,
   SafariLogo,
+  SparkLogo,
   TailwindLogo,
   ThreeLogo,
   TocLogo,
@@ -57,6 +58,7 @@ export const Deck_     = adaptLogo(DeckLogo);
 export const Three_    = adaptLogo(ThreeLogo);
 export const TOC_      = adaptLogo(TocLogo);
 export const Potree_   = adaptLogo(PotreeLogo);
+export const Spark_    = adaptLogo(SparkLogo);
 export const Postgres_ = adaptLogo(PostgresLogo);
 export const PostGIS_  = adaptLogo(PostGisLogo);
 export const MinIO_    = adaptLogo(MinioLogo);
