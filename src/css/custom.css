@@ -221,9 +221,17 @@ h1 { letter-spacing: -0.03em; }
   color: var(--hp-primary-container);
 }
 
-@media (max-width: 480px) {
-  .cdt-brand__wordmark {
-    font-size: 0.85rem;
+.cdt-brand__wordmark-short {
+  display: none;
+}
+
+@media (max-width: 996px) {
+  .cdt-brand__wordmark-long {
+    display: none;
+  }
+
+  .cdt-brand__wordmark-short {
+    display: inline;
   }
 }
 
@@ -434,10 +442,12 @@ pre {
 ::-webkit-scrollbar-thumb:hover { background: var(--hp-outline); }
 
 /* ── Navbar items with icons ─────────────────────────── */
-/* An inline-flex child takes its baseline from the svg, lifting the label; centre the link box instead. */
-.navbar__items > .navbar__link {
-  display: inline-flex;
-  align-items: center;
+/* Desktop only: an unscoped display would override Infima hiding these links on mobile. */
+@media (min-width: 997px) {
+  .navbar__items > .navbar__link {
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
 .navbarItemWithIcon {

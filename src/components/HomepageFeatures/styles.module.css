@@ -148,10 +148,9 @@
   align-items: flex-start;
   border-radius: 12px;
   background: var(--hp-mid);
-  border: 1px solid var(--hp-outline-variant);
   color: inherit;
   text-decoration: none !important;
-  transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .card:hover,
@@ -164,21 +163,14 @@
 .card:hover,
 .card:focus-visible {
   background: var(--hp-high);
-  border-color: var(--hp-primary-container);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px -10px color-mix(in srgb, var(--hp-primary-container) 50%, transparent);
+  box-shadow: 0 4px 12px -8px color-mix(in srgb, var(--hp-primary-container) 20%, transparent);
   outline: none;
 }
 
 .cardIcon {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: color-mix(in srgb, var(--hp-primary-container) 14%, transparent);
   color: var(--hp-primary-container);
 }
 
