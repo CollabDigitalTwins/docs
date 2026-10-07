@@ -297,10 +297,7 @@ function HomepageHeader() {
         <div className={styles.heroGrid}>
           {/* Left — text */}
           <div className={styles.heroLeft}>
-            <div className={styles.heroBadge}>
-              <span className={styles.heroBadgeDot} />
-              Documentation
-            </div>
+            <div className={styles.heroTagline}>Documentation</div>
 
             <h1 className={styles.heroTitle}>
               <span className={styles.heroGradient}>Explore</span>
