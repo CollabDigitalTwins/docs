@@ -31,6 +31,25 @@ Click the search bar, type a Canadian address, place name, or asset name, then p
 
 Search queries the Pelias and Nominatim geocoders alongside your organization's own asset names, so saved buildings appear next to public results.
 
+Once the map has finished flying, the address bar holds the full location, so you can copy it at any time.
+
+## Link to a location
+
+The map also flies to a location named in its URL. It goes to the most specific location the URL gives, in this order from broadest to most specific:
+
+| Parameter | Value |
+|---|---|
+| `country` | Country name or code, such as `CA` |
+| `countrySubdivision` | Province or state, such as `QC`, `CA-QC` or `Quebec` |
+| `municipality` | City or town name |
+| `site` | Site ID |
+| `address` | Street address |
+| `buildingId` | Building ID |
+| `bbox` | `west,south,east,north` in degrees |
+| `lat` and `lng` | Coordinates, with optional `zoom`, `bearing` and `pitch` |
+
+Names are looked up only in their own category, and the broader values narrow the search. For example, `?municipality=quebec&countrySubdivision=QC` goes to Québec City, never to the province. `?municipality=London&countrySubdivision=CA-ON` goes to London, Ontario, never to London, England: the `CA-` prefix sets the country, and a result outside Ontario is skipped. Without a `country` or a prefixed subdivision, the search uses your organization's country. If a parameter is missing, invalid or finds nothing, the map uses the next broader one. After the fly, the map rewrites only its own location values, including the coordinates. Other parameters, such as `buildingId` or the BIM camera, are kept. Because coordinates are the most specific level, a shared link always reopens exactly where it was copied.
+
 ## Add data layers
 
 Click **Datasets** in the bottom toolbar to open the layer panel, tick a layer, and click any feature to read its attributes. Layers stack, and the map uses scale-dependent visibility so more detailed layers reveal as you zoom in.
