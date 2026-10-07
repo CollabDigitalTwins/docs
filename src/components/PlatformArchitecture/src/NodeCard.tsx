@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, type CSSProperties, type FC } from 'react';
 import type { Node, NodeHighlight } from './types';
-import { kindVar, kindSoft, kindName } from './theme';
+import TabCard from '../../TabCard';
+import { kindTabProps } from './theme';
 import { LogoChip } from './LogoChip';
 
 export const NodeCard: FC<{
@@ -14,83 +15,32 @@ export const NodeCard: FC<{
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => { registerRef(node.id, ref.current); });
 
-  const hlStyle: CSSProperties =
+  const hlStyle = (
     state === 'focus'
-      ? { borderColor: 'var(--primary)', boxShadow: '0 0 0 1px var(--primary), 0 10px 30px -10px rgba(239,145,97,0.35)' }
+      ? { '--tc-border': 'var(--primary)', '--tc-surface': 'var(--panel-2)' }
       : state === 'dim' ? { opacity: 0.35 }
-      : state === 'rel' ? { borderColor: 'var(--stroke-2)' }
-      : {};
+      : state === 'rel' ? { '--tc-border': 'var(--stroke-2)' }
+      : {}
+  ) as CSSProperties;
 
   return (
-    <div
+    <TabCard
       ref={ref}
+      {...kindTabProps(node.kind)}
+      size="sm"
+      title={node.title}
+      subtitle={node.subtitle}
+      icon={node.Icon && <node.Icon s={16} />}
       data-node-id={node.id}
       data-hl={state}
       onMouseEnter={interactive ? () => onHover(node.id) : undefined}
       onMouseLeave={interactive ? onLeave : undefined}
       style={{
-        position: 'relative',
-        background: 'linear-gradient(180deg, var(--panel), var(--panel-2))',
-        border: '1px solid var(--stroke)',
-        borderRadius: 10,
-        padding: '14px 16px 12px',
         minWidth: node.wide ? 560 : 200,
         flex: node.wide ? '1 1 100%' : '1 1 0',
-        boxShadow: '0 1px 0 rgba(255,255,255,0.02) inset, 0 8px 24px -14px rgba(0,0,0,0.4)',
-        transition: 'transform .18s, box-shadow .18s, border-color .18s, opacity .18s',
         ...hlStyle,
       }}
     >
-      {/* Coloured accent bar on the left edge */}
-      <div style={{
-        position: 'absolute',
-        left: -1, top: -1, bottom: -1,
-        width: 5,
-        borderTopLeftRadius: 10,
-        borderBottomLeftRadius: 10,
-        background: kindVar(node.kind),
-        opacity: 0.95,
-      }} />
-
-      {/* Header: icon + title + kind-name badge */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-        {node.Icon && (
-          <span style={{
-            display: 'inline-flex',
-            width: 26, height: 26,
-            alignItems: 'center', justifyContent: 'center',
-            border: '1px solid var(--stroke)',
-            borderRadius: 6,
-            background: kindSoft(node.kind),
-            color: kindVar(node.kind),
-          }}>
-            <node.Icon s={16} />
-          </span>
-        )}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13.5, fontWeight: 600, letterSpacing: '-0.01em' }}>
-            {node.title}
-          </div>
-          {node.subtitle && (
-            <div style={{ fontSize: 11, color: 'var(--text-dim)', lineHeight: 1.35, marginTop: 2 }}>
-              {node.subtitle}
-            </div>
-          )}
-        </div>
-        <span style={{
-          fontFamily: 'Geist Mono, ui-monospace, monospace',
-          fontSize: 9, letterSpacing: '0.12em',
-          color: kindVar(node.kind),
-          background: kindSoft(node.kind),
-          padding: '3px 6px',
-          borderRadius: 4,
-          textTransform: 'uppercase',
-          whiteSpace: 'nowrap',
-        }}>
-          {kindName(node.kind)}
-        </span>
-      </div>
-
       {/* Optional header chip row */}
       {node.header && (
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8, marginBottom: 4 }}>
@@ -102,7 +52,7 @@ export const NodeCard: FC<{
       {node.modules && (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${node.modules.length}, minmax(0,1fr))`,
+          gridTemplateColumns: `repeat(${node.modules.length}, auto)`,
           gap: 8, marginTop: 10,
         }}>
           {node.modules.map(m => (
@@ -135,6 +85,6 @@ export const NodeCard: FC<{
           {node.tech.map(t => <LogoChip key={t.n} Logo={t.Logo} label={t.n} size={12} />)}
         </div>
       )}
-    </div>
+    </TabCard>
   );
 };
