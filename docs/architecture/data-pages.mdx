@@ -24,7 +24,7 @@ renders a single `<Viewer>`. `Viewer` reads a `viewer` search param and swaps wh
 /ottawa?viewer=buildings   → buildings table → row click → BuildingDetails
 /ottawa?viewer=sites       → sites table     → row click → SiteDetails
 /ottawa?viewer=files       → files table     → row click → FileDetails
-/ottawa?viewer=map | bim | infrastructure | users | extensions | settings
+/ottawa?viewer=map | bim | infrastructure | users | plugins | settings
 /ottawa?viewer=plugin:<pluginId>:<pageId>
 ```
 
@@ -118,14 +118,16 @@ The requested viewer is gated per organization before it renders:
 
 export function isViewerAllowed(viewer: ViewerKey, appContent: Organization['appContent']): boolean {
   if (parsePluginViewerKey(viewer) !== null) return true
+  if (ALWAYS_AVAILABLE_VIEWERS.includes(viewer as ViewerNames)) return true
 
   return appContent.length === 0 || appContent.includes(viewer as ViewerNames)
 }
 ```
 
 `organization.appContent` is a Prisma enum array listing the pages an organization gets; an empty
-array means "all of them". A disallowed viewer falls back to the map and the param is stripped
-from the URL.
+array means "all of them". The map, plugins and settings viewers (`ALWAYS_AVAILABLE_VIEWERS` in
+`core/utils/appContent.ts`) are allowed for every organization and are never stored in `appContent`.
+A disallowed viewer falls back to the map and the param is stripped from the URL.
 
 `ViewerNames` mirrors the Prisma `appContent` enum, which is why a plugin page cannot be a member
 of it. Plugin pages use a separate key space and are gated by plugin enablement instead:

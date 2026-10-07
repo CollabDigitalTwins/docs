@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-14T17:48:12.292Z",
+  "generatedAt": "2026-10-04T20:55:36.602Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -526,6 +526,12 @@
               "primary": null
             },
             {
+              "id": "plugins/proxied-feeds",
+              "title": "Call an API without CORS",
+              "slug": "/docs/plugins/proxied-feeds",
+              "primary": null
+            },
+            {
               "id": "plugins/all-capabilities",
               "title": "Capabilities",
               "slug": "/docs/plugins/all-capabilities",
@@ -559,6 +565,12 @@
               "id": "plugins/mounting-a-plugin",
               "title": "Run your plugin",
               "slug": "/docs/plugins/mounting-a-plugin",
+              "primary": null
+            },
+            {
+              "id": "plugins/plugin-registry",
+              "title": "Share and promote plugins",
+              "slug": "/docs/plugins/plugin-registry",
               "primary": null
             }
           ],
