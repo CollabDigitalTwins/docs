@@ -13,7 +13,7 @@ There are three separate steps. Each is controlled by a different person:
 | Step | Who | Where |
 |------|-----|-------|
 | **Publish** a version | The dev team (`PLUGIN_PUBLISHER_EMAILS`, plus platform admins) | Dev instance: from a mounted build. Any other deployment: by importing a package |
-| **Share** it with an organization | Platform admins (`PLATFORM_ADMIN_EMAILS`) | The "Visible to" column on the Plugins page |
+| **Share** it with an organization | Platform admins | The "Visible to" column on the Plugins page |
 | **Turn it on** | That organization's admin | The Plugins page, as for any plugin |
 
 :::warning
@@ -83,7 +83,6 @@ isValidVersion('v1.2.3') // false: no leading "v"
 | `PLUGINS_ENABLED` | unset or `"false"`, unless you mount plugins from a folder on purpose |
 | `PLUGINS_DEV` | unset or `"false"` |
 | `PLUGIN_PUBLISHER_EMAILS` | empty, so only platform admins can import |
-| `PLATFORM_ADMIN_EMAILS` | the admins who import and share plugins |
 | `PLUGIN_REGISTRY_BUCKET` | defaults to `cdt-plugin-registry`. Create it as a private bucket |
 
 The server logs `plugins: mounted=off dev=off` the first time it handles a plugin request. Check for this line after deploying.
