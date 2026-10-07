@@ -8,7 +8,7 @@ sidebar_position: 4
 
 A plugin can be added to a self-hosted CDT deployment without rebuilding it. Build the plugin, place the folder where CDT can see it, and add it on the Plugins page. A restart is only needed when `PLUGINS_DEV` is off, see [The development loop](#the-development-loop).
 
-This applies to self-hosted deployments. On the CDT-hosted platform, a plugin becomes available by being reviewed and included in a release.
+This applies to self-hosted deployments and dev instances. The CDT-hosted platform never mounts folders: a plugin reaches it as an imported package. See [Share and promote plugins](./plugin-registry.md).
 
 :::warning
 Only mount plugins that are trusted and have been read. See [Security](./overview.md#security).

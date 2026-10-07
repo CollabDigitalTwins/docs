@@ -140,7 +140,7 @@ Tenant record. Controls branding, map defaults, feature flags, and language supp
 |-------|------|-------------|
 | `id` | `number` | Primary key |
 | `name` | `string` | URL slug / identifier |
-| `appContent` | `ViewerNames[]` | Enabled viewers for this org |
+| `appContent` | `ViewerNames[]` | Optional viewers enabled for this org. Map, plugins and settings are always available and never stored |
 | `languages` | `Language[]` | Supported locales |
 | `bbox` | `number[]` | Map bounding box `[w, s, e, n]` |
 | `mapStyles` | `unknown[]` | Custom MapLibre style definitions |
@@ -179,7 +179,7 @@ Controls which sections of the app are available to an organization and routes s
 enum ViewerNames {
   auth, map, bim, buildings,
   sites, files, land, infrastructure,
-  extensions, settings, users
+  plugins, settings, users
 }
 ```
 

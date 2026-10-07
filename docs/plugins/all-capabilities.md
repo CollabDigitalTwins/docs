@@ -8,13 +8,14 @@ sidebar_position: 3
 
 A capability is a place in CDT where a plugin can add something. A plugin declares the capabilities it uses in its manifest, then calls `ctx.register()` once per contribution.
 
-These seven are the whole list. Registering anything else is a compile error, and registering a capability that is not declared in the manifest throws.
+These eight are the whole list. Registering anything else is a compile error, and registering a capability that is not declared in the manifest throws.
 
 | Capability | Where it appears | Fields |
 |---|---|---|
 | `map.tools` | Map toolbar | `id`, `label`, `icon`, `component` |
 | `bim.tools` | BIM toolbar | `id`, `label`, `icon`, `component` |
 | `map.layers` | Drawn on the map | `id`, `component` |
+| `map.datasets` | Datasets menu, under Organizational or Live Data | `id`, `name`, optional `live`, `source`, `description`, `publisher`, `information` |
 | `viewer.legends` | Legend card, map and BIM viewer | `id`, `title`, `useLegend`, optional `viewers` |
 | `viewer.tabs` | Viewer sidebar, as a tab | `id`, `labelKey`, `icon`, `component`, optional `viewers` |
 | `data.pages` | Datasets nav, as a full page | `id`, `titleKey`, `icon`, `useRows`, `columns` |
@@ -117,6 +118,30 @@ ctx.register('viewer.legends', {
 })
 ```
 
+On the map, legends stack inside the applied-layers card in the bottom-left corner. In the BIM viewer they have a card of their own.
+
+A legend for one of the plugin's own `map.datasets` names it with `dataset`. It is then nested under that dataset's row in the applied-layers card, and the row's switch shows and hides the layer without removing it. Rows take an optional switch, and `controls` adds the plugin's own inputs under them:
+
+```tsx
+ctx.register('viewer.legends', {
+  id: 'active-fires',
+  title: 'Fires by size',
+  viewers: ['map'],
+  dataset: 'active-fires',
+  useLegend: () => ({
+    active: usePluginDataset('active-fires').applied,
+    rows: [{
+      label: 'Under 50 ha', color: '#9acd32', count: 40,
+      visible: !hidden.includes(0),            // with onVisibleChange, the row gets a switch
+      onVisibleChange: visible => toggleBand(0, visible),
+    }],
+    controls: <MonthSlider />,                 // rendered under the rows
+  }),
+})
+```
+
+A legend that returns `unavailable: true` while `active` shows a "Feed unavailable" banner over its last rows, and CDT raises one warning toast naming it, so a user knows the feed is down rather than seeing an empty map. Set it when your fetch fails or times out, and clear it on the next good response.
+
 ## Drawing on the map
 
 `map.layers` registers a component CDT mounts for as long as the map exists. It renders `null`: everything it does goes through the map handle.
@@ -166,6 +191,56 @@ Three common mistakes:
 Update features with `setData` rather than removing and re-adding the layer, or they flicker on every change.
 
 For colours, `stringToColour(key)` and `MAP_COLOUR_PALETTE` are exported from `@collabdt/core/plugins-sdk`. They are the platform's colourblind-accessible palette, and `stringToColour` is deterministic, so the same key always produces the same colour.
+
+## Datasets
+
+`map.datasets` lists a dataset in the Datasets menu and the map sidebar's Layers tab. Users apply it, hide it and remove it like any other dataset. With `live: true` it is listed under **Live Data**; otherwise it is listed under **Organizational**, as data of the viewer's own organization.
+
+```ts
+ctx.register('map.datasets', {
+  id: 'weather-radar',
+  name: 'Live Weather Radar (Canada)',
+  publisher: 'Environment and Climate Change Canada',
+  live: true,
+  source: { type: 'wms', baseUrl: 'https://geo.weather.gc.ca/geomet', layers: 'RADAR_1KM_RRAI', timeEnabled: true },
+})
+```
+
+`source` says how CDT draws it:
+
+| `source` | Drawn by |
+|---|---|
+| `{ type: 'wms', baseUrl, layers, timeEnabled? }` | CDT's WMS layer. `timeEnabled` nests a play button, time scrubber and the server's legend image under the dataset's row in the applied-layers card. |
+| `{ type: 'geojson', getFeatures }` | CDT's GeoJSON layer, with its clustering, colouring and feature popups. `getFeatures` returns a FeatureCollection. |
+| omitted | Nothing. The plugin draws it from its own `map.layers` component. |
+
+A plugin that draws its own dataset asks whether it is on the map with `usePluginDataset(id)` from `@collabdt/core/plugins-sdk/data`, passing the registration's `id`. Its layer draws, and its legend sets `active`, only while `visible` is true:
+
+```tsx
+export function ActiveFiresLayer({ map }: MapToolProps) {
+  const { visible } = usePluginDataset('active-fires')   // { applied, visible, apply, remove }
+  const fires = useActiveFiresFeed(visible)               // fetch nothing until applied
+  useFireLayer(map, visible ? fires : null)
+  return null
+}
+```
+
+`applied` is true once a user adds the dataset; `visible` is false again while they hide it from the applied list. The `wildfire-monitoring` and `weather-radar` plugins in `cdt-na/plugins` show one of each.
+
+To give a plugin its own switch for its dataset, call `apply()` and `remove()` from the same hook. They do exactly what ticking and unticking the dataset in the Datasets menu does, so the switch and the menu always agree: `apply()` adds the dataset, or shows it again if it was hidden, and `remove()` takes it off the map. A switch that reads `visible` and calls them needs no state of its own:
+
+```tsx
+function LiveAircraftSwitch() {
+  const aircraft = usePluginDataset('live-aircraft')
+  return (
+    <Switch checked={aircraft.visible} onCheckedChange={on => (on ? aircraft.apply() : aircraft.remove())}>
+      Live aircraft
+    </Switch>
+  )
+}
+```
+
+`apply()` only finds datasets the calling plugin registered, so one plugin cannot add another's. The `airplanes` plugin's toolbar card uses this.
 
 ## Data pages
 
