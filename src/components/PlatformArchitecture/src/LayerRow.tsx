@@ -17,7 +17,7 @@ export const LayerRow: FC<{
     alignItems: 'stretch',
     position: 'relative',
   }}>
-    <div style={{ padding: '28px 0', borderRight: '1px dashed var(--stroke)' }}>
+    <div style={{ padding: '12px 0 28px', borderRight: '1px dashed var(--stroke)' }}>
       <div style={{
         fontFamily: 'Geist Mono,monospace',
         fontSize: 10, letterSpacing: '0.16em',
@@ -37,7 +37,7 @@ export const LayerRow: FC<{
         </div>
       )}
     </div>
-    <div style={{ padding: '28px 0' }}>
+    <div style={{ padding: '6px 0 28px' }}>
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'stretch' }}>
         {layer.nodes.map(n => (
           <NodeCard

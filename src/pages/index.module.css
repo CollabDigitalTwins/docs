@@ -280,6 +280,14 @@
   width: 100%;
 }
 
+.audienceHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+}
+
 .audienceLabel {
   font-family: 'Geist', sans-serif;
   font-size: 0.78rem;
@@ -292,7 +300,7 @@
 .audienceGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.75rem;
+  gap: 1rem 0.75rem;
 }
 
 @media (min-width: 540px) {
@@ -302,12 +310,10 @@
 }
 
 .siteMapLink {
-  margin-top: 0.5rem;
   font-size: 0.85rem;
   color: var(--hp-on-surface-variant);
   text-decoration: none;
   border-bottom: 1px dashed var(--hp-outline-variant);
-  align-self: flex-start;
   padding-bottom: 0.1rem;
   transition: color 120ms ease, border-color 120ms ease;
 }
@@ -325,73 +331,6 @@
 
 .siteMapLink:hover strong {
   color: var(--hp-primary);
-}
-
-.audienceCard {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1.1rem 1.1rem 1.1rem 1.35rem;
-  border-radius: 10px;
-  background: var(--hp-mid);
-  border: none;
-  overflow: hidden;
-  text-decoration: none;
-  transition:
-    transform 0.15s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-/* Left accent stripe — mirrors NodeCard motif from PlatformArchitecture */
-.audienceCard::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--hp-primary-container);
-  opacity: 0.85;
-  transition: width 0.2s ease, opacity 0.2s ease;
-}
-
-.audienceCard:hover {
-  text-decoration: none;
-  transform: translateY(-2px);
-  background: color-mix(in srgb, var(--hp-primary-container) 8%, var(--hp-mid));
-  box-shadow: 0 12px 32px -18px
-    color-mix(in srgb, var(--hp-primary-container) 50%, rgba(0, 0, 0, 0.3));
-}
-
-.audienceCard:hover::before {
-  width: 4px;
-  opacity: 1;
-}
-
-.audienceIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--hp-primary-container) 14%, transparent);
-  color: var(--hp-primary-container);
-}
-
-.audienceTitle {
-  font-family: 'Geist', sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--hp-on-surface);
-}
-
-.audienceDesc {
-  font-size: 0.85rem;
-  line-height: 1.45;
-  color: var(--hp-on-surface-variant);
 }
 
 /* ── Mobile ──────────────────────────────────────────── */

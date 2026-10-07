@@ -1,6 +1,7 @@
 import { useEffect, useState, type CSSProperties, type FC, type ReactNode } from 'react';
 import type { Theme, FlowKind } from '../PlatformArchitecture/src/types';
-import { THEMES, kindVar, kindSoft } from '../PlatformArchitecture/src/theme';
+import { THEMES, kindVar, kindSoft, kindTabProps } from '../PlatformArchitecture/src/theme';
+import TabCard from '../TabCard';
 import {
   MapLibreLogo,
   TocLogo,
@@ -28,64 +29,33 @@ function useIsMobile(): boolean {
 
 type Chip = { label: string; logo?: ReactNode };
 
-/* ── Card with optional kind accent + chips with logos ───────── */
 const Card: FC<{
   title: string;
   sub?: string;
   chips?: Chip[];
-  kind?: FlowKind;
+  kind: FlowKind;
   centered?: boolean;
 }> = ({ title, sub, chips, kind, centered }) => (
-  <div style={{
-    position: 'relative',
-    background: kind
-      ? `linear-gradient(180deg, color-mix(in srgb, ${kindVar(kind)} 6%, var(--panel)), var(--panel-2))`
-      : 'linear-gradient(180deg, var(--panel), var(--panel-2))',
-    border: `1px solid ${kind
-      ? `color-mix(in srgb, ${kindVar(kind)} 30%, var(--stroke))`
-      : 'var(--stroke)'}`,
-    borderRadius: 10,
-    padding: centered ? '11px 14px' : '11px 14px 11px 17px',
-    boxShadow: '0 1px 0 rgba(255,255,255,0.02) inset, 0 4px 12px -8px rgba(0,0,0,0.35)',
-    textAlign: centered ? 'center' : 'left',
-  }}>
-    {kind && !centered && (
-      <div style={{
-        position: 'absolute',
-        left: -1, top: -1, bottom: -1, width: 4,
-        borderTopLeftRadius: 10,
-        borderBottomLeftRadius: 10,
-        background: kindVar(kind),
-        opacity: 0.95,
-      }} />
-    )}
-
-    <div style={{
-      fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
-      color: 'var(--text)', lineHeight: 1.3, marginBottom: sub ? 3 : 0,
-      fontFamily: 'Geist Mono, ui-monospace, monospace',
-    }}>
-      {title}
-    </div>
-    {sub && (
-      <div style={{ fontSize: 11, color: 'var(--text-dim)', lineHeight: 1.45 }}>
-        {sub}
-      </div>
-    )}
-
+  <TabCard
+    {...kindTabProps(kind)}
+    size="sm"
+    title={<span style={{ fontFamily: 'Geist Mono, ui-monospace, monospace' }}>{title}</span>}
+    subtitle={sub}
+    style={{ textAlign: centered ? 'center' : 'left' }}
+  >
     {chips && chips.length > 0 && (
       <div style={{
-        display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 8,
+        display: 'flex', flexWrap: 'wrap', gap: 4,
         justifyContent: centered ? 'center' : 'flex-start',
       }}>
         {chips.map(c => (
           <span key={c.label} style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
             padding: '2px 8px 2px 5px',
-            background: kind ? kindSoft(kind) : 'var(--chip)',
-            border: `1px solid ${kind
-              ? `color-mix(in srgb, ${kindVar(kind)} 25%, var(--stroke))`
-              : 'var(--stroke)'}`,
+            background: kind === 'core' ? 'var(--chip)' : kindSoft(kind),
+            border: `1px solid ${kind === 'core'
+              ? 'var(--stroke)'
+              : `color-mix(in srgb, ${kindVar(kind)} 25%, var(--stroke))`}`,
             borderRadius: 5,
             fontSize: 10.5,
             fontFamily: 'Geist Mono, ui-monospace, monospace',
@@ -105,14 +75,14 @@ const Card: FC<{
         ))}
       </div>
     )}
-  </div>
+  </TabCard>
 );
 
 /* ── Simple double-headed vertical arrow (mobile fallback) ───── */
 const SimpleArrow: FC<{ height?: number }> = ({ height = 22 }) => (
   <div style={{
     display: 'flex', flexDirection: 'column', alignItems: 'center',
-    padding: '10px 0',
+    padding: '10px 0 0', marginBottom: -12,
   }}>
     <svg width="10" height="7" viewBox="0 0 10 7" style={{ display: 'block' }}>
       <path d="M0 7 L5 1 L10 7 z" fill="var(--primary)" />
@@ -183,7 +153,7 @@ const BranchArrows: FC<{ columns: number; mode: 'merge' | 'split' }> = ({ column
       position: 'relative',
       width: '100%',
       height: HEIGHT,
-      margin: '14px 0 18px',
+      margin: '14px 0 -4px',
     }}>
       <svg
         width="100%"

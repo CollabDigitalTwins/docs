@@ -49,3 +49,8 @@ export const kindVar = (k: FlowKind) => `var(--c-${k})`;
 export const kindSoft = (k: FlowKind) => `var(--c-${k}-soft)`;
 export const kindName = (k: FlowKind): string =>
   ({ open: 'Open', map: 'Map', unstruct: 'Files', core: 'Core' }[k]);
+
+export const kindTabProps = (k: FlowKind) =>
+  k === 'core'
+    ? { tab: kindName(k), emphasis: 'default' as const }
+    : { tab: kindName(k), emphasis: 'key' as const, accent: kindVar(k) };

@@ -88,7 +88,6 @@ export const TECH_EDGES: Array<[TechId, TechId]> = [
   ['three', 'potree'],
   ['three', 'spark'],
   ['spark', 'potree'],
-  ['toc', 'react'],
   // Infra
   ['docker', 'postgres'],
   ['docker', 'node'],

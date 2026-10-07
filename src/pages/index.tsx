@@ -4,6 +4,7 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
+import TabCard from '@site/src/components/TabCard';
 
 import styles from './index.module.css';
 
@@ -85,9 +86,6 @@ function ArchitectureSketch() {
         )}
         <rect x={x - w / 2} y={y - h / 2} width={w} height={h} rx={rx}
           fill={C.panel} stroke={ringColor} strokeWidth={accent ? 1.6 : 1.2} />
-        {/* left accent bar — same motif as PlatformArchitecture NodeCard */}
-        <rect x={x - w / 2} y={y - h / 2} width={2.5} height={h} rx={1}
-          fill={C[kind]} opacity={0.9} />
         <g transform={`translate(${x - 8}, ${y - 8})`} color={ringColor}>
           {icon}
         </g>
@@ -314,47 +312,61 @@ function HomepageHeader() {
             <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
 
             <div className={styles.audienceGroup} role="group" aria-label="Choose your path">
-              <span className={styles.audienceLabel}>Where would you like to start?</span>
+              <div className={styles.audienceHeader}>
+                <span className={styles.audienceLabel}>Where would you like to start?</span>
+                <Link to="/site-map" className={styles.siteMapLink}>
+                  Or browse the full <strong>Site Map</strong>
+                </Link>
+              </div>
               <div className={styles.audienceGrid}>
-                <Link className={styles.audienceCard} to="/docs/introduction">
-                  <span className={styles.audienceIcon} aria-hidden="true">
+                <TabCard
+                  tab="01 · Use"
+                  emphasis="key"
+                  variant="header"
+                  to="/docs/introduction"
+                  title="I am a user"
+                  subtitle="Guides for using the CDT platform."
+                  icon={
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                       <circle cx="12" cy="8" r="4" />
                       <path d="M3 21c1.5-4 5-6 9-6s7.5 2 9 6" />
                     </svg>
-                  </span>
-                  <span className={styles.audienceTitle}>I am a user</span>
-                  <span className={styles.audienceDesc}>Guides for using the CDT platform.</span>
-                </Link>
+                  }
+                />
 
-                <Link className={styles.audienceCard} to="/docs/developer-introduction">
-                  <span className={styles.audienceIcon} aria-hidden="true">
+                <TabCard
+                  tab="02 · Build"
+                  emphasis="key"
+                  variant="header"
+                  to="/docs/developer-introduction"
+                  title="I am a developer"
+                  subtitle="APIs, hooks, components, and plugins."
+                  icon={
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="8 7 3 12 8 17" />
                       <polyline points="16 7 21 12 16 17" />
                       <line x1="14" y1="4" x2="10" y2="20" />
                     </svg>
-                  </span>
-                  <span className={styles.audienceTitle}>I am a developer</span>
-                  <span className={styles.audienceDesc}>APIs, hooks, components, and plugins.</span>
-                </Link>
+                  }
+                />
 
-                <Link className={styles.audienceCard} to="/docs/deployment/overview">
-                  <span className={styles.audienceIcon} aria-hidden="true">
+                <TabCard
+                  tab="03 · Own"
+                  emphasis="key"
+                  variant="header"
+                  to="/docs/deployment/overview"
+                  title="Deployment"
+                  subtitle="Self-host CDT or use a managed deployment."
+                  icon={
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="4" width="18" height="6" rx="1.5" />
                       <rect x="3" y="14" width="18" height="6" rx="1.5" />
                       <line x1="7" y1="7" x2="7.01" y2="7" />
                       <line x1="7" y1="17" x2="7.01" y2="17" />
                     </svg>
-                  </span>
-                  <span className={styles.audienceTitle}>Deployment</span>
-                  <span className={styles.audienceDesc}>Self-host CDT or use a managed deployment.</span>
-                </Link>
+                  }
+                />
               </div>
-              <Link to="/site-map" className={styles.siteMapLink}>
-                Or browse the full <strong>Site Map</strong> →
-              </Link>
             </div>
           </div>
 

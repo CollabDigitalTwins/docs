@@ -434,6 +434,12 @@ pre {
 ::-webkit-scrollbar-thumb:hover { background: var(--hp-outline); }
 
 /* ── Navbar items with icons ─────────────────────────── */
+/* An inline-flex child takes its baseline from the svg, lifting the label; centre the link box instead. */
+.navbar__items > .navbar__link {
+  display: inline-flex;
+  align-items: center;
+}
+
 .navbarItemWithIcon {
   display: inline-flex;
   align-items: center;

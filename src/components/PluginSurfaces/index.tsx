@@ -1,6 +1,7 @@
 import { useEffect, useState, type CSSProperties, type FC, type ReactNode } from 'react';
 import type { Theme, FlowKind } from '../PlatformArchitecture/src/types';
-import { THEMES, kindVar, kindSoft } from '../PlatformArchitecture/src/theme';
+import { THEMES, kindVar, kindSoft, kindTabProps } from '../PlatformArchitecture/src/theme';
+import TabCard from '../TabCard';
 
 const MOBILE_BREAKPOINT = 768;
 const MONO = 'Geist Mono, ui-monospace, monospace';
@@ -95,61 +96,22 @@ const Card: FC<{
   title: string;
   sub: string;
   kind: FlowKind;
-  badge?: string;
-  hub?: boolean;
+  tab?: string;
   chips?: string[];
-}> = ({ title, sub, kind, badge, hub, chips }) => (
-  <div style={{
-    position: 'relative',
-    background: hub
-      ? `linear-gradient(180deg, color-mix(in srgb, ${kindVar(kind)} 12%, var(--panel)), var(--panel-2))`
-      : 'linear-gradient(180deg, var(--panel), var(--panel-2))',
-    border: `1px solid ${hub ? `color-mix(in srgb, ${kindVar(kind)} 60%, var(--stroke))` : 'var(--stroke)'}`,
-    borderRadius: 10,
-    padding: '10px 13px 10px 16px',
-    boxShadow: hub
-      ? `0 0 22px color-mix(in srgb, ${kindVar(kind)} 16%, transparent), 0 1px 0 rgba(255,255,255,0.02) inset`
-      : '0 1px 0 rgba(255,255,255,0.02) inset, 0 4px 12px -8px rgba(0,0,0,0.35)',
-  }}>
-    <div style={{
-      position: 'absolute',
-      left: -1, top: -1, bottom: -1, width: 4,
-      borderTopLeftRadius: 10, borderBottomLeftRadius: 10,
-      background: kindVar(kind),
-      opacity: 0.95,
-    }} />
-
-    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
-          fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
-          color: 'var(--text)', lineHeight: 1.3, marginBottom: 3,
-          fontFamily: MONO,
-        }}>
-          {title}
-        </div>
-        <div style={{ fontSize: 11, color: 'var(--text-dim)', lineHeight: 1.45 }}>{sub}</div>
-      </div>
-      {badge && (
-        <span style={{
-          fontFamily: MONO,
-          fontSize: 8.5, letterSpacing: '0.12em',
-          color: kindVar(kind), background: kindSoft(kind),
-          padding: '2px 5px', borderRadius: 4,
-          textTransform: 'uppercase',
-          whiteSpace: 'nowrap', flexShrink: 0, marginTop: 1,
-        }}>
-          {badge}
-        </span>
-      )}
-    </div>
-
+}> = ({ title, sub, kind, tab, chips }) => (
+  <TabCard
+    {...kindTabProps(kind)}
+    {...(tab && { tab })}
+    size="sm"
+    title={<span style={{ fontFamily: MONO }}>{title}</span>}
+    subtitle={sub}
+  >
     {chips && (
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 8 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
         {chips.map(chip => <Chip key={chip} label={chip} />)}
       </div>
     )}
-  </div>
+  </TabCard>
 );
 
 const ZoneBox: FC<{ label: string; kind: FlowKind; children: ReactNode }> = ({ label, kind, children }) => (
@@ -173,8 +135,8 @@ const ZoneBox: FC<{ label: string; kind: FlowKind; children: ReactNode }> = ({ l
 );
 
 const Tick: FC = () => (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '2px 0' }}>
-    <div style={{ width: 1, height: 10, background: 'var(--stroke)' }} />
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '4px 0 -18px' }}>
+    <div style={{ width: 1, height: 20, background: 'var(--stroke)' }} />
     <svg width="8" height="6" viewBox="0 0 8 6" aria-hidden>
       <path d="M0 0 L4 5 L8 0 z" fill="var(--stroke)" opacity="0.6" />
     </svg>
@@ -230,7 +192,7 @@ const VArrow: FC<{ label: string }> = ({ label }) => (
 );
 
 const AuthoredCards: FC = () => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
     {AUTHORED.map(card => <Card key={card.title} kind="open" {...card} />)}
   </div>
 );
@@ -256,7 +218,7 @@ const Framework: FC = () => (
       sub="Once, with the plugin id and its saved settings." />
     <Tick />
     <div style={{ marginTop: 10 }}>
-      <Card kind="unstruct" hub badge="Registry" title="Registered contributions"
+      <Card kind="unstruct" tab="Registry" title="Registered contributions"
         sub="Kept per capability. The app subscribes, so a plugin switched on or off appears and disappears without a reload." />
     </div>
   </div>
@@ -266,7 +228,7 @@ const HostedCards: FC<{ columns: number }> = ({ columns }) => (
   <div style={{
     display: 'grid',
     gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-    gap: 9,
+    gap: 12,
     alignContent: 'start',
   }}>
     {HOSTED.map(card => <Card key={card.title} kind="map" {...card} />)}
