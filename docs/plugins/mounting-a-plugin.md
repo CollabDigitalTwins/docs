@@ -81,9 +81,9 @@ CDT publishes an import map that points a plugin's imports at CDT's own instance
 Available at runtime:
 
 - `react`, `react-dom`, `react/jsx-runtime`
-- `@collabdt/core/plugins-sdk`, and its `/components`, `/config`, `/data`, `/messages`, `/state`, `/store` and `/ui` entries
+- `@collabdt/core/plugins-sdk`, and its `/charts`, `/components`, `/config`, `/data`, `/messages`, `/state`, `/store` and `/ui` entries
 
-That list is exactly what CDT resolves. `usePluginBimAppearance` is not in it, so painting BIM elements is currently available only to a plugin compiled into core.
+That list is exactly what the CDT platform resolves. `useBimViewer` and `usePluginBimAppearance` are not in it, so a mounted plugin reaches the BIM viewer, its floorplans and element colours through the [`BimToolProps`](./all-capabilities.md#toolbar-tools) a `bim.tools` component is handed. `/charts` is loaded only when a plugin first imports it, see [Charts](./charts.md); import Recharts from there rather than bundling `recharts`.
 
 Types for the data hooks come from `@collabdt/plugin-kit/types/data`, which declares the record fields the SDK commits to. Core's schema carries more columns than that; the kit widens a record when a plugin needs one.
 
