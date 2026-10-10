@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-07T19:08:05.207Z",
+  "generatedAt": "2026-10-09T12:45:00.583Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -535,6 +535,12 @@
               "id": "plugins/all-capabilities",
               "title": "Capabilities",
               "slug": "/docs/plugins/all-capabilities",
+              "primary": null
+            },
+            {
+              "id": "plugins/charts",
+              "title": "Charts",
+              "slug": "/docs/plugins/charts",
               "primary": null
             },
             {

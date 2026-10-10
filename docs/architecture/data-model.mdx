@@ -109,7 +109,7 @@ Key fields:
 | `lazFileKey` / `potreeFolderKey` | `string?` | Point cloud asset references |
 | `pointCloudUploaded` / `pointCloudPotreeConverted` | `boolean?` | Processing status |
 | `fileTransformX` / `Y` / `Z` | `number?` | Scene-local position, metres |
-| `fileRotationX` / `Y` / `Z` | `number?` | Rotation, radians, XYZ Euler |
+| `fileRotationX` / `Y` / `Z` | `number?` | Rotation, radians, XYZ Euler. For a BIM model, `Z` is project north about the vertical axis, added to `Y` |
 | `fileScale` | `number?` | Uniform scale |
 | `fileSourceUp` | `SourceUpAxis?` | Up axis of the source data (`y` or `z`) |
 | `fileProjectedCRS` | `string?` | Projected CRS, e.g. `EPSG:2169` (an IFC `IfcProjectedCRS.Name`, or a remote dataset's source CRS) |

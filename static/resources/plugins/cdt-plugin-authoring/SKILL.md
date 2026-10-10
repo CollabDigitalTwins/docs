@@ -1,6 +1,6 @@
 ---
 name: cdt-plugin-authoring
-description: Author a CDT (Collab Digital Twins) platform plugin, from scaffold to a plugin rendering in the map or BIM viewer. Use when asked to build, scaffold, extend, or debug a CDT plugin, add a toolbar tool, sidebar tab, legend, map layer, dataset, data page or dialog to CDT, or when a plugin builds but never shows up.
+description: Author a CDT (Collab Digital Twins) platform plugin, from scaffold to a plugin rendering in the map or BIM viewer. Use when asked to build, scaffold, extend, or debug a CDT plugin, add a toolbar tool, sidebar tab, legend, map layer, dataset, data page, dialog, chart or floorplan overlay to CDT, or when a plugin builds but never shows up.
 ---
 
 # Author a CDT platform plugin
@@ -10,7 +10,8 @@ $ARGUMENTS may name the plugin, the surfaces it targets, or the behaviour wanted
 Reference pages, fetch them when a detail below is not enough:
 https://docs.collabdt.org/docs/plugins/all-capabilities ·
 https://docs.collabdt.org/docs/plugins/mounted-plugins-in-practice ·
-https://docs.collabdt.org/docs/plugins/mounting-a-plugin
+https://docs.collabdt.org/docs/plugins/mounting-a-plugin ·
+https://docs.collabdt.org/docs/plugins/charts
 
 ## Constraints that are invisible from inside a plugin folder
 
@@ -29,7 +30,7 @@ Read these before writing any code. Each one is a failure that looks like succes
   | `map.datasets` | Datasets menu, under Organizational, or Live Data with `live: true` | no component |
   | `viewer.legends` | The shared legend card, map and BIM | a `useLegend` hook |
   | `viewer.tabs` | Viewer sidebar, as a tab | **no props at all** |
-  | `data.pages` | Datasets nav, as a full table page | `useRows` hook + `columns` |
+  | `data.pages` | Datasets nav, as a full page | `useRows` hook + `columns`, or a `component` with no props |
   | `ui.dialogs` | A modal, opened by id from any surface of the plugin | what `open()` passed + `close` |
 
 - **A `viewer.tabs` or `viewer.legends` registration with no `viewers` appears in every
@@ -43,9 +44,13 @@ Read these before writing any code. Each one is a failure that looks like succes
   An icon *inside* a component body therefore has to be inline SVG.
 - **Only a fixed list of modules resolves at runtime:** `react`, `react-dom`,
   `react/jsx-runtime`, and `@collabdt/core/plugins-sdk` with its subpaths `/config`,
-  `/messages`, `/store`, `/data`, `/state`, `/ui` and `/components`. Anything else must be
-  bundled into `dist/index.js`, and the build's import guard names any specifier it cannot
-  resolve. `usePluginBimAppearance`, `useBimViewer` and `useMapViewer` are not on the list.
+  `/messages`, `/store`, `/data`, `/state`, `/ui`, `/components` and `/charts`. Anything else
+  must be bundled into `dist/index.js`, and the build's import guard names any specifier it
+  cannot resolve. `usePluginBimAppearance`, `useBimViewer` and `useMapViewer` are not on the
+  list; a `bim.tools` component gets the BIM viewer, its floorplans and element colours as props.
+- **Charts come from `@collabdt/core/plugins-sdk/charts`,** never from an installed `recharts`.
+  It exports the `Chart*` wrappers and the Recharts primitives the platform uses, and the host
+  loads Recharts only when a plugin imports it. A bundled copy loses the platform's styling.
 - **`manifest.slug` must equal the folder name.** The scanner skips the folder with only a log
   line otherwise, so a mismatch is a plugin that never appears. Renaming the folder, or editing
   the manifest's `name` and assuming the slug followed, is the usual cause.
@@ -87,6 +92,19 @@ them, so the shape of the plugin follows from which surface holds the handles.
   that dataset's row. Fetch nothing until the dataset is applied.
 - **A modal is `ui.dialogs`,** opened with `usePluginDialogs().open(id, props)`. It outlives
   whatever opened it, and a plugin can only open its own.
+- **A full page is `data.pages`.** Give it `useRows` + `columns` for a searchable table, or
+  `component` instead for a dashboard, a calendar or charts below the platform's frame and
+  title. Never both forms.
+- **Drawing on a BIM floorplan is `floorplan` on `BimToolProps`,** so it lives in the
+  `bim.tools` component. Check `floorplan.available` first: it is false in a viewer without
+  floorplans. After `activate(id)`, call `generateLines()` so the plan shows its walls and
+  drawing snaps to them. `drawShape('rectangle' | 'polygon')` and `editShape(points)` resolve
+  with `{ x, z }` points in world metres, or `null` on Escape; `frame(points)` fits the plan to
+  an outline. `setOverlay(shapes, { onShapeClick })` draws the plugin's own labelled polygons on
+  whichever plan is open, so filter them by `floorplan.active`; `clearOverlay()` removes them.
+- **`buildingId` on `BimToolProps` is the open building**, `null` until one is chosen, and the
+  only place a plugin learns it. Stamp it on records and publish it with `usePluginState` for
+  the surfaces that are not handed it.
 
 Pick the state hook by whether the value belongs in a database: `usePluginState` for a
 selection or filter (in memory), `usePluginStore` for records the plugin owns, `usePluginConfig`
@@ -114,11 +132,16 @@ and treat a missing value as a normal model. `IFCSPACE` is hidden by default, so
 `setItemsVisible(items, true)` before acting on spaces. Key stored records by `GlobalId`, never
 by `modelId` and `localId`, which only mean something while that model is open.
 
-To colour elements from a mounted plugin, use `model.highlight(localIds, material)` with
-`{ color: { r, g, b }, opacity: 1, transparent: false, preserveOriginalMaterial: false }` cast
-to `FRAGS.MaterialDefinition`. Convert the colour from sRGB to linear, make one call per colour
-rather than per element, and give the user a way to clear it with `model.resetHighlight`: paint
-outlives the panel that applied it.
+For a space's floor outline, area and height, `floorplan.getSpaceFootprints(items)` reads them
+from each element's lowest flat face, ready to pass to `setOverlay`. Pass the spaces you redraw
+as `setOverlay(shapes, { replacesSpaces })` so the plan hides its own room graphic under them.
+
+Colour elements with `appearance` on `BimToolProps`: `setAppearance(groups)`, each group
+`{ items, appearance: { color: 0xRRGGBB, opacity? } }`, and `clearAppearance()`. Pass every
+group in **one** call, since each call replaces the plugin's previous paint, and call it from
+an effect so that changed colours repaint. Paint is scoped to the plugin and outlives the panel
+that applied it, so give the user a way to clear it. Never paint through
+`model.highlight` on the raw `fragments` handle: it bypasses the platform's appearance layer.
 
 ## Steps
 

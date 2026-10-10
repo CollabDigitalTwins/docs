@@ -303,6 +303,12 @@ card, the viewport menu and the adapters cannot disagree.
 | DXF | Yaw only | Yes | `fileTransformX/Y/Z`, `fileRotationY`, `fileScale` |
 | BIM model (`frag`, `ifc`) | Yaw only | No | `fileTransformX/Y/Z`, `fileRotationY` |
 
+A BIM model's `fileRotationZ` is not part of its placement: it is the model's **project north**, in radians
+about the vertical axis, added to `fileRotationY` when the model is turned in the scene. Setting it lays the
+model's grid along world X and Z, so a floorplan opens square to the screen. The floorplan compass (a typed
+angle, or a two-click line on the open plan) and the BIM file menu's **Set project north** (a click on a model
+edge in the 3D view, snapped and highlighted as the dimension tool does) both write it; moving the model never does. `shared/placement/projectNorth` holds the maths.
+
 Scaling is always **proportional — one number, never per axis**. The gizmo writes only the axis
 being dragged, so `uniformScale()` resolves the three components back to the single value the drag
 meant and the object is re-scaled uniformly.

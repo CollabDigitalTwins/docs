@@ -102,7 +102,15 @@ const { buildings } = useBuildings()
 const building = buildings.find(candidate => candidate.id === record.buildingId)
 ```
 
-That id has to be *put* there by someone. **Nothing tells a plugin which building the open model belongs to**: the SDK offers `useBuildings()` and `useBuilding(id)`, and no way to ask which building the viewer is showing. A plugin that needs the association has the user name it once and stamps the answer onto every record, so the surfaces that run with no model open still work.
+That id has to be *put* there by someone. **Only a `bim.tools` component is told which building the open models belong to**, as `buildingId` on its props. Stamp it onto every record the tool writes, so the surfaces that run with no model open, a data page say, still know where each record belongs, and publish it with `usePluginState` for a tab or legend that should follow the open building:
+
+```tsx
+export function PlannerTool({ buildingId }: ToolbarToolProps & BimToolProps) {
+  const [, setOpenBuilding] = usePluginState<number | null>('openBuildingId', null)
+  React.useEffect(() => { setOpenBuilding(buildingId) }, [buildingId, setOpenBuilding])
+  ...
+}
+```
 
 ## Message keys always fall back
 
@@ -138,31 +146,24 @@ export const columns: DataPageColumn<Record<string, unknown>>[] = [
 
 ## Colouring from a mounted plugin
 
-`usePluginBimAppearance` is not among the entries CDT publishes to a mounted plugin, so the SDK's colour API is out of reach. Colour itself is not: the `fragments` handle carries it.
+`usePluginBimAppearance` is not among the entries the CDT platform publishes to a mounted plugin, but its two functions are: a `bim.tools` component gets them as `appearance` on its props, scoped to the plugin like the hook.
 
 ```tsx
-// MaterialDefinition types `color` as a THREE.Color, but fragments only reads r, g and b.
-const material = { color: { r, g, b }, opacity: 1, transparent: false,
-                   preserveOriginalMaterial: false } as unknown as FRAGS.MaterialDefinition
-
-await model.highlight(localIds, material)   // one call per colour, never per element
-await model.resetHighlight(localIds)        // back to the model's own colours
+export function PaintTool({ appearance }: ToolbarToolProps & BimToolProps) {
+  React.useEffect(() => {
+    appearance.setAppearance(spaces.map(space => ({ items: space.items, appearance: { color: space.colour } })))
+  }, [appearance, spaces])
+  ...
+}
 ```
 
-Four things to get right:
-
-- **`preserveOriginalMaterial` must stay `false`.** At `true` fragments skips deduplication and spends one of the model's ~65 500 material slots per element per call. At `false` a colour costs one slot however many elements wear it, so bucket elements by colour and make one call per bucket.
-- **Convert sRGB to linear.** `new THREE.Color(hex)`, which is what core passes on its own path, converts into the renderer's working space. Passing raw sRGB values gives visibly different colours from the rest of the app.
-- **Show before painting.** A hidden category stays hidden, so paint it without `setItemsVisible(items, true)` and you have coloured something invisible.
-- **Paint is a change to the model, not to your component.** It outlives the toolbar panel that applied it, which is the only reason a colour survives the dropdown closing, so do not clear it in a cleanup function, and give the user a way to turn it off.
-
-This bypasses core's own `ElementAppearance`, so plugin paint and the Layers tab's colouring overwrite each other, and CTRL+Z does not undo the plugin's. For a plugin painting a category the sidebar trees rarely touch, spaces say, that is an acceptable trade; for anything else, prefer being compiled in and using `usePluginBimAppearance`.
+The rules in [Colouring elements](./all-capabilities.md#colouring-elements) apply unchanged: one call with every group, from an effect, after `setItemsVisible(items, true)`. A tab or dialog that should change the colours leaves a request in plugin state for the tool to carry out, like any other viewer work.
 
 ## When mounting is the wrong answer
 
 Most of the limits above have a workaround. Two do not, and they are the signal to submit the plugin to core as a pull request instead:
 
-- **The SDK appearance API, and anything else outside the published import list.** The workarounds reach around core rather than through it, and they can conflict with it.
+- **Anything outside the published import list.** The workarounds reach around core rather than through it, and they can conflict with it.
 - **Translated interface text.** A mounted plugin's message keys cannot resolve, so it ships in one language.
 
 Everything else on this page a mounted plugin can do for itself today.
