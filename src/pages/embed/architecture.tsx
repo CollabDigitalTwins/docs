@@ -5,7 +5,7 @@ import Head from '@docusaurus/Head';
 /**
  * Standalone, chrome-less embed of the platform architecture diagram.
  *
- * Served at /embed/architecture — no navbar, sidebar, or footer — so it can be
+ * Served at /embed/architecture (no navbar, sidebar, or footer) so it can be
  * iframed from other CDT properties (e.g. the marketing homepage) while staying
  * single-source with the docs. The diagram component itself is unchanged.
  *
@@ -40,7 +40,7 @@ function ArchitectureEmbed() {
 
   // Report the *content* height so an embedding iframe can size itself
   // exactly. We measure the root element (content-driven height) rather than
-  // document.body / scrollHeight — using a viewport-relative height like
+  // document.body / scrollHeight; a viewport-relative height like
   // 100vh here would feed back through the parent's iframe sizing and grow
   // without bound. A small dead-band avoids sub-pixel oscillation.
   useEffect(() => {
@@ -54,7 +54,7 @@ function ArchitectureEmbed() {
       try {
         window.parent?.postMessage({ type: 'cdt-arch-height', height }, '*');
       } catch {
-        /* cross-origin parent without a listener — safe to ignore */
+        /* cross-origin parent without a listener, safe to ignore */
       }
     };
     report();
@@ -88,7 +88,7 @@ export default function ArchitectureEmbedPage(): React.ReactElement {
         <title>CDT Platform Architecture</title>
         <meta name="robots" content="noindex" />
         {/* Strip default page chrome margins for a clean embed. No 100vh /
-            min-height anywhere — the page is exactly as tall as the diagram so
+            min-height anywhere: the page is exactly as tall as the diagram so
             the height it reports to the parent iframe stays stable. */}
         <style>{`html,body{margin:0;padding:0;background:var(--hp-surface);}`}</style>
       </Head>

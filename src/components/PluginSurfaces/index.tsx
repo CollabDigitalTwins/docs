@@ -262,7 +262,7 @@ const DeclareStrip: FC = () => (
         ctx.register()
       </code>{' '}
       must also be listed in the manifest. If an undeclared one is registered, CDT drops every
-      contribution that plugin made and marks it errored — activation is all-or-nothing, so a
+      contribution that plugin made and marks it errored. Activation is all-or-nothing, so a
       half-registered plugin never occurs.
     </div>
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>

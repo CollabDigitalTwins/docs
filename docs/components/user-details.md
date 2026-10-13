@@ -46,6 +46,6 @@ Role updates and avatar changes require `update` on the `Role` subject; see [Sha
 
 ## Related
 
-- [Settings Components](./settings.md) — `UsersSettingsPanel`, where this panel is reached
+- [Settings Components](./settings.md): `UsersSettingsPanel`, where this panel is reached
 - [useCreateUser / useUserRole](../hooks/users.md)
 - [User data model](../architecture/data-model.mdx#user)

@@ -40,6 +40,6 @@ Editing controls are gated on `update` for the `Building` subject; see [Shared c
 
 ## Related
 
-- [AddBuilding](./data-menu.md) — the dialog that starts a new building
+- [AddBuilding](./data-menu.md): the dialog that starts a new building
 - [useBuilding / useCreateBuilding](../hooks/buildings.md)
 - [Building data model](../architecture/data-model.mdx#building)

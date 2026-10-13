@@ -1,6 +1,6 @@
 ---
 title: Roles, Permissions & CASL
-description: How the CDT authorization engine works internally — Prisma storage, CASL ability construction, and server- and client-side enforcement.
+description: "How the CDT authorization engine works internally: Prisma storage, CASL ability construction, and server- and client-side enforcement."
 sidebar_position: 4
 displayed_sidebar: developerSidebar
 ---
@@ -16,7 +16,7 @@ For the conceptual model, see [Authorization Overview](./overview.mdx). For UI t
 CDT uses **role-based access control (RBAC)** scoped to organizations:
 
 - **Prisma** stores roles and permissions in PostgreSQL.
-- **CASL** is the authorization engine — it converts stored permissions into a queryable `Ability` instance.
+- **CASL** is the authorization engine. It converts stored permissions into a queryable `Ability` instance.
 - **Server-side checks** in API routes are the authoritative gate.
 - **Client-side checks** in components hide and disable controls for the current user.
 
@@ -33,8 +33,8 @@ Roles are represented by the `Role` entity. Each `User` has a foreign key to a `
 
 | Field | Description |
 |-------|-------------|
-| `action` | The verb the user can perform — `read`, `create`, `update`, `delete`, or `manage`. |
-| `subject` | The resource the action applies to — `Building`, `Site`, `User`, etc. |
+| `action` | The verb the user can perform: `read`, `create`, `update`, `delete`, or `manage`. |
+| `subject` | The resource the action applies to (`Building`, `Site`, `User`, etc.). |
 
 CASL rules are derived from this data at request time.
 
@@ -42,15 +42,15 @@ CASL rules are derived from this data at request time.
 
 CDT chose CASL because it offers:
 
-- A simple API for defining and checking rules — `ability.can(action, subject)`.
+- A simple API for defining and checking rules: `ability.can(action, subject)`.
 - A shared authorization model usable on both server and client.
 - A path from simple RBAC today to attribute- and condition-based rules later, without changing call sites.
 
 The construction flow:
 
-1. **Fetch permissions** for the current user and organization — `getUserPermissions(userId, orgId)`.
-2. **Build the rule set** with CASL's `AbilityBuilder` — `buildAbilityFromPermissions(perms)`.
-3. **Return the ability** — server code uses it directly; client code receives it via `PermissionsProvider`.
+1. **Fetch permissions** for the current user and organization with `getUserPermissions(userId, orgId)`.
+2. **Build the rule set** with CASL's `AbilityBuilder` via `buildAbilityFromPermissions(perms)`.
+3. **Return the ability**: server code uses it directly, and client code receives it via `PermissionsProvider`.
 
 ## Enforcing permissions server-side
 
@@ -62,7 +62,7 @@ if (!ability.can("read", "Building")) {
 }
 ```
 
-This is the authoritative check. Bypassing the UI does not bypass it — direct API calls hit the same gate.
+This is the authoritative check. Bypassing the UI does not bypass it, because direct API calls hit the same gate.
 
 ## Enforcing permissions client-side
 

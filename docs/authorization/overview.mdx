@@ -1,6 +1,6 @@
 ---
 title: Overview
-description: How authorization works in CDT — organizations, roles, and the permission model in plain language.
+description: "How authorization works in CDT: organizations, roles, and the permission model in plain language."
 sidebar_position: 1
 displayed_sidebar: userSidebar
 ---
@@ -37,7 +37,7 @@ The full default permission matrix is on the [Permission reference](./permission
 
 Permissions are checked in two places:
 
-- **Server-side**, before every mutation in the API. This is the authoritative check — bypassing the UI does not bypass it.
+- **Server-side**, before every mutation in the API. This is the authoritative check. Bypassing the UI does not bypass it.
 - **Client-side**, to hide buttons and disable actions the user cannot perform. This is a UX layer only; do not rely on it for security.
 
 The same `Ability` object drives both checks, so server and UI never disagree.

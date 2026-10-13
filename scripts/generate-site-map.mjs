@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generates src/data/siteMap.json — the data behind the /site-map page.
+ * Generates src/data/siteMap.json, the data behind the /site-map page.
  * Runs automatically before `docusaurus start` and `docusaurus build`.
  *
  * The script:
@@ -174,7 +174,7 @@ function build() {
 
   // Place directories by primary audience.
   // Primary audience = first sidebar in AUDIENCE_ORDER that contains the dir,
-  // OR — preferred — the displayed_sidebar of the dir's pages if consistent.
+  // OR (preferred) the displayed_sidebar of the dir's pages if consistent.
   for (const [dir, pages] of Object.entries(dirPages)) {
     const audSet = dirAudiences[dir];
     if (!audSet || audSet.size === 0) continue; // dir not in any sidebar (e.g. templates)

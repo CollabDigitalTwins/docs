@@ -52,7 +52,7 @@ Rules:
 - For sections you cannot infer (design decisions, business logic, edge cases), leave the <!-- TODO: ... --> comment exactly as-is. Do not invent content.
 - For table rows (props, params, returns), auto-populate what you can from TypeScript types and JSDoc comments. Leave <!-- description --> for anything unclear.
 - Use plain, direct language. No filler phrases like "this component provides" or "this hook is responsible for".
-- Code examples should be minimal and realistic — not toy examples.
+- Code examples should be minimal and realistic, not toy examples.
 - The Related section should link to the most likely related pages based on naming conventions (e.g. a buildings API route links to hooks/buildings.md and data-model/building.md).
 - Output only the raw MDX content. No preamble, no explanation, no markdown fences around the whole output.
 - NEVER include secrets, API keys, passwords, tokens, or environment variable values in the output. If the source contains secrets, omit or redact them.`;
@@ -93,7 +93,7 @@ async function main() {
   fs.mkdirSync(outputDir, { recursive: true });
 
   fs.writeFileSync(outputPath, generated, 'utf8');
-  console.log(`Done — written to ${outputPath}`);
+  console.log(`Done. Written to ${outputPath}`);
 }
 
 main().catch((err) => {

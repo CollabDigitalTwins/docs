@@ -123,7 +123,7 @@ const BranchArrows: FC<{ columns: number; mode: 'merge' | 'split' }> = ({ column
   // Generate an arrowhead polygon centred on a percentage x, pointing UP or DOWN.
   const arrowhead = (xPct: number, dir: 'up' | 'down', key: string | number) => {
     // Polygon points use a CSS calc()-equivalent via the "points" attribute
-    // — but SVG doesn't allow calc(); we render the polygon inside a nested <svg>
+    // but SVG doesn't allow calc(), so we render the polygon inside a nested <svg>
     // anchored with x="<percent>" to keep percentage-based horizontal positioning.
     const tipY = dir === 'up' ? TOP_TIP_Y : BOTTOM_TIP_Y;
     const baseY = dir === 'up' ? TOP_BASE_Y : BOTTOM_BASE_Y;
@@ -272,7 +272,7 @@ const MultiViewerStack: FC = () => {
       <Card
         kind="map"
         title="PostgreSQL + PostGIS"
-        sub="Structured records — buildings, sites, users, BCF, comments, sensor metadata."
+        sub="Structured records: buildings, sites, users, BCF, comments, sensor metadata."
         chips={[
           { label: 'PostgreSQL', logo: <PostgresLogo size={14} /> },
           { label: 'PostGIS', logo: <PostGisLogo size={14} /> },
@@ -281,7 +281,7 @@ const MultiViewerStack: FC = () => {
       <Card
         kind="unstruct"
         title="MinIO"
-        sub="Binary files — IFC, Fragments, point clouds, media."
+        sub="Binary files: IFC, Fragments, point clouds, media."
         chips={[
           { label: 'MinIO', logo: <MinioLogo size={14} /> },
         ]}

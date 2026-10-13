@@ -36,6 +36,6 @@ Individual inputs are disabled without `update` on the `Infrastructure` subject;
 
 ## Related
 
-- [AddInfrastructure](./data-menu.md) — the dialog that starts a new infrastructure record
+- [AddInfrastructure](./data-menu.md): the dialog that starts a new infrastructure record
 - [useInfrastructure / useCreateInfrastructure](../hooks/infrastructures.md)
 - [Infrastructure data model](../architecture/data-model.mdx#infrastructure)

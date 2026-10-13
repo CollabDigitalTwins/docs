@@ -8,7 +8,7 @@ title: Middleware
 
 # Middleware
 
-CDT uses the term "middleware" to describe the layer between UI components and application state — specifically the combination of React Context, reducers, and action creators that ensure components remain purely presentational.
+CDT uses the term "middleware" to describe the layer between UI components and application state. Specifically, it is the combination of React Context, reducers, and action creators that ensure components remain purely presentational.
 
 > This is distinct from Next.js route middleware (`middleware.ts`). CDT does not currently use a Next.js middleware file.
 
@@ -38,7 +38,7 @@ User interaction
   Component re-renders
 ```
 
-State flows in one direction. Components never mutate state directly — they describe *what happened* and the reducer decides *what changes*.
+State flows in one direction. Components never mutate state directly. They describe *what happened* and the reducer decides *what changes*.
 
 ## Anatomy of a Middleware Slice
 
@@ -98,7 +98,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
 ## Using Middleware in a Component
 
-Import the context, destructure `state` and `dispatch`, and call `dispatch` on interaction. The component does not know how the state changes — only that an action occurred.
+Import the context, destructure `state` and `dispatch`, and call `dispatch` on interaction. The component does not know how the state changes, only that an action occurred.
 
 ```tsx
 import { MapContext } from '@collabdt/core/core/store/Map/context'
@@ -116,12 +116,12 @@ export default function MapStyleMenu() {
 
 ## Adding a New Slice
 
-1. Create `@collabdt/core/store/<Domain>/reducer.ts` — define state type, action payload map, and reducer.
-2. Create `@collabdt/core/store/<Domain>/context.tsx` — define the context and provider.
+1. Create `@collabdt/core/store/<Domain>/reducer.ts` and define the state type, action payload map, and reducer.
+2. Create `@collabdt/core/store/<Domain>/context.tsx` and define the context and provider.
 3. Register the provider in `CombineProviders.tsx`.
 4. Export from `@collabdt/core/store/index.ts`.
 
 ## Related
 
-- [State Management](./state-management.mdx) — full provider list, CombineProviders, and key files
-- [Authorization](../authorization/authorization_roles_permissions.md) — how CASL integrates with the Permissions provider
+- [State Management](./state-management.mdx): full provider list, CombineProviders, and key files
+- [Authorization](../authorization/authorization_roles_permissions.md): how CASL integrates with the Permissions provider

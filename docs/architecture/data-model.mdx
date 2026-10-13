@@ -30,6 +30,9 @@ Key fields:
 | `buildingProjectType` | `BuildingProjectType?` | Modification, renovation, new build, etc. |
 | `buildingGeometryStyle` | `BuildingGeometryStyle?` | `Complex`, `Simple`, or `Apartment` |
 | `featureId` | `string?` | External GIS feature identifier |
+| `buildingOsmId` | `string?` | OpenStreetMap footprint the building was picked from |
+| `buildingGeometry` | `Json?` | Drawn footprint as a GeoJSON `Polygon`. When set, the map draws the building from it and hides its OSM footprint |
+| `buildingStoreyNum` | `number?` | Storey count, also used to extrude the footprint on the map |
 | `buildingParentSiteId` | `number?` | Site this building belongs to |
 
 ### Site

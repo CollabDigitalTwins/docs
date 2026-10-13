@@ -35,6 +35,6 @@ See [Shared conventions](./overview.md#shared-conventions) for permissions.
 
 - [Map Viewer](../guides/map-viewer.md)
 - [BIM Viewer](../guides/bim-viewer.md)
-- [DataMenu](./data-menu.md) — data management views
-- [Toolbar](./toolbar.md) — viewer toolbar controls
-- [State Management](../architecture/state-management.mdx) — `MenusContext` and `BuildingsContext`
+- [DataMenu](./data-menu.md): data management views
+- [Toolbar](./toolbar.md): viewer toolbar controls
+- [State Management](../architecture/state-management.mdx): `MenusContext` and `BuildingsContext`

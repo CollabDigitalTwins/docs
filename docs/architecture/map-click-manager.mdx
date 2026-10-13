@@ -2,20 +2,20 @@
 sidebar_position: 11
 displayed_sidebar: developerSidebar
 title: Map Click Manager
-description: Priority-based click dispatch system for the map viewer — how layers register handlers and how conflicts are resolved.
+description: "Priority-based click dispatch system for the map viewer: how layers register handlers and how conflicts are resolved."
 ---
 
 <AudienceNotice home="developers" also="deployment" />
 
 # Map Click Manager
 
-`MapClickManager` is a priority-based click dispatch system for the MapLibre map viewer. When the user clicks the map, exactly one handler fires — the one with the highest priority whose layer contains a rendered feature at the click point.
+`MapClickManager` is a priority-based click dispatch system for the MapLibre map viewer. When the user clicks the map, exactly one handler fires: the one with the highest priority whose layer contains a rendered feature at the click point.
 
 Source: `@collabdt/core/core/components/viewers/map/utils/MapEventManager/MapClickManager.ts`
 
 ## Problem it solves
 
-MapLibre fires a single `click` event for the whole map. Multiple layers may have rendered features at the same point (e.g., a building marker and an open data polygon overlap). Without a priority system, all registered handlers would fire — or the last one registered would win by accident.
+MapLibre fires a single `click` event for the whole map. Multiple layers may have rendered features at the same point (e.g., a building marker and an open data polygon overlap). Without a priority system, all registered handlers would fire, or the last one registered would win by accident.
 
 `MapClickManager` makes priority explicit and deterministic.
 
@@ -31,7 +31,7 @@ export enum MapLayerClickPriority {
   OpenDataLayerClickPriority  = 350,
   FileLayerClickPriority      = 400,
   BimModelLayerPriority       = 600,
-  ActiveTool                  = 1000, // special — see below
+  ActiveTool                  = 1000, // special, see below
 }
 ```
 
@@ -106,7 +106,7 @@ private handleMapClick(e: maplibregl.MapMouseEvent) {
 
 ## Adding a new layer with click behaviour
 
-1. Choose a priority from `MapLayerClickPriority`. If none fits, add a new enum value — leave a comment explaining the ordering rationale.
+1. Choose a priority from `MapLayerClickPriority`. If none fits, add a new enum value and leave a comment explaining the ordering rationale.
 2. Use the layer's MapLibre `layerId` string as the registration key.
 3. Register on mount, unregister on unmount.
 4. If implementing a tool (not a passive layer), use `ActiveTool` and ensure you call `unregister` when the tool is deactivated.
@@ -126,5 +126,5 @@ private handleMapClick(e: maplibregl.MapMouseEvent) {
 
 ## Related
 
-- [Map Layers](./map-layers.mdx) — all layers that use this system
-- [State Management](./state-management.mdx) — `MapProvider` holds the `MapClickManager` instance
+- [Map Layers](./map-layers.mdx): all layers that use this system
+- [State Management](./state-management.mdx): `MapProvider` holds the `MapClickManager` instance

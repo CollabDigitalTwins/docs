@@ -1,23 +1,23 @@
 /**
  * PlatformArchitecture.tsx
- * Collab Digital Twins — full-stack platform architecture diagram.
+ * Collab Digital Twins: full-stack platform architecture diagram.
  *
  * Self-contained React + TypeScript component. Extend by editing the
  * LAYERS / EDGES constants in ./src/data.ts. Edges auto-route orthogonally
  * with rounded corners; hovering a node highlights its neighborhood.
  *
  * File layout under ./src:
- *   types.ts        — FlowKind, Theme, Node, Layer, Edge, …
- *   theme.ts        — THEMES + kindVar / kindSoft / kindName helpers
- *   kindIcons.tsx   — inline SVG node-kind glyphs
- *   techLogos.tsx   — bridge to HomepageFeatures/logos + local adapters
- *   data.ts         — DEFAULT_LAYERS + DEFAULT_EDGES
- *   router.ts       — orthogonal routing (pure function)
- *   LogoChip.tsx    — tech-chip pill
- *   NodeCard.tsx    — card for a single node
- *   LayerRow.tsx    — one layer (label column + node row)
- *   EdgeOverlay.tsx — SVG overlay that draws every edge
- *   Legend.tsx      — collapsible flow-filter legend
+ *   types.ts:        FlowKind, Theme, Node, Layer, Edge, …
+ *   theme.ts:        THEMES + kindVar / kindSoft / kindName helpers
+ *   kindIcons.tsx:   inline SVG node-kind glyphs
+ *   techLogos.tsx:   bridge to HomepageFeatures/logos + local adapters
+ *   data.ts:         DEFAULT_LAYERS + DEFAULT_EDGES
+ *   router.ts:       orthogonal routing (pure function)
+ *   LogoChip.tsx:    tech-chip pill
+ *   NodeCard.tsx:    card for a single node
+ *   LayerRow.tsx:    one layer (label column + node row)
+ *   EdgeOverlay.tsx: SVG overlay that draws every edge
+ *   Legend.tsx:      collapsible flow-filter legend
  */
 
 import {

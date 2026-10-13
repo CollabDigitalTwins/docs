@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────
-   CDT — Digital Twin Maturity Model
+   CDT Digital Twin Maturity Model
    Docusaurus React component.
 
    Used from the Concepts page:
@@ -26,7 +26,7 @@ const MM_LEVELS = [
     name: 'Descriptive',
     tagline: 'Map what exists.',
     summary:
-      'A static digital representation of physical assets. The twin documents geometry, location, and metadata — but does not yet reflect real-world change.',
+      'A static digital representation of physical assets. The twin documents geometry, location, and metadata, but does not yet reflect real-world change.',
     capabilities: [
       {
         tier: 1,
@@ -112,7 +112,7 @@ const MM_LEVELS = [
     name: 'Autonomous',
     tagline: 'Let the system act.',
     summary:
-      'The twin closes the loop — sensing, deciding, and acting with minimal human intervention as it interacts with its environment.',
+      'The twin closes the loop by sensing, deciding, and acting with minimal human intervention as it interacts with its environment.',
     capabilities: [
       {
         tier: 5,

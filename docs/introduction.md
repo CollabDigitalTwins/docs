@@ -34,10 +34,10 @@ You want to run CDT on your own infrastructure or evaluate a hosted deployment.
 
 Infrastructure for managing the relationship between a physical environment and its digital representation over time. It combines:
 
-- **Two integrated viewers** — a MapLibre web map and an IFC BIM viewer (That Open Engine) that also draws point clouds, sharing one coordinate system so a building uploaded in 3D appears in the right place on the map.
-- **Open data integration** — a federated catalogue of national, provincial, and municipal portals, fetched live and overlaid on the map.
-- **Live data feedback loops** — IoT and sensor feeds linked to BIM elements or to any point on the map, so design models become operational digital twins.
-- **Multi-tenant collaboration** — organizations, role-based permissions, threaded comments, and BCF issue tracking.
+- **Two integrated viewers**: a MapLibre web map and an IFC BIM viewer (That Open Engine) that also draws point clouds, sharing one coordinate system so a building uploaded in 3D appears in the right place on the map.
+- **Open data integration**: a federated catalogue of national, provincial, and municipal portals, fetched live and overlaid on the map.
+- **Live data feedback loops**: IoT and sensor feeds linked to BIM elements or to any point on the map, so design models become operational digital twins.
+- **Multi-tenant collaboration**: organizations, role-based permissions, threaded comments, and BCF issue tracking.
 
 The [Concepts](./concepts/digital-twins.mdx) section covers the background: digital twins, BIM, GIS, point clouds, and the open standards CDT builds on.
 

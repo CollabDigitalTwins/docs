@@ -98,7 +98,7 @@ export const MartinLogo: FC<{ s?: number }> = ({ s = 18 }) => (
   />
 );
 
-/** LAS / LAZ point-cloud format marker — shared cloud glyph.
+/** LAS / LAZ point-cloud format marker, shared cloud glyph.
  *  Uses a solid dark stroke so it reads clearly on the white logo chip
  *  (currentColor resolves to the light text color and is barely visible). */
 export const PointCloudFormatIcon: FC<{ s?: number; fg?: string }> = ({ s = 18 }) => (

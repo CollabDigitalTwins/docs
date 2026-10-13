@@ -25,5 +25,5 @@ See [Shared conventions](./overview.md#shared-conventions) for permissions.
 
 ## Related
 
-- [Sidebar](./app-sidebar.md) — sidebar context provider and hooks
-- [MenusContext](../architecture/state-management.mdx) — viewer state management
+- [Sidebar](./app-sidebar.md): sidebar context provider and hooks
+- [MenusContext](../architecture/state-management.mdx): viewer state management

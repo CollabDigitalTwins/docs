@@ -101,6 +101,6 @@ The strip is a hand-written tablist rather than the `Tabs` primitive in `compone
 
 ## Related
 
-- [NavigationBar](./top-navigation-bar.md) — owns the button that opens this sidebar.
+- [NavigationBar](./top-navigation-bar.md): owns the button that opens this sidebar.
 - [Viewer](./viewer.md)
-- [State Management](../architecture/state-management.mdx) — the `Menus` store that holds `selectedTab`.
+- [State Management](../architecture/state-management.mdx): the `Menus` store that holds `selectedTab`.

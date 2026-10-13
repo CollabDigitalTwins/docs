@@ -48,7 +48,7 @@ keeps them out of the JavaScript bundle. Adding the prefix to a secret, such as
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `AUTH_SECRET` | NextAuth signing secret. Must be at least 32 random characters. Generate with `openssl rand -base64 32`. | `…` |
-| `AUTH_URL` | Public URL of the application — used for callback URLs. | `https://app.example.com` |
+| `AUTH_URL` | Public URL of the application, used for callback URLs. | `https://app.example.com` |
 | `AUTH_TRUST_HOST` | Set `true` when running behind a reverse proxy. | `true` |
 | `AUTH_GOOGLE_ID` | Google OAuth client ID (only if Google sign-in is enabled). | `…apps.googleusercontent.com` |
 | `AUTH_GOOGLE_SECRET` | Google OAuth client secret. | `…` |
@@ -69,14 +69,14 @@ Required for sending multi-factor authentication codes at sign-in.
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `GEOCODE_EARTH_API_KEY` | Geocode Earth API key for address search (hosted Pelias). Highest-quality results; used when set. Optional — see the geocoder fallback below. | `ge-…` |
+| `GEOCODE_EARTH_API_KEY` | Geocode Earth API key for address search (hosted Pelias). Highest-quality results; used when set. Optional; see the geocoder fallback below. | `ge-…` |
 | `GEOCODER_URL` | Base URL of a self-hosted Pelias-compatible geocoder (no key, same response format). Used when no Geocode Earth key is set. | `https://pelias.example.com` |
 | `PHOTON_URL` | Photon autocomplete endpoint for the key-free public fallback. Defaults to the public instance. | `https://photon.komoot.io` |
 | `NOMINATIM_URL` | Nominatim reverse-geocoding endpoint for the key-free public fallback. Defaults to the public instance. | `https://nominatim.openstreetmap.org` |
 | `RECAPTCHA_SITE_KEY` | Google reCAPTCHA v3 public site key for the sign-in form. | `…` |
 | `RECAPTCHA_SECRET_KEY` | reCAPTCHA secret key. | `…` |
 
-**Geocoder provider selection:** the geocoder variables resolve in priority order — Geocode Earth (if a key is set) → self-hosted Pelias (`GEOCODER_URL`) → free public OpenStreetMap services (Photon for autocomplete, Nominatim for reverse). Address search therefore works out of the box with no key; set a key or self-hosted URL for higher quality and to avoid the public instances' rate limits. See [Self-Hosting → Geocoding](../deployment/self-hosting.md#geocoding-address-search) for the full table.
+**Geocoder provider selection:** the geocoder variables resolve in priority order: Geocode Earth (if a key is set) → self-hosted Pelias (`GEOCODER_URL`) → free public OpenStreetMap services (Photon for autocomplete, Nominatim for reverse). Address search therefore works out of the box with no key; set a key or self-hosted URL for higher quality and to avoid the public instances' rate limits. See [Self-Hosting → Geocoding](../deployment/self-hosting.md#geocoding-address-search) for the full table.
 
 ## Tile and asset URLs
 
@@ -84,9 +84,9 @@ Required for sending multi-factor authentication codes at sign-in.
 |----------|-------------|---------|
 | `MARTIN_SERVER_URL` | Public base URL of the Martin tile server. | `https://tiles.example.com` |
 | `POINTCLOUD_API_URL` | Base URL of the point cloud conversion and streaming service. Required to upload or render point clouds in the BIM viewer. | `https://pointcloud.example.com` |
-| `MAPTILER_KEY` | Your deployment's own [MapTiler](https://cloud.maptiler.com) key, used for satellite imagery, terrain elevation, map fonts, administrative boundaries and building footprints. Optional — see the basemap fallback below. | `INSERT_YOUR_OWN_API_KEY` |
+| `MAPTILER_KEY` | Your deployment's own [MapTiler](https://cloud.maptiler.com) key, used for satellite imagery, terrain elevation, map fonts, administrative boundaries and building footprints. Optional; see the basemap fallback below. | `INSERT_YOUR_OWN_API_KEY` |
 
-**Basemap provider selection:** with `MAPTILER_KEY` set, the CDT platform requests imagery, elevation, fonts and building tiles from MapTiler on that key, and every built-in style is available. Unset, each source falls back to a key-free provider — Esri World Imagery for satellite, the open terrarium tiles for elevation, the OpenMapTiles font CDN for labels — and building footprints and administrative boundaries fall back to MapTiler's placeholder key, which only answers on `localhost`. The map therefore works out of the box for local development; production deployments should set their own key. See [Self-Hosting → Basemaps](../deployment/self-hosting.md#basemaps-imagery-terrain-and-buildings).
+**Basemap provider selection:** with `MAPTILER_KEY` set, the CDT platform requests imagery, elevation, fonts and building tiles from MapTiler on that key, and every built-in style is available. Unset, each source falls back to a key-free provider (Esri World Imagery for satellite, the open terrarium tiles for elevation, the OpenMapTiles font CDN for labels), and building footprints and administrative boundaries fall back to MapTiler's placeholder key, which only answers on `localhost`. The map therefore works out of the box for local development; production deployments should set their own key. See [Self-Hosting → Basemaps](../deployment/self-hosting.md#basemaps-imagery-terrain-and-buildings).
 
 ## Platform and operations
 
@@ -104,7 +104,7 @@ Required for sending multi-factor authentication codes at sign-in.
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `MEMCACHE_SERVER` | Memcache server address. Optional — used for cross-process caching when multiple Next.js workers run. | `memcache.example.com:11211` |
+| `MEMCACHE_SERVER` | Memcache server address. Optional, used for cross-process caching when multiple Next.js workers run. | `memcache.example.com:11211` |
 | `MEMCACHE_USERNAME` | Memcache username. | `cdt` |
 | `MEMCACHE_PASSWORD` | Memcache password. | `…` |
 
@@ -122,10 +122,10 @@ A handful of variables behave differently between local development and producti
 
 ## Security notes
 
-- **Never commit `.env`** — it is listed in `.gitignore` for a reason.
-- **Rotate `AUTH_SECRET`** if it is ever logged or shared — invalidates all existing sessions.
+- **Never commit `.env`**. It is listed in `.gitignore` for a reason.
+- **Rotate `AUTH_SECRET`** if it is ever logged or shared. Rotating it invalidates all existing sessions.
 - **Use different credentials in production** than the defaults from `.env.example`.
-- **Restrict MinIO and PostgreSQL ports** in production — only the application server needs to reach them.
+- **Restrict MinIO and PostgreSQL ports** in production. Only the application server needs to reach them.
 
 ## Related
 

@@ -20,8 +20,8 @@ The **Data URL** field is fetched verbatim with no prefix added, so paste the fu
 
 **Data Format** controls how the response is parsed:
 
-- **Csv** — header-less `time,value` rows.
-- **Json** — auto-detects the response shape and reads OGC SensorThings data: an STA Datastream (`?format=sta`), a compact `dataArray` (`?format=dataarray`), or a single `reading` (`?format=reading`).
+- **Csv**: header-less `time,value` rows.
+- **Json**: auto-detects the response shape and reads OGC SensorThings data: an STA Datastream (`?format=sta`), a compact `dataArray` (`?format=dataarray`), or a single `reading` (`?format=reading`).
 
 Use `?format=sta` when the source supports it. It is the only windowed format that carries a unit, from `unitOfMeasurement.symbol`; `dataarray` returns history but no unit, and `reading` returns only the current value with no history. When a unit is available it appears next to the value in the chart.
 
@@ -41,7 +41,7 @@ Cards and charts render times in a **display timezone**, derived from the curren
 
 Open a sensor's **expanded view** with the expand tool on the card's action row, available in the sidebar and the map popup. It adds:
 
-- **Time-range presets** — All, Last day, Last hour, plus a **Custom** range set by dragging the navigator brush under the chart. Presets apply to the comparison charts too, each with its own brush.
+- **Time-range presets**: All, Last day, Last hour, plus a **Custom** range set by dragging the navigator brush under the chart. Presets apply to the comparison charts too, each with its own brush.
 - **A timezone selector** that changes the display zone for every sensor time across the app.
 - **A metadata panel** that, for an OGC SensorThings Datastream, lists the observation type, observed property and its definition link, unit and unit definition, phenomenon-time interval, observation count, and generator properties.
 
@@ -52,7 +52,7 @@ Hovering the chart shows a tooltip with the reading's value and its time in the 
 Each **sensor type** carries a value range (`minValue`, `maxValue`) and a three-stop colour ramp (`minColour`, `midColour`, `maxColour`). One value-to-colour mapping drives everything, so the same colour always means the same reading:
 
 - **The chart fill** is a gradient stretched over the type's range rather than the plot box, so a colour partway up the area corresponds to an actual value. Readings beyond the range clamp to the end colours.
-- **Marker halos** — focus a sensor and every sensor of that type gets a halo coloured by its own current reading, so you can scan the model or map for highs and lows without opening any of them.
+- **Marker halos**: focus a sensor and every sensor of that type gets a halo coloured by its own current reading, so you can scan the model or map for highs and lows without opening any of them.
 - **The focused sensor** gets a thicker ring rather than a different colour, since colour is carrying the value.
 - **The legend** sits bottom-left in both viewers, in the same card stack as the layers card, showing the active type, the focused sensor's reading, the ramp as a bar, the range's low/middle/high values, and a caret marking where the current reading falls.
 - **Sidebar rows** ring each sensor's icon in the colour of its current reading, with the reading printed under the name. Every listed sensor gets one, so the panel doubles as a status list. Colours resolve per type, so a reading reads high or low against its own type's range and is not comparable across types.
@@ -60,6 +60,8 @@ Each **sensor type** carries a value range (`minValue`, `maxValue`) and a three-
 A type with no colours configured, or with `minValue` equal to `maxValue`, has nothing meaningful to map: no halos are drawn and the chart stays plain. The legend still opens so you can pick another type, showing a "no colour range configured" note in place of the ramp.
 
 #### Showing and hiding the legend
+
+The switch beside the sidebar's search box turns every listed type, or every tag when grouped by tag, on or off at once.
 
 Switching a sensor type on in the sidebar is also how you choose what the legend explains. The card, the marker halos and the map's building colours all appear immediately, without clicking a sensor first, and switching the type off releases them.
 
@@ -96,6 +98,8 @@ The usual building details return when no sensor type is active.
 ### Comparing sensors of the same type
 
 The expanded view has a scope control beside the time-range presets, scoping both charts below it at once: **This sensor** (the single-sensor area chart), **All of type**, or **By tag**, which narrows to one tag so you can compare a floor, a zone, or an equipment group.
+
+Comparison only reaches the sensors the sidebar lists: on the map, map sensors; in the BIM viewer, the sensors of the building that is open.
 
 With more than one sensor in scope you get two charts:
 

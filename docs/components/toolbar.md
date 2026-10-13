@@ -28,5 +28,5 @@ The toolbar is fixed at the bottom centre and sits above viewer content via `z-1
 
 ## Related
 
-- [BIM Viewer Tools](./bim-tools.md) — the tools `useBimToolbarTools()` supplies
-- [Menubar](https://ui.shadcn.com/docs/components/radix/menubar) — the container primitive
+- [BIM Viewer Tools](./bim-tools.md): the tools `useBimToolbarTools()` supplies
+- [Menubar](https://ui.shadcn.com/docs/components/radix/menubar): the container primitive

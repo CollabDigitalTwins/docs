@@ -47,7 +47,7 @@ export const PostGisLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/postgis.svg" alt="PostGIS" style={assetLogoStyle(size)} />
 );
 
-/* Prisma — angled monolith */
+/* Prisma: angled monolith */
 export const PrismaLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/prisma_logo.svg" alt="Prisma" style={assetLogoStyle(size)} />
 );
@@ -94,7 +94,7 @@ export const ThreeLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/three-logo.svg" alt="three.js" style={assetLogoStyle(size)} />
 );
 
-/* Martin — MapLibre vector tile server */
+/* Martin: MapLibre vector tile server */
 export const MartinLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/martin-logo.svg" alt="Martin" style={assetLogoStyle(size)} />
 );
@@ -114,7 +114,7 @@ export const PotreeLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/potree-logo.png" alt="Potree" style={assetLogoStyle(size)} />
 );
 
-/* Spark — Gaussian splat renderer for three.js */
+/* Spark: Gaussian splat renderer for three.js */
 export const SparkLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/sparkjs.svg" alt="Spark" style={assetLogoStyle(size)} />
 );

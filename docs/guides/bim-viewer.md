@@ -45,7 +45,9 @@ Every upload shows the same progress bar, both on the row and as a toast, moving
 
 ## Inspect element properties
 
-Click any element in the 3D scene. The right panel populates with entity attributes and geometry, property sets (Psets), quantity sets (Qsets), material assignments, associated `IfcTask` entries, and spatial container relationships.
+Click any element in the 3D scene. The right panel populates with entity attributes and geometry, property sets (Psets), quantity sets (Qsets), material assignments, associated `IfcTask` entries, and spatial container relationships. Identity Data starts with the **File** the element came from, which helps when several models are loaded.
+
+A pick needs a quick click that stays in place, so orbiting or panning the view never opens the properties panel.
 
 Use the search field to filter large property trees. Hold **Shift** and click multiple elements to compare attributes side by side, and click **Export** to save the current selection's properties as JSON or CSV.
 
@@ -111,6 +113,8 @@ Rows show each element's **name** (`Basic Wall:Generic 200mm`) with its IFC clas
 
 The classes view groups the same elements by what they *are* rather than where they sit: one row per IFC class (`IFCWALL`, `IFCSLAB`, `IFCDOOR`, …) with the number of elements in it. Class names are shown exactly as the IFC defines them, in every language. Only classes that have geometry are listed.
 
+With more than one IFC file loaded, the picker in the view's toolbar narrows the list to one file. The counts, switches and colours then cover that file only, so hiding `IFCWALL` hides the walls of the file you picked and leaves the others standing.
+
 :::note Classes hidden by default
 
 Three classes start hidden, because their geometry envelops the building and would obscure everything behind it:
@@ -133,12 +137,13 @@ Every row in both views supports the same actions:
 
 | Action | How | Effect |
 |--------|-----|--------|
-| **Select** | Click the row | Highlights the element(s) in 3D and opens the properties panel |
+| **Expand** | Click the row | Opens or closes the row's children |
+| **Select** | The pointer button (appears on hover) | Highlights the element(s) in 3D and opens the properties panel |
 | **Hide / show** | The row's switch | Toggles visibility of the row and everything under it |
 | **Isolate** | The crosshair button (appears on hover) | Hides everything else |
 | **Recolour / fade** | The small circle at the left of the row | Sets a colour and an opacity for the row and everything under it |
 
-These act across **all loaded models**, so isolating `IFCWALL` leaves only walls in a federated set. Use the eye button in the view's toolbar, or **Selection → Show all** in the viewer toolbar, to bring everything back.
+These act across **all loaded models**, unless the classes view is narrowed to one file, so isolating `IFCWALL` leaves only walls in a federated set. Use the eye button in the view's toolbar, or **Selection → Show all** in the viewer toolbar, to bring everything back.
 
 The search box at the top of the tab filters both groups at once and opens the branches leading to each match.
 
@@ -149,6 +154,8 @@ Every row carries a small circle at its left. It stays an empty outline until yo
 Click it to open the picker: a colour well and an opacity slider. Both are optional and independent, so you can tint a class without fading it, or fade a storey while it keeps its own colours. **Reset** in the picker clears just that row.
 
 Colouring cascades. Tint a storey in the **Spatial** view and everything inside it takes the colour; a wall you had already coloured separately keeps its own, whichever order you set the two in. Setting only an opacity on that wall leaves it the storey's colour and fades it.
+
+To colour or fade a whole file, open its **⋮** menu in the **Files** tab and choose **Colour and opacity**. It opens the same picker and works with undo. Where a file colour and a class or storey colour cover the same element, the one you set most recently wins.
 
 The two views can name the same element, since `IFCWALL` and a storey overlap. Whichever view you touched most recently wins the overlap, and undoing that change hands the elements back to the other view.
 
@@ -214,7 +221,7 @@ Upload a `.dxf` to overlay a 2D drawing inside the 3D scene. The platform parses
 
 ## Related
 
-- [Concepts → BIM & IFC](../concepts/bim-and-ifc.mdx) — what IFC, IDS, BCF and bSDD are
+- [Concepts → BIM & IFC](../concepts/bim-and-ifc.mdx): what IFC, IDS, BCF and bSDD are
 - [File Management](./file-management.md)
 - [Collaboration → BCF Topics](./collaboration.md)
 - [Components → BIM Tools](../components/bim-tools.md)

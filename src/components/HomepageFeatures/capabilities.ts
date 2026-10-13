@@ -16,7 +16,7 @@ export const CAPABILITIES: Capability[] = [
     Icon: BookOpenIcon,
     title: 'Platform Overview',
     description:
-      'Understand the CDT architecture — geospatial layers, BIM models, and the multi-scale data model.',
+      'Understand the CDT architecture: geospatial layers, BIM models, and the multi-scale data model.',
     href: '/docs/architecture/overview',
   },
   {
@@ -30,14 +30,14 @@ export const CAPABILITIES: Capability[] = [
     Icon: GlobeIcon,
     title: 'Open Standards',
     description:
-      'Built on CityGML, IFC, and OGC APIs. No proprietary lock-in — your data stays yours.',
+      'Built on CityGML, IFC, and OGC APIs. No proprietary lock-in. Your data stays yours.',
     href: '/docs/concepts/open-standards',
   },
   {
     Icon: UsersIcon,
     title: 'Collaboration',
     description:
-      'Multi-user sessions, comments, and shared views — built for interdisciplinary teams.',
+      'Multi-user sessions, comments, and shared views, built for interdisciplinary teams.',
     href: '/docs/authorization/overview',
   },
   {

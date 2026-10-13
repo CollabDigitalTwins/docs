@@ -58,7 +58,7 @@ WebGL-based viewer for IFC (Industry Foundation Classes) building models.
 
 Point cloud renderer for LiDAR scans and photogrammetry datasets, driven as an object inside the BIM viewer's Three.js scene.
 
-- **Structure:** Octree LOD (level-of-detail) — only visible geometry is loaded
+- **Structure:** Octree LOD (level-of-detail), so only visible geometry is loaded
 - **Performance:** Handles billions of points with flythrough smoothness
 - **Styling:** Height-based or intensity-based coloring
 - **Export:** Crop and download clips as LAS/LAZ
@@ -109,7 +109,7 @@ export function AppProvider({ children, runtimeConfig, plugins, enabledSlugs, co
 ```
 
 `AppConfigProvider` sits outside the composed set because it takes a `runtimeConfig` prop, and
-`PluginHostProvider` sits inside it for the same reason — `compose` only threads `children`.
+`PluginHostProvider` sits inside it for the same reason: `compose` only threads `children`.
 
 `AppProvider` is rendered once at the application root and gives every component access to every context without prop drilling. See [State Management](./state-management.mdx) for the full pattern (state, actions, reducers, and consumption).
 
@@ -129,7 +129,7 @@ export function AppProvider({ children, runtimeConfig, plugins, enabledSlugs, co
 | **FilesProvider** | Upload queue, progress, error state | `useFilesContext()` |
 | **BuildingsProvider** | Selected building, cached properties, compare tray | `useBuildingsContext()` |
 
-`MenusProvider` is the one most relevant to the data pages — besides menu state it owns
+`MenusProvider` is the one most relevant to the data pages. Besides menu state, it owns
 `currentViewer`, the `table`/`detail` toggle, and the current selection for every entity type.
 See [Data Pages](./data-pages.mdx).
 
@@ -160,7 +160,7 @@ export const useBuilding = (id: number | null) => useCoreHooks().building.useBui
 SWR keys are **arrays, not URL strings** (`["buildings"]`, `["building", id]`), so the cache is
 keyed on identity rather than on the endpoint that served it. Mutations revalidate by key.
 
-All API calls normalize through `/api` — the HTTP adapter masks server/client boundaries. See
+All API calls normalize through `/api`, and the HTTP adapter masks server/client boundaries. See
 [Data Pages](./data-pages.mdx) for the full path from a table row back to Prisma.
 
 ### Real-Time: WebSocket (Future)
@@ -234,7 +234,7 @@ Both viewers share the same chrome:
 ## Data Pages
 
 Buildings, sites, files, infrastructure and users are **not separate routes**. The whole
-authenticated app is one route — `src/app/[instance]/page.tsx` — rendering one `<Viewer>` that
+authenticated app is one route (`src/app/[instance]/page.tsx`) rendering one `<Viewer>` that
 swaps content based on a `?viewer=` search param. All five entity pages are the same component,
 `DataMenu`, in different modes.
 
@@ -255,5 +255,5 @@ See [Internationalization](./internationalization.mdx) for full i18n architectur
 - **Viewer refs:** Viewers (MapLibre, That Open Company) maintain internal mutation state. Store refs in `useRef`, not state.
 - **State sync:** Map viewport + building selection must stay in sync across panels. Use `useEffect` dependencies carefully.
 - **Memory:** Large IFC/point cloud files load into browser memory. Monitor DevTools → Memory for leaks on viewer switches.
-- **Permissions:** UI controls hide via `PermissionsProvider`, but always verify on API side — frontend checks are for UX only.
+- **Permissions:** UI controls hide via `PermissionsProvider`, but always verify on API side. Frontend checks are for UX only.
 

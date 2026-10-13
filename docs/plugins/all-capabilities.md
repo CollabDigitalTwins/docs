@@ -308,7 +308,7 @@ Three common mistakes:
 
 - **Re-add on `styledata`, not only once.** Switching the basemap replaces the style and silently drops every source and layer added before it.
 - **Guard both cleanup calls.** The style can be torn down before cleanup runs, and removing a layer that is already gone throws. A source left behind makes the next mount fail on a duplicate id.
-- **`maplibre-gl` cannot be imported as a runtime value,** so `new maplibregl.Marker()` and `new maplibregl.Popup()` are unavailable. The platform shims four packages this way — `three`, `@thatopen/components`, `maplibre-gl` and `lucide-react` — because a second copy of any of them breaks the viewer. Type-only imports are fine and expected. A GeoJSON source with a circle or symbol layer does the same job and pans and zooms on the GPU for free. A popup can be built by portalling an element into `map.getContainer()` and positioning it with `map.project()`.
+- **`maplibre-gl` cannot be imported as a runtime value,** so `new maplibregl.Marker()` and `new maplibregl.Popup()` are unavailable. The platform shims four packages this way (`three`, `@thatopen/components`, `maplibre-gl` and `lucide-react`) because a second copy of any of them breaks the viewer. Type-only imports are fine and expected. A GeoJSON source with a circle or symbol layer does the same job and pans and zooms on the GPU for free. A popup can be built by portalling an element into `map.getContainer()` and positioning it with `map.project()`.
 
 Update features with `setData` rather than removing and re-adding the layer, or they flicker on every change.
 
@@ -520,6 +520,17 @@ Every read hook returns its payload plus `isLoading` and `isError`. A list hook 
 | Files | `useFiles`, `useFile`, `useFilesByBuildingId`, `useFilesBySiteId`, `useDownloadFile` |
 | Sensors | `useSensors`, `useSensor`, `useSensorsByBuilding`, `useSensorsByAuthor`, `useSensorTypes`, `useSensorType` |
 | Comments | `useComments`, `useComment`, `useCommentsByBuilding`, `useCommentsByAuthor` |
+
+`usePluginUser()` returns the signed-in person as a `PluginUser` (`{ id, name }`), or `null` while the session loads or when nobody is signed in. Use it to record who did something, such as who booked a room:
+
+```tsx
+import { usePluginUser } from '@collabdt/core/plugins-sdk/data'
+
+const user = usePluginUser()
+const bookedBy = user?.name ?? 'Unknown'
+```
+
+The id is for attribution only. The server already knows who is calling, so never send it as proof of identity.
 
 Buildings and sites are read-only to a plugin: they are canonical asset records, so changing one is a change to CDT rather than to a plugin. Sensors and comments are the domains plugins are expected to author, and they have `useCreateSensor`, `useCreateComment` and `useDeleteComments`. A plugin's own records go in `usePluginStore`.
 

@@ -1,12 +1,12 @@
 ---
 title: Contributing
-description: How to contribute to CDT — reporting bugs, suggesting features, writing code, and improving documentation.
+description: "How to contribute to CDT: reporting bugs, suggesting features, writing code, and improving documentation."
 sidebar_position: 1
 ---
 
 # Contributing
 
-Thanks for taking the time to contribute to Collab Digital Twins. All types of contributions are encouraged and valued — code, documentation, bug reports, and feature suggestions.
+Thanks for taking the time to contribute to Collab Digital Twins. All types of contributions are encouraged and valued: code, documentation, bug reports, and feature suggestions.
 
 If you like the project but do not have time to contribute right now, other ways to help include starring the repository, mentioning CDT at meetups, or referencing it from your own project's readme.
 
@@ -16,9 +16,9 @@ Pick the path that matches what you want to do:
 
 | You want to… | You are a… | Start here |
 |---|---|---|
-| Improve CDT itself — viewers, components, hooks, fixes | **Core contributor** | [Dev Environment Setup](./dev-environment.md) → PR to [`@collabdt/core`](https://github.com/CollabDigitalTwins/core) |
+| Improve CDT itself (viewers, components, hooks, fixes) | **Core contributor** | [Dev Environment Setup](./dev-environment.md) → PR to [`@collabdt/core`](https://github.com/CollabDigitalTwins/core) |
 | Extend CDT with your own tool or feature | **Plugin creator** | [Plugins overview](../plugins/overview.md) → [Create your first plugin](../plugins/create-your-first-plugin.md) |
-| Run CDT on your own infrastructure | **Self-hoster** | [Self-hosting guide](../deployment/self-hosting.md) — Docker image + compose, no build required |
+| Run CDT on your own infrastructure | **Self-hoster** | [Self-hosting guide](../deployment/self-hosting.md): Docker image + compose, no build required |
 
 All three build on the same open foundation: the [`@collabdt/core`](https://github.com/CollabDigitalTwins/core)
 library and the published CDT Docker images. Merged core and plugin
@@ -26,7 +26,7 @@ contributions ship to every CDT deployment with the next platform release.
 
 ## I have a question
 
-Before opening an issue, search [existing issues](https://github.com/CollabDigitalTwins/core/issues) — someone may have already asked. If you still need clarification:
+Before opening an issue, search [existing issues](https://github.com/CollabDigitalTwins/core/issues), since someone may have already asked. If you still need clarification:
 
 - Open a [new issue](https://github.com/CollabDigitalTwins/core/issues/new).
 - Provide as much context as you can about what you are running into.
@@ -37,7 +37,7 @@ Before opening an issue, search [existing issues](https://github.com/CollabDigit
 ### Before submitting
 
 - Confirm you are on the latest version.
-- **Check whether the bug belongs to a dependency.** CDT is built on Next.js, Prisma, MapLibre, MinIO, PostGIS, and NextAuth.js, among others. If the issue reproduces without CDT-specific code, it likely belongs to that project's own issue tracker — report it there instead. Open a CDT issue only if the bug is specific to how CDT integrates with that dependency.
+- **Check whether the bug belongs to a dependency.** CDT is built on Next.js, Prisma, MapLibre, MinIO, PostGIS, and NextAuth.js, among others. If the issue reproduces without CDT-specific code, it likely belongs to that project's own issue tracker, so report it there instead. Open a CDT issue only if the bug is specific to how CDT integrates with that dependency.
 - Check the [issue tracker](https://github.com/CollabDigitalTwins/core/issues?q=label%3Abug) to see if the bug has already been reported.
 - Collect the following before filing:
   - Stack trace or error output
@@ -47,7 +47,7 @@ Before opening an issue, search [existing issues](https://github.com/CollabDigit
 
 ### How to file a bug report
 
-- Open a [new issue](https://github.com/CollabDigitalTwins/core/issues/new). Do not label it as a bug yet — the team triages it.
+- Open a [new issue](https://github.com/CollabDigitalTwins/core/issues/new). Do not label it as a bug yet; the team triages it.
 - Describe the **expected** behaviour and the **actual** behaviour.
 - Include reproduction steps someone else can follow from scratch.
 - Attach relevant code, logs, or a reduced test case.
@@ -63,7 +63,7 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/Collab
 ### Before submitting
 
 - Confirm you are on the latest version and the feature does not already exist.
-- Search issues to see if it has already been suggested — comment on an existing issue rather than opening a new one.
+- Search issues to see if it has already been suggested. Comment on an existing issue rather than opening a new one.
 - Consider whether the feature is useful to the majority of users. Narrow use cases are better suited to a [plugin](../plugins/overview.md).
 
 ### How to write a good enhancement suggestion
@@ -75,18 +75,18 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/Collab
 
 ## Your first code contribution
 
-1. Set up your local environment — see [Dev Environment Setup](./dev-environment.md).
-2. Fork and clone the repo — see [Git Workflow](./git-workflow.md).
+1. Set up your local environment (see [Dev Environment Setup](./dev-environment.md)).
+2. Fork and clone the repo (see [Git Workflow](./git-workflow.md)).
 3. Create a branch from `dev` named after your feature or issue.
 4. Make your changes, following the [commit message convention](./git-workflow.md#commit-message-convention).
 5. Open a pull request against `dev` with a clear description of what changed and why.
-6. Sign the Contributor License Agreement when prompted on your first pull request — see [below](#contributor-license-agreement-cla).
+6. Sign the Contributor License Agreement when prompted on your first pull request (see [below](#contributor-license-agreement-cla)).
 
 ## Contributor License Agreement (CLA)
 
-CDT is released under the **AGPL-3.0** licence and is also offered to organizations under a separate **Commercial License Agreement** — a standard dual-licensing model. To keep both editions legally consistent, every contributor must agree to the **[Contributor License Agreement](https://github.com/CollabDigitalTwins/core/blob/main/CLA.md)** before their contribution can be merged.
+CDT is released under the **AGPL-3.0** licence and is also offered to organizations under a separate **Commercial License Agreement**, a standard dual-licensing model. To keep both editions legally consistent, every contributor must agree to the **[Contributor License Agreement](https://github.com/CollabDigitalTwins/core/blob/main/CLA.md)** before their contribution can be merged.
 
-Under the CLA you **keep the copyright** in your contribution and grant Collab Digital Twins the right to distribute it under both the AGPL-3.0 and the commercial terms — the same approach used by projects such as MongoDB, GitLab, and Grafana. A CLA bot prompts you to sign on your first pull request, and merging is blocked until it is signed.
+Under the CLA you **keep the copyright** in your contribution and grant Collab Digital Twins the right to distribute it under both the AGPL-3.0 and the commercial terms. This is the same approach used by projects such as MongoDB, GitLab, and Grafana. A CLA bot prompts you to sign on your first pull request, and merging is blocked until it is signed.
 
 - **Individuals** sign Part A; **organizations** whose employees contribute have an authorized signatory complete Part B.
 - The agreement does not transfer ownership and does not limit your right to use your own contribution elsewhere.

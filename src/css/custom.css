@@ -1,5 +1,5 @@
 /**
- * CDT Docs — "Sovereign Architect" design system
+ * CDT Docs: "Sovereign Architect" design system
  * Mirrors the homepage tokens from sovereign-tokens.css
  */
 
@@ -7,7 +7,7 @@
 
 /* ── Light mode (default) ─────────────────────────────── */
 :root {
-  /* Sovereign palette — purple-tinted neutrals + terracotta accents */
+  /* Sovereign palette: purple-tinted neutrals + terracotta accents */
   --hp-lowest:             #f1ecf5;
   --hp-surface:            #f8f5fc;
   --hp-lowest-grad:        linear-gradient(90deg, #f1ecf5 0%, #f3eef2 40%, #f5efed 70%, #f7f0e8 100%);
@@ -27,7 +27,7 @@
   --hp-outline:            #85789c;
   --hp-outline-variant:    #bcb1ca;
 
-  /* Infima overrides — light */
+  /* Infima overrides (light) */
   --ifm-color-primary:           #c05520;
   --ifm-color-primary-dark:      #a84a1b;
   --ifm-color-primary-darker:    #9e4419;
@@ -95,7 +95,7 @@
   --hp-outline:            #9788a8;
   --hp-outline-variant:    #4a3d5c;
 
-  /* Infima overrides — dark */
+  /* Infima overrides (dark) */
   --ifm-color-primary:           #ef9161;
   --ifm-color-primary-dark:      #eb7d47;
   --ifm-color-primary-darker:    #e9743a;

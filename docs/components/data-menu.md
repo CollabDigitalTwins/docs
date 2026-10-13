@@ -78,6 +78,6 @@ When adding a viewer with edit or create actions, put the `ability.can()` check 
 
 ## Related
 
-- [Data Pages](../architecture/data-pages.mdx) — how these pages are assembled
+- [Data Pages](../architecture/data-pages.mdx): how these pages are assembled
 - [DataTable](./data-table.md)
 - [useBuildings](../hooks/buildings.md), [useSites](../hooks/sites.md), [useInfrastructures](../hooks/infrastructures.md), [useFiles](../hooks/files.md), [useUsers](../hooks/users.md)

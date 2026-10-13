@@ -16,7 +16,7 @@ You need a CDT account and a browser with WebGL enabled.
 |---------|-------------|--------------|
 | **Search bar** | Top-left | Geocodes addresses and place names, and searches your organization's assets |
 | **Layer panel** | Left sidebar | Toggle national, provincial/territorial, and municipal data layers |
-| **Bottom toolbar** | Bottom of viewport | Datasets, Compare Buildings, Share, and Measure |
+| **Bottom toolbar** | Bottom of viewport | Datasets, Compare Buildings, Add, Share, and Measure |
 | **Settings** | Left sidebar | Language, support, and account |
 
 ## Navigate the map
@@ -24,6 +24,8 @@ You need a CDT account and a browser with WebGL enabled.
 Drag with the left mouse button to pan, scroll to zoom, and hold the right mouse button to tilt and rotate in 3D. Building footprints render as extruded polygons at LOD 1.3 once you are zoomed in.
 
 Single-click a footprint at street level to see its OSM attributes. CDT-managed buildings open the full Building Details panel instead.
+
+To add a building, click **Add → Building** in the bottom toolbar. You can place it at an address, pick an existing footprint, or draw a new one. See [Buildings & Sites → Create a Building](./buildings-and-sites.md#create-a-building).
 
 ## Find a location
 

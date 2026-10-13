@@ -20,4 +20,4 @@ There is no self-service sign-up screen. Accounts are created by an Admin from *
 ## Related
 
 - [Managing roles and permissions](../authorization/managing-roles.mdx)
-- [Getting Started — Installation](../getting-started/installation.mdx)
+- [Getting Started: Installation](../getting-started/installation.mdx)
