@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────
-   Docs homepage hero — sovereign style (mirrors HeroSection)
+   Docs homepage hero, sovereign style (mirrors HeroSection)
    ───────────────────────────────────────────────────────── */
 
 .heroBanner {
@@ -142,7 +142,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────
-   Right side — platform architecture preview
+   Right side: platform architecture preview
    ───────────────────────────────────────────────────────── */
 
 .heroVisual {
@@ -200,7 +200,7 @@
     0 10px 28px -14px rgba(0, 0, 0, 0.2);
 }
 
-/* Architecture sketch — pure SVG scales to fit the card */
+/* Architecture sketch: pure SVG scales to fit the card */
 .heroSketch {
   position: absolute;
   inset: 0;

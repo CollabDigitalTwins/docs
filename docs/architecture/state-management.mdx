@@ -8,7 +8,7 @@ title: State Management
 
 # State Management
 
-CDT uses a custom middleware pattern built on React Context and `useReducer`. There is no external state library — each domain owns its own context, reducer, and action types. All contexts are composed into a single `AppProvider` that wraps the application once.
+CDT uses a custom middleware pattern built on React Context and `useReducer`. There is no external state library. Each domain owns its own context, reducer, and action types. All contexts are composed into a single `AppProvider` that wraps the application once.
 
 ## Pattern
 
@@ -37,7 +37,7 @@ export type BuildingsActions =
 
 ### 3. Reducer
 
-Pure function — receives the current state and an action, returns the next state. Components never modify state directly.
+A pure function that receives the current state and an action and returns the next state. Components never modify state directly.
 
 ```ts
 export const BuildingsReducer = (
@@ -93,7 +93,7 @@ export default function MapStyleMenu() {
 }
 ```
 
-Components dispatch actions — they never calculate the next state themselves.
+Components dispatch actions. They never calculate the next state themselves.
 
 ## CombineProviders
 
@@ -153,11 +153,11 @@ export const AppProvider = compose([
 
 - **No external library.** React Context + `useReducer` covers CDT's needs without the overhead of Redux or Zustand. The pattern is intentionally close to Redux (actions, reducers, dispatch) so it's familiar and easy to reason about.
 - **One reducer per domain.** Each slice is fully self-contained. Adding a new domain means creating a `context.tsx` and `reducer.ts`, then registering the provider in `CombineProviders.tsx`.
-- **`PermissionsProvider` is special.** It does not use `useReducer` — it reads the user's session via NextAuth and builds a CASL `MongoAbility` object from the fetched role permissions. It is memoized so the ability only rebuilds when permissions change.
+- **`PermissionsProvider` is special.** It does not use `useReducer`. Instead, it reads the user's session via NextAuth and builds a CASL `MongoAbility` object from the fetched role permissions. It is memoized so the ability only rebuilds when permissions change.
 - **`ContentProvider` is special.** It uses `useState` instead of `useReducer` because its state transitions are simple and don't benefit from the action/reducer pattern.
 
 ## Related
 
-- [Authorization](../authorization/authorization_roles_permissions.md) — how CASL abilities are defined and checked
-- [Hooks](../hooks/overview.md) — data-fetching hooks that work alongside this store
+- [Authorization](../authorization/authorization_roles_permissions.md): how CASL abilities are defined and checked
+- [Hooks](../hooks/overview.md): data-fetching hooks that work alongside this store
 - [Architecture Overview](./overview.mdx)

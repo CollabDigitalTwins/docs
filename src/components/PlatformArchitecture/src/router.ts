@@ -130,7 +130,7 @@ export function computePaths(
 
   /* 2b. Snap-to-straight: align both anchors to a shared x inside the
      overlap so the edge renders as a single vertical line with no bend.
-     Skip for edges with srcXBetween or srcXFrac — they route themselves. */
+     Skip for edges with srcXBetween or srcXFrac; they route themselves. */
   infos.forEach(info => {
     if (info.e.srcXBetween) return;
     if (typeof info.e.srcXFrac === 'number') return;
@@ -260,7 +260,7 @@ export function computePaths(
       .filter(y => !yBlocked(y));
     if (valid.length > 0) {
       if (typeof info.e.corner === 'number') {
-        // Explicit corner: honour it — pick the unblocked candidate
+        // Explicit corner: honour it and pick the unblocked candidate
         // nearest the requested fractional position.
         valid.sort((a, b) => Math.abs(a - naive) - Math.abs(b - naive));
       } else if (info.goingDown) {

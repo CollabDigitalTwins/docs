@@ -21,7 +21,7 @@ Next.js API routes, authentication via NextAuth, RBAC authorization via CASL, RE
 
 ## Architecture
 
-CDT's backend is a single **Core API** running inside Next.js API routes — no separate server process. The Core API hosts business logic and CRUD endpoints; Authentication and Authorization are cross-cutting services it calls on every request. Routes are organized by domain under `src/app/api/`:
+CDT's backend is a single **Core API** running inside Next.js API routes, with no separate server process. The Core API hosts business logic and CRUD endpoints; Authentication and Authorization are cross-cutting services it calls on every request. Routes are organized by domain under `src/app/api/`:
 
 ```
 src/app/api/
@@ -39,7 +39,7 @@ src/app/api/
 
 ## Route Conventions
 
-Each route uses the shared `getRequestAbility` helper to authenticate and load the caller's CASL ability in one step. The helper calls `auth()` internally and returns the user's id, their organization id, and an `ability` built from the role's permissions — or an `errorResponse` if the request is unauthenticated.
+Each route uses the shared `getRequestAbility` helper to authenticate and load the caller's CASL ability in one step. The helper calls `auth()` internally and returns the user's id, their organization id, and an `ability` built from the role's permissions, or an `errorResponse` if the request is unauthenticated.
 
 ```typescript
 // src/app/api/buildings/route.ts
@@ -60,13 +60,13 @@ export async function GET() {
 }
 ```
 
-The same shape applies to `POST`, `PATCH`, and `DELETE` — call `getRequestAbility`, check the relevant `(action, subject)` against `ability.can(...)`, then mutate scoped by the caller's `organizationId`.
+The same shape applies to `POST`, `PATCH`, and `DELETE`: call `getRequestAbility`, check the relevant `(action, subject)` against `ability.can(...)`, then mutate scoped by the caller's `organizationId`.
 
 ## Authentication
 
 **NextAuth v5** manages user sessions. The session carries the user's id and their organization id, which `getRequestAbility` reads on every request to scope queries and load the right CASL ability.
 
-Sign-in requires a multi-factor code delivered by email. MFA codes expire after 5 minutes. Sessions are valid for 8 hours and are not refreshed on activity — users are signed out at expiry and must sign in again.
+Sign-in requires a multi-factor code delivered by email. MFA codes expire after 5 minutes. Sessions are valid for 8 hours and are not refreshed on activity. Users are signed out at expiry and must sign in again.
 
 ## Authorization (RBAC via CASL)
 

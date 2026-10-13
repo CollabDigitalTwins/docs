@@ -82,7 +82,7 @@ Every editable control is disabled without `update` on `File`:
 
 ## Related
 
-- [Data Pages](../architecture/data-pages.mdx) — how the files page is assembled
-- [DataMenu](./data-menu.md) — the shell that renders this panel
-- [useFile](../hooks/files.md) — hook for file operations
-- [DbFile](../architecture/data-model.mdx#dbfile) — file metadata type definition
+- [Data Pages](../architecture/data-pages.mdx): how the files page is assembled
+- [DataMenu](./data-menu.md): the shell that renders this panel
+- [useFile](../hooks/files.md): hook for file operations
+- [DbFile](../architecture/data-model.mdx#dbfile): file metadata type definition

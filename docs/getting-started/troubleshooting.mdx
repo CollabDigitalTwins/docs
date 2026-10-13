@@ -2,7 +2,7 @@
 sidebar_position: 4
 displayed_sidebar: userSidebar
 title: Troubleshooting
-description: Known failure modes for installation, deployment, and day-to-day use — with diagnostic steps and fixes.
+description: Known failure modes for installation, deployment, and day-to-day use, with diagnostic steps and fixes.
 ---
 
 <AudienceNotice home="users" also="deployment" />
@@ -52,7 +52,7 @@ Paste the output as `AUTH_SECRET` in `.env`, then restart the dev server.
 
 ### The map renders blank
 
-Most often the geocoder or tile server URL is missing. Check that `GEOCODE_EARTH_API_KEY` and `MARTIN_SERVER_URL` are set in `.env`. The geocoder is optional for local dev — set the key to any non-empty string to silence the warning.
+Most often the geocoder or tile server URL is missing. Check that `GEOCODE_EARTH_API_KEY` and `MARTIN_SERVER_URL` are set in `.env`. The geocoder is optional for local dev. Set the key to any non-empty string to silence the warning.
 
 ## Database
 
@@ -90,7 +90,7 @@ The application's `S3_ACCESS_KEY` and `S3_ACCESS_SECRET` do not match a MinIO us
 
 ### Files upload but cannot be downloaded by the browser
 
-`MINIO_BUCKET_URL` does not match how the browser actually reaches MinIO. In production this should be a public URL behind TLS — not an internal Docker hostname.
+`MINIO_BUCKET_URL` does not match how the browser actually reaches MinIO. In production this should be a public URL behind TLS, not an internal Docker hostname.
 
 ### "Mixed content" warnings when CDT is on HTTPS but MinIO is HTTP
 
@@ -108,7 +108,7 @@ The redirect URI registered in your Google Cloud Console must exactly match `${A
 
 ### MFA code emails never arrive
 
-Check the SMTP variables (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`). The Next.js logs show the result of each send — look for "EAUTH" or "EENVELOPE" errors. If you use Resend, the port should be `465` and the username should be `resend`.
+Check the SMTP variables (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`). The Next.js logs show the result of each send. Look for "EAUTH" or "EENVELOPE" errors. If you use Resend, the port should be `465` and the username should be `resend`.
 
 ## Viewers
 
@@ -134,9 +134,9 @@ The file's coordinate reference system is unknown or wildly different from the m
 
 The application container is not responding on its expected port. Common causes:
 
-- `next start` has not finished booting yet — check container logs
+- `next start` has not finished booting yet; check container logs
 - The proxy is forwarding to the wrong port (host port `6012`, container port `3000`)
-- The container exited — `docker compose ps` will show `Exited (1)`
+- The container exited, and `docker compose ps` will show `Exited (1)`
 
 ### Static assets return 404 in production
 
@@ -148,7 +148,7 @@ The default health check is `pg_isready` against PostgreSQL, with a 10-second in
 
 ## Where to get more help
 
-- Search [open and closed GitHub issues](https://github.com/CollabDigitalTwins/core/issues?q=is%3Aissue) — many problems have already been answered.
+- Search [open and closed GitHub issues](https://github.com/CollabDigitalTwins/core/issues?q=is%3Aissue). Many problems have already been answered.
 - Open a [new issue](https://github.com/CollabDigitalTwins/core/issues/new) with the symptom, the relevant log output, and your environment (OS, Node version, Docker version, deployment type).
 - Reach the team via the [contact form](https://collabdt.org/En/contact/).
-- Security issues — do **not** file a public issue. Email the maintainers instead.
+- Security issues: do **not** file a public issue. Email the maintainers instead.

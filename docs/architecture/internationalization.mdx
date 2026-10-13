@@ -16,7 +16,7 @@ UI strings are stored in locale message files (e.g. `en.json`) instead of being 
 
 This keeps presentation text separate from business logic and makes translation updates mostly a content change rather than a code change.
 
-> For data coming from the backend (not UI labels), separate API and database changes are needed — next-intl only handles UI strings.
+> For data coming from the backend (not UI labels), separate API and database changes are needed, since next-intl only handles UI strings.
 
 ---
 
@@ -29,7 +29,7 @@ import { coreMessages } from '@collabdt/core/messages';
 // { en: { ... }, fr: { ... }, es: { ... } }
 ```
 
-English is the source of truth and the universal fallback: `en.json` defines the full key set, and any key a locale hasn't translated yet falls back to English rather than crashing. So `fr.json` and `es.json` must mirror `en.json` exactly — same namespaces, same keys.
+English is the source of truth and the universal fallback: `en.json` defines the full key set, and any key a locale hasn't translated yet falls back to English rather than crashing. So `fr.json` and `es.json` must mirror `en.json` exactly, with the same namespaces and the same keys.
 
 To translate or fix a string, edit the relevant catalog in `src/core/i18n/messages/` and republish `@collabdt/core`.
 
@@ -38,7 +38,7 @@ To translate or fix a string, edit the relevant catalog in `src/core/i18n/messag
 ## Basic Usage
 
 ```tsx
-// Without i18n — avoid this
+// Without i18n (avoid this)
 export default function Welcome() {
   return <h1>Hello World</h1>;
 }
@@ -64,7 +64,7 @@ Message files are keyed by namespace:
 { "Welcome": { "greeting": "Bonjour" } }
 ```
 
-> When designing layouts, leave extra space for French — text is typically 15–30% longer than English.
+> When designing layouts, leave extra space for French, since text is typically 15–30% longer than English.
 
 ---
 
@@ -173,7 +173,7 @@ The steps below add **Portuguese** to `@collabdt/core`. Locale codes are capital
 
 ### 1. Add the core catalog
 
-Copy `src/core/i18n/messages/en.json` to `src/core/i18n/messages/pt.json` and translate every value. Keep the keys identical to `en.json` — an untranslated key falls back to English at runtime, and a missing key degrades to a visible key name rather than crashing.
+Copy `src/core/i18n/messages/en.json` to `src/core/i18n/messages/pt.json` and translate every value. Keep the keys identical to `en.json`. An untranslated key falls back to English at runtime, and a missing key degrades to a visible key name rather than crashing.
 
 ### 2. Register it in `coreMessages`
 
@@ -224,7 +224,7 @@ The switcher label comes from the `LanguageSwitch` namespace, so add a `portugue
 
 ### 6. Publish and enable
 
-Rebuild and publish `@collabdt/core`. Verify layouts with the translated text — some languages need more space.
+Rebuild and publish `@collabdt/core`. Verify layouts with the translated text. Some languages need more space.
 
 ---
 

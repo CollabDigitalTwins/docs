@@ -22,7 +22,7 @@ const Row: FC<{
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center', padding: '3px 0' }}>
-        {/* indentation columns from ancestors — vertical line where the
+        {/* indentation columns from ancestors, with a vertical line where the
             ancestor still has siblings below it */}
         {ancestorsLast.map((wasLast, i) => (
           <span

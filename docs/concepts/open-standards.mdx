@@ -16,21 +16,21 @@ Open standards are the connective tissue of interoperability. Without them, each
 
 [buildingSMART International](https://www.buildingsmart.org/) (bSI) develops and maintains open standards for the built environment. CDT aligns with four of them.
 
-### IFC — Industry Foundation Classes
+### IFC (Industry Foundation Classes)
 
 **ISO 16739**, the open format for building and infrastructure models. IFC defines a schema of thousands of element types (`IfcWall`, `IfcBeam`, `IfcSpace`, `IfcSensor`, and so on) along with their geometric representation, properties, relationships, and lifecycle attributes. A model exported to IFC can be opened by any compliant application without a licence from the authoring tool's vendor.
 
 CDT ingests IFC natively. When you upload an `.ifc` file, the platform parses the full schema (geometry, property sets, quantity sets, relationships) and makes it available in the viewer and in the database.
 
-### IDS — Information Delivery Specification
+### IDS (Information Delivery Specification)
 
 A buildingSMART standard for machine-readable requirements describing what information a model must contain. An IDS file defines which elements must be present, what properties they must have, and what values are acceptable. CDT's BIM viewer loads an IDS file against a loaded model and visually flags which elements pass or fail each requirement, turning abstract information requirements (exchange information requirements, employer's information requirements) into automated visual checks.
 
-### BCF — BIM Collaboration Format
+### BCF (BIM Collaboration Format)
 
 A buildingSMART standard for communicating issues within BIM models. BCF separates issue data (topic text, viewpoint, author, status, assigned party) from the model file itself, so coordination issues can be shared between teams using different authoring tools. A BCF topic created in CDT opens correctly in Revit, ArchiCAD, or any other compliant tool, and vice versa.
 
-### bSDD — buildingSMART Data Dictionary
+### bSDD (buildingSMART Data Dictionary)
 
 A library of standardized classifications, properties, and their allowed values, covering building element types, materials, and attributes. CDT maps building records to bSDD classifications, enabling filtering and analysis by standardized typology rather than free-text labels.
 

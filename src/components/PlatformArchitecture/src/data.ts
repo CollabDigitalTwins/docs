@@ -122,7 +122,7 @@ export const DEFAULT_LAYERS: Layer[] = [
 
 export const DEFAULT_EDGES: Edge[] = [
   // Primary top-down flow. Auth + Authz are cross-cutting concerns
-  // Core API invokes on every request — their adjacency in the
+  // Core API invokes on every request; their adjacency in the
   // Backend Services row conveys that without an explicit edge.
   { from: 'user', to: 'frontend', kind: 'core' },
   { from: 'frontend', to: 'core_api', kind: 'core' },

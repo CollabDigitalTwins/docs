@@ -1,4 +1,4 @@
-/* TabCard — full border + a mono label tab on the top-left edge. Tokens: src/css/custom.css. */
+/* TabCard: full border + a mono label tab on the top-left edge. Tokens: src/css/custom.css. */
 .card {
   --tc-surface: var(--hp-mid);
   --tc-surface-hover: var(--hp-high);

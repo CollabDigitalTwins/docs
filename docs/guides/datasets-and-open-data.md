@@ -29,9 +29,9 @@ Click the layer name in the layer panel, open the **Style** subpanel, pick the a
 
 1. Open the **Add media** feature in the map.
 2. Choose the source type:
-   - **GeoJSON** — drop a file onto the map, or browse and pick one.
-   - **ArcGIS Feature Service** — paste the service URL to pull its features directly.
-   - **WMS** — paste the service URL and enter the **WMS layer name(s)**. WMS data is added as a raster overlay rather than a vector dataset, so its features are not individually clickable.
+   - **GeoJSON**: drop a file onto the map, or browse and pick one.
+   - **ArcGIS Feature Service**: paste the service URL to pull its features directly.
+   - **WMS**: paste the service URL and enter the **WMS layer name(s)**. WMS data is added as a raster overlay rather than a vector dataset, so its features are not individually clickable.
 3. Choose visibility: **Private** (only you) or **Organization** (all members).
 4. The dataset is listed alongside official datasets. Uploaded GeoJSON is stored in MinIO; ArcGIS and WMS layers are fetched live from their source.
 
@@ -51,11 +51,11 @@ Portals are organized by jurisdiction, plus **Organizational** datasets your own
 | Geo.ca | National geospatial catalogue |
 | CIFFC | Active wildfire perimeters and conditions |
 
-**Country subdivision (provincial / territorial)** — British Columbia (Open BC), Quebec (Données ouvertes), Ontario, New Brunswick, Alberta, Saskatchewan, Yukon, Nunavut, and others.
+**Country subdivision (provincial / territorial)**: British Columbia (Open BC), Quebec (Données ouvertes), Ontario, New Brunswick, Alberta, Saskatchewan, Yukon, Nunavut, and others.
 
-**Municipal** — Ottawa, Toronto, Vancouver, Montreal, Calgary, Halifax, and more, providing parcel data, zoning, infrastructure, and transit.
+**Municipal**: Ottawa, Toronto, Vancouver, Montreal, Calgary, Halifax, and more, providing parcel data, zoning, infrastructure, and transit.
 
-**Community and global** — OpenStreetMap (building footprints, roads, points of interest) and partner affordable-housing databases.
+**Community and global**: OpenStreetMap (building footprints, roads, points of interest) and partner affordable-housing databases.
 
 ## Supported formats
 

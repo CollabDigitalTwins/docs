@@ -56,7 +56,7 @@ Five hooks share one shape: each takes its filter value, skips the request when 
 |------|------------|
 | `useOpenDataPortalsByMunicipality` | `municipality: string \| null` |
 | `useOpenDataPortalsByMunicipalityAndCountrySubdivision` | `municipality: string \| null`, `countrySubdivision: string \| null` |
-| `useOpenDataPortalsByCountrySubdivision` | `countrySubdivision: string \| null` — province or territory code |
+| `useOpenDataPortalsByCountrySubdivision` | `countrySubdivision: string \| null`, a province or territory code |
 | `useOpenDataPortalsByGroup` | `group: DatasetGroup \| null` |
 | `useOpenDataPortalsByName` | `name: string \| null` |
 

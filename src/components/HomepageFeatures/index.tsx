@@ -9,7 +9,7 @@ export default function HomepageFeatures(): ReactNode {
 
   return (
     <>
-      {/* ── Core capabilities — marquee carousel (left) ────────── */}
+      {/* ── Core capabilities: marquee carousel (left) ────────── */}
       <section className={styles.carousel}>
         <div className={styles.carouselHeader}>
           <div className={styles.sectionLabel}>What's inside</div>
@@ -21,7 +21,7 @@ export default function HomepageFeatures(): ReactNode {
         </Marquee>
       </section>
 
-      {/* ── Mission — Level 1 surface ──────────────────────────── */}
+      {/* ── Mission: Level 1 surface ──────────────────────────── */}
       <section className={styles.mission}>
         <div className={styles.missionInner}>
           <div className={styles.missionGrid}>
@@ -35,15 +35,15 @@ export default function HomepageFeatures(): ReactNode {
             <div className={styles.missionRight}>
               <p className={styles.missionDesc}>
                 These docs cover the platform architecture, APIs, and workflows
-                for visualizing multi-scale geospatial data and BIM models —
-                all in the browser, on open standards.
+                for visualizing multi-scale geospatial data and BIM models,
+                all in the browser and on open standards.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Tech Stack — 100% Open Source (constellation) ──────── */}
+      {/* ── Tech Stack: 100% Open Source (constellation) ──────── */}
       <section className={styles.techStack}>
         <div className={styles.techStackInner}>
           <div className={styles.techStackHeader}>

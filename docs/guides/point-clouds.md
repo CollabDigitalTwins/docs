@@ -8,7 +8,7 @@ description: Upload a LAS, LAZ or E57 scan, convert it to a streaming octree, an
 
 Point clouds render in the **BIM viewer**, in the same scene as your IFC models. A scan and a model share one camera, one clipping set, and one measurement tool.
 
-You need access to a building, a scan in **LAS**, **LAZ** or **E57**, and a reachable conversion service (`POINTCLOUD_API_URL` — self-hosters see [Deployment → Services](../deployment/services.md)).
+You need access to a building, a scan in **LAS**, **LAZ** or **E57**, and a reachable conversion service (`POINTCLOUD_API_URL`). If you self-host, see [Deployment → Services](../deployment/services.md).
 
 ## Upload a scan
 
@@ -48,8 +48,8 @@ Colour comes from the scan itself. Elevation, intensity and classification colou
 
 Sidebar → **Settings** → **Camera Settings**.
 
-- **Orbit** — left-drag to orbit, right-drag to pan, scroll to zoom.
-- **Walk** — first person. Move with **WASD** or the arrow keys; **Q** and **E** move down and up. Set a **move speed**, and **lock elevation at** a height in metres to hold a constant eye level. Walk mode needs a perspective projection and is unavailable under orthographic.
+- **Orbit**: left-drag to orbit, right-drag to pan, scroll to zoom.
+- **Walk**: first person. Move with **WASD** or the arrow keys; **Q** and **E** move down and up. Set a **move speed**, and **lock elevation at** a height in metres to hold a constant eye level. Walk mode needs a perspective projection and is unavailable under orthographic.
 
 ## Measure and section
 

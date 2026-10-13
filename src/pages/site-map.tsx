@@ -14,7 +14,7 @@ export default function SiteMapPage() {
           <h1 className={styles.title}>Site Map</h1>
           <p className={styles.subtitle}>
             CDT's documentation is organised into three sections by audience.
-            Some pages live in more than one — they're highlighted below.
+            Pages that live in more than one are highlighted below.
           </p>
         </header>
         <SiteMap />

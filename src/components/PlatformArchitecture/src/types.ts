@@ -55,7 +55,7 @@ export interface PlatformArchitectureProps {
   theme?: Theme;
   layers?: Layer[];
   edges?: Edge[];
-  /** Hide the legend sidebar — render just the diagram. */
+  /** Hide the legend sidebar and render just the diagram. */
   bare?: boolean;
   /** Preview mode: hide chrome, disable hover, non-interactive. */
   preview?: boolean;

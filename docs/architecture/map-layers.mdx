@@ -2,7 +2,7 @@
 sidebar_position: 10
 displayed_sidebar: developerSidebar
 title: Map Layers
-description: The composable map layer system — what each layer renders, what data it reads, and how layers register with MapClickManager.
+description: "The composable map layer system: what each layer renders, what data it reads, and how layers register with MapClickManager."
 ---
 
 <AudienceNotice home="developers" also="deployment" />
@@ -30,7 +30,7 @@ export const MapLayers = () => (
 )
 ```
 
-Render order affects visual stacking but click priority is controlled separately by `MapClickManager` — see [Map Click Manager](./map-click-manager.mdx).
+Render order affects visual stacking, but click priority is controlled separately by `MapClickManager` (see [Map Click Manager](./map-click-manager.mdx)).
 
 ## Layers
 
@@ -40,7 +40,7 @@ Renders country, region and subdivision boundary outlines, and tracks which admi
 
 Country and region borders come from MapTiler's vector tiles on the deployment's `MAPTILER_KEY`, falling back to MapTiler's localhost-only placeholder key. Subdivision polygons for the organization's own country come from ArcGIS World Administrative Divisions and need no key, so subdivision borders render on every deployment and on every base style.
 
-`currentLocation.countrySubdivision` follows the **camera**, not the pointer: after each `moveend` the layer resolves the polygon under the camera target and commits its ISO 3166-2 code, also writing it to the `countrySubdivision` URL parameter. Hovering only thickens the border of the subdivision under the cursor, and only above zoom 10 — there is no fill, so imagery is never tinted. Subdivision borders are hidden above zoom 15, where building-scale detail takes over; the invisible hit-test polygons remain at every zoom, so camera tracking keeps working past that point. When the camera target falls outside the loaded polygons — over water, or in another country — the last resolved value is kept. An organization with a fixed `countrySubdivision` or `municipality` skips all of this: those values are pushed into `currentLocation` once and the layer renders nothing.
+`currentLocation.countrySubdivision` follows the **camera**, not the pointer: after each `moveend` the layer resolves the polygon under the camera target and commits its ISO 3166-2 code, also writing it to the `countrySubdivision` URL parameter. Hovering only thickens the border of the subdivision under the cursor, and only above zoom 10. There is no fill, so imagery is never tinted. Subdivision borders are hidden above zoom 15, where building-scale detail takes over; the invisible hit-test polygons remain at every zoom, so camera tracking keeps working past that point. When the camera target falls outside the loaded polygons (over water, or in another country), the last resolved value is kept. An organization with a fixed `countrySubdivision` or `municipality` skips all of this: those values are pushed into `currentLocation` once and the layer renders nothing.
 
 **Sources:** `openmaptiles-boundaries` (MapTiler vector tiles), `admin-subdivisions-source` (ArcGIS GeoJSON).
 
@@ -52,9 +52,9 @@ Renders CDT buildings as 3D extrusions. Highlights a building when selected and 
 
 The layer brings its own building tile source (`cdt-buildings`, from MapTiler's buildings tileset on the deployment's `MAPTILER_KEY`), so buildings are interactive on **every** base style rather than only the MapTiler ones. Without a key it reuses a buildings-capable vector source already present in the style (`openmaptiles`, `maptiler_planet`, `carto`) and otherwise falls back to MapTiler's localhost-only placeholder key.
 
-**Data:** `useBuildings()` — all buildings for the active organization.  
+**Data:** `useBuildings()` (all buildings for the active organization).  
 **Layer ID:** `maptiler-3d-buildings`  
-**Prop:** `maptilerKey` — passed down from `MapViewer` through `MapLayers`.  
+**Prop:** `maptilerKey`, passed down from `MapViewer` through `MapLayers`.  
 **Click priority:** `BuildingLayersClickPriority = 100`  
 **On click:** Opens a `MapFeaturePopoverMenu` with building details.
 
@@ -64,7 +64,7 @@ The layer brings its own building tile source (`cdt-buildings`, from MapTiler's 
 
 Renders user comments as avatar markers on the map. Clustered when zoomed out.
 
-**Data:** `useComments()` — all comments for the active organization.  
+**Data:** `useComments()` (all comments for the active organization).  
 **Click priority:** `CommentLayersClickPriority = 200`  
 **On click:** Opens the comment detail popup.
 
@@ -75,7 +75,7 @@ Renders user comments as avatar markers on the map. Clustered when zoomed out.
 Renders IoT sensors as icon markers. Icons are resolved from `SensorType.icon` (Lucide icon name). Clustered when zoomed out.
 
 **Data:** `useSensors()`, `useSensorTypes()`.  
-**Click priority:** No explicit priority registered — sensors use marker-level click events rather than MapLibre layer events.
+**Click priority:** No explicit priority registered. Sensors use marker-level click events rather than MapLibre layer events.
 
 ---
 
@@ -114,7 +114,7 @@ Renders the georeferenced footprint of a loaded IFC model on the map. Hides the 
 ## Adding a New Layer
 
 1. Create a component in `@collabdt/core/core/components/viewers/map/src/MapLayers/src/<YourLayer>/`.
-2. Register a click handler using `MapClickManager.register()` with an appropriate priority from `MapLayerClickPriority`. Add a new enum value if none fits — see [Map Click Manager](./map-click-manager.mdx).
+2. Register a click handler using `MapClickManager.register()` with an appropriate priority from `MapLayerClickPriority`. Add a new enum value if none fits (see [Map Click Manager](./map-click-manager.mdx)).
 3. Add your component to `MapLayers/index.tsx`.
 4. Call `MapClickManager.unregister()` in a `useEffect` cleanup to avoid leaking handlers on unmount.
 
@@ -134,6 +134,6 @@ Renders the georeferenced footprint of a loaded IFC model on the map. Hides the 
 
 ## Related
 
-- [Map Click Manager](./map-click-manager.mdx) — how click priority dispatch works
-- [State Management](./state-management.mdx) — `MapProvider`, `DatasetsProvider`
+- [Map Click Manager](./map-click-manager.mdx): how click priority dispatch works
+- [State Management](./state-management.mdx): `MapProvider`, `DatasetsProvider`
 - [Open Data Portals concept](../concepts/open-data-portals.mdx)

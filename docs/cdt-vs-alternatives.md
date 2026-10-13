@@ -1,7 +1,7 @@
 ---
 sidebar_position: 98
 title: CDT vs Alternatives
-description: When to choose CDT over commercial digital twin platforms — and when one of them is the better fit.
+description: When to choose CDT over commercial digital twin platforms, and when one of them is the better fit.
 ---
 
 # CDT vs Alternatives
@@ -46,11 +46,11 @@ CDT is **not** the right choice when:
 
 **Does CDT replace Revit or ArcGIS?** No. It complements them. Authoring stays in those tools; CDT consumes their outputs and adds federation, web access, and collaboration.
 
-**Can I migrate off CDT later?** Yes. All data is in open formats — IFC, GeoJSON, LAS — and can be exported in bulk. There is no proprietary lock-in.
+**Can I migrate off CDT later?** Yes. All data is in open formats (IFC, GeoJSON, LAS) and can be exported in bulk. There is no proprietary lock-in.
 
 **Does CDT support [feature X from a commercial product]?** Often, but not always. Check the relevant guide and the [GitHub roadmap](https://github.com/CollabDigitalTwins/core/milestones). If a feature is missing and broadly useful, file an issue. If it is narrow, consider a [plugin](./plugins/overview.md).
 
-**Is CDT production-ready?** Yes for federation, visualization, and collaboration use cases. Some advanced features (full IoT device management, alert rules, a plugin marketplace) are still on the roadmap — see the [Changelog](./changelog.md) for what is shipped.
+**Is CDT production-ready?** Yes for federation, visualization, and collaboration use cases. Some advanced features (full IoT device management, alert rules, a plugin marketplace) are still on the roadmap. See the [Changelog](./changelog.md) for what is shipped.
 
 ## Get help deciding
 

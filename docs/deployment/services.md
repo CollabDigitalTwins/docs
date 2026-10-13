@@ -1,6 +1,6 @@
 ---
 title: Services
-description: Configuration reference for every service in the CDT stack — PostgreSQL, MinIO, Martin/PostGIS, the Node application, and the Open Data Service.
+description: "Configuration reference for every service in the CDT stack: PostgreSQL, MinIO, Martin/PostGIS, the Node application, and the Open Data Service."
 sidebar_position: 2
 ---
 
@@ -23,7 +23,7 @@ docker compose run --rm migrate
 ## PostgreSQL
 
 **Image:** `postgres:15`
-**Purpose:** Relational database storing application data — building records, object metadata, users, and other structured entities.
+**Purpose:** Relational database storing application data: building records, object metadata, users, and other structured entities.
 
 ### Installation
 
@@ -34,7 +34,7 @@ After migrations, the database contains schema only. Seed initial data as needed
 
 ### Configuration
 
-All credentials are supplied via environment variables (`.env` file in the project root). They are only used during initial database creation when the data volume is empty — changing them after initialization does not modify an existing database.
+All credentials are supplied via environment variables (`.env` file in the project root). They are only used during initial database creation when the data volume is empty. Changing them after initialization does not modify an existing database.
 
 | Variable | Purpose |
 |----------|---------|
@@ -65,12 +65,12 @@ services:
 postgresql://<POSTGRES_USER>:<POSTGRES_PASSWORD>@postgres:5432/<POSTGRES_DB>
 ```
 
-The hostname `postgres` resolves through Docker Compose internal networking. Port 5432 must not be publicly accessible in production — restrict inbound access to trusted internal networks only.
+The hostname `postgres` resolves through Docker Compose internal networking. Port 5432 must not be publicly accessible in production. Restrict inbound access to trusted internal networks only.
 
 ## MinIO
 
 **Image:** `quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z`
-**Purpose:** S3-compatible object storage for unstructured digital twin assets — BIM models, point clouds, GIS data, images, and videos.
+**Purpose:** S3-compatible object storage for unstructured digital twin assets: BIM models, point clouds, GIS data, images, and videos.
 
 ### Installation
 
@@ -130,11 +130,11 @@ Both images are pulled automatically when the Compose stack starts. On first sta
 - The `postgis/postgis` image enables PostGIS extensions automatically
 - Any SQL scripts placed in `/docker-entrypoint-initdb.d` are executed during initialization
 - Martin waits until PostgreSQL reports healthy, then connects and auto-discovers all spatial tables and views containing geometry columns
-- Each discovered dataset is immediately exposed as a vector tile endpoint — no manual registration needed
+- Each discovered dataset is immediately exposed as a vector tile endpoint, with no manual registration needed
 
 ### Configuration
 
-PostGIS shares the PostgreSQL configuration described in the [PostgreSQL section](#postgresql) — credentials and storage are the same.
+PostGIS shares the PostgreSQL configuration described in the [PostgreSQL section](#postgresql). Credentials and storage are the same.
 
 Martin is configured via a PostgreSQL connection string passed as a command argument:
 
@@ -213,15 +213,15 @@ External service dependencies:
 
 Notable libraries:
 
-- **NextAuth.js** — authentication and session management
-- **MapLibre** — interactive vector map rendering
-- **Prisma** — database schema management and query layer
+- **NextAuth.js**: authentication and session management
+- **MapLibre**: interactive vector map rendering
+- **Prisma**: database schema management and query layer
 
 For a full dependency list see `package.json` in the application source.
 
 ## Open Data Service
 
-**Purpose:** Registry of open data portals — municipal, provincial, organizational, and federal. Enables dataset discovery and integration via geographic and categorical filtering.
+**Purpose:** Registry of open data portals (municipal, provincial, organizational, and federal). Enables dataset discovery and integration via geographic and categorical filtering.
 
 ### Installation
 

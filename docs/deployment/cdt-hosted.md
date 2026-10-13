@@ -1,6 +1,6 @@
 ---
 title: CDT Hosted
-description: Managed SaaS and assisted deployment options for CDT — contact the team to learn more.
+description: Managed SaaS and assisted deployment options for CDT. Contact the team to learn more.
 sidebar_position: 3
 ---
 
@@ -13,9 +13,9 @@ Prefer not to manage your own infrastructure? The CDT team offers hosted and ass
 A fully managed SaaS deployment hosted in Canada. We handle infrastructure, updates, and support so you can focus on your project.
 
 - 1 dedicated instance
-- Faster time to deployment — no infrastructure setup
+- Faster time to deployment, with no infrastructure setup
 - Periodic automatic updates and maintenance
-- Support included — documentation at no cost
+- Support included, with documentation at no cost
 - **Canadian-hosted** for data sovereignty
 - Revenue sustains the open-source mission
 
@@ -23,7 +23,7 @@ Best for organizations with limited IT resources.
 
 <a href="mailto:info@collabdt.org?subject=CDT%20Hosted" className="button button--primary">Contact us about CDT Hosted</a>
 
-## Self Hosted — We Install
+## Self Hosted: We Install
 
 We deploy CDT on your own infrastructure, giving you full control over your data while the CDT team handles the setup.
 
@@ -42,4 +42,4 @@ Best for organizations with existing IT capacity that require data sovereignty o
 
 ## Related
 
-- [Self-Hosting](./self-hosting.md) — deploy it yourself
+- [Self-Hosting](./self-hosting.md): deploy it yourself

@@ -94,4 +94,4 @@ const handleCreate = async () => {
 
 - [Sensor data model](/docs/architecture/data-model#sensor)
 - [Sensor type hooks](/docs/hooks/sensor-types)
-- [Sensors & IoT Data guide](/docs/guides/sensors-and-iot) — Data URL, data formats, and units
+- [Sensors & IoT Data guide](/docs/guides/sensors-and-iot): Data URL, data formats, and units

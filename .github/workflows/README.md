@@ -2,7 +2,7 @@
 
 This workflow auto-generates documentation pages from source code in the CDT core repo using the Claude API. It fetches source files, feeds them to Claude with the appropriate template, and opens a draft PR for human review.
 
-Currently **manual trigger only**. The workflow supports auto-triggering on core repo changes but this is not yet configured — see [Future: Auto Trigger](#future-auto-trigger) below.
+Currently **manual trigger only**. The workflow supports auto-triggering on core repo changes but this is not yet configured. See [Future: Auto Trigger](#future-auto-trigger) below.
 
 ## How It Works
 
@@ -77,8 +77,8 @@ Fill in the three fields:
 
 **Single file vs directory:**
 
-- Single file — point at a `.ts` or `.tsx` file directly. Claude documents that file only.
-- Directory — point at a folder. All `.ts` and `.tsx` files in that directory are concatenated and Claude generates one consolidated doc covering all of them.
+- Single file: point at a `.ts` or `.tsx` file directly. Claude documents that file only.
+- Directory: point at a folder. All `.ts` and `.tsx` files in that directory are concatenated and Claude generates one consolidated doc covering all of them.
 
 Use single file for standalone components. Use directory for resource-grouped files like hooks where all files are closely related.
 
@@ -117,7 +117,7 @@ Every generated PR is opened as a **draft** and includes a before-merging checkl
 
 Go to the PR → **Files changed** tab. Review the generated `.md` file against the checklist:
 
-- [ ] Fill in all `<!-- TODO: ... -->` sections — these require human context (design decisions, business logic, edge cases, architectural rationale)
+- [ ] Fill in all `<!-- TODO: ... -->` sections. These require human context (design decisions, business logic, edge cases, architectural rationale)
 - [ ] Verify auto-populated props, params, and return types are accurate
 - [ ] Check all links in the Related section resolve to real pages
 - [ ] Update `last_updated` in the frontmatter to today's date
@@ -125,7 +125,7 @@ Go to the PR → **Files changed** tab. Review the generated `.md` file against 
 
 ### 2. Edit directly in the PR
 
-For small edits, click `...` on the file in Files changed → **Edit file**. Commit directly to the PR branch — no need to check out locally.
+For small edits, click `...` on the file in Files changed → **Edit file**. Commit directly to the PR branch; there is no need to check out locally.
 
 ### 3. Preview locally (optional)
 
@@ -154,7 +154,7 @@ Once all TODOs are resolved and the content looks accurate, click **Ready for re
 - Usage examples based on the actual code
 - Related section links based on naming conventions
 
-**Claude cannot infer — requires human input:**
+**Claude cannot infer (requires human input):**
 - Why a design decision was made
 - Business logic and edge cases not evident from code
 - Architectural tradeoffs or alternatives considered
@@ -166,7 +166,7 @@ These gaps are marked with `<!-- TODO: ... -->` comments in the generated output
 
 ## Future: Auto Trigger
 
-The workflow already supports a `repository_dispatch` trigger which can fire automatically when code is merged in the core repo. It is currently dormant — nothing sends dispatch events to this repo yet.
+The workflow already supports a `repository_dispatch` trigger which can fire automatically when code is merged in the core repo. It is currently dormant: nothing sends dispatch events to this repo yet.
 
 To enable it, add this workflow to the core repo:
 

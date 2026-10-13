@@ -37,9 +37,9 @@ Authors can **edit** their own comment text with the pencil action (edited comme
 
 Markers on the map and in the BIM scene share the same interactions:
 
-- **Open** — click a marker's avatar to open its card.
-- **Card actions** — close, plus reply, edit, and delete, mirroring the sidebar (edit and delete only for the author). In the BIM viewer, reply and edit open the comment's editor in the **Comments** sidebar so you have room to type; delete and close act in place.
-- **Zoom to a comment** — double-click a marker, or a comment in the sidebar, to fly the camera to it. The focused comment gets a thicker highlight ring, and double-clicking again re-frames it.
+- **Open**: click a marker's avatar to open its card.
+- **Card actions**: close, plus reply, edit, and delete, mirroring the sidebar (edit and delete only for the author). In the BIM viewer, reply and edit open the comment's editor in the **Comments** sidebar so you have room to type; delete and close act in place.
+- **Zoom to a comment**: double-click a marker, or a comment in the sidebar, to fly the camera to it. The focused comment gets a thicker highlight ring, and double-clicking again re-frames it.
 
 Markers use a thin ring by default, a highlight ring when hovered or selected, and a thicker ring when focused.
 

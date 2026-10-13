@@ -1,6 +1,6 @@
 ---
 title: BIM Viewer Tools
-description: The toolbar tools available in the BIM viewer — clipping, measurement, inspection, model loading, and more.
+description: "The toolbar tools available in the BIM viewer: clipping, measurement, inspection, model loading, and more."
 ---
 
 # BIM Viewer Tools
@@ -36,7 +36,7 @@ Adds section planes to the Three.js scene using `@thatopen/components-front`. Ea
 - **Enter** finishes and keeps the planes. **Escape** clears every plane and exits. **Backspace** or **Delete** removes the plane under the cursor.
 - Leaving the mode hides the translucent squares but keeps the arrow gizmos, so an existing section can still be dragged.
 - `CTRL+Z` / `CTRL+Y` step through adding, deleting and moving planes. The shortcut is bound in `BimViewer`, which routes it to whichever of the appearance and clipping histories changed last.
-- Deactivates when another tool is selected — planes persist until explicitly removed.
+- Deactivates when another tool is selected. Planes persist until explicitly removed.
 
 ### Section box
 
@@ -44,8 +44,8 @@ The same menu offers a **section box**: an axis-aligned box that isolates what i
 
 - **Section box** fits a padded box around everything currently in the scene; the same item clears it.
 - Each face carries a grab handle. Dragging one moves that face only, and the box never becomes thinner than 10 cm on any axis.
-- Cut geometry is capped in black, the same `ClipStyler` style the section planes use. `ClipStyler.create()` returns edges with `visible === false`, and that setter is what adds the cap to the scene — unlike `createFromClipping()`, it does not show them for you.
-- The box is six inward clipping planes appended to `world.renderer.clippingPlanes`. Three.js clipping is an intersection, so this gives keep-inside behaviour with no shader work — and any renderer already subscribed to `onClippingPlanesUpdated`, such as the BIM point clouds, is cut by the box too.
+- Cut geometry is capped in black, the same `ClipStyler` style the section planes use. `ClipStyler.create()` returns edges with `visible === false`, and that setter is what adds the cap to the scene. Unlike `createFromClipping()`, it does not show them for you.
+- The box is six inward clipping planes appended to `world.renderer.clippingPlanes`. Three.js clipping is an intersection, so this gives keep-inside behaviour with no shader work, and any renderer already subscribed to `onClippingPlanesUpdated`, such as the BIM point clouds, is cut by the box too.
 - Planes and the box are independent. Both cuts apply at once, and clearing one leaves the other alone.
 
 ### Dependencies
@@ -90,7 +90,7 @@ Measures length, area, volume and angle. The submenu offers five modes, all back
 in-progress shape and leaves measurement mode. `Clear` removes every measurement of every kind.
 
 Picking a mode shows its instructions in a persistent toast, replaced when the mode changes and
-dismissed when measurement mode ends — the same pattern `ClippingTool` uses.
+dismissed when measurement mode ends, the same pattern `ClippingTool` uses.
 
 ### `BimMeasurementManager`
 
@@ -102,7 +102,7 @@ make one double-click feed both.
 The manager also handles three things the raw components do not:
 
 - **World binding is resolved per activation**, not cached in the constructor. `Components.get()`
-  caches, and the toolbar calls it on its first render — which can land before `CurrentWorld.world`
+  caches, and the toolbar calls it on its first render, which can land before `CurrentWorld.world`
   is published. A constructor snapshot would cache `null` for the rest of the session.
 - **Ordering.** `Measurement.enabled`'s setter calls `setEvents()`, which throws when `world` is
   null, so the world and all configuration are applied before `enabled = true`.
@@ -115,7 +115,7 @@ Measurements are held in each component's own `list` and persist across tool swi
 
 ### Measuring geometry that is not a fragment
 
-The OBF measurers snap against fragment geometry only. Anything else — a point cloud, today —
+The OBF measurers snap against fragment geometry only. Anything else (today, a point cloud)
 offers itself through `registerPickSource(source)`, where a source implements `ScenePickSource`
 from `bim/src/lib/scenePicker.ts`:
 
@@ -132,7 +132,7 @@ Ties go to the fragment snap. Call `unregisterPickSource(source)` when the sourc
 :::note
 Subscribing to `onPointerMove` instead does not work, and fails in a way that looks like the tool
 is broken rather than merely imprecise. The library registers its own preview handler in the
-`Measurement` constructor, so it reads `lastPick` before any later subscriber can change it — and
+`Measurement` constructor, so it reads `lastPick` before any later subscriber can change it, and
 it reads `null` whenever the cursor is over geometry the fragment picker cannot see. The preview
 line's end never moves, and a length measurement commits with both points on top of each other.
 Intercepting the write puts every reader in agreement regardless of subscription order.
@@ -150,8 +150,8 @@ cursor moves. The defaults here narrow that:
 
 | Setting | Library default | CDT default |
 |---------|-----------------|-------------|
-| `snappings` | `[LINE, POINT, FACE]` | One or two classes per mode — `[LINE]` for edge length, `[FACE]` for face area, `[POINT, LINE]` otherwise, `undefined` for volume |
-| `pickMode` | `MOUSE_MOVE` | `MOUSE_STOP` — one GPU pick per intentional cursor stop rather than one per animation frame |
+| `snappings` | `[LINE, POINT, FACE]` | One or two classes per mode: `[LINE]` for edge length, `[FACE]` for face area, `[POINT, LINE]` otherwise, `undefined` for volume |
+| `pickMode` | `MOUSE_MOVE` | `MOUSE_STOP`, one GPU pick per intentional cursor stop rather than one per animation frame |
 | `delay` | 300 ms | 120 ms |
 | `pickerSize` | 6 px | 10 px |
 | `SnapResolvers` `maxDistance` | 1 m | 0.5 m |
@@ -159,7 +159,7 @@ cursor moves. The defaults here narrow that:
 
 :::note
 `Measurement.snapDistance` looks like the snap-range knob but has no effect in
-components-front 3.4.3 — its setter writes `GraphicVertexPicker.maxDistance`, which
+components-front 3.4.3. Its setter writes `GraphicVertexPicker.maxDistance`, which
 `GraphicVertexPicker.get()` never reads. The live knob is
 `components.get(OBC.SnapResolvers).get().maxDistance`.
 :::
@@ -184,7 +184,7 @@ Activates element inspection mode. On click, highlights the selected element and
 
 ## `FitCameraTool`
 
-Fits the Three.js camera to the bounding box of the loaded model. Single-action tool — no persistent active state.
+Fits the Three.js camera to the bounding box of the loaded model. Single-action tool with no persistent active state.
 
 ---
 
@@ -215,7 +215,7 @@ Only one tool is active at a time. When a new tool is activated, the previous to
 ## Placement editor
 
 One editor places everything in the BIM scene: fragment models, loaded 3D objects (GLB, DXF) and
-point clouds. It is not a toolbar tool — it has no entry of its own and is started from whatever
+point clouds. It is not a toolbar tool: it has no entry of its own and is started from whatever
 is being placed.
 
 Source: `@collabdt/core/core/components/viewers/bim/src/Placement/`
@@ -229,8 +229,8 @@ Entries are keyed by **file id**, and the scene object is named `file:<id>`. Rea
 
 The sidebar, the viewport menu and the placement editor all resolve a file through
 `sceneObjectForFile(file, registry)`, so none of them can disagree about what a file is. Objects
-placed before their upload finishes are held under a temporary key with `fileId: null` — they draw
-no marker and the viewport menu skips them — until `rekey(tempKey, fileId)` hands them over.
+placed before their upload finishes are held under a temporary key with `fileId: null`. They draw
+no marker, and the viewport menu skips them, until `rekey(tempKey, fileId)` hands them over.
 
 Because the registry is the one index, the list and the scene stay in step in both directions:
 deleting a row removes the object, and placing a file marks its row visible.
@@ -252,20 +252,20 @@ deleting a row removes the object, and placing a file marks its row visible.
 
 The hook owns the right button, not the `contextmenu` event: `camera-controls` trucks the camera
 with the same button, so the menu opens on release only if the press never moved past
-`DRAG_SLOP_PX` (5px). Duration is ignored — a pan always moves, and a slow click that opened
+`DRAG_SLOP_PX` (5px). Duration is ignored: a pan always moves, and a slow click that opened
 nothing would read as a bug.
 
 The native menu is suppressed by a **capture-phase listener on `window`**, gated on
 `withinViewport(canvas.getBoundingClientRect(), …)` rather than on the event target. A listener
 bound to the canvas is not enough: CSS2D marker overlays sit above it without being its
 descendants and default to `pointer-events: auto`, so a right-click on one reaches neither our
-handler nor `camera-controls`' own — which is how the native menu used to appear alongside the
+handler nor `camera-controls`' own, which is how the native menu used to appear alongside the
 card. Gating on position covers every overlay at once instead of patching each marker type.
 
 :::note
 Suppression is unconditional inside the viewport, not conditional on hitting geometry. The pick is
 async and `contextmenu` is synchronous, so what was hit is not yet known when the decision has to
-be made — and a viewport whose right button pans has no use for the native menu anywhere.
+be made, and a viewport whose right button pans has no use for the native menu anywhere.
 :::
 
 Both resolve through the registry, so a DXF drawing and a GLB behave identically. The card's
@@ -273,7 +273,7 @@ Both resolve through the registry, so a DXF drawing and a GLB behave identically
 
 :::warning
 `pickSceneObject` calls `updateMatrixWorld(true)` before raycasting. `Raycaster.intersectObject()`
-does not do it, and the BIM renderer draws on demand — so an object added or moved with no render
+does not do it, and the BIM renderer draws on demand, so an object added or moved with no render
 since is otherwise tested against a stale, usually identity, matrix and the click misses it.
 :::
 
@@ -309,7 +309,7 @@ model's grid along world X and Z, so a floorplan opens square to the screen. The
 angle, or a two-click line on the open plan) and the BIM file menu's **Set project north** (a click on a model
 edge in the 3D view, snapped and highlighted as the dimension tool does) both write it; moving the model never does. `shared/placement/projectNorth` holds the maths.
 
-Scaling is always **proportional — one number, never per axis**. The gizmo writes only the axis
+Scaling is always **proportional: one number, never per axis**. The gizmo writes only the axis
 being dragged, so `uniformScale()` resolves the three components back to the single value the drag
 meant and the object is re-scaled uniformly.
 
@@ -331,7 +331,7 @@ speed slider from 0.1x to 3x. Clips autoplay at 1x on every load path; one clip 
 a file offering alternatives does not blend them.
 
 :::warning
-Playback is **session-only** and is never persisted — there is no column for it and none is planned.
+Playback is **session-only** and is never persisted. There is no column for it and none is planned.
 A reload restores the first clip at 1x.
 :::
 
@@ -406,7 +406,7 @@ and applies the mode afterwards. Setting the mode before attaching silently lose
 
 ## Related
 
-- [State Management](../architecture/state-management.mdx) — `ToolsContext`, `BimContext`
-- [Components — Toolbar](./toolbar.md)
-- [Concepts — BIM and IFC](../concepts/bim-and-ifc.mdx)
-- [Guides — BIM Viewer](../guides/bim-viewer.md)
+- [State Management](../architecture/state-management.mdx): `ToolsContext`, `BimContext`
+- [Components: Toolbar](./toolbar.md)
+- [Concepts: BIM and IFC](../concepts/bim-and-ifc.mdx)
+- [Guides: BIM Viewer](../guides/bim-viewer.md)

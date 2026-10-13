@@ -1,6 +1,6 @@
 ---
 title: Deployment Overview
-description: Choose how to run the CDT platform — self-hosted on your own infrastructure or managed by the CDT team.
+description: "Choose how to run the CDT platform: self-hosted on your own infrastructure or managed by the CDT team."
 sidebar_position: 1
 ---
 
@@ -24,9 +24,9 @@ A fully managed SaaS deployment hosted in Canada, or an assisted deployment wher
 
 ## In this section
 
-- [Self-Hosting](./self-hosting.md) — deploy CDT yourself with Docker or Podman
-- [Services](./services.md) — PostgreSQL, MinIO, Martin/PostGIS, Node/Next.js, Open Data Service
-- [CDT Hosted](./cdt-hosted.md) — managed SaaS and assisted deployment options
+- [Self-Hosting](./self-hosting.md): deploy CDT yourself with Docker or Podman
+- [Services](./services.md): PostgreSQL, MinIO, Martin/PostGIS, Node/Next.js, Open Data Service
+- [CDT Hosted](./cdt-hosted.md): managed SaaS and assisted deployment options
 
 ## Related
 

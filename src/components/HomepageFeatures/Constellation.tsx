@@ -10,7 +10,7 @@ const M_VB_H = 850;
 export function TechConstellation(): ReactNode {
   const [hovered, setHovered] = useState<TechId | null>(null);
 
-  // Adjacency map — for each node, the set of directly connected node ids.
+  // Adjacency map: for each node, the set of directly connected node ids.
   const neighbors = useMemo(() => {
     const m = new Map<TechId, Set<TechId>>();
     for (const t of TECH_STACK) m.set(t.id, new Set());
@@ -101,7 +101,7 @@ export function TechConstellation(): ReactNode {
         })}
       </svg>
 
-      {/* Node layer — positions come from CSS vars, swapped by media query */}
+      {/* Node layer: positions come from CSS vars, swapped by media query */}
       {TECH_STACK.map((t) => {
         const active = hovered === t.id;
         const highlighted = isHighlighted(t.id);

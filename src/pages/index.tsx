@@ -36,9 +36,9 @@ function ArchitectureSketch() {
   const VH = 520;
   const NODE_R = 16;
 
-  // 4-column grid for services — gateway centered
+  // 4-column grid for services, gateway centered
   const xs = [180, 300, 420, 540];
-  const cx = VW / 2; // 360 — used for wide center-aligned nodes
+  const cx = VW / 2; // 360, used for wide center-aligned nodes
   const ys = { user: 60, frontend: 140, api: 220, backend: 310, data: 400, infra: 480 };
 
   // Flow-kind colors (identical to PlatformArchitecture)
@@ -215,7 +215,7 @@ function ArchitectureSketch() {
         </svg>
       } />
 
-      {/* Backend services — one per kind */}
+      {/* Backend services, one per kind */}
       <Node x={xs[0]} y={ys.backend} icon={
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
           <path d="M8 2 L14 4.5 V10 C14 12.5 10.5 14.5 8 15 C5.5 14.5 2 12.5 2 10 V4.5 Z" />
@@ -295,7 +295,7 @@ function HomepageHeader() {
 
       <div className={styles.heroInner}>
         <div className={styles.heroGrid}>
-          {/* Left — text */}
+          {/* Left: text */}
           <div className={styles.heroLeft}>
             <div className={styles.heroTagline}>Documentation</div>
 
@@ -367,7 +367,7 @@ function HomepageHeader() {
             </div>
           </div>
 
-          {/* Right — visual */}
+          {/* Right: visual */}
           <HeroVisual />
         </div>
       </div>

@@ -89,6 +89,6 @@ Each panel reads `ability` from `usePermissions()`; see [Shared conventions](./o
 
 ## Related
 
-- [Hooks — Users](../hooks/users.md)
-- [Hooks — Organizations](../hooks/organizations.md)
+- [Hooks: Users](../hooks/users.md)
+- [Hooks: Organizations](../hooks/organizations.md)
 - [Authorization](../authorization/authorization_roles_permissions.md)

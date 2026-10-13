@@ -27,7 +27,7 @@ const { resources, isLoading } = useResources();
 
 <!-- Inline the parameter rather than tabling it: "Fetches one X by `id` (`number | null`)." -->
 
-<!-- Only table the return fields that are SPECIFIC to this hook. Never repeat isLoading / isError / isMutating — they are in Shared conventions. -->
+<!-- Only table the return fields that are SPECIFIC to this hook. Never repeat isLoading / isError / isMutating, since they are in Shared conventions. -->
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -50,7 +50,7 @@ const { resource, isLoading, updateResource } = useResource(id);
 - <!-- the guide or component that uses these -->
 
 <!--
-STYLE RULES for this section — follow them or the page will not match the rest of the docs:
+STYLE RULES for this section. Follow them or the page will not match the rest of the docs:
 - No `### Signature` / `### Parameters` / `### Returns` / `### Example` / `### Notes` headings.
   Put the signature in the H2 (`## \`useResource(id)\``) and let prose and one table carry the rest.
 - No "Parameters: None." stubs. Omit the section.

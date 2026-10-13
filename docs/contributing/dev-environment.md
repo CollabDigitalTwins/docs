@@ -1,13 +1,13 @@
 ---
 title: Dev Environment Setup
-description: Set up a local development environment for contributing to @collabdt/core — the open-source heart of CDT.
+description: Set up a local development environment for contributing to @collabdt/core, the open-source heart of CDT.
 sidebar_position: 2
 ---
 
 # Dev Environment Setup
 
 This page covers what you need on your machine to contribute to
-[**`@collabdt/core`**](https://github.com/CollabDigitalTwins/core) — the
+[**`@collabdt/core`**](https://github.com/CollabDigitalTwins/core), the
 open-source library that powers CDT's viewers, UI components, hooks, and plugin
 SDK. If you only want to *use* CDT or self-host it, see the
 [Installation](../getting-started/installation.mdx) and
@@ -25,12 +25,12 @@ CDT deployment with the next platform release.
 
 | Tool | Version | Notes |
 |------|---------|-------|
-| **Node.js** | 22.2.0 | the repo ships an `.nvmrc` — `nvm use` picks it up |
+| **Node.js** | 22.2.0 | the repo ships an `.nvmrc`, which `nvm use` picks up |
 | **Yarn** | 1.x classic | the repo's lockfile is `yarn.lock` |
 | **Git** | any recent | required to clone and push branches |
 | **VS Code** | latest | recommended editor |
 
-No database or Docker setup is needed to develop core — it's a library.
+No database or Docker setup is needed to develop core, since it's a library.
 
 ## Initial setup
 
@@ -45,27 +45,27 @@ yarn hooks:install   # enables the repo's git hooks
 
 | Command | What it does |
 |---------|--------------|
-| `yarn build` | full library build — tsup (per-file ESM), CSS copy, type declarations |
+| `yarn build` | full library build: tsup (per-file ESM), CSS copy, type declarations |
 | `yarn dev` | watch mode: rebuilds `dist/` on every change |
 | `yarn test:unit` | Vitest unit tests (watch mode: `yarn test:unit:watch`) |
 | `yarn lint` | ESLint over `src/` |
 
-Run all three (`build`, `test:unit`, `lint`) before opening a PR — CI checks the same.
+Run all three (`build`, `test:unit`, `lint`) before opening a PR. CI checks the same.
 
 ## Seeing your changes running
 
 `@collabdt/core` is a library, so day-to-day you validate changes with the unit
-test suite (Vitest covers the viewers, plugin host, and UI logic — see
+test suite (Vitest covers the viewers, plugin host, and UI logic; see
 [TESTING.md](https://github.com/CollabDigitalTwins/core/blob/dev/TESTING.md)).
 
 To see a change running inside the full platform:
 
-- **During review** — maintainers exercise every core PR inside the platform
+- **During review**: maintainers exercise every core PR inside the platform
   before merging, and will share screenshots/feedback on visual changes.
-- **Self-hosters** — platform releases pick up the new core version; watch the
+- **Self-hosters**: platform releases pick up the new core version; watch the
   [changelog](../changelog.md) for the release that includes your change.
 - A standalone **dev harness** (a runnable sandbox app inside the core repo) is
-  on the roadmap to close this gap — track progress in the repo's issues.
+  on the roadmap to close this gap. Track progress in the repo's issues.
 
 ## Contribution flow
 
@@ -81,7 +81,7 @@ Full details: [Git Workflow](./git-workflow.md) and the repo's
 ## Building a plugin instead?
 
 If your goal is to *extend* CDT rather than change its internals, start with the
-[Plugins overview](../plugins/overview.md) — plugins build against the plugin
+[Plugins overview](../plugins/overview.md). Plugins build against the plugin
 SDK and don't require platform internals knowledge.
 
 ## Related

@@ -12,11 +12,11 @@ CDT uses a feature-branch workflow on top of two long-lived branches: `dev` (int
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Production. Protected — only maintainers merge here, which triggers a CI release (`semantic-release`) and deploy. |
+| `main` | Production. Protected: only maintainers merge here, which triggers a CI release (`semantic-release`) and deploy. |
 | `dev` | Development integration. Feature branches merge here first via reviewed PRs. |
 | `feature/*` | Your work. Branch off `dev`, then open a PR back into `dev`. |
 
-> **Branch protection.** `main` and `dev` are protected. Contributions go through **pull requests** — direct pushes to `main` and `dev` are restricted to maintainers. PRs into `dev` require maintainer review and approval, and only maintainers promote `dev` to `main`.
+> **Branch protection.** `main` and `dev` are protected. Contributions go through **pull requests**. Direct pushes to `main` and `dev` are restricted to maintainers. PRs into `dev` require maintainer review and approval, and only maintainers promote `dev` to `main`.
 
 ### Creating a feature branch from a GitHub issue
 
@@ -64,7 +64,7 @@ CDT follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1
 
 ## Authorship
 
-Commits credit the people who wrote them. Do not add an AI assistant as an author or co-author — no `Co-authored-by:` trailer naming an assistant, and no generated-by footer. You are welcome to use an assistant; describe how in the pull request, where it is useful context for reviewers rather than a permanent claim on the contributor record.
+Commits credit the people who wrote them. Do not add an AI assistant as an author or co-author. That means no `Co-authored-by:` trailer naming an assistant, and no generated-by footer. You are welcome to use an assistant; describe how in the pull request, where it is useful context for reviewers rather than a permanent claim on the contributor record.
 
 `yarn hooks:install` rejects such a trailer before the commit is written, and the **AI attribution** check enforces the same rule on every pull request. To check a branch yourself:
 
@@ -94,7 +94,7 @@ See the [semantic-release docs](https://semantic-release.gitbook.io/semantic-rel
 
 ## Forking the repository
 
-Contributions target [`@collabdt/core`](https://github.com/CollabDigitalTwins/core) — the open-source library. To contribute:
+Contributions target [`@collabdt/core`](https://github.com/CollabDigitalTwins/core), the open-source library. To contribute:
 
 1. Fork [CollabDigitalTwins/core](https://github.com/CollabDigitalTwins/core) on GitHub.
 2. Clone your fork and install dependencies:
@@ -116,7 +116,7 @@ yarn lint
 4. Push to your fork and open a pull request against `dev`. You'll be asked to
    sign the Contributor License Agreement on your first PR.
 
-No environment files or services are needed — core is a library. See
+No environment files or services are needed, because core is a library. See
 [Dev Environment Setup](./dev-environment.md) for the full guide.
 
 ## Related
