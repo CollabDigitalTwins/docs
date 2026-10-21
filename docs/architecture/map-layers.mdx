@@ -90,7 +90,7 @@ Renders files that have been pinned to map coordinates (images, IFC footprints, 
 
 ### OpenDataLayers (`OpenDataLayers`)
 
-Renders datasets fetched from external open data portals (ArcGIS, CKAN, Opendatasoft) as vector or GeoJSON sources.
+Renders datasets fetched from external open data portals (ArcGIS, CKAN, Opendatasoft, Socrata) and map services. Each dataset gets one of three components: `GeoJsonDatasetLayer` (one source per geometry family, styled from the dataset's `DatasetStyle`), `MVTDatasetLayer` (vector tiles), or `RasterDatasetLayer` (WMS, WMTS, ArcGIS map/image services and XYZ tiles).
 
 **Data:** Active datasets from `DatasetsProvider`.  
 **Click priority:** `OpenDataLayerClickPriority = 350`  
@@ -127,7 +127,7 @@ Renders the georeferenced footprint of a loaded IFC model on the map. Hides the 
 | `@collabdt/core/core/components/viewers/map/src/MapLayers/src/CommentLayers/CommentLayers.tsx` | Comment layer implementation |
 | `@collabdt/core/core/components/viewers/map/src/MapLayers/src/SensorsLayer/index.tsx` | Sensor layer implementation |
 | `@collabdt/core/core/components/viewers/map/src/MapLayers/src/FileLayer/index.tsx` | File layer implementation |
-| `@collabdt/core/core/components/viewers/map/src/MapLayers/src/OpenDataLayers/src/index.tsx` | Open data layer implementation |
+| `@collabdt/core/core/components/viewers/map/src/MapLayers/src/OpenDataLayer/src/index.tsx` | Open data layer orchestrator and click handling |
 | `@collabdt/core/core/components/viewers/map/src/MapLayers/src/BimLayer/index.tsx` | BIM footprint layer |
 | `@collabdt/core/core/components/viewers/map/src/MapLayers/src/SiteLayer/index.ts` | `createSitesDataset()` utility |
 | `@collabdt/core/core/components/viewers/map/utils/MapEventManager/MapClickManager.ts` | Click priority registry |

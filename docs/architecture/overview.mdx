@@ -47,7 +47,7 @@ See [Data Layer](./data-layer.mdx) for the schema, migrations, Martin configurat
 
 | Service | Purpose |
 |---|---|
-| **CKAN** | Open data portal API, proxied through `/api/ckanProxy` and `/api/opendatasoftProxy` to avoid CORS and hide credentials |
+| **CKAN** | Open data portal API, proxied through a single `/api/openDataProxy` route to avoid CORS and hide credentials (`/api/ckanProxy`, `/api/opendatasoftProxy` and `/api/socrataProxy` remain as aliases for older clients). The Socrata app token is only sent to hosts registered as Socrata portals. The proxy only forwards to hosts of registered open-data portals (signed-in users may also reach any other public host, whose responses are only ever cached privately), and never to private or loopback addresses |
 | **Google reCAPTCHA v3** | Bot protection on the sign-in form |
 | **Geocode Earth** | Forward and reverse geocoding for address search (`GEOCODE_EARTH_API_KEY`) |
 | **NRCan elevation services** | Canadian elevation and hillshade raster tiles, proxied via rewrites in `next.config.ts` |

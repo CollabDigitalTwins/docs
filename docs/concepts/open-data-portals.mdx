@@ -28,14 +28,36 @@ Each `DataManagementSystem` has an adapter that knows how to fetch and normalise
 | System | Value | Adapter |
 |--------|-------|---------|
 | CKAN | `Ckan` | `ckanDatasets` |
-| ArcGIS | `Arcgis` | `arcGISDatasets` |
+| ArcGIS | `Arcgis` | `arcgisDatasets` |
 | Opendatasoft | `Opendatasoft` | `opendatasoftDatasets` |
 | Local | — | `localDatasets` |
-| Socrata | `Socrata` | <!-- TODO: confirm adapter location --> |
+| Socrata | `Socrata` | `socrataDatasets` |
 
 The adapters normalise external API responses into a common `Dataset` type with `getFeatures()` and `getFields()` methods. The map viewer calls these to build a GeoJSON `Source` and render a `Layer`.
 
 A dataset too large to load whole sets `viewport: { minZoom }`. The map then calls `getFeatures({ bbox, zoom })` for the visible area after every pan or zoom, fetches nothing below `minZoom`, and asks the user to zoom in. An organizational dataset row opts in by putting `minZoom` in its description JSON, and its URL then receives `?bbox=west,south,east,north`.
+
+### Loading
+
+Every adapter pages through its source to the end: ArcGIS at the layer's `maxRecordCount` (or by object id when the server cannot page), CKAN DataStore in 32,000-row pages, Opendatasoft through its GeoJSON export, and Socrata through SODA. ArcGIS, Opendatasoft and Socrata datasets set `viewport: { minZoom: 0 }` and use `viewportLoader`, which:
+
+- loads a dataset whole when it has up to 50,000 features, or when the map is zoomed out past zoom 11, and then serves every view from that copy,
+- otherwise splits the view into fixed zoom-11 tiles, each fetched with the source's own spatial filter, and
+- caches each tile and each whole dataset in IndexedDB, so a pan reuses what is already loaded.
+
+ArcGIS line and polygon layers are an exception to the count rule, because a few hundred detailed polygons can weigh hundreds of megabytes: the server simplifies them to about one screen pixel, as a whole overview at three detail levels when zoomed out and as detailed tiles from zoom 11. Points are clustered when zoomed out, whatever their style, except as a heatmap. `getFeatures` may set `truncatedAt` on the returned `FeatureCollection` (typed `LoadedFeatures`) when the 500,000-feature cap was hit, and the map then shows a notice.
+
+Portal fetchers (`fetchArcGISDatasets`, `fetchCkanDatasets`, `fetchOpenDataSoftDatasets`, `fetchSocrataDatasets`) take an optional `onDatasets` listener and call it as each service, catalogue page or view resolves. The catalogue uses it to list datasets while a large portal is still loading.
+
+For a CKAN package, the adapter picks the best resource: an ArcGIS service, then WFS, then the DataStore, then a GeoJSON file, then WMS/WMTS. ArcGIS Hub download links are mapped back to their FeatureServer. A GeoJSON file is downloaded and indexed in a web worker, and only the visible slice reaches the map.
+
+### Styling
+
+A dataset's `style` (`DatasetStyle`) holds a `renderer` (single colour, feature colour, categories, yes/no, ramp, graduated classes, or heatmap) plus opacity, border, size and label settings. The first time a dataset loads, its `fields` are profiled from the feature values (`FieldProfile`: inferred type, distinct values, numeric range, and whether it is an id). The starting style then comes from `getSourceStyle()` if the adapter provides it (ArcGIS maps `drawingInfo`), otherwise from a colour-valued property, otherwise a single colour. Panels update both through the `UPDATE_ADDED_DATASET` action.
+
+### Map services
+
+A raster dataset carries a `mapService` (`kind`, `url`, `layer`). Its tile template is resolved from the service's capabilities only when the layer is first drawn, so listing hundreds of portal datasets costs nothing.
 
 ## Groups
 
@@ -60,7 +82,7 @@ Portals are tagged with a `DatasetGroup`:
 ## Gotchas
 
 - Portal `apiUrl` and `portalUrl` are optional. Some portals in the registry may not have API access configured, which causes dataset fetches to fail silently.
-- External API rate limits and CORS policies apply. CDT fetches dataset data client-side, so the user's browser must be able to reach the external portal API directly.
+- External API rate limits apply. Data is fetched in the browser; CKAN, Opendatasoft and Socrata requests go through the app's proxies, which only forward to hosts of registered portals (or to any public host for a signed-in user).
 - `countrySubdivision` uses ISO 3166-2 format (`CA-ON`, `US-NY`). Mismatched formats cause portal lookup by subdivision to return empty results.
 
 ## Further Reading
