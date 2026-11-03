@@ -29,7 +29,7 @@ These fields are filtered out of the UI: `id`, `imageFileId`, `image`, `password
 
 Displays and edits the current user's organization record, covering branding, map defaults, language configuration, and logo and favicon upload.
 
-It fetches the organization with `useOrganization(userOrganizationId)` and tracks `editingValues` as a partial `Organization` diff, so only changed fields reach `updateOrganization`. Logo and favicon are uploaded to a public MinIO bucket through `uploadOrganizationLogoToPublicBucket`. The subdivision dropdown is populated from `countrySubdivisionsData` on `MapContext`.
+It fetches the organization with `useOrganization(userOrganizationId)` and tracks `editingValues` as a partial `Organization` diff, so only changed fields reach `updateOrganization`. Logo and favicon are uploaded to a public storage bucket through `uploadOrganizationLogoToPublicBucket`. The subdivision dropdown is populated from `countrySubdivisionsData` on `MapContext`.
 
 Without `update` on `Organization` the panel renders read-only.
 

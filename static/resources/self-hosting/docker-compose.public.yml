@@ -18,28 +18,33 @@
 version: "3.9"
 
 services:
-  minio:
-    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+  # Any S3-compatible store works; Silo (a MinIO fork) is the bundled default.
+  # To use an external provider instead, remove these two services and point
+  # S3_ENDPOINT / S3_PUBLIC_URL at it.
+  object-storage:
+    image: pgsty/silo:RELEASE.2026-10-15T00-00-00Z
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_ACCESS_SECRET}
     ports:
-      - "9000:9000"   # API access
-      - "9001:9001"   # MinIO console
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # web console
     volumes:
       - minio_data:/data:Z
 
-  minio-init:
-    image: quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
+  object-storage-init:
+    image: pgsty/silo:RELEASE.2026-10-15T00-00-00Z   # ships the mc S3 client
+    depends_on:
+      - object-storage
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_ACCESS_SECRET: ${S3_ACCESS_SECRET}
     entrypoint: >
       /bin/sh -c "
-      until mc alias set local http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD; do
-        echo 'Waiting for local MinIO...';
+      until mc alias set local http://object-storage:9000 $$S3_ACCESS_KEY $$S3_ACCESS_SECRET; do
+        echo 'Waiting for object storage...';
         sleep 2;
       done;
       mc mb --ignore-existing local/org-logos;
@@ -107,11 +112,10 @@ services:
     env_file:
       - .env
     environment:
-      # MinIO Configuration
-      MINIO_URL: ${MINIO_URL}
-      MINIO_REGION: ${MINIO_REGION}
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-      MINIO_USE_SSL: ${MINIO_USE_SSL}
+      # S3-compatible object storage
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_REGION: ${S3_REGION}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
 
       S3_ACCESS_KEY: ${S3_ACCESS_KEY}
       S3_ACCESS_SECRET: ${S3_ACCESS_SECRET}
@@ -121,11 +125,17 @@ services:
       AUTH_TRUST_HOST: ${AUTH_TRUST_HOST}
       AUTH_URL: ${AUTH_URL}
 
-      # MinIO Public URLs (for server-side config)
-      MINIO_BUCKET_URL: ${MINIO_BUCKET_URL}
+      # Object storage public base URL (browser-facing)
+      S3_PUBLIC_URL: ${S3_PUBLIC_URL}
 
-      # Basemaps
+      # Martin Tile Server (PostGIS Vector Tiles) — browser-facing URL
+      MARTIN_SERVER_URL: ${MARTIN_SERVER_URL}
+
+      # Basemap. Optional; without it the map falls back to keyless imagery.
       MAPTILER_KEY: ${MAPTILER_KEY}
+
+      # PointCloud API Service
+      POINTCLOUD_API_URL: ${POINTCLOUD_API_URL:-http://localhost:5101}
 
       # Geocoding Service
       GEOCODE_EARTH_API_KEY: ${GEOCODE_EARTH_API_KEY}
@@ -156,7 +166,7 @@ services:
     command: >
       dockerize
       -wait tcp://postgres:5432
-      -wait tcp://minio:9000
+      -wait tcp://object-storage:9000
       -timeout 90s
       node server.js
     volumes:
@@ -168,5 +178,5 @@ services:
       retries: 6
 
 volumes:
-  minio_data:
+  minio_data:   # name kept so existing installs keep their stored files
   postgres_data:

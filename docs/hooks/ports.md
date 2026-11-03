@@ -25,7 +25,7 @@ createBuilding(input: { buildingData: Partial<Building>; organizationId: string 
 
 ## Files
 
-File management backed by MinIO storage, supporting attachments to buildings, sites, and users.
+File management backed by S3-compatible object storage, supporting attachments to buildings, sites, and users.
 
 ```ts
 listFiles(): Promise<DbFile[]>

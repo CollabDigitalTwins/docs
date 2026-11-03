@@ -28,7 +28,7 @@ Both viewers draw from the same backend:
 | Service | Role |
 |---|---|
 | **PostgreSQL + PostGIS** | Building and site records, user metadata, sensor readings, BCF topics, and spatial queries |
-| **MinIO** | Binary assets: IFC files, Fragments, point clouds, media uploads. S3-compatible, versioned, Canadian-hosted |
+| **Object storage** (S3-compatible) | Binary assets: IFC files, Fragments, point clouds, media uploads. S3-compatible, versioned, Canadian-hosted |
 | **Martin** | Generates vector tiles from PostGIS on demand for the map viewer |
 | **Next.js API** | Validates all writes, runs the IFC to Fragments conversion pipeline, enforces role-based access control |
 

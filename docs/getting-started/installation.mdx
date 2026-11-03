@@ -18,7 +18,7 @@ This guide walks through setting up a local CDT development environment. Plan fo
 | **Node.js** | 18.0 or newer (LTS recommended) | Runs the Next.js application |
 | **Yarn** or **npm** | latest | Package manager |
 | **Git** | any recent version | Cloning the repository |
-| **Docker** *(optional)* | 24.0 or newer | Runs PostgreSQL, MinIO, and Martin locally |
+| **Docker** *(optional)* | 24.0 or newer | Runs PostgreSQL, object storage, and Martin locally |
 
 Verify your installations:
 
@@ -64,17 +64,17 @@ Open `.env` and fill in values. For a minimal local setup, the **required** vari
 - `DATABASE_URL`: PostgreSQL connection string
 - `AUTH_SECRET`: any random 32+ character string
 - `AUTH_URL`: `http://localhost:3000`
-- `S3_ACCESS_KEY` and `S3_ACCESS_SECRET`: MinIO credentials
-- `MINIO_ENDPOINT`: `localhost` for local MinIO
+- `S3_ACCESS_KEY` and `S3_ACCESS_SECRET`: object storage credentials (you choose them for the local store)
+- `S3_ENDPOINT`: `http://localhost:9000` for the local store
 
 All other keys are **optional** and only needed if you want to test the matching feature (Google OAuth, Geocode Earth, reCAPTCHA, etc.). The full list with descriptions is in the [Environment variables reference](./environment-variables.mdx).
 
 ## 4. Start the database services
 
-The simplest path is to run PostgreSQL and MinIO locally with Docker Compose:
+The simplest path is to run PostgreSQL and object storage locally with Docker Compose:
 
 ```bash
-docker compose up -d postgres minio
+docker compose up -d postgres object-storage object-storage-init
 ```
 
 Apply Prisma migrations once the database is ready:
@@ -83,7 +83,7 @@ Apply Prisma migrations once the database is ready:
 npx prisma migrate dev
 ```
 
-If you have an existing PostgreSQL or MinIO instance you want to use instead, point `DATABASE_URL` and the MinIO variables at it and skip the Docker step.
+If you have an existing PostgreSQL database or S3-compatible store you want to use instead, point `DATABASE_URL` and the `S3_*` variables at it and skip the Docker step.
 
 ## 5. Start the development server
 

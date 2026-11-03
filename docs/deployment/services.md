@@ -1,6 +1,6 @@
 ---
 title: Services
-description: "Configuration reference for every service in the CDT stack: PostgreSQL, MinIO, Martin/PostGIS, the Node application, and the Open Data Service."
+description: "Configuration reference for every service in the CDT stack: PostgreSQL, S3-compatible object storage, Martin/PostGIS, the Node application, and the Open Data Service."
 sidebar_position: 2
 ---
 
@@ -67,27 +67,29 @@ postgresql://<POSTGRES_USER>:<POSTGRES_PASSWORD>@postgres:5432/<POSTGRES_DB>
 
 The hostname `postgres` resolves through Docker Compose internal networking. Port 5432 must not be publicly accessible in production. Restrict inbound access to trusted internal networks only.
 
-## MinIO
+## S3-compatible object storage
 
-**Image:** `quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z`
+**Image:** `pgsty/silo:RELEASE.2026-10-15T00-00-00Z` (Silo, a community-maintained MinIO fork; MinIO no longer publishes pullable images)
 **Purpose:** S3-compatible object storage for unstructured digital twin assets: BIM models, point clouds, GIS data, images, and videos.
 
 ### Installation
 
-MinIO starts as part of the CDT Compose stack. A one-time `minio-init` service runs on first startup to:
+The `object-storage` service starts as part of the CDT Compose stack. A one-time `object-storage-init` service runs on first startup to:
 
-1. Wait for MinIO to become available
+1. Wait for object storage to become available
 2. Create the platform's storage buckets (for example, `users` and `building-footprints`) if they do not exist
 3. Exit automatically after initialization
 
 No manual bucket creation is needed.
 
+To use an external provider (AWS S3, Cloudflare R2, Backblaze B2, Garage, SeaweedFS, …) instead, remove both services from the Compose file, create the buckets on the provider, and point the variables under [Integration](#integration) at it.
+
 ### Configuration
 
 | Variable | Purpose |
 |----------|---------|
-| `MINIO_ROOT_USER` | Administrator username |
-| `MINIO_ROOT_PASSWORD` | Administrator password |
+| `S3_ACCESS_KEY` | Administrator username of the bundled store (also the app's access key) |
+| `S3_ACCESS_SECRET` | Administrator password of the bundled store (also the app's secret key) |
 
 **Ports:**
 
@@ -96,26 +98,29 @@ No manual bucket creation is needed.
 | `9000` | S3-compatible API endpoint |
 | `9001` | Web-based management console |
 
-**Persistent storage:** Volume `minio_data` mounted at `/data`. Data persists across restarts and redeployments.
+**Persistent storage:** Volume `minio_data` (name kept for existing installs) mounted at `/data`. Data persists across restarts and redeployments.
 
-**Health check:** MinIO's built-in health endpoint is used to verify service readiness before dependent services start.
+**Readiness:** the app waits for port 9000 to accept connections before it starts.
 
 ### Integration
 
 - **Port 9000 (API):** Used by the CDT backend and frontend viewers to upload, retrieve, and stream digital twin assets. Must be protected by TLS (HTTPS) in production.
 - **Port 9001 (Console):** Browser-based management UI. Restrict access to trusted administrator networks or IP addresses only.
 
-**Production deployment:** Place MinIO behind a reverse proxy (e.g. Nginx or Traefik) with valid TLS certificates. Without TLS, mixed-content warnings may occur when MinIO is accessed from secure frontend applications.
+**Production deployment:** Place object storage behind a reverse proxy (e.g. Nginx or Traefik) with valid TLS certificates. Without TLS, mixed-content warnings may occur when storage is accessed from secure frontend applications.
 
-The Node application connects to MinIO using these environment variables:
+The Node application connects to object storage using these environment variables:
 
 | Variable | Purpose |
 |----------|---------|
-| `MINIO_ENDPOINT` | MinIO hostname or IP |
-| `MINIO_USE_SSL` | `true` in production |
+| `S3_ENDPOINT` | S3 API URL including protocol; must be browser-reachable because presigned URLs embed it |
+| `S3_REGION` | Region, default `us-east-1` |
+| `S3_FORCE_PATH_STYLE` | `true` (default) for path-style URLs; `false` for virtual-hosted-style providers |
 | `S3_ACCESS_KEY` | Access key |
 | `S3_ACCESS_SECRET` | Secret key |
-| `MINIO_BUCKET_URL` | Public bucket base URL |
+| `S3_PUBLIC_URL` | Public bucket base URL |
+
+The deprecated `MINIO_URL`, `MINIO_REGION` and `MINIO_BUCKET_URL` are still read as fallbacks and log a warning; `MINIO_ENDPOINT` and `MINIO_USE_SSL` are no longer read.
 
 ## Martin / PostGIS
 
@@ -208,7 +213,7 @@ External service dependencies:
 | Service | Connection | Used for |
 |---------|-----------|---------|
 | PostgreSQL | `DATABASE_URL` | All application data |
-| MinIO | `S3_ACCESS_KEY` / `S3_ACCESS_SECRET` | Asset storage |
+| Object storage | `S3_ENDPOINT` / `S3_ACCESS_KEY` / `S3_ACCESS_SECRET` | Asset storage |
 | Martin | `MARTIN_SERVER_URL` | Map tile consumption |
 
 Notable libraries:

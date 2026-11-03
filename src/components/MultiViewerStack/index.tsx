@@ -10,7 +10,7 @@ import {
   NextLogo,
   PostgresLogo,
   PostGisLogo,
-  MinioLogo,
+  SiloLogo,
 } from '../HomepageFeatures/logos';
 
 const MOBILE_BREAKPOINT = 768;
@@ -280,10 +280,10 @@ const MultiViewerStack: FC = () => {
       />
       <Card
         kind="unstruct"
-        title="MinIO"
+        title="Object storage"
         sub="Binary files: IFC, Fragments, point clouds, media."
         chips={[
-          { label: 'MinIO', logo: <MinioLogo size={14} /> },
+          { label: 'S3 Silo', logo: <SiloLogo size={14} /> },
         ]}
       />
     </div>

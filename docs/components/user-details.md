@@ -38,7 +38,7 @@ await detailsRef.current?.saveChanges();
 
 When `selectedUser.id` is negative the component renders a creation form with name, email, role and password fields. Passwords must be 12 to 65 characters with an uppercase letter, a lowercase letter, a digit and a special character; inline feedback shows strength as the user types. Roles come from `useOrganizationRoles` for the current session's organization.
 
-In edit mode, clicking the avatar opens a file picker; the image uploads to MinIO through a presigned URL and is associated with the user. The submit button shows a spinner while a request is in flight, and validation errors and API failures surface through `toast.error`.
+In edit mode, clicking the avatar opens a file picker; the image uploads to object storage through a presigned URL and is associated with the user. The submit button shows a spinner while a request is in flight, and validation errors and API failures surface through `toast.error`.
 
 `AddUser` is a modal wrapper around this panel for quick user creation, and `UserMoreOptions` provides bulk import and export actions.
 

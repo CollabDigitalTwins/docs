@@ -48,7 +48,7 @@ New layers start with the publisher's own styling when the source provides it (A
    - **ArcGIS map service** or **ArcGIS image service**: a whole MapServer or ImageServer, drawn as imagery.
    - **XYZ tiles**: a tile URL containing `{z}`, `{x}` and `{y}`.
 3. Choose visibility: **Private** (only you) or **Organization** (all members).
-4. The dataset is listed alongside official datasets. Uploaded GeoJSON is stored in MinIO. Everything else is fetched live from its source.
+4. The dataset is listed alongside official datasets. Uploaded GeoJSON is stored in object storage. Everything else is fetched live from its source.
 
 Map services are imagery, so their features are not individually clickable. You can still set their opacity, and WMS, WMTS and ArcGIS map services show the server's legend under the layer. While their tiles load, the layer's row shows the share already drawn.
 
