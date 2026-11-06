@@ -56,6 +56,34 @@ Role-based visibility is separate from CASL, and deliberately so: the `accessibl
 
 Collapsed and expanded state drives label visibility and layout throughout, through an `isCollapsed` derived value rather than `sidebarState` directly. On mobile the sheet's open state counts as expanded, so labels render correctly while the drawer is visible.
 
+## AppSidebar
+
+`AppSidebar` is the frame around `AppSidebarContent`: the toggle buttons, the footer, and the avatar menu (`NavUser`).
+
+```tsx
+import { AppSidebar } from '@collabdt/core/core/components/ui/AppSidebar';
+import { DropdownMenuItem } from '@collabdt/core/core/components/ui/DropdownMenu';
+
+<AppSidebar
+  signOut={signOut}
+  userMenuItems={
+    <DropdownMenuItem asChild>
+      <Link href={`/${organization.name}/usage`}>Usage</Link>
+    </DropdownMenuItem>
+  }
+>
+  <AppSidebarContent organization={organization} />
+</AppSidebar>
+```
+
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `signOut` | `(options?) => Promise<void>` | Yes | — | Called by the avatar menu's Logout item |
+| `children` | `ReactNode` | No | `undefined` | Sidebar body, usually `AppSidebarContent` |
+| `userMenuItems` | `ReactNode` | No | `undefined` | Extra `DropdownMenuItem`s in the avatar menu, rendered between Settings and Logout |
+
+`userMenuItems` is a slot rather than a list of routes, so core stays free of app routes: the app decides what the item links to and who sees it.
+
 ## Related
 
 - [useMenusContext](../hooks/ui.md)

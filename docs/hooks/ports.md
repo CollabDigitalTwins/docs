@@ -81,6 +81,15 @@ updateOrganization(id: string, patch: Partial<Organization>): Promise<Organizati
 getOrganizationRoles(orgId: string): Promise<Role[]>
 ```
 
+## Usage
+
+```ts
+getMyUsage(): Promise<VolumeReport>
+getOrganizationUsage(): Promise<UserUsageReport>
+```
+
+`getMyUsage` covers the files the signed-in user uploaded. `getOrganizationUsage` covers their organization, broken down per uploader. The backend takes the organization from the session and decides who may see it, usually org admins. Types are in `@collabdt/core/core/types/usage`. See [Usage components](../components/usage.md).
+
 ## Open Data Portals
 
 Queries against external open data portal references, by geographic and categorical filters.
