@@ -71,7 +71,7 @@ Open the Buildings list and use the filter controls at the top for construction 
 
 ## Storage layers
 
-Files attached to a building are split across two storage layers: binary payloads in MinIO (S3-compatible), and metadata in PostgreSQL, indexed for fast querying.
+Files attached to a building are split across two storage layers: binary payloads in S3-compatible object storage, and metadata in PostgreSQL, indexed for fast querying.
 
 The platform also distinguishes **georeferenced files**, defined by longitude/latitude and placed on the map automatically, from **local Cartesian files**, defined by XYZ coordinates relative to the building origin and displayed in the BIM viewer. Both record provenance and respect permission-based access.
 

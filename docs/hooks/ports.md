@@ -25,7 +25,7 @@ createBuilding(input: { buildingData: Partial<Building>; organizationId: string 
 
 ## Files
 
-File management backed by MinIO storage, supporting attachments to buildings, sites, and users.
+File management backed by S3-compatible object storage, supporting attachments to buildings, sites, and users.
 
 ```ts
 listFiles(): Promise<DbFile[]>
@@ -80,6 +80,15 @@ getOrganizationByName(name: string): Promise<Organization | null>
 updateOrganization(id: string, patch: Partial<Organization>): Promise<Organization>
 getOrganizationRoles(orgId: string): Promise<Role[]>
 ```
+
+## Usage
+
+```ts
+getMyUsage(): Promise<VolumeReport>
+getOrganizationUsage(): Promise<UserUsageReport>
+```
+
+`getMyUsage` covers the files the signed-in user uploaded. `getOrganizationUsage` covers their organization, broken down per uploader. The backend takes the organization from the session and decides who may see it, usually org admins. Types are in `@collabdt/core/core/types/usage`. See [Usage components](../components/usage.md).
 
 ## Open Data Portals
 

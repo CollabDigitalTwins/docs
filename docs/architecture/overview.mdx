@@ -10,7 +10,7 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 
 # Architecture Overview
 
-CDT is a full-stack Next.js 15 application that combines two specialized visualization engines, maps and BIM/IFC models, with a REST API layer and a PostgreSQL + MinIO storage backend. The entire application, from server-side rendering to API routes, lives in a single Next.js deployment, which keeps infrastructure simple while still supporting a rich interactive browser experience. Authentication, RBAC authorization, and multi-tenant organization support are built in at the framework level.
+CDT is a full-stack Next.js 15 application that combines two specialized visualization engines, maps and BIM/IFC models, with a REST API layer and a PostgreSQL + S3-compatible storage backend. The entire application, from server-side rendering to API routes, lives in a single Next.js deployment, which keeps infrastructure simple while still supporting a rich interactive browser experience. Authentication, RBAC authorization, and multi-tenant organization support are built in at the framework level.
 
 ## High-Level Architecture
 
@@ -39,7 +39,7 @@ CDT's backend is a single **Core API** that lives entirely inside Next.js API ro
 
 ## Data Layer
 
-All structured data lives in **PostgreSQL**, accessed through **Prisma ORM**, with **Organization** as the top-level tenant that every other record is scoped to. Geospatial data lives in **PostGIS** and is served to MapLibre as Mapbox Vector Tiles by the **Martin** tile server, avoiding full GeoJSON payloads. Binary assets are stored in **MinIO** (S3-compatible), uploaded and downloaded directly by the browser through presigned URLs so large files never pass through the Next.js process.
+All structured data lives in **PostgreSQL**, accessed through **Prisma ORM**, with **Organization** as the top-level tenant that every other record is scoped to. Geospatial data lives in **PostGIS** and is served to MapLibre as Mapbox Vector Tiles by the **Martin** tile server, avoiding full GeoJSON payloads. Binary assets are stored in **S3-compatible object storage**, uploaded and downloaded directly by the browser through presigned URLs so large files never pass through the Next.js process.
 
 See [Data Layer](./data-layer.mdx) for the schema, migrations, Martin configuration, and indexing strategy, and [Data Model](./data-model.mdx) for the entity field reference.
 

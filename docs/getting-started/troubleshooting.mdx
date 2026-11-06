@@ -82,19 +82,19 @@ npx prisma migrate dev
 
 If you restored a `pg_dump` from a different version, the schema may be out of sync. Either run pending migrations with `npx prisma migrate deploy`, or reset to a clean database and reapply.
 
-## Object storage (MinIO)
+## Object storage
 
 ### `AccessDenied` when uploading or downloading files
 
-The application's `S3_ACCESS_KEY` and `S3_ACCESS_SECRET` do not match a MinIO user with bucket access. Check the MinIO console at `http://<host>:9001` and confirm the access key exists and has read/write policy on the relevant buckets.
+The application's `S3_ACCESS_KEY` and `S3_ACCESS_SECRET` do not match a storage user with bucket access. Check your provider's console (the bundled store's is at `http://<host>:9001`) and confirm the access key exists and has read/write policy on the relevant buckets.
 
 ### Files upload but cannot be downloaded by the browser
 
-`MINIO_BUCKET_URL` does not match how the browser actually reaches MinIO. In production this should be a public URL behind TLS, not an internal Docker hostname.
+`S3_PUBLIC_URL` does not match how the browser actually reaches object storage. In production this should be a public URL behind TLS, not an internal Docker hostname.
 
-### "Mixed content" warnings when CDT is on HTTPS but MinIO is HTTP
+### "Mixed content" warnings when CDT is on HTTPS but storage is HTTP
 
-Browsers block insecure subresource requests from secure pages. Put MinIO behind a reverse proxy with TLS and set `MINIO_USE_SSL=true`.
+Browsers block insecure subresource requests from secure pages. Put object storage behind a reverse proxy with TLS and use `https://` in `S3_ENDPOINT` and `S3_PUBLIC_URL`.
 
 ## Authentication
 
@@ -140,7 +140,7 @@ The application container is not responding on its expected port. Common causes:
 
 ### Static assets return 404 in production
 
-`AUTH_URL` and `MINIO_BUCKET_URL` must match the public hostnames the browser uses. A mismatch causes the browser to request assets from URLs the proxy does not route.
+`AUTH_URL` and `S3_PUBLIC_URL` must match the public hostnames the browser uses. A mismatch causes the browser to request assets from URLs the proxy does not route.
 
 ### Health checks fail intermittently
 

@@ -1,14 +1,14 @@
 import type { LogoComp } from './logos';
 import {
   NextLogo, ReactLogo, TsLogo, TailwindLogo, NodeLogo,
-  NextAuthLogo, PrismaLogo, PostgresLogo, PostGisLogo, MinioLogo,
+  NextAuthLogo, PrismaLogo, PostgresLogo, PostGisLogo, SiloLogo,
   MapLibreLogo, MartinLogo, DeckLogo, ThreeLogo, PotreeLogo, DockerLogo,
   ShadcnLogo, TocLogo, SparkLogo,
 } from './logos';
 
 export type TechId =
   | 'next' | 'react' | 'ts' | 'tailwind' | 'shadcn' | 'node'
-  | 'nextauth' | 'prisma' | 'postgres' | 'postgis' | 'minio'
+  | 'nextauth' | 'prisma' | 'postgres' | 'postgis' | 'silo'
   | 'maplibre' | 'martin' | 'deck' | 'three' | 'toc' | 'potree' | 'spark' | 'docker';
 
 export type Tech = {
@@ -40,7 +40,7 @@ export const TECH_STACK: Tech[] = [
   // ── Data cluster ──────────────────────────────────────
   { id: 'prisma', name: 'Prisma', Logo: PrismaLogo, href: 'https://www.prisma.io', x: 570, y: 70, mx: 355, my: 290 },
   { id: 'postgres', name: 'PostgreSQL', Logo: PostgresLogo, href: 'https://www.postgresql.org', x: 600, y: 190, mx: 235, my: 410 },
-  { id: 'minio', name: 'MinIO', Logo: MinioLogo, href: 'https://min.io', x: 700, y: 90, mx: 400, my: 440 },
+  { id: 'silo', name: 'S3 Silo', Logo: SiloLogo, href: 'https://hub.docker.com/r/pgsty/silo', x: 700, y: 90, mx: 400, my: 440 },
 
   // ── Geo cluster ───────────────────────────────────────
   { id: 'postgis', name: 'PostGIS', Logo: PostGisLogo, href: 'https://postgis.net', x: 780, y: 250, mx: 95, my: 525 },
@@ -76,8 +76,8 @@ export const TECH_EDGES: Array<[TechId, TechId]> = [
   ['node', 'prisma'],
   ['prisma', 'postgres'],
   ['postgres', 'postgis'],
-  ['node', 'minio'],
-  ['minio', 'potree'],
+  ['node', 'silo'],
+  ['silo', 'potree'],
   // Geo
   ['postgis', 'martin'],
   ['martin', 'maplibre'],
@@ -91,5 +91,5 @@ export const TECH_EDGES: Array<[TechId, TechId]> = [
   // Infra
   ['docker', 'postgres'],
   ['docker', 'node'],
-  ['docker', 'minio'],
+  ['docker', 'silo'],
 ];

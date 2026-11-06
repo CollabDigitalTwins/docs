@@ -41,16 +41,16 @@ If you are evaluating providers or sizing a VM, the stack has been tested on a 4
 | Service | Purpose |
 |---------|---------|
 | `postgres` | PostgreSQL 15 with PostGIS 3.4 for relational and geospatial data |
-| `minio` | Object storage for BIM, point clouds, and GIS files |
+| `object-storage` | S3-compatible object storage for BIM, point clouds, and GIS files (Silo by default; any S3-compatible provider works) |
 | `cdt` | Core application: API, business logic, and web UI |
-| `minio-init` | One-time init job: creates the public buckets required for the app to function |
+| `object-storage-init` | One-time init job: creates the public buckets required for the app to function |
 | `migrate` | One-time init job: applies pending database migrations on startup |
 
 ### Init Services
 
 Two short-lived services run automatically on every `docker compose up` and exit when their work is done:
 
-- **minio-init**: waits for MinIO to be healthy, then creates the public buckets required for the app to function. Safe to re-run; it skips creation for any bucket that already exists.
+- **object-storage-init**: waits for object storage to be reachable, then creates the public buckets required for the app to function. Safe to re-run; it skips creation for any bucket that already exists.
 - **migrate**: waits for PostgreSQL to be ready, then runs `prisma migrate deploy` to apply any pending schema migrations. This is idempotent and safe across upgrades.
 
 ---
@@ -113,22 +113,23 @@ These must be set before the stack will start correctly.
 | `POSTGRES_DB` | Database name |
 | `DATABASE_URL` | Full Prisma connection string, e.g. `postgresql://user:pass@postgres:5432/db` |
 
-#### Object Storage (MinIO)
+#### Object Storage (any S3-compatible provider)
+
+CDT talks to object storage through the S3 API, so the bundled `object-storage` service (Silo, a MinIO fork) can be replaced by AWS S3, Cloudflare R2, Backblaze B2, Garage, SeaweedFS or any other S3-compatible store: remove `object-storage` and `object-storage-init` from the Compose file and point the variables below at your provider.
 
 | Variable | Description |
 |----------|-------------|
-| `MINIO_ROOT_USER` | MinIO admin username |
-| `MINIO_ROOT_PASSWORD` | MinIO admin password |
-| `S3_ACCESS_KEY` | Access key for the app to authenticate with MinIO (set equal to `MINIO_ROOT_USER` for self-hosted) |
-| `S3_ACCESS_SECRET` | Secret key for the app to authenticate with MinIO (set equal to `MINIO_ROOT_PASSWORD` for self-hosted) |
-| `MINIO_ENDPOINT` | MinIO host:port without protocol. Set to match `MINIO_URL` (e.g. `host.docker.internal:9000`) |
-| `MINIO_USE_SSL` | `true` if MinIO is behind TLS, `false` for local/internal setups |
-| `MINIO_REGION` | Region string, e.g. `us-east-1` (arbitrary for self-hosted MinIO) |
-| `MINIO_URL` | The URL the app uses to connect to MinIO and generate presigned URLs. **This hostname must be reachable by browsers**, because presigned upload and download URLs embed it directly. Do not use `http://minio:9000`: that is the internal Docker network name and browsers cannot resolve it. Choose based on your environment: **Mac/Windows (Docker Desktop):** `http://host.docker.internal:9000`. Docker Desktop automatically resolves this to your host machine. **Linux (local):** `host.docker.internal` is not available by default; use your machine's LAN IP instead (e.g. `http://192.168.1.100:9000`), or add `extra_hosts: ["host.docker.internal:host-gateway"]` under the `cdt` service in `docker-compose.public.yml` and then use `http://host.docker.internal:9000`. **Server deployment:** use the public hostname and port (e.g. `http://cdt.yourorg.com:9000` or `https://files.yourorg.com`). |
-| `MINIO_BUCKET_URL` | Public base URL browsers use to load stored assets (e.g. org logos). For local use: `http://localhost:9000`. For org deployments: the public MinIO URL (same value as `MINIO_URL` in most setups). |
-| `ALLOWED_ORIGIN` | The CDT app URL, used to configure MinIO's CORS policy so the browser can upload and download files. Set to your `AUTH_URL` value (e.g. `http://localhost:6012` or `https://cdt.yourorg.com`). Defaults to `*` if unset, which is fine for local testing but should be locked down for org deployments. |
+| `S3_ACCESS_KEY` | Access key the app uses. With the bundled store, this is also its admin username. |
+| `S3_ACCESS_SECRET` | Secret key the app uses. With the bundled store, this is also its admin password (8 characters minimum). |
+| `S3_REGION` | Region string, e.g. `us-east-1` (arbitrary for the bundled store) |
+| `S3_FORCE_PATH_STYLE` | `true` (default) for path-style URLs (`host/bucket/key`). Set `false` for providers that require virtual-hosted-style URLs. |
+| `S3_ENDPOINT` | The URL the app uses to connect to object storage and generate presigned URLs. Include the protocol; `https://` enables TLS. **This hostname must be reachable by browsers**, because presigned upload and download URLs embed it directly. Do not use `http://object-storage:9000`: that is the internal Docker network name and browsers cannot resolve it. Choose based on your environment: **Mac/Windows (Docker Desktop):** `http://host.docker.internal:9000`. Docker Desktop automatically resolves this to your host machine. **Linux (local):** `host.docker.internal` is not available by default; use your machine's LAN IP instead (e.g. `http://192.168.1.100:9000`), or add `extra_hosts: ["host.docker.internal:host-gateway"]` under the `cdt` service in `docker-compose.public.yml` and then use `http://host.docker.internal:9000`. **Server deployment:** use the public hostname and port (e.g. `http://cdt.yourorg.com:9000` or `https://files.yourorg.com`). |
+| `S3_PUBLIC_URL` | Public base URL browsers use to load stored assets (e.g. org logos from the `org-logos` bucket). For local use: `http://localhost:9000`. For org deployments: the public storage URL (same value as `S3_ENDPOINT` in most setups). |
+| `ALLOWED_ORIGIN` | The CDT app URL, used to configure the storage CORS policy so the browser can upload and download files. Set to your `AUTH_URL` value (e.g. `http://localhost:6012` or `https://cdt.yourorg.com`). Defaults to `*` if unset, which is fine for local testing but should be locked down for org deployments. |
 
-> **Presigned URLs and browser reachability:** CDT generates presigned MinIO URLs server-side for file uploads and downloads. These URLs are sent to the browser, which then contacts MinIO directly. If `MINIO_URL` is set to an internal Docker hostname like `minio:9000`, presigned URLs will contain that hostname and fail in the browser. Always set `MINIO_URL` to a hostname your users' browsers can reach.
+> **Presigned URLs and browser reachability:** CDT generates presigned storage URLs server-side for file uploads and downloads. These URLs are sent to the browser, which then contacts object storage directly. If `S3_ENDPOINT` is set to an internal Docker hostname like `object-storage:9000`, presigned URLs will contain that hostname and fail in the browser. Always set `S3_ENDPOINT` to a hostname your users' browsers can reach.
+
+> **Upgrading from the `MINIO_*` variables:** rename `MINIO_URL` to `S3_ENDPOINT`, `MINIO_REGION` to `S3_REGION` and `MINIO_BUCKET_URL` to `S3_PUBLIC_URL`, and delete `MINIO_ENDPOINT`, `MINIO_USE_SSL`, `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD`. The bundled store now takes its admin login from `S3_ACCESS_KEY` / `S3_ACCESS_SECRET`. The old names still work for now and log a deprecation warning on startup. The `minio_data` volume keeps its name, so stored files carry over.
 
 #### reCAPTCHA
 
@@ -279,8 +280,8 @@ Change the admin password immediately after your first login if you shared the c
 | Service | Host Port | Container Port |
 |---------|-----------|----------------|
 | PostgreSQL | 5433 | 5432 |
-| MinIO API | 9000 | 9000 |
-| MinIO Console | 9001 | 9001 |
+| Object storage S3 API | 9000 | 9000 |
+| Object storage console | 9001 | 9001 |
 | CDT Application | 6012 | 3000 |
 
 For local deployments, these ports are accessed directly (e.g. `http://localhost:6012`). For org deployments behind a reverse proxy, these ports stay internal to the host. Only ports 80 and 443 are exposed to the network, and the proxy routes traffic to the right container.
@@ -347,9 +348,9 @@ If you are not using a reverse proxy, expose the three service ports directly on
 | Service | Port | Example URL |
 |---------|------|-------------|
 | CDT app | 6012 | `http://cdt.yourorg.com:6012` |
-| MinIO (files) | 9000 | `http://cdt.yourorg.com:9000` |
+| Object storage (files) | 9000 | `http://cdt.yourorg.com:9000` |
 
-Set `AUTH_URL` and `MINIO_URL` / `MINIO_BUCKET_URL` to these URLs in your `.env`. Ensure your firewall allows inbound traffic on all three ports.
+Set `AUTH_URL` and `S3_ENDPOINT` / `S3_PUBLIC_URL` to these URLs in your `.env`. Ensure your firewall allows inbound traffic on all three ports.
 
 Note that this approach uses plain HTTP unless you separately configure TLS on each port. For internal/VPN-only networks where traffic does not leave a trusted network, this is often acceptable.
 
@@ -367,7 +368,7 @@ This removes the containers but preserves the named volumes (`postgres_data`, `m
 
 ### Removing All Data
 
-> **Warning:** This is irreversible. All database records, uploaded files, and MinIO objects will be permanently deleted.
+> **Warning:** This is irreversible. All database records, uploaded files, and stored objects will be permanently deleted.
 
 To stop the stack **and delete all volumes**:
 
@@ -397,6 +398,6 @@ The `migrate` service runs automatically on startup and applies any new database
 All services are documented on a single [Services](./services.md) page. Jump directly to a section:
 
 - [PostgreSQL](./services.md#postgresql)
-- [MinIO](./services.md#minio)
+- [S3-compatible object storage](./services.md#s3-compatible-object-storage)
 - [Node / Next.js Application](./services.md#node--nextjs-application)
 - [Open Data Service](./services.md#open-data-service)

@@ -52,9 +52,9 @@ export const PrismaLogo: LogoComp = ({ size = 28 }) => (
   <img src="/img/logos/prisma_logo.svg" alt="Prisma" style={assetLogoStyle(size)} />
 );
 
-/* MinIO */
-export const MinioLogo: LogoComp = ({ size = 28 }) => (
-  <img src="/img/logos/minio.svg" alt="MinIO" style={assetLogoStyle(size)} />
+/* Silo: S3-compatible object storage */
+export const SiloLogo: LogoComp = ({ size = 28 }) => (
+  <img src="/img/logos/silo.svg" alt="Silo" style={assetLogoStyle(size)} />
 );
 
 /* CASL */
