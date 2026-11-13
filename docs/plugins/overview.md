@@ -37,6 +37,35 @@ Mounting is the place to start. A plugin that turns out to be broadly useful can
 
 **2. The plugin has to be enabled.** An administrator adds it to their organization on the **Plugins** page, and each person then chooses whether it runs for them. Nothing runs merely because the code is present.
 
+## Plugins on the maturity model
+
+Plugins are how a twin climbs the [maturity model](../concepts/maturity-model.mdx). The core covers the descriptive baseline; each plugin adds a use case at the level it reaches, from a permit map to a live transit feed to a grid what-if.
+
+<BrowserOnly>
+  {() => {
+    const MaturityModel = require('@site/src/components/MaturityModel').default;
+    const g = 'https://collabdt.org/En/plugins/';
+    return (
+      <MaturityModel
+        yAxisLabel="Maturity →"
+        kicker="Use cases · Plugins"
+        title={<>Plugins on the <span className="mm-acc">Maturity Model</span></>}
+        lede="A sample of the plugins built so far, placed at the level each one reaches."
+        useCases={[
+          { id: 'building-permits', label: 'Building permits', level: 1, href: g + '#building-permits' },
+          { id: 'airplanes', label: 'Live flights', level: 2, href: g + '#airplanes' },
+          { id: 'space-planner', label: 'Space planning', level: 2, href: g + '#space-planner' },
+          { id: 'flooding', label: 'Coastal flooding', level: 3, href: g + '#flooding' },
+          { id: 'electric-grid', label: 'Energy grid what-if', level: 4, href: g + '#electric-grid' },
+          { id: 'tabletop', label: 'Tabletop exercise', level: 4, href: g + '#tabletop' },
+        ]}
+      />
+    );
+  }}
+</BrowserOnly>
+
+See every plugin in action in the [plugin gallery](https://collabdt.org/En/plugins/).
+
 ## Security
 
 A plugin runs with the same access as CDT itself. There is no sandbox: it can read anything the signed-in person can read and call any endpoint they can call.
