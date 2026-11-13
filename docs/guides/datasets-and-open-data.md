@@ -21,9 +21,20 @@ Uploading requires the **User** or **Admin** role in your organization.
 
 Multiple layers can be active at once. CDT reprojects everything to WGS 84 with [Proj4js](https://proj4js.org/), so layers from different scales and sources stack correctly.
 
+## Manage layers on the map
+
+Each layer in the map legend and in the **Applied Datasets** list of the **Layers** tab has the same controls:
+
+- The **eye** shows or hides the layer without removing it.
+- **Zoom to extent** fits the map to the layer's features. Imagery services and datasets that load by area do not have it.
+- The **caret** opens the layer's style settings.
+- The **X** removes the layer from the map. You can add it again from the dataset list.
+
+Datasets already on the map stay listed under **Organizational**, with a check mark. Select the check mark to remove the dataset from the map.
+
 ## Style a layer
 
-Select the settings icon next to a layer in the layer panel to open its style settings. **Colour by** lists the dataset's attributes; identifiers and coordinates are left out. The CDT platform reads each attribute's values to decide what it holds, so the choices match the data:
+Select the caret next to a layer to open its style settings. **Colour by** lists the dataset's attributes; identifiers and coordinates are left out. The CDT platform reads each attribute's values to decide what it holds, so the choices match the data:
 
 | Attribute holds | Display options |
 |-----------------|-----------------|
@@ -47,8 +58,7 @@ New layers start with the publisher's own styling when the source provides it (A
    - **WMS** or **WMTS**: click **Load** to list the service's layers, pick one, then **Add to map**.
    - **ArcGIS map service** or **ArcGIS image service**: a whole MapServer or ImageServer, drawn as imagery.
    - **XYZ tiles**: a tile URL containing `{z}`, `{x}` and `{y}`.
-3. Choose visibility: **Private** (only you) or **Organization** (all members).
-4. The dataset is listed alongside official datasets. Uploaded GeoJSON is stored in MinIO. Everything else is fetched live from its source.
+3. The dataset is saved for your organization and listed under **Organizational**. It comes back when you reload the page, and other organizations never see it. Uploaded GeoJSON is stored in object storage. For a URL, only the address is saved, and the data is fetched live from its source.
 
 Map services are imagery, so their features are not individually clickable. You can still set their opacity, and WMS, WMTS and ArcGIS map services show the server's legend under the layer. While their tiles load, the layer's row shows the share already drawn.
 

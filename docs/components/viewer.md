@@ -23,7 +23,7 @@ On mount, Viewer reads `viewer` from the URL search params and falls back to `ma
 
 Viewer is the top-level routing and layout component: it owns the relationship between the URL and the active viewer state in context, and decides which viewer component to render.
 
-The core choice is a two-way sync between URL and context rather than treating one as the single source of truth, because viewer changes arrive from two directions: direct URL navigation (browser back and forward, shared links) and in-app actions (sidebar, `HeaderButtons`). An `isUpdatingRef` flag stops the two `useEffect`s triggering each other in a loop when one initiates a change. An `isMounted` flag keeps the URL-to-context sync from running on the first render, where the URL and context would briefly disagree.
+The core choice is a two-way sync between URL and context rather than treating one as the single source of truth, because viewer changes arrive from two directions: direct URL navigation (browser back and forward, shared links) and in-app actions (sidebar, `ResultActions`). An `isUpdatingRef` flag stops the two `useEffect`s triggering each other in a loop when one initiates a change. An `isMounted` flag keeps the URL-to-context sync from running on the first render, where the URL and context would briefly disagree.
 
 The MapViewer is always mounted and merely hidden with `display: none` when inactive. MapLibre is expensive to initialise and tear down, so staying mounted preserves map state (position, loaded layers, datasets) across a switch away and back. Every other viewer mounts and unmounts normally.
 

@@ -50,7 +50,7 @@ Role-based visibility is separate from CASL, and deliberately so: the `accessibl
 }
 ```
 
-`handleChangeViewer` is exported so other parts of the app, such as map interactions and `HeaderButtons`, can trigger a viewer change without going through the sidebar. It always resets the selected item, site, file and view state, so a stale detail view cannot carry over between viewers.
+`handleChangeViewer` is exported so other parts of the app, such as map interactions and `ResultActions`, can trigger a viewer change without going through the sidebar. It always resets the selected item, site, file and view state, so a stale detail view cannot carry over between viewers.
 
 Collapsed and expanded state drives label visibility and layout throughout, through an `isCollapsed` derived value rather than `sidebarState` directly. On mobile the sheet's open state counts as expanded, so labels render correctly while the drawer is visible.
 

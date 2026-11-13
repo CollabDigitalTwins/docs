@@ -35,7 +35,7 @@ import { ViewerNames } from '@collabdt/core/core/types/dbTypes';
 
 ## Behaviour
 
-**Table view.** A `DataTable` is populated from the relevant SWR hook (`useBuildings`, `useSites`, and so on). The search input filters rows by name and address fields, `FilterButtons` applies advanced filters, and `HeaderButtons` provides the compare toggle and entity creation. Clicking a row opens its detail view, except in compare mode, where clicking toggles selection to a maximum of three items and checkboxes appear in the leading cells.
+**Table view.** A `DataTable` is populated from the relevant SWR hook (`useBuildings`, `useSites`, and so on). The search input filters rows by name and address fields, `FilterButtons` applies advanced filters, `PageActions` beside the title provides entity creation, and `ResultActions` shows the result count, View All on Map and the compare toggle. Applied filters show as removable chips under the search row. Clicking a row opens its detail view, except in compare mode, where clicking toggles selection to a maximum of three items and checkboxes appear in the leading cells.
 
 **Detail view.** The detail component for `currentViewer` is rendered (`BuildingDetails`, `SiteDetails`, and so on), the breadcrumb shows the selected entity's name, and `DetailActions` drives the edit, save and cancel flow. Save calls `saveChanges()` on the detail component's ref and reports the outcome through `sonner`. Back navigation clears the selection and returns to the table.
 
@@ -62,10 +62,10 @@ DataMenu itself gates nothing and renders for any authenticated user. Enforcemen
 
 | Action | Subject | Where enforced |
 |--------|---------|----------------|
-| `create` | `Building` | `HeaderButtons` → Add Building button |
-| `create` | `User` | `HeaderButtons` → Add User button |
-| `read` | `Building` | `HeaderButtons` → View All on Map, Compare |
-| `read` | `Site` | `HeaderButtons` → View All on Map, Compare |
+| `create` | `Building` | `PageActions` → Add Building button |
+| `create` | `User` | `PageActions` → Add User button |
+| `read` | `Building` | `ResultActions` → View All on Map, Compare |
+| `read` | `Site` | `ResultActions` → View All on Map, Compare |
 | `update` | `Building` | `DetailActions` → Edit Details button |
 | `update` | `Site` | `DetailActions` → Edit Details button |
 | `update` | `Infrastructure` | `DetailActions` → Edit Details button |
@@ -73,8 +73,9 @@ DataMenu itself gates nothing and renders for any authenticated user. Enforcemen
 | `update` | `Role` | `DetailActions` → Edit/Save buttons (users) |
 | `delete` | `User` | `DetailActions` → via `MoreOptions` |
 | `update` | `Site` | `MoreOptions` → Delete Site |
+| `delete` | `Building` | `MoreOptions` → Delete Building (admin only by default) |
 
-When adding a viewer with edit or create actions, put the `ability.can()` check inside `DetailActions` for the edit and save buttons, and inside `HeaderButtons` for any creation entry point.
+When adding a viewer with edit or create actions, put the `ability.can()` check inside `DetailActions` for the edit and save buttons, and inside `PageActions` for any creation entry point.
 
 ## Related
 

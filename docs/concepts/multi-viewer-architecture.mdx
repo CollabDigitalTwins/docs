@@ -34,7 +34,7 @@ Both viewers draw from the same backend:
 
 ## Coordinate System Alignment
 
-Everything in CDT is anchored to **WGS 84** (EPSG:4326). When you upload an IFC file, the server reads its georeferencing information (IfcSite, IfcMapConversion) and stores the longitude/latitude origin. When the file is loaded in the map viewer, the Three.js scene is positioned at those coordinates and the camera is synchronized, so the building appears at its correct location on the globe.
+Everything in the CDT platform is anchored to **WGS 84** (EPSG:4326). When you upload an IFC file, your browser reads its georeference (IfcMapConversion and IfcProjectedCRS) before converting it to Fragments. It then converts the projected coordinates to longitude and latitude with proj4 and saves both: the source coordinates and the resulting position. In the map viewer, the model's IFC origin is placed at that position. Moving the model afterwards changes only the position, so the source is always there to revert to. Elevation on the map is measured from the terrain; the source height is kept for reference.
 
 Point clouds with GPS coordinates are treated the same way. Local Cartesian files (XYZ-only, with no geographic reference) are stored with their Building's coordinate and displayed in the BIM viewer with an explicit local origin.
 

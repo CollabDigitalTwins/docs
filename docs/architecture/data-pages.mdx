@@ -48,7 +48,7 @@ The host app is a thin shell: routes, Prisma, adapters, auth. All of the page UI
          ├─ VIEWER_CONFIG                 Data/utils/viewerConfig.ts
          ├─ useViewerData                 Data/utils/useViewerData.ts
          ├─ useColumns / use*Headers      Data/utils/Columns.tsx, Headers.tsx
-         ├─ view 'table'  → <DataTable> + HeaderButtons + FilterButtons + MoreOptions
+         ├─ view 'table'  → <DataTable> + PageActions + FilterButtons + ResultActions + MoreOptions
          └─ view 'detail' → BuildingDetails | SiteDetails | FileDetails | …
 
    ↑ data arrives in the browser, never as server props
@@ -228,8 +228,11 @@ display model rather than the database record. The original row stays available 
 
 Around the table:
 
-- **`HeaderButtons`**: creation entry points, "view all on map", compare toggle.
-- **`FilterButtons`**: advanced filtering over `FilterState` (field, operator, value).
+- **`PageActions`**: creation entry points and the collection ⋯ menu, beside the title.
+- **`FilterButtons`**: quick filters and advanced filtering over `FilterState` (field, operator,
+  value). On a phone they collapse into one "Filters" popover.
+- **`ActiveFilterChips`**: one removable chip per applied filter value, plus Clear all.
+- **`ResultActions`**: result count, "View All on Map" and the compare toggle.
 - **`MoreOptions`**: the per-row trailing menu, switched on `DataTypes`.
 - **Compare tray**: lives in `BuildingsContext`, holds at most 3 items, FIFO. Reset whenever
   `currentViewer` changes.
@@ -320,6 +323,12 @@ return <CoreHooksProvider adapter={adapter}>{children}</CoreHooksProvider>;
 export const useBuildings = () => useCoreHooks().building.useBuildings();
 export const useBuilding = (id: number | null) => useCoreHooks().building.useBuilding(id);
 ```
+
+Removing a building from an organization takes two port methods: `getBuildingAssociations(id)`
+counts the organization's files, sensors and comments on it, and `removeBuilding(id, { transferToBuildingId })`
+removes it, moving those to another building of the organization or, without a target,
+unlinking the files and deleting the sensors and comments. A custom `ApiAdapter` must
+implement both.
 
 ### SWR keys are arrays, not URLs
 
@@ -439,7 +448,7 @@ Core side, in `@collabdt/core`:
 12. **Two dispatch sites**: add the viewer to the `ViewerNames` list in `Viewer.tsx` and to the
     detail branch in `DataMenu.tsx`.
 
-Gate every action with CASL: creation entry points in `HeaderButtons`, edit and save in
+Gate every action with CASL: creation entry points in `PageActions`, edit and save in
 `DetailActions`.
 
 ### What not to do

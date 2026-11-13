@@ -16,7 +16,7 @@ Start with [DataMenu](./data-menu.md), the shell for managing building, site, fi
 
 These hold across the section, and the pages below do not repeat them.
 
-**Permissions are enforced at the action level, not at render time.** Presentation components (`Toolbar`, `DataTable`, `NavigationBar`, `Viewer`, `DataMenu`, the BIM toolbar tools) run no CASL check of their own and render for any authenticated user. Gating lives in the controls: `FieldRenderer` disables an input the user may not change, `DetailActions` and `HeaderButtons` hide or disable edit and create buttons. The check is always the same shape:
+**Permissions are enforced at the action level, not at render time.** Presentation components (`Toolbar`, `DataTable`, `NavigationBar`, `Viewer`, `DataMenu`, the BIM toolbar tools) run no CASL check of their own and render for any authenticated user. Gating lives in the controls: `FieldRenderer` disables an input the user may not change, `DetailActions` and `PageActions` hide or disable edit and create buttons. The check is always the same shape:
 
 ```tsx
 {ability.can('update', 'Building') && <Input ... />}
