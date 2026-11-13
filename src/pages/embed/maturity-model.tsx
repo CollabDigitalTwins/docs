@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import Head from '@docusaurus/Head';
-import EmbedFrame, { EMBED_PAGE_STYLE, postToParent } from '@site/src/components/EmbedFrame';
+import EmbedFrame, { BARE_EMBED_PAGE_STYLE, postToParent } from '@site/src/components/EmbedFrame';
 
 interface UseCase {
   id: string;
@@ -33,7 +33,7 @@ function MaturityModelEmbed(): React.ReactElement {
   }, []);
 
   return (
-    <EmbedFrame id="maturity-model" onHello={() => postToParent({ type: 'cdt-mm-ready' })}>
+    <EmbedFrame id="maturity-model" bare onHello={() => postToParent({ type: 'cdt-mm-ready' })}>
       <MaturityModel
         useCases={useCases}
         onUseCaseSelect={(id: string) => postToParent({ type: 'cdt-mm-select', id })}
@@ -56,7 +56,7 @@ export default function MaturityModelEmbedPage(): React.ReactElement {
       <Head>
         <title>CDT Plugins Maturity Model</title>
         <meta name="robots" content="noindex" />
-        <style>{EMBED_PAGE_STYLE}</style>
+        <style>{BARE_EMBED_PAGE_STYLE}</style>
       </Head>
       <BrowserOnly>{() => <MaturityModelEmbed />}</BrowserOnly>
     </>
