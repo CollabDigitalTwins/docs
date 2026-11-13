@@ -271,18 +271,18 @@ const DeclareStrip: FC = () => (
   </div>
 );
 
-const PluginSurfaces: FC = () => {
+const PluginSurfaces: FC<{ bare?: boolean }> = ({ bare = false }) => {
   const themeVars = THEMES[useDocTheme()] as unknown as CSSProperties;
   const isMobile = useIsMobile();
 
   return (
     <figure style={{
       ...themeVars,
-      margin: '0 0 8px',
+      margin: bare ? 0 : '0 0 8px',
       color: 'var(--text)',
       fontFamily: 'Geist, system-ui, sans-serif',
     }}>
-      <div style={{
+      <div style={bare ? { position: 'relative' } : {
         position: 'relative',
         border: '1px solid var(--stroke)',
         borderRadius: 14,
@@ -293,14 +293,16 @@ const PluginSurfaces: FC = () => {
         padding: isMobile ? '20px 14px' : 24,
         overflow: 'hidden',
       }}>
-        <div style={{
-          fontFamily: MONO,
-          fontSize: 10, letterSpacing: '0.16em',
-          color: 'var(--text-dim)', textTransform: 'uppercase',
-          marginBottom: 20,
-        }}>
-          What a plugin supplies, and where it appears
-        </div>
+        {!bare && (
+          <div style={{
+            fontFamily: MONO,
+            fontSize: 10, letterSpacing: '0.16em',
+            color: 'var(--text-dim)', textTransform: 'uppercase',
+            marginBottom: 20,
+          }}>
+            What a plugin supplies, and where it appears
+          </div>
+        )}
 
         {isMobile ? (
           <div>
