@@ -190,11 +190,59 @@ function MMDetailPanel({ level, onClose }) {
   );
 }
 
-export default function MaturityModel({ defaultLevel = null }) {
-  const [selected, setSelected] = useState(defaultLevel); // level num string or null
+function MMUseCases({ items, onSelect }) {
+  return (
+    <div className="mm-usecases">
+      <span className="mm-usecases-label">Use cases</span>
+      <div className="mm-usecases-list">
+        {items.length === 0 ? (
+          <span className="mm-usecase is-tbd">TBD</span>
+        ) : (
+          items.map((item) => {
+            if (item.href) {
+              return (
+                <a key={item.id} className="mm-usecase" href={item.href}>
+                  {item.label}
+                </a>
+              );
+            }
+            if (!onSelect) {
+              return <span key={item.id} className="mm-usecase">{item.label}</span>;
+            }
+            return (
+              <button key={item.id} type="button" className="mm-usecase" onClick={() => onSelect(item.id)}>
+                {item.label}
+              </button>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+}
+
+function useCasesForLevel(useCases, num) {
+  return useCases.filter((u) => Number(u.level) === Number(num));
+}
+
+/**
+ * Pass `useCases` ({ id, label, level, href? }[]) to show the plugins variant:
+ * use-case pills per level, TBD where a level has none. Defaults render the plain model.
+ */
+export default function MaturityModel({
+  defaultLevel = null,
+  useCases = null,
+  onUseCaseSelect,
+  yAxisLabel = 'Value →',
+  kicker = 'Collab Digital Twins · Framework',
+  title = null,
+  lede = 'Five levels of capability, from a static map of what exists to a system that senses, decides, and acts on its own. Select a level to explore what it unlocks.',
+}) {
+  const [selected, setSelected] = useState(defaultLevel);
   const [hovered, setHovered] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const rootRef = useRef(null);
+  const hasUseCases = Array.isArray(useCases);
 
   useEffect(() => {
     const el = rootRef.current;
@@ -214,21 +262,51 @@ export default function MaturityModel({ defaultLevel = null }) {
   const selectedLevel = MM_LEVELS.find((l) => l.num === selected) || null;
   const isDimming = hovered != null || selected != null;
 
+  const renderTag = (level) => (
+    <span className="mm-tag">
+      <span className="mm-num">Level {level.num}</span>
+      <span className="mm-name">{level.name}</span>
+      <span className="mm-sub">{level.tagline}</span>
+    </span>
+  );
+
+  const renderCells = (level) =>
+    level.capabilities.map((cap) => (
+      <span key={cap.title} className={'mm-cell t' + cap.tier}>
+        {cap.title}
+      </span>
+    ));
+
+  const columnProps = (level) => ({
+    onMouseEnter: () => setHovered(level.num),
+    onMouseLeave: () => setHovered(null),
+    onFocus: () => setHovered(level.num),
+    onBlur: () => setHovered(null),
+  });
+
+  const columnClass = (level) =>
+    'mm-col' +
+    (selected === level.num ? ' is-active' : '') +
+    (hovered === level.num ? ' is-hot' : '');
+
   return (
-    <div className={'cdt-mm' + (isDimming && !isMobile ? ' is-dimming' : '')} ref={rootRef}>
+    <div
+      className={'cdt-mm' + (hasUseCases ? ' has-usecases' : '') + (isDimming && !isMobile ? ' is-dimming' : '')}
+      ref={rootRef}
+    >
       <header className="mm-head">
-        <p className="mm-kicker">Collab Digital Twins · Framework</p>
+        <p className="mm-kicker">{kicker}</p>
         <h2 className="mm-title">
-          Digital Twin <span className="mm-acc">Maturity Model</span>
+          {title ?? (
+            <>
+              Digital Twin <span className="mm-acc">Maturity Model</span>
+            </>
+          )}
         </h2>
-        <p className="mm-lede">
-          Five levels of capability, from a static map of what exists to a system that
-          senses, decides, and acts on its own. Select a level to explore what it unlocks.
-        </p>
+        {lede && <p className="mm-lede">{lede}</p>}
       </header>
 
       {isMobile ? (
-        /* ── Mobile: accordion ── */
         <div className="mm-mobile">
           {MM_LEVELS.map((level) => {
             const active = selected === level.num;
@@ -248,6 +326,11 @@ export default function MaturityModel({ defaultLevel = null }) {
                   </span>
                   <span className="mm-m-chev" aria-hidden="true">⌄</span>
                 </button>
+                {hasUseCases && (
+                  <div className="mm-m-usecases">
+                    <MMUseCases items={useCasesForLevel(useCases, level.num)} onSelect={onUseCaseSelect} />
+                  </div>
+                )}
                 <div className="mm-m-body">
                   <div className="mm-m-body-inner">
                     <div className="mm-m-body-pad">
@@ -270,40 +353,53 @@ export default function MaturityModel({ defaultLevel = null }) {
           </div>
         </div>
       ) : (
-        /* ── Desktop: staircase ── */
         <React.Fragment>
           <div className="mm-chart">
             <div className="mm-yaxis">
               <div className="mm-axisline"></div>
-              <span className="mm-axislabel">Value →</span>
+              <span className="mm-axislabel">{yAxisLabel}</span>
             </div>
             <div className="mm-matrix">
               {MM_LEVELS.map((level) => {
                 const active = selected === level.num;
-                const hot = hovered === level.num;
+                const label = `Level ${level.num}, ${level.name}. ${level.tagline}`;
+                if (!hasUseCases) {
+                  return (
+                    <button
+                      key={level.num}
+                      className={columnClass(level)}
+                      onClick={() => toggle(level.num)}
+                      {...columnProps(level)}
+                      aria-expanded={active}
+                      aria-label={label}
+                    >
+                      {renderTag(level)}
+                      {renderCells(level)}
+                    </button>
+                  );
+                }
                 return (
-                  <button
-                    key={level.num}
-                    className={'mm-col' + (active ? ' is-active' : '') + (hot ? ' is-hot' : '')}
-                    onClick={() => toggle(level.num)}
-                    onMouseEnter={() => setHovered(level.num)}
-                    onMouseLeave={() => setHovered(null)}
-                    onFocus={() => setHovered(level.num)}
-                    onBlur={() => setHovered(null)}
-                    aria-expanded={active}
-                    aria-label={`Level ${level.num}, ${level.name}. ${level.tagline}`}
-                  >
-                    <span className="mm-tag">
-                      <span className="mm-num">Level {level.num}</span>
-                      <span className="mm-name">{level.name}</span>
-                      <span className="mm-sub">{level.tagline}</span>
-                    </span>
-                    {level.capabilities.map((cap) => (
-                      <span key={cap.title} className={'mm-cell t' + cap.tier}>
-                        {cap.title}
-                      </span>
-                    ))}
-                  </button>
+                  <div key={level.num} className={columnClass(level)} role="group" {...columnProps(level)}>
+                    <button
+                      type="button"
+                      className="mm-col-toggle"
+                      onClick={() => toggle(level.num)}
+                      aria-expanded={active}
+                      aria-label={label}
+                    >
+                      {renderTag(level)}
+                    </button>
+                    <MMUseCases items={useCasesForLevel(useCases, level.num)} onSelect={onUseCaseSelect} />
+                    <button
+                      type="button"
+                      className="mm-col-toggle mm-col-cells"
+                      onClick={() => toggle(level.num)}
+                      tabIndex={-1}
+                      aria-hidden="true"
+                    >
+                      {renderCells(level)}
+                    </button>
+                  </div>
                 );
               })}
             </div>

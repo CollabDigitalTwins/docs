@@ -760,6 +760,38 @@ pre {
 }
 .cdt-mm .mm-m-foundation .mm-fpillars { font-size: 14px; color: var(--mm-ink); line-height: 1.5; }
 
+/* ── Use cases / plugins variant ────────────── */
+.cdt-mm .mm-col-toggle {
+  display: flex; flex-direction: column; gap: 8px;
+  border: 0; background: none; padding: 0; text-align: left;
+  font: inherit; color: inherit; cursor: pointer; width: 100%;
+}
+.cdt-mm .mm-col-toggle:focus-visible { outline: 2px solid var(--mm-axis); outline-offset: 4px; border-radius: 8px; }
+.cdt-mm.has-usecases .mm-col { cursor: default; }
+.cdt-mm.has-usecases .mm-tag { margin-bottom: 0; }
+.cdt-mm .mm-usecases { display: flex; flex-direction: column; gap: 6px; margin: 2px 0 4px; }
+.cdt-mm .mm-usecases-label {
+  font-family: var(--ifm-font-family-monospace, monospace); font-size: 10.5px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--mm-ink-2); font-weight: 600;
+}
+.cdt-mm .mm-usecases-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.cdt-mm .mm-usecase {
+  display: inline-flex; align-items: center;
+  padding: 5px 11px; border-radius: 999px;
+  font: inherit; font-size: 12.5px; font-weight: 600; line-height: 1.2;
+  background: var(--hp-primary-container, #c05520); color: var(--hp-on-primary-ctr, #fff); border: 1px solid transparent;
+  text-decoration: none; cursor: pointer;
+  transition: transform .2s var(--mm-ease), filter .2s var(--mm-ease);
+}
+.cdt-mm a.mm-usecase:hover, .cdt-mm button.mm-usecase:hover { transform: translateY(-1px); filter: brightness(1.08); color: var(--hp-on-primary-ctr, #fff); text-decoration: none; }
+.cdt-mm .mm-usecase:focus-visible { outline: 2px solid var(--mm-ink); outline-offset: 2px; }
+.cdt-mm span.mm-usecase { cursor: default; }
+.cdt-mm .mm-usecase.is-tbd {
+  background: none; color: var(--mm-ink-2);
+  border: 1px dashed var(--mm-line); font-weight: 500;
+}
+.cdt-mm .mm-m-usecases { padding: 0 16px 14px 22px; }
+
 @media (prefers-reduced-motion: reduce) {
   .cdt-mm * { transition: none !important; }
 }
