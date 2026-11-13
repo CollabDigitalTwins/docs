@@ -500,7 +500,7 @@ pre {
 .cdt-mm .mm-kicker {
   font-family: var(--ifm-font-family-monospace, ui-monospace, monospace);
   font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--mm-axis); font-weight: 600; margin: 0 0 10px;
+  color: var(--hp-primary-container, #c05520); font-weight: 600; margin: 0 0 10px;
 }
 .cdt-mm .mm-title {
   font-size: clamp(28px, 4vw, 44px); line-height: 1.02;
