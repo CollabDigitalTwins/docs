@@ -58,7 +58,8 @@ New layers start with the publisher's own styling when the source provides it (A
    - **WMS** or **WMTS**: click **Load** to list the service's layers, pick one, then **Add to map**.
    - **ArcGIS map service** or **ArcGIS image service**: a whole MapServer or ImageServer, drawn as imagery.
    - **XYZ tiles**: a tile URL containing `{z}`, `{x}` and `{y}`.
-3. The dataset is saved for your organization and listed under **Organizational**. It comes back when you reload the page, and other organizations never see it. Uploaded GeoJSON is stored in object storage. For a URL, only the address is saved, and the data is fetched live from its source.
+3. Choose visibility: **Private** (only you) or **Organization** (all members).
+4. The dataset is listed alongside official datasets. Uploaded GeoJSON is stored in object storage. Everything else is fetched live from its source.
 
 Map services are imagery, so their features are not individually clickable. You can still set their opacity, and WMS, WMTS and ArcGIS map services show the server's legend under the layer. While their tiles load, the layer's row shows the share already drawn.
 

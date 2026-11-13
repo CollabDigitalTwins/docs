@@ -29,19 +29,22 @@ keeps them out of the JavaScript bundle. Adding the prefix to a secret, such as
 | `POSTGRES_PASSWORD` | Password for the user above. Use a long random value in production. | `change-me-in-production` |
 | `POSTGRES_DB` | Application database name. | `cdt` |
 
-## Object storage (MinIO / S3)
+## Object storage (any S3-compatible provider)
+
+CDT uses the S3 API, so the bundled store can be swapped for AWS S3, Cloudflare R2, Backblaze B2, Garage, SeaweedFS or any other S3-compatible provider.
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `MINIO_ROOT_USER` | MinIO admin username (used when initializing the container). | `minioadmin` |
-| `MINIO_ROOT_PASSWORD` | MinIO admin password. Use a long random value in production. | `change-me-in-production` |
-| `MINIO_ENDPOINT` | Hostname of the MinIO server. `localhost` for local dev, `minio` inside Compose, public hostname in production. | `minio.example.com` |
-| `MINIO_USE_SSL` | `true` in production behind TLS, `false` for local dev. | `true` |
-| `MINIO_REGION` | S3 region label. Most deployments use the default. | `us-east-1` |
-| `MINIO_URL` | Full base URL the backend uses to reach MinIO. | `https://minio.example.com` |
-| `S3_ACCESS_KEY` | Access key for the application service account. | `cdt-app` |
-| `S3_ACCESS_SECRET` | Secret for the access key. | `…` |
-| `MINIO_BUCKET_URL` | Public base URL the browser uses to download assets. | `https://cdn.example.com` |
+| `S3_ENDPOINT` | S3 API URL, including protocol. Presigned URLs embed it, so browsers must be able to reach it. | `https://files.example.com` |
+| `S3_REGION` | Region label. Defaults to `us-east-1`. | `us-east-1` |
+| `S3_FORCE_PATH_STYLE` | `true` (default) for path-style URLs; `false` for providers that require virtual-hosted style. | `true` |
+| `S3_ACCESS_KEY` | Access key for the application. With the bundled store, also its admin username. | `cdt-app` |
+| `S3_ACCESS_SECRET` | Secret for the access key. With the bundled store, also its admin password. | `…` |
+| `S3_PUBLIC_URL` | Public base URL the browser uses to load public-bucket assets such as org logos. | `https://cdn.example.com` |
+| `S3_BUCKETS` | Local Compose only: space-separated buckets `object-storage-init` creates. | `org-logos pointclouds-demo` |
+| `S3_PUBLIC_BUCKETS` | Local Compose only: buckets that allow anonymous download. | `org-logos` |
+
+The deprecated `MINIO_URL`, `MINIO_REGION` and `MINIO_BUCKET_URL` are still read as fallbacks for `S3_ENDPOINT`, `S3_REGION` and `S3_PUBLIC_URL`, with a warning. `MINIO_ENDPOINT`, `MINIO_USE_SSL`, `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD` are no longer read.
 
 ## Authentication (NextAuth)
 
@@ -114,18 +117,17 @@ A handful of variables behave differently between local development and producti
 
 | Variable | Development | Production |
 |----------|-------------|------------|
-| `MINIO_USE_SSL` | `false` | `true` |
 | `AUTH_TRUST_HOST` | unset or `false` | `true` (when behind a proxy) |
 | `AUTH_URL` | `http://localhost:3000` | `https://your-domain` |
-| `MINIO_ENDPOINT` | `localhost` | public hostname |
-| `MINIO_BUCKET_URL` | `http://localhost:9000` | public CDN URL |
+| `S3_ENDPOINT` | `http://localhost:9000` | public `https://` hostname |
+| `S3_PUBLIC_URL` | `http://localhost:9000` | public CDN URL |
 
 ## Security notes
 
 - **Never commit `.env`**. It is listed in `.gitignore` for a reason.
 - **Rotate `AUTH_SECRET`** if it is ever logged or shared. Rotating it invalidates all existing sessions.
 - **Use different credentials in production** than the defaults from `.env.example`.
-- **Restrict MinIO and PostgreSQL ports** in production. Only the application server needs to reach them.
+- **Restrict object storage and PostgreSQL ports** in production. Only the application server needs to reach them.
 
 ## Related
 

@@ -88,7 +88,7 @@ if (sessionOrgName && sessionOrgName !== orgName && !isPlatformAdmin(sessionEmai
 4. Loads the organization with `organizationService.getOrganizationByName(orgName)`, guarded so a
    database outage redirects to a maintenance page rather than throwing. A missing organization
    redirects to `/instance-not-found`.
-5. Reads server-only environment values (`MINIO_BUCKET_URL`, `MARTIN_SERVER_URL`,
+5. Reads server-only environment values (`S3_PUBLIC_URL`, `MARTIN_SERVER_URL`,
    `POINTCLOUD_API_URL`, `MAPTILER_KEY`, geocoder keys) and passes them down as props. This is the
    only way those reach the client; they are never bundled.
 6. Renders the shell: `PluginAwareAppProvider` → `SidebarProvider` → `AppSidebar` + `Viewer`.
@@ -479,7 +479,7 @@ outside all of it.
 - [Frontend Architecture](./frontend.mdx): stack, viewers, providers
 - [State Management](./state-management.mdx): the context and reducer pattern
 - [Data Model](./data-model.mdx): `Building`, `Site`, `DbFile` field reference
-- [Data Layer](./data-layer.mdx): Prisma, PostGIS, MinIO
+- [Data Layer](./data-layer.mdx): Prisma, PostGIS, object storage
 - [RESTful API Design](./api-design.mdx): URI and status-code conventions
 - [DataMenu](../components/data-menu.md): component-level reference
 - [DataTable](../components/data-table.md)

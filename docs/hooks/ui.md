@@ -12,6 +12,7 @@ Layout hooks that read the environment rather than platform data, so they return
 | `useIsMobile` | Whether the viewport is below the mobile breakpoint |
 | `useCompactTabStrip` | Whether a tab strip should drop its labels to fit |
 | `useResizableSidebarWidth` | Drag-to-resize state for the sidebar |
+| `useFirstLoadableImage` | The first image URL in a list that actually loads |
 
 ## `useIsMobile()`
 
@@ -56,6 +57,18 @@ const { width, isResizing, canResize, startResize } = useResizableSidebarWidth()
 ```
 
 The width is restored from storage after mount rather than during render, which avoids a server/client mismatch on first paint.
+
+## `useFirstLoadableImage(candidates)`
+
+Returns the first URL in `candidates` that loads, or `null` while probing and when none do. Blank entries are skipped.
+
+```tsx
+import { useFirstLoadableImage } from '@collabdt/core/hooks/useFirstLoadableImage';
+
+const src = useFirstLoadableImage([organizationLogo, conventionLogo, '/images/cdt-logo-stroke.svg']);
+```
+
+Each candidate is probed with a detached `Image()` rather than a rendered `<img>` and its `onError`, so an image that fails before hydration cannot leave a broken icon behind. The list is compared by value, so passing a new array with the same URLs does not probe again.
 
 ## Related
 

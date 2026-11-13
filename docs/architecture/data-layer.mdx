@@ -10,7 +10,7 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 
 # Data Layer
 
-PostgreSQL database managed by Prisma ORM, object storage via MinIO, and real-time sync with Martin tile server.
+PostgreSQL database managed by Prisma ORM, S3-compatible object storage, and real-time sync with Martin tile server.
 
 <BrowserOnly>
   {() => {
@@ -35,7 +35,7 @@ The schema is built around an **Organization** as the top-level tenant. Every ot
 | `Site` | A geographic grouping of buildings inside an organization. |
 | `Building` | The primary asset entity. Belongs to a site and an organization. |
 | `Infrastructure` | Non-building assets (utility lines, roads, etc.). |
-| `File` | Metadata for an uploaded binary; the binary itself lives in MinIO. |
+| `File` | Metadata for an uploaded binary; the binary itself lives in object storage. |
 | `Sensor` / `SensorType` | An IoT sensor and its category/unit definition. |
 | `Comment` | Threaded annotation attached to other entities. |
 
@@ -54,9 +54,9 @@ npx prisma migrate deploy
 
 Migrations stored in `prisma/migrations/` as timestamped `.sql` files for version control and auditing.
 
-## Unstructured Files (MinIO)
+## Unstructured Files (object storage)
 
-Binary assets (IFC models, glTF, DXF, LAS/LAZ point cloud tiles, PDFs, images, video, CSV) are stored in **MinIO** (S3-compatible). Each `File` record in PostgreSQL holds the metadata (name, type, size, owner, parent building); the binary itself lives in MinIO and is referenced by an object key.
+Binary assets (IFC models, glTF, DXF, LAS/LAZ point cloud tiles, PDFs, images, video, CSV) are stored in **S3-compatible object storage** (Silo locally; any S3 provider in production). Each `File` record in PostgreSQL holds the metadata (name, type, size, owner, parent building); the binary itself lives in object storage and is referenced by an object key.
 
 ## Spatial Database (PostGIS + Martin)
 

@@ -12,7 +12,7 @@ import {
   GltfLogo,
   IfcLogo,
   MapLibreLogo,
-  MinioLogo,
+  SiloLogo,
   NextAuthLogo,
   NextLogo,
   NodeLogo,
@@ -61,7 +61,7 @@ export const Potree_   = adaptLogo(PotreeLogo);
 export const Spark_    = adaptLogo(SparkLogo);
 export const Postgres_ = adaptLogo(PostgresLogo);
 export const PostGIS_  = adaptLogo(PostGisLogo);
-export const MinIO_    = adaptLogo(MinioLogo);
+export const Silo_     = adaptLogo(SiloLogo);
 export const Docker_   = adaptLogo(DockerLogo);
 export const Fullhost_ = adaptLogo(FullhostLogo);
 export const GLTF_     = adaptLogo(GltfLogo);

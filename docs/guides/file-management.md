@@ -6,13 +6,13 @@ description: Upload, organize, and manage files attached to buildings and sites.
 
 # File Management
 
-CDT stores binary assets in [MinIO](https://min.io/), an open-source object store with the S3 API. Metadata and relational attributes live in PostgreSQL.
+CDT stores binary assets in any S3-compatible object store (the bundled default is Silo, an open-source MinIO fork). Metadata and relational attributes live in PostgreSQL.
 
 Uploading requires the **User** or **Admin** role on the target building or site.
 
 ## Upload a file
 
-Open the building → **Files** tab → **Upload**, then pick one or more files. The platform detects the file type, routes it to the right pipeline, stores the binary in MinIO, and creates a metadata record.
+Open the building → **Files** tab → **Upload**, then pick one or more files. The platform detects the file type, routes it to the right pipeline, stores the binary in object storage, and creates a metadata record.
 
 ## Supported file types
 
@@ -37,7 +37,8 @@ Your browser prepares the model before it is stored:
 
 1. Reads the georeference from the IFC STEP file (`IfcMapConversion` and its `IfcProjectedCRS`), if the model has one.
 2. Converts geometry and metadata to **Fragments 2.0** (`.frag`) using FlatBuffers encoding.
-3. Uploads the `.frag` to object storage. The viewers stream it at load time.
+3. Stores both the original IFC and the `.frag` version in object storage.
+4. Streams the `.frag` to the client at load time.
 
 Fragments cut RAM use and load time sharply compared with parsing IFC on every load, which matters for multi-gigabyte federated models.
 
@@ -63,7 +64,7 @@ File visibility and editability follow the organization's role assignments, enfo
 
 ## Storage architecture
 
-The MinIO instance for hosted CDT runs on Canadian infrastructure (Fullhost VPS in Vancouver and Toronto) for data sovereignty, so all storage and processing remain within Canadian boundaries. Network policy restricts database and storage access to the application server's IP only.
+Object storage for hosted CDT runs on Canadian infrastructure (Fullhost VPS in Vancouver and Toronto) for data sovereignty, so all storage and processing remain within Canadian boundaries. Network policy restricts database and storage access to the application server's IP only.
 
 Self-hosted deployments inherit the same architecture. See [Self-Hosting](../deployment/self-hosting.md).
 

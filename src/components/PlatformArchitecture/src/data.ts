@@ -6,7 +6,7 @@ import {
 import {
   Node_, Next_, React_, TS_, Tailwind_, Shadcn_, NextAuth_,
   MapLibre_, Deck_, Three_, TOC_, Potree_, Spark_, Martin_,
-  Postgres_, PostGIS_, MinIO_, Docker_, Prisma_, CASL_,
+  Postgres_, PostGIS_, Silo_, Docker_, Prisma_, CASL_,
   Firefox_, Chrome_, Edge_, Opera_, Safari_,
   Fullhost_, GLTF_, DXF_, IFC_, LAS_, LAZ_,
 } from './techLogos';
@@ -100,7 +100,7 @@ export const DEFAULT_LAYERS: Layer[] = [
         subtitle: `BIM ${DOT} Point clouds ${DOT} Video ${DOT} CSV`,
         kind: 'unstruct', Icon: BoxIcon,
         tech: [
-          { Logo: MinIO_, n: 'MinIO' },
+          { Logo: Silo_, n: 'S3 Silo' },
           { Logo: IFC_, n: 'IFC' },
           { Logo: GLTF_, n: 'glTF' },
           { Logo: DXF_, n: 'DXF' },

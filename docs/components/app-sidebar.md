@@ -27,6 +27,8 @@ On mount it dispatches `SET_ORGANIZATION` to `AppConfigContext` and, when `count
 
 Clicking a menu item calls `handleChangeViewer`, which resets the selected item, site and file state, sets the view to `'table'`, and updates `currentViewer` in menus state. The active viewer is highlighted in the primary colour.
 
+The header logo tries, in order, the organization's stored `logoKey`, then `<organization name>-logo.png` and `<organization name>-logo.svg` in the public `org-logos` bucket, then the CDT logo. It never renders a broken image: each candidate is probed with a detached `Image()` before it is shown, through `useFirstLoadableImage` and the `fallbacks` prop on `Logo`.
+
 Collapsed state hides text labels and centres the icons; on mobile the sidebar sheet's open state determines the layout instead. The footer shows a language switcher when the organization supports more than one language, plus service links such as a support email.
 
 ## Design decisions
@@ -53,6 +55,34 @@ Role-based visibility is separate from CASL, and deliberately so: the `accessibl
 `handleChangeViewer` is exported so other parts of the app, such as map interactions and `ResultActions`, can trigger a viewer change without going through the sidebar. It always resets the selected item, site, file and view state, so a stale detail view cannot carry over between viewers.
 
 Collapsed and expanded state drives label visibility and layout throughout, through an `isCollapsed` derived value rather than `sidebarState` directly. On mobile the sheet's open state counts as expanded, so labels render correctly while the drawer is visible.
+
+## AppSidebar
+
+`AppSidebar` is the frame around `AppSidebarContent`: the toggle buttons, the footer, and the avatar menu (`NavUser`).
+
+```tsx
+import { AppSidebar } from '@collabdt/core/core/components/ui/AppSidebar';
+import { DropdownMenuItem } from '@collabdt/core/core/components/ui/DropdownMenu';
+
+<AppSidebar
+  signOut={signOut}
+  userMenuItems={
+    <DropdownMenuItem asChild>
+      <Link href={`/${organization.name}/usage`}>Usage</Link>
+    </DropdownMenuItem>
+  }
+>
+  <AppSidebarContent organization={organization} />
+</AppSidebar>
+```
+
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `signOut` | `(options?) => Promise<void>` | Yes | — | Called by the avatar menu's Logout item |
+| `children` | `ReactNode` | No | `undefined` | Sidebar body, usually `AppSidebarContent` |
+| `userMenuItems` | `ReactNode` | No | `undefined` | Extra `DropdownMenuItem`s in the avatar menu, rendered between Settings and Logout |
+
+`userMenuItems` is a slot rather than a list of routes, so core stays free of app routes: the app decides what the item links to and who sees it.
 
 ## Related
 

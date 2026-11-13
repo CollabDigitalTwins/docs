@@ -37,7 +37,7 @@ Before opening an issue, search [existing issues](https://github.com/CollabDigit
 ### Before submitting
 
 - Confirm you are on the latest version.
-- **Check whether the bug belongs to a dependency.** CDT is built on Next.js, Prisma, MapLibre, MinIO, PostGIS, and NextAuth.js, among others. If the issue reproduces without CDT-specific code, it likely belongs to that project's own issue tracker, so report it there instead. Open a CDT issue only if the bug is specific to how CDT integrates with that dependency.
+- **Check whether the bug belongs to a dependency.** CDT is built on Next.js, Prisma, MapLibre, the AWS S3 SDK, PostGIS, and NextAuth.js, among others. If the issue reproduces without CDT-specific code, it likely belongs to that project's own issue tracker, so report it there instead. Open a CDT issue only if the bug is specific to how CDT integrates with that dependency.
 - Check the [issue tracker](https://github.com/CollabDigitalTwins/core/issues?q=label%3Abug) to see if the bug has already been reported.
 - Collect the following before filing:
   - Stack trace or error output

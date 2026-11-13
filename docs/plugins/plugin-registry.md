@@ -6,7 +6,7 @@ sidebar_position: 8
 
 # Share and promote plugins
 
-Each CDT deployment has its own plugin registry, stored in its database and a private MinIO bucket. The registry holds published, immutable plugin versions. Platform admins decide which organizations may use each one.
+Each CDT deployment has its own plugin registry, stored in its database and a private object storage bucket. The registry holds published, immutable plugin versions. Platform admins decide which organizations may use each one.
 
 There are three separate steps. Each is controlled by a different person:
 

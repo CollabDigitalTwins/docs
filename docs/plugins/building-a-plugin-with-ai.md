@@ -66,6 +66,8 @@ Constraints, all of which are load-bearing:
   toolbar component, publish results with usePluginState, and have other surfaces
   read from it. A toolbar panel unmounts when its dropdown closes unless the
   registration sets stayActive: true.
+- Load remote data once per session and share the in-flight promise; never abort
+  a fetch from an effect cleanup whose dependencies include the loading status.
 - Do not import three, @thatopen/components, maplibre-gl or lucide-react as
   runtime values. Viewer instances arrive as props. Icons are named by string in
   a registration; inside a component use inline SVG. Type-only imports of
@@ -228,6 +230,38 @@ selection or filter (in memory), `usePluginStore` for records the plugin owns, `
 for settings. Platform records (buildings, sites, files, sensors, comments) come from the hooks
 in `@collabdt/core/plugins-sdk/data`, which carry the user's session and organization scoping.
 
+## Loading remote data
+
+**Load remote data once per session, and never abort it from an effect cleanup.** A hook that
+sets `loading` inside an effect whose dependencies include that status re-runs the effect on its
+own write; if the cleanup aborts the request, the abort sets the status back to `idle` and the
+effect starts again. That loop never yields to the network, so it freezes the tab within
+seconds while hammering the remote server. Several surfaces of one plugin mount together, so
+share one in-flight promise per key as well:
+
+```ts
+const pending = new Map<string, Promise<unknown>>()
+
+export function useRemote<T>(key: string, load: () => Promise<T>, enabled = true) {
+  const [state, setState] = usePluginState<Remote<T>>(`remote:${key}`, { status: 'idle' })
+  React.useEffect(() => {
+    if (!enabled || state.status !== 'idle') return
+    setState({ status: 'loading' })
+    let request = pending.get(key) as Promise<T> | undefined
+    if (!request) {
+      request = load().finally(() => pending.delete(key))
+      pending.set(key, request)
+    }
+    request
+      .then(value => setState({ status: 'ready', value }))
+      .catch((error: unknown) => setState({ status: 'error', message: String(error) }))
+  }, [key, enabled, state.status, setState])
+  return state
+}
+```
+
+An error is terminal: offer a retry button that sets `idle`, never retry from the effect.
+
 ## Reading and colouring a BIM model
 
 `getItemsOfCategory(...)` then `getProperties(items, [...])` reaches **attributes only**. The
@@ -327,6 +361,8 @@ Nothing short of the last step proves it works.
    `dist/index.js` exists, and check the server log for the folder name and the skip reason.
 3. It renders once enabled, in every place its surfaces name. A red card mentioning the host API
    means it was built against a different platform version.
+4. With the browser's network panel open, use every surface: each remote URL is requested once.
+   The same URL repeating, or a stream of cancelled requests, is a loading loop.
 
 A plugin that reaches step 2 and fails step 3 is almost always registering under a capability
 nothing renders, or under a `viewers` value that is not `'map'` or `'bim'`.
