@@ -23,10 +23,11 @@ interface EmbedFrameProps {
   id: string;
   children: ReactNode;
   onHello?: () => void;
+  bare?: boolean;
 }
 
 /** Chrome-less wrapper for /embed pages: applies `?theme=` and posts its content height to the parent. */
-export default function EmbedFrame({ id, children, onHello }: EmbedFrameProps): React.ReactElement {
+export default function EmbedFrame({ id, children, onHello, bare = false }: EmbedFrameProps): React.ReactElement {
   const rootRef = useRef<HTMLDivElement>(null);
   const onHelloRef = useRef(onHello);
   onHelloRef.current = onHello;
@@ -68,7 +69,7 @@ export default function EmbedFrame({ id, children, onHello }: EmbedFrameProps): 
   return (
     <div
       ref={rootRef}
-      style={{
+      style={bare ? undefined : {
         background: 'var(--hp-surface-grad, var(--hp-surface))',
         padding: 'clamp(12px, 2vw, 28px)',
         boxSizing: 'border-box',
@@ -80,3 +81,6 @@ export default function EmbedFrame({ id, children, onHello }: EmbedFrameProps): 
 }
 
 export const EMBED_PAGE_STYLE = 'html,body{margin:0;padding:0;overflow:hidden;background:var(--hp-surface);}';
+
+/** A transparent page; the shared color-scheme keeps the host from painting an opaque iframe backdrop. */
+export const BARE_EMBED_PAGE_STYLE = 'html,body{margin:0;padding:0;overflow:hidden;background:transparent!important;color-scheme:normal!important;}';
