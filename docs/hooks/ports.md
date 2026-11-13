@@ -19,9 +19,13 @@ getBuildingsByFeatureId(featureId: string): Promise<Building[]>
 getBuildingOsmIds(): Promise<number[]>
 updateBuilding(id: number, patch: Partial<Building>): Promise<Building>
 createBuilding(input: { buildingData: Partial<Building>; organizationId: string }): Promise<Building>
+getBuildingAssociations(id: number): Promise<BuildingAssociations>
+removeBuilding(id: number, opts?: { transferToBuildingId?: number }): Promise<BuildingRemoval>
 ```
 
 `osmId` is an OpenStreetMap identifier and `featureId` a GeoJSON feature identifier. `getBuildingOsmIds` returns the OSM IDs of every building in the system.
+
+`getBuildingAssociations` counts the files, sensors and comments the current organization has on a building, and reports in `isDefaultLocation` whether it is the organization's default map location. `removeBuilding` removes the building from the current organization, and deletes it once no other organization uses it. With `transferToBuildingId`, those files, sensors and comments move to that building, which must also belong to the organization; without it the files are unlinked and the sensors and comments deleted. If the building was the organization's default location, the transfer target takes that role; without a transfer the default location is cleared. Both must be scoped to the session's organization on the server. `useBuildingAssociations(id)` and `useRemoveBuilding()` call them.
 
 ## Files
 

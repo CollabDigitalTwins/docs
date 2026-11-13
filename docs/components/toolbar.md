@@ -22,7 +22,7 @@ See [Shared conventions](./overview.md#shared-conventions) for permissions.
 
 Toolbar is deliberately thin and stateless: it receives the active viewer and renders the matching tool set, nothing more. Tool definitions and behaviour live in viewer-specific files (`mapTools`, `bimToolbar`), so adding or changing a viewer's tools never touches this component.
 
-Only spatial viewers get a toolbar. Data viewers like Buildings, Sites and Files return `null`, because their actions belong in `HeaderButtons` and `DetailActions` instead; persistent floating tool access is something only map and BIM need.
+Only spatial viewers get a toolbar. Data viewers like Buildings, Sites and Files return `null`, because their actions belong in `PageActions`, `ResultActions` and `DetailActions` instead; persistent floating tool access is something only map and BIM need.
 
 The toolbar is fixed at the bottom centre and sits above viewer content via `z-10`. The container sets `pointer-events-none` so it does not block map interaction in the gaps between buttons, and `ToolbarButton` restores `pointer-events-auto` on each button.
 

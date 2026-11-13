@@ -21,9 +21,20 @@ Uploading requires the **User** or **Admin** role in your organization.
 
 Multiple layers can be active at once. CDT reprojects everything to WGS 84 with [Proj4js](https://proj4js.org/), so layers from different scales and sources stack correctly.
 
+## Manage layers on the map
+
+Each layer in the map legend and in the **Applied Datasets** list of the **Layers** tab has the same controls:
+
+- The **eye** shows or hides the layer without removing it.
+- **Zoom to extent** fits the map to the layer's features. Imagery services and datasets that load by area do not have it.
+- The **caret** opens the layer's style settings.
+- The **X** removes the layer from the map. You can add it again from the dataset list.
+
+Datasets already on the map stay listed under **Organizational**, with a check mark. Select the check mark to remove the dataset from the map.
+
 ## Style a layer
 
-Select the settings icon next to a layer in the layer panel to open its style settings. **Colour by** lists the dataset's attributes; identifiers and coordinates are left out. The CDT platform reads each attribute's values to decide what it holds, so the choices match the data:
+Select the caret next to a layer to open its style settings. **Colour by** lists the dataset's attributes; identifiers and coordinates are left out. The CDT platform reads each attribute's values to decide what it holds, so the choices match the data:
 
 | Attribute holds | Display options |
 |-----------------|-----------------|

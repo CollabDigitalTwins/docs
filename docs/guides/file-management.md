@@ -33,14 +33,24 @@ Point clouds are converted to a Potree octree on upload, producing three files (
 
 ## What happens to an IFC on upload
 
-The server runs an optimization pipeline before storage:
+Your browser prepares the model before it is stored:
 
-1. Parses the raw IFC STEP file.
+1. Reads the georeference from the IFC STEP file (`IfcMapConversion` and its `IfcProjectedCRS`), if the model has one.
 2. Converts geometry and metadata to **Fragments 2.0** (`.frag`) using FlatBuffers encoding.
 3. Stores both the original IFC and the `.frag` version in object storage.
 4. Streams the `.frag` to the client at load time.
 
-This cuts RAM use and load time sharply compared with parsing IFC in the browser, which matters for multi-gigabyte federated models.
+Fragments cut RAM use and load time sharply compared with parsing IFC on every load, which matters for multi-gigabyte federated models.
+
+A georeferenced IFC is placed on the map at its surveyed location and turned to its true orientation. Its height on the map is measured from the terrain. The height from the IFC is kept for reference, and you can adjust the elevation with **Move**.
+
+## Place and geolocate files
+
+- **Linking to a building.** A file you upload from a building, or place on a building's footprint on the map, is linked to that building. It is then listed in the building's **Files** tab in the BIM viewer.
+- **Placing in the BIM viewer.** An IFC model loads at the scene origin. A 3D model, CAD drawing or splat that has no position yet shows **Place** in its menu: double-click in the scene to put it there.
+- **Geolocating.** **Geolocate** in a file's menu sets where a BIM model, point cloud, 3D model or splat stands on the map. Pick the file's coordinate system, enter its coordinates, height and rotation from north, and check the converted latitude and longitude before saving.
+  - **Coordinate systems:** WGS 84, NAD83 and NAD83(CSRS) UTM zones, NAD83(CSRS) MTM zones and WGS 84 UTM zones. For any other system, paste a proj4 definition.
+  - **Revert:** the source coordinates are kept when you move the file on the map, so **Revert to source position** brings it back.
 
 ## File metadata
 
