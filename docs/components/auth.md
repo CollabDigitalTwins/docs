@@ -17,7 +17,7 @@ The logo is `<instance>-logo.png` or `<instance>-logo.svg` from the public `org-
 
 Email and password sign-in, rendered inside `AuthPage`. Submission requires a reCAPTCHA challenge. On success the user is emailed a multi-factor code and prompted to enter it; codes expire after 5 minutes. Sessions last 8 hours and are not refreshed on activity.
 
-If the user's organization is suspended, sign-in is refused after the password check and a dialog names the instance and links to the CDT contact form. The server reports this as the error code `organization_suspended:<name>`; `organizationSuspendedCode` and `suspendedOrganizationName` in `authentication/organizationSuspension` build and read it.
+`onAuthError(code)` is optional and receives each sign-in error code, whether it comes from the form submission or from the `?error=` query a provider redirect leaves on the page. Return `true` when your app shows its own message for that code; `Signin` then shows nothing. Return `false`, or omit the prop, and `Signin` shows its built-in message.
 
 There is no self-service sign-up screen. Accounts are created by an Admin from **Settings → Users**.
 
