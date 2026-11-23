@@ -71,6 +71,10 @@ Measurements use [Turf.js](https://turfjs.org/) client-side. Distances are in me
 
 Click **Share** in the bottom toolbar, then copy the URL or scan the QR code. The URL encodes longitude, latitude, zoom, pitch, bearing, the active map style, and the IDs of any loaded assets, so whoever opens it sees your exact scene with no re-navigation.
 
+## Pick up where you left off
+
+The CDT platform remembers the last place you moved the map or a building's 3D view to, in this browser, for 30 days. When you come back through an address that names no location, for example after a crash, a closed tab or a bookmark to your instance, a prompt offers **Go back** to reopen that view. Links that already point somewhere, such as a shared view, open there without the prompt.
+
 ## Overlay an IFC model
 
 A building with an IFC attached places its model automatically. Open the building from the buildings list and the model appears as a 3D object at the building's coordinates, staying anchored as you pan and zoom.
