@@ -70,11 +70,13 @@ export default function UsersSettingsPanel() {
 
 Each panel reads `ability` from `usePermissions()`; see [Shared conventions](./overview.md#shared-conventions).
 
-| Panel | Required permission |
-|-------|---------------------|
-| Account | `read User` (always visible); `update User` to edit |
-| Organization | `read Organization`; `update Organization` to edit |
-| Users | Controlled by `DataMenu` / `read User`, gated on the `User` subject |
+| Panel | Shown on the settings page | To edit |
+|-------|----------------------------|---------|
+| Account | Always | `update User`; `changePassword User` for the password |
+| Organization | `update Organization` | `update Organization` |
+| Users | `update Role` | The users table follows `DataMenu`'s own checks |
+
+`canSeeSettingsTab(can, key)` from `settings/src/settingsTabs` decides which sections show. The settings page and the platform tour both use it.
 
 ## Key files
 

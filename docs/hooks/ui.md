@@ -13,6 +13,7 @@ Layout hooks that read the environment rather than platform data, so they return
 | `useCompactTabStrip` | Whether a tab strip should drop its labels to fit |
 | `useResizableSidebarWidth` | Drag-to-resize state for the sidebar |
 | `useFirstLoadableImage` | The first image URL in a list that actually loads |
+| `useChangeViewer` | A function that switches viewer the way the app sidebar does |
 
 ## `useIsMobile()`
 
@@ -69,6 +70,17 @@ const src = useFirstLoadableImage([organizationLogo, conventionLogo, '/images/cd
 ```
 
 Each candidate is probed with a detached `Image()` rather than a rendered `<img>` and its `onError`, so an image that fails before hydration cannot leave a broken icon behind. The list is compared by value, so passing a new array with the same URLs does not probe again.
+
+## `useChangeViewer()`
+
+Returns a function that switches to a viewer the way the app sidebar does: it clears the selected item, site and file, sets the view to `'table'`, dispatches `SET_VIEWER` and closes the side panel. It needs `MenusProvider` and `SidebarProvider` above it.
+
+```tsx
+import { useChangeViewer } from '@collabdt/core/hooks/ui/useChangeViewer';
+
+const changeViewer = useChangeViewer();
+changeViewer(ViewerNames.map);
+```
 
 ## Related
 

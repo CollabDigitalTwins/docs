@@ -25,7 +25,7 @@ import { AppSidebarContent } from '@collabdt/core/core/components/AppSidebarCont
 
 On mount it dispatches `SET_ORGANIZATION` to `AppConfigContext` and, when `countrySubdivisionsData` is given, `SET_COUNTRY_SUBDIVISIONS` to `MapContext`.
 
-Clicking a menu item calls `handleChangeViewer`, which resets the selected item, site and file state, sets the view to `'table'`, and updates `currentViewer` in menus state. The active viewer is highlighted in the primary colour.
+Clicking a menu item calls `useChangeViewer` (`hooks/ui/useChangeViewer`), which resets the selected item, site and file state, sets the view to `'table'`, updates `currentViewer` in menus state and closes the side panel. The active viewer is highlighted in the primary colour.
 
 The header logo tries, in order, the organization's stored `logoKey`, then `<organization name>-logo.png` and `<organization name>-logo.svg` in the public `org-logos` bucket, then the CDT logo. It never renders a broken image: each candidate is probed with a detached `Image()` before it is shown, through `useFirstLoadableImage` and the `fallbacks` prop on `Logo`.
 
@@ -83,6 +83,35 @@ import { DropdownMenuItem } from '@collabdt/core/core/components/ui/DropdownMenu
 | `userMenuItems` | `ReactNode` | No | `undefined` | Extra `DropdownMenuItem`s in the avatar menu, rendered between Settings and Logout |
 
 `userMenuItems` is a slot rather than a list of routes, so core stays free of app routes: the app decides what the item links to and who sees it.
+
+## Platform tour
+
+`AppSidebar` also mounts `PlatformTour`, a [guided tour](../plugins/tour.md) of the app shell: the sidebar, the two ways to see data (3D viewers and data pages), plugins, support and the account menu. Then it tours the page the person is on, and every overview card has a shortcut at the top straight to that part. The last card offers closer tours of the 3D viewers or the data pages. The tour only offers the viewers and data pages the organization shows. A viewer tour covers its search, side panel and toolbar. The map tour adds its controls, settings, attribution and a legend (a live zoning demo where the map can reach Ottawa, otherwise an example). The BIM tour adds hints on its empty card and its view cube. The settings tours briefly change each setting to show what it does, then put it back.
+
+The tour opens by itself once per device, on the first visit, and is remembered in local storage under `cdt.tour.platform.hidden`. The Guide item at the top of the Support menu opens it again at any time. That item calls `SupportMenu`'s `onOpenGuide`, which sets `guideOpen` through `useSidebar()`:
+
+```tsx
+const { setGuideOpen } = useSidebar()
+setGuideOpen(true)
+```
+
+`guideOpen` lives in the sidebar context, next to the bug report and feature request dialogs, for the same reason: on mobile `AppSidebarContent` sits inside a sheet that unmounts when it closes, so anything it opens must render outside it. On a phone, the steps that point into the sidebar open that sheet and close it when the tour moves on.
+
+The steps target these `data-tour` anchors on the shell. Keep them on the same elements when you restyle the sidebar, toolbar or top bar, or the step shows a "Waiting for this part of the screen to appear." note instead of a spotlight:
+
+| Anchor | Element |
+|--------|---------|
+| `sidebar` | The whole sidebar |
+| `sidebar-interfaces` | The 3D viewers and data pages groups together |
+| `sidebar-viewers`, `sidebar-data`, `sidebar-plugins`, `sidebar-support` | The sidebar's groups |
+| `sidebar-account` | The avatar menu |
+| `viewer-search` | The geocoder on the map, the element search in BIM |
+| `viewer-panel-toggle` | The button that opens the viewer side panel |
+| `toolbar` | The bottom toolbar of either viewer |
+| `bim-empty` | The BIM viewer's empty card; `data-state` says which (`noBuilding`, `noBimFiles`, …) |
+| `settings-*` | Each map and BIM setting the settings tours visit |
+
+The BIM view cube is found by its `cdt-view-cube` class.
 
 ## Related
 

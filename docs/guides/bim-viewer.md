@@ -179,7 +179,7 @@ Open the **File** tab, click **Import IDS** and pick your `.ids` file. The viewe
 ## Track issues with BCF topics
 
 1. Click the element(s) related to the issue.
-2. Open the **Topics** tab → **New topic**.
+2. Open **BCF Topics** → **Add Topic**.
 3. Fill in title, description, responsible party, status, and priority. The current viewpoint is captured automatically.
 4. Save the topic.
 

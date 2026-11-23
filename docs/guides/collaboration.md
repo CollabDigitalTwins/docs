@@ -51,7 +51,7 @@ Overlapping comments collapse into a single numbered circle. Hover it and the me
 
 The [BIM Collaboration Format (BCF)](https://www.buildingsmart.org/standards/bsi-standards/bim-collaboration-format-bcf/) is the openBIM standard for communicating design issues, and the Topics tab in the BIM viewer gives you a full BCF workflow.
 
-To create a topic, click the element(s) related to the issue, open **Topics** → **New topic**, fill in title, description, and responsible party, set status and priority, then save. The current camera viewpoint is captured automatically.
+To create a topic, click the element(s) related to the issue, open **BCF Topics** → **Add Topic**, fill in title, description, and responsible party, set status and priority, then save. The current camera viewpoint is captured automatically.
 
 Topics can be filtered by status or sorted by date and priority. Click any topic to navigate the camera to its viewpoint, or export the list as a `.bcf` file. BCF is vendor-neutral, so issues created in CDT open correctly in Revit, Archicad, or any compliant authoring application, and vice versa.
 
@@ -67,7 +67,7 @@ Media and annotations added by any user are visible to others in the same organi
 
 ## Internationalization
 
-The interface supports **English, French, and Spanish**. Switch language from **Settings → Language**. See [Architecture → Internationalization](../architecture/internationalization.mdx) for implementation details.
+The interface supports **English, French, and Spanish**. Switch language from **Language** in the sidebar. See [Architecture → Internationalization](../architecture/internationalization.mdx) for implementation details.
 
 ## Related
 

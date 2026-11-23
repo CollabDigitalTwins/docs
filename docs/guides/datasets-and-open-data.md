@@ -30,7 +30,7 @@ Each layer in the map legend and in the **Applied Datasets** list of the **Layer
 - The **caret** opens the layer's style settings.
 - The **X** removes the layer from the map. You can add it again from the dataset list.
 
-Datasets already on the map stay listed under **Organizational**, with a check mark. Select the check mark to remove the dataset from the map.
+Datasets already on the map stay listed under **Organizational**, with a check mark. Select the check mark to remove the dataset from the map. The **Applied** tab lists every dataset on the map.
 
 ## Style a layer
 

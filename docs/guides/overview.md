@@ -8,7 +8,9 @@ description: "Task-oriented walkthroughs for everyday work in CDT: the map, BIM 
 
 Task-oriented walkthroughs for **end users and operators**. Pick the goal you have in mind and follow the steps.
 
-New to CDT? Start with the [Quickstart](../getting-started/quickstart.mdx), which threads the most important guides into a single 30-minute path.
+For a tour of the screen, open **Support → Guide** in the sidebar. It also opens by itself the first time you sign in on a device.
+
+New to the CDT platform? Start with the [Quickstart](../getting-started/quickstart.mdx), which threads the most important guides into a single 30-minute path.
 
 | You want to… | Read |
 |--------------|------|

@@ -61,8 +61,8 @@ See [Datasets & Open Data](./datasets-and-open-data.md) for the full source cata
 ## Measure a distance or area
 
 1. Click **Measure** in the bottom toolbar.
-2. Click two or more points for a distance.
-3. Click the first point again to close a polygon and get an area.
+2. Pick **Distance** and click two or more points.
+3. Pick **Area** and click the corners; the shape closes by itself and shows its area.
 4. Press **Esc** to clear.
 
 Measurements use [Turf.js](https://turfjs.org/) client-side. Distances are in metres, areas in square metres.
