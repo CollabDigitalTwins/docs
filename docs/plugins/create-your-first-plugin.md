@@ -182,6 +182,10 @@ Use the components from `@collabdt/core/plugins-sdk/components`. They are the ap
 
 Build the plugin, load it into CDT and enable it: see [Run your plugin](./mounting-a-plugin.md).
 
+## 6. Share it
+
+Open a pull request to [CollabDigitalTwins/plugins](https://github.com/CollabDigitalTwins/plugins), the community plugin repository, so others can run it on their own instances. Running `npx create-cdt-plugin` inside its `plugins/<category>/` folder scaffolds the plugin in the right place; its `CONTRIBUTING.md` covers the review process. See [Community plugins](./overview.md#community-plugins).
+
 :::note Contributing a plugin to core instead
 A plugin can also live inside `@collabdt/core`, at `src/core/plugins/<slug>/`, which places it in every CDT installation, including the hosted platform. That route means a pull request against core and waiting for a release, so it is worth building and testing the plugin as a mounted one first.
 

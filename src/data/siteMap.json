@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T19:59:30.302Z",
+  "generatedAt": "2026-11-24T20:14:04.516Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -370,6 +370,12 @@
               "primary": null
             },
             {
+              "id": "components/usage",
+              "title": "Usage Components",
+              "slug": "/docs/components/usage",
+              "primary": null
+            },
+            {
               "id": "components/user-details",
               "title": "UserDetails",
               "slug": "/docs/components/user-details",
@@ -553,6 +559,12 @@
               "id": "plugins/hello-map-example",
               "title": "Example: one plugin, several surfaces",
               "slug": "/docs/plugins/hello-map-example",
+              "primary": null
+            },
+            {
+              "id": "plugins/tour",
+              "title": "Guided tours",
+              "slug": "/docs/plugins/tour",
               "primary": null
             },
             {

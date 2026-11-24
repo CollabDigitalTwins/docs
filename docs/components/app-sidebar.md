@@ -88,6 +88,8 @@ import { DropdownMenuItem } from '@collabdt/core/core/components/ui/DropdownMenu
 
 `AppSidebar` also mounts `PlatformTour`, a [guided tour](../plugins/tour.md) of the app shell: the sidebar, the two ways to see data (3D viewers and data pages), plugins, support and the account menu. Then it tours the page the person is on, and every overview card has a shortcut at the top straight to that part. The last card offers closer tours of the 3D viewers or the data pages. The tour only offers the viewers and data pages the organization shows. A viewer tour covers its search, side panel and toolbar. The map tour adds its controls, settings, attribution and a legend (a live zoning demo where the map can reach Ottawa, otherwise an example). The BIM tour adds hints on its empty card and its view cube. The settings tours briefly change each setting to show what it does, then put it back.
 
+The list button in every card's header opens a dialog of all the tour's sections: the overview, the tour of each page the organization shows, and the closer tours of the page the person is on (its toolbar, side panel tabs and, on the map, the datasets menu and measuring). Each lists its steps, and a search box finds steps across all of them. Picking one jumps straight there, opening its page first when it is on another one. Back to tour, or Escape, returns to the step the person was on.
+
 The tour opens by itself once per device, on the first visit, and is remembered in local storage under `cdt.tour.platform.hidden`. The Guide item at the top of the Support menu opens it again at any time. That item calls `SupportMenu`'s `onOpenGuide`, which sets `guideOpen` through `useSidebar()`:
 
 ```tsx

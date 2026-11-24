@@ -37,6 +37,16 @@ Mounting is the place to start. A plugin that turns out to be broadly useful can
 
 **2. The plugin has to be enabled.** An administrator adds it to their organization on the **Plugins** page, can turn it on for everyone, and can let each person switch it on or off for themselves. Nothing runs merely because the code is present.
 
+## Community plugins
+
+Plugins built and shared by the community live in [CollabDigitalTwins/plugins](https://github.com/CollabDigitalTwins/plugins), an AGPL-3.0 repository open to pull requests. Start with `wildfire-monitoring`, a complete plugin that draws live Canadian wildfires from public government feeds.
+
+- **Self-hosting?** Clone the repository into your `PLUGINS_DIR`, run `npm run build`, and add the plugins you want on the **Plugins** page. See [Run your plugin](./mounting-a-plugin.md).
+- **On the CDT-hosted platform?** Merging into the repository does not put a plugin in front of users. Maintainers publish a reviewed version to the registry, and a platform admin shares it with your organization. See [Share and promote plugins](./plugin-registry.md).
+- **Built something useful?** Scaffold it with `npx create-cdt-plugin` inside the repository and open a pull request. The repository's README and `CONTRIBUTING.md` list the checks CI runs.
+
+Community plugins run with the same privileges as any other plugin. Read the code before turning one on, and mount a reviewed commit or tag rather than a moving branch.
+
 ## Plugins on the maturity model
 
 Plugins are how a twin climbs the [maturity model](../concepts/maturity-model.mdx). The core covers the descriptive baseline; each plugin adds a use case at the level it reaches, from a permit map to a live transit feed to a grid what-if.
