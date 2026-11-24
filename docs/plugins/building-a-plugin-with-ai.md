@@ -74,11 +74,13 @@ Constraints, all of which are load-bearing:
   maplibre-gl or @thatopen/components are fine.
 - At runtime only react, react-dom, react/jsx-runtime and
   @collabdt/core/plugins-sdk (with /config, /messages, /store, /data, /state, /ui,
-  /components, /charts) resolve. usePluginBimAppearance, useBimViewer and
+  /components, /charts, /tour) resolve. usePluginBimAppearance, useBimViewer and
   useMapViewer are not available to a mounted plugin: colour BIM elements with
   the appearance prop of a bim.tools component.
 - For charts, import Recharts components and the Chart* wrappers from
   @collabdt/core/plugins-sdk/charts. Never install or bundle recharts.
+- For a step-by-step guide, use GuidedTour and useTour from
+  @collabdt/core/plugins-sdk/tour and tag targets with data-tour="<id>".
 - manifest.slug must equal the folder name, and must not be hello-map or hello-bim.
 - hostApi must be 1.
 - Each registration id must be unique within the plugin.

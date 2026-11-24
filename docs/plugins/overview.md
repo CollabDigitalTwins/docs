@@ -35,7 +35,7 @@ Two conditions must be met, and they are separate on purpose.
 
 Mounting is the place to start. A plugin that turns out to be broadly useful can then be submitted to core as a pull request.
 
-**2. The plugin has to be enabled.** An administrator adds it to their organization on the **Plugins** page, and each person then chooses whether it runs for them. Nothing runs merely because the code is present.
+**2. The plugin has to be enabled.** An administrator adds it to their organization on the **Plugins** page, can turn it on for everyone, and can let each person switch it on or off for themselves. Nothing runs merely because the code is present.
 
 ## Plugins on the maturity model
 

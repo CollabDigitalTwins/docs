@@ -147,6 +147,8 @@ Tenant record. Controls branding, map defaults, feature flags, and language supp
 | `languages` | `Language[]` | Supported locales |
 | `bbox` | `number[]` | Map bounding box `[w, s, e, n]` |
 | `mapStyles` | `unknown[]` | Custom MapLibre style definitions |
+| `defaultMapStyle` | `MapStyleName?` | Built-in style the map opens on: `Satellite`, `Streets`, `Dark`, `Positron` or `Maplibre`. Null means Satellite |
+| `suspended` | `boolean` | Members of a suspended organization cannot sign in; platform admins still can |
 
 ### OpenDataPortal
 
