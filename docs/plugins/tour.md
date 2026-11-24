@@ -79,6 +79,24 @@ Create the store once, outside the component.
 
 Inside core, `components/tour/hostTargets` also exports `anchorSelector(name)`, the CSS selector for `data-tour="<name>"` with quotes and backslashes escaped, and `findAnchor(name, root?)`, which returns the first element with that anchor under `root` (the document by default) or `null`. They are not part of `plugins-sdk/tour`.
 
+## Jumping between sections
+
+A tour made of several parts can pass `sections` to let people jump to any of them. A list button then appears in the card's header and opens a dialog listing every section and its steps, with a search box across all of them. Back to tour, or Escape, closes it on the step that was open.
+
+```tsx
+const sections: TourSections = {
+  current: 'sites',
+  list: () => [
+    { id: 'sites', title: 'Sites', steps: siteSteps.map(({ id, title }) => ({ id, title })), start: stepId => openTour('sites', stepId) },
+    { id: 'reports', title: 'Reports', description: 'Monthly summaries.', steps: reportSteps.map(({ id, title }) => ({ id, title })), start: stepId => openTour('reports', stepId) },
+  ],
+}
+
+<GuidedTour steps={siteSteps} onHide={tour.hide} sections={sections} />
+```
+
+`current` is the id of the section this tour is. Picking one of its steps moves the open tour there. Picking a step of another section closes the dialog and calls that section's `start(stepId)`; switch the tour you render and pass the step as `startAt`. `list` runs each time the dialog opens, so it can leave out steps that do not apply to the page at that moment. Sections with no steps are not shown.
+
 ## Look and labels
 
 The tour uses the CDT palette by default. It reads the platform's theme tokens, so it follows light and dark mode: a terracotta accent and header, the platform's card surface and text colours, and a dark scrim. Written out for the light theme, the defaults are:
@@ -101,9 +119,9 @@ The full set is `--tour-surface`, `--tour-text`, `--tour-ink`, `--tour-muted`, `
 
 `header` puts your own content, such as a logo, at the start of the card's header.
 
-The buttons and progress text come in the platform's languages. Override any of them with `labels`: `next`, `back`, `finish`, `hide`, `missing` and `progress(step, total)`.
+The buttons, progress text and sections dialog come in the platform's languages. Override any of them with `labels`: `next`, `back`, `finish`, `hide`, `missing` and `progress(step, total)`.
 
-Keyboard: the arrow keys move between steps and Escape hides the tour. Animations stop when the person prefers reduced motion.
+Keyboard: the arrow keys move between steps and Escape hides the tour, or closes the sections dialog when it is open. Animations stop when the person prefers reduced motion.
 
 ## Types
 
