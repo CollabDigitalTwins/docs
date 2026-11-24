@@ -174,6 +174,10 @@ const config: Config = {
               href: 'https://github.com/CollabDigitalTwins/docs',
             },
             {
+              label: 'Plugins',
+              href: 'https://github.com/CollabDigitalTwins/plugins',
+            },
+            {
               label: 'Contact',
               href: 'https://collabdt.org/En/contact/',
             },
