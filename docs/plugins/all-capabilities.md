@@ -418,7 +418,7 @@ ctx.register('data.pages', {
 })
 ```
 
-A registration takes one form or the other: `component` alongside `useRows` or `columns` is a type error. For charts, use [`@collabdt/core/plugins-sdk/charts`](./charts.md).
+A registration takes one form or the other: `component` alongside `useRows` or `columns` is a type error. For charts, use [`@collabdt/core/plugins-sdk/charts`](./sdk-modules.md#charts).
 
 ### Permissions
 
@@ -493,65 +493,9 @@ const [confirming, setConfirming] = React.useState(false)
 
 Without `title` and `description` it asks the standard delete question about `itemName`. For a question that destroys nothing, pass your own copy, a `confirmLabel` and `tone="default"`. `isDeleting` shows a spinner on the confirm button while the work runs. `toast` has `success`, `error` and `info`, each taking a message.
 
-## Reading platform data
+## Data and state
 
-Buildings, sites, sensors, comments and files come from `@collabdt/core/plugins-sdk/data`. A plugin goes through the same request path as the rest of CDT, so it inherits the signed-in user's session, the organization scoping and the shared cache. There is no second data path and no way past the tenant boundary.
-
-```tsx
-import { useBuildings, useSensorsByBuilding } from '@collabdt/core/plugins-sdk/data'
-
-function Panel() {
-  const { buildings, isLoading } = useBuildings()
-  const { sensors } = useSensorsByBuilding(buildings[0]?.id ?? null)
-
-  if (isLoading) return null
-  return <p>{sensors.length} sensors</p>
-}
-```
-
-Every read hook returns its payload plus `isLoading` and `isError`. A list hook returns `[]` before it resolves rather than `undefined`, so it can be mapped straight away; a single-record hook returns `null`.
-
-| Read | Hook |
-|---|---|
-| Buildings | `useBuildings`, `useBuilding`, `useBuildingsByOsm`, `useBuildingOsmIds` |
-| Sites | `useSites`, `useSite` |
-| Infrastructure | `useInfrastructures`, `useInfrastructure` |
-| Organization | `useOrganization`, `useOrganizationByName` |
-| Files | `useFiles`, `useFile`, `useFilesByBuildingId`, `useFilesBySiteId`, `useDownloadFile` |
-| Sensors | `useSensors`, `useSensor`, `useSensorsByBuilding`, `useSensorsByAuthor`, `useSensorTypes`, `useSensorType` |
-| Comments | `useComments`, `useComment`, `useCommentsByBuilding`, `useCommentsByAuthor` |
-
-`usePluginUser()` returns the signed-in person as a `PluginUser` (`{ id, name }`), or `null` while the session loads or when nobody is signed in. Use it to record who did something, such as who booked a room:
-
-```tsx
-import { usePluginUser } from '@collabdt/core/plugins-sdk/data'
-
-const user = usePluginUser()
-const bookedBy = user?.name ?? 'Unknown'
-```
-
-The id is for attribution only. The server already knows who is calling, so never send it as proof of identity.
-
-Buildings and sites are read-only to a plugin: they are canonical asset records, so changing one is a change to CDT rather than to a plugin. Sensors and comments are the domains plugins are expected to author, and they have `useCreateSensor`, `useCreateComment` and `useDeleteComments`. A plugin's own records go in `usePluginStore`.
-
-Types come from `@collabdt/plugin-kit/types/data`, which declares the fields the SDK commits to rather than every column CDT's schema carries.
-
-A `PluginFile`'s place in the BIM viewer is `fileTransformX` / `Y` / `Z` (metres), `fileRotationX` / `Y` / `Z` (radians) and `fileScale` (one uniform number). For a BIM model, `fileRotationZ` is its project north: a turn about the vertical axis added to `fileRotationY`. Its `x`, `y` and `z` are deprecated: the CDT platform no longer writes them, so they are `null` or stale for any file placed since.
-
-## Where to keep state
-
-Surfaces share state through hooks rather than props. The choice depends on whether the value belongs in a database:
-
-| Kind of value | Hook | Survives a reload |
-|---|---|---|
-| A selection, a filter, a draft | `usePluginState` | No |
-| Records the plugin owns | `usePluginStore` | Yes |
-| Per-user preferences | `usePluginConfig`, via user settings | Yes |
-| Org-wide settings | `usePluginConfig` | Yes |
-
-`usePluginState` is in-memory and scoped per plugin, so two plugins using the key `selected` never see each other's value. `usePluginStore` will hold a selection, but makes every click a database write.
-
-[Example: one plugin, several surfaces](./hello-map-example.md) shows both in one plugin.
+Platform records, the signed-in user and the state hooks surfaces share come from the SDK, see [Platform data](./sdk-modules.md#platform-data) and [State](./sdk-modules.md#state).
 
 ## Registering more than one contribution
 

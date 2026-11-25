@@ -64,6 +64,21 @@ const config: Config = {
     locales: ['en'],
   },
 
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          { from: '/docs/plugins/charts', to: '/docs/plugins/sdk-modules#charts' },
+          { from: '/docs/plugins/tour', to: '/docs/plugins/sdk-modules#guided-tours' },
+          { from: '/docs/plugins/proxied-feeds', to: '/docs/plugins/sdk-modules#calling-an-external-api' },
+          { from: '/docs/plugins/hello-map-example', to: '/docs/plugins/patterns' },
+          { from: '/docs/plugins/mounted-plugins-in-practice', to: '/docs/plugins/patterns' },
+        ],
+      },
+    ],
+  ],
+
   presets: [
     [
       'classic',

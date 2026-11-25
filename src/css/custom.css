@@ -126,7 +126,7 @@
   --ifm-menu-color-active:       var(--hp-primary-container);
 
   --ifm-code-background:         var(--hp-low);
-  --ifm-code-color:              var(--hp-primary);
+  --ifm-code-color:              var(--hp-primary-container);
   --ifm-pre-background:          var(--hp-lowest);
 }
 
@@ -422,7 +422,7 @@ pre {
   font-size: 1.05rem;
   font-weight: 600;
   margin-bottom: 0.35rem;
-  color: var(--hp-primary);
+  color: var(--hp-primary-container);
 }
 
 .audienceGrid > p > em {
@@ -477,7 +477,7 @@ pre {
    so the component re-tints with the light/dark toggle.
    ───────────────────────────────────────────────────────── */
 .cdt-mm {
-  --mm-axis: var(--hp-primary, #d4673a);
+  --mm-axis: var(--hp-primary-container, #c05520);
   --mm-tier-1: color-mix(in srgb, var(--hp-primary-container, #c05520) 14%, #fff);
   --mm-tier-2: color-mix(in srgb, var(--hp-primary-container, #c05520) 28%, #fff);
   --mm-tier-3: color-mix(in srgb, var(--hp-primary-container, #c05520) 50%, #fff);
@@ -759,38 +759,6 @@ pre {
   letter-spacing: 0.2em; text-transform: uppercase; color: var(--mm-axis); font-weight: 600; margin-bottom: 6px;
 }
 .cdt-mm .mm-m-foundation .mm-fpillars { font-size: 14px; color: var(--mm-ink); line-height: 1.5; }
-
-/* ── Use cases / plugins variant ────────────── */
-.cdt-mm .mm-col-toggle {
-  display: flex; flex-direction: column; gap: 8px;
-  border: 0; background: none; padding: 0; text-align: left;
-  font: inherit; color: inherit; cursor: pointer; width: 100%;
-}
-.cdt-mm .mm-col-toggle:focus-visible { outline: 2px solid var(--mm-axis); outline-offset: 4px; border-radius: 8px; }
-.cdt-mm.has-usecases .mm-col { cursor: default; }
-.cdt-mm.has-usecases .mm-tag { margin-bottom: 0; }
-.cdt-mm .mm-usecases { display: flex; flex-direction: column; gap: 6px; margin: 2px 0 4px; }
-.cdt-mm .mm-usecases-label {
-  font-family: var(--ifm-font-family-monospace, monospace); font-size: 10.5px;
-  letter-spacing: 0.18em; text-transform: uppercase; color: var(--mm-ink-2); font-weight: 600;
-}
-.cdt-mm .mm-usecases-list { display: flex; flex-wrap: wrap; gap: 6px; }
-.cdt-mm .mm-usecase {
-  display: inline-flex; align-items: center;
-  padding: 5px 11px; border-radius: 999px;
-  font: inherit; font-size: 12.5px; font-weight: 600; line-height: 1.2;
-  background: var(--hp-primary-container, #c05520); color: var(--hp-on-primary-ctr, #fff); border: 1px solid transparent;
-  text-decoration: none; cursor: pointer;
-  transition: transform .2s var(--mm-ease), filter .2s var(--mm-ease);
-}
-.cdt-mm a.mm-usecase:hover, .cdt-mm button.mm-usecase:hover { transform: translateY(-1px); filter: brightness(1.08); color: var(--hp-on-primary-ctr, #fff); text-decoration: none; }
-.cdt-mm .mm-usecase:focus-visible { outline: 2px solid var(--mm-ink); outline-offset: 2px; }
-.cdt-mm span.mm-usecase { cursor: default; }
-.cdt-mm .mm-usecase.is-tbd {
-  background: none; color: var(--mm-ink-2);
-  border: 1px dashed var(--mm-line); font-weight: 500;
-}
-.cdt-mm .mm-m-usecases { padding: 0 16px 14px 22px; }
 
 @media (prefers-reduced-motion: reduce) {
   .cdt-mm * { transition: none !important; }

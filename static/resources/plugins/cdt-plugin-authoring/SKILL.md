@@ -9,9 +9,9 @@ $ARGUMENTS may name the plugin, the surfaces it targets, or the behaviour wanted
 
 Reference pages, fetch them when a detail below is not enough:
 https://docs.collabdt.org/docs/plugins/all-capabilities ·
-https://docs.collabdt.org/docs/plugins/mounted-plugins-in-practice ·
-https://docs.collabdt.org/docs/plugins/mounting-a-plugin ·
-https://docs.collabdt.org/docs/plugins/charts
+https://docs.collabdt.org/docs/plugins/sdk-modules ·
+https://docs.collabdt.org/docs/plugins/patterns ·
+https://docs.collabdt.org/docs/plugins/mounting-a-plugin
 
 ## Constraints that are invisible from inside a plugin folder
 
@@ -44,7 +44,8 @@ Read these before writing any code. Each one is a failure that looks like succes
   An icon *inside* a component body therefore has to be inline SVG.
 - **Only a fixed list of modules resolves at runtime:** `react`, `react-dom`,
   `react/jsx-runtime`, and `@collabdt/core/plugins-sdk` with its subpaths `/config`,
-  `/messages`, `/store`, `/data`, `/state`, `/ui`, `/components` and `/charts`. Anything else
+  `/messages`, `/store`, `/data`, `/state`, `/ui`, `/components`, `/charts`, `/tour` and
+  `/geocoding`. Anything else
   must be bundled into `dist/index.js`, and the build's import guard names any specifier it
   cannot resolve. `usePluginBimAppearance`, `useBimViewer` and `useMapViewer` are not on the
   list; a `bim.tools` component gets the BIM viewer, its floorplans and element colours as props.

@@ -23,7 +23,7 @@ A single plugin can use as many of these as it needs; `hello-map` ships with CDT
 
 ## Getting a plugin running
 
-Two conditions must be met, and they are separate on purpose.
+Two conditions must be met.
 
 **1. The code has to be present.** Either a built plugin folder sits next to a CDT deployment, or the plugin is compiled into `@collabdt/core` and ships with every installation.
 
@@ -47,34 +47,18 @@ Plugins built and shared by the community live in [CollabDigitalTwins/plugins](h
 
 Community plugins run with the same privileges as any other plugin. Read the code before turning one on, and mount a reviewed commit or tag rather than a moving branch.
 
-## Plugins on the maturity model
+## Plugin categories
 
-Plugins are how a twin climbs the [maturity model](../concepts/maturity-model.mdx). The core covers the descriptive baseline; each plugin adds a use case at the level it reaches, from a permit map to a live transit feed to a grid what-if.
+Every plugin belongs to one category. The plugin repositories keep one folder per category (`plugins/<category>/<plugin>/`), and the manifest's `category` field must match that folder.
 
-<BrowserOnly>
-  {() => {
-    const MaturityModel = require('@site/src/components/MaturityModel').default;
-    const g = 'https://collabdt.org/En/plugins/';
-    return (
-      <MaturityModel
-        yAxisLabel="Maturity →"
-        kicker="Use cases · Plugins"
-        title={<>Plugins on the <span className="mm-acc">Maturity Model</span></>}
-        lede="A sample of the plugins built so far, placed at the level each one reaches."
-        useCases={[
-          { id: 'building-permits', label: 'Building permits', level: 1, href: g + '#building-permits' },
-          { id: 'airplanes', label: 'Live flights', level: 2, href: g + '#airplanes' },
-          { id: 'space-planner', label: 'Space planning', level: 2, href: g + '#space-planner' },
-          { id: 'flooding', label: 'Coastal flooding', level: 3, href: g + '#flooding' },
-          { id: 'electric-grid', label: 'Energy grid what-if', level: 4, href: g + '#electric-grid' },
-          { id: 'tabletop', label: 'Tabletop exercise', level: 4, href: g + '#tabletop' },
-        ]}
-      />
-    );
-  }}
-</BrowserOnly>
+| Category | Folder | What belongs there | Examples |
+|---|---|---|---|
+| **Live data** | `live-data` | Real-time feeds on the map: transit, flights, sensors and hazards | [Live flights](https://collabdt.org/En/plugins/#airplanes), [OC Transpo](https://collabdt.org/En/plugins/#oc-transpo), [Wildfire monitoring](https://collabdt.org/En/plugins/#wildfires) |
+| **Planning** | `planning` | City and asset data turned into evidence for decisions, from permits to what-if scenarios | [Building permits](https://collabdt.org/En/plugins/#building-permits), [Coastal flooding](https://collabdt.org/En/plugins/#flooding), [Power grid what-if](https://collabdt.org/En/plugins/#electric-grid), [Disaster response simulation](https://collabdt.org/En/plugins/#tabletop) |
+| **Facility management** | `facility-management` | Running buildings day to day: spaces, assets and maintenance | [Space planner](https://collabdt.org/En/plugins/#space-planner) |
+| **Utilities** | `utilities` | General-purpose tools for the map and the BIM viewer | |
 
-See every plugin in action in the [plugin gallery](https://collabdt.org/En/plugins/).
+See every plugin in action, grouped by category, in the [plugin gallery](https://collabdt.org/En/plugins/).
 
 ## Security
 
@@ -84,11 +68,10 @@ Treat a plugin as any other dependency being granted full access, and read it be
 
 ## In this section
 
-Read in this order:
-
-1. [Create your first plugin](./create-your-first-plugin.md)
-2. [Capabilities](./all-capabilities.md)
-3. [Run your plugin](./mounting-a-plugin.md)
-4. [Example: one plugin, several surfaces](./hello-map-example.md)
-5. [Mounted plugins in practice](./mounted-plugins-in-practice.md)
-6. [Building a plugin with AI](./building-a-plugin-with-ai.md)
+1. [Create your first plugin](./create-your-first-plugin.md): scaffold, manifest, entry point
+2. [Capabilities](./all-capabilities.md): the eight places a plugin can add something
+3. [SDK modules](./sdk-modules.md): data, state, charts, geocoding, tours and external APIs
+4. [Patterns](./patterns.md): several surfaces, shared state, the viewers, mounted plugins
+5. [Run your plugin](./mounting-a-plugin.md): build, mount, enable, troubleshoot
+6. [Share and promote plugins](./plugin-registry.md): the registry, for platform admins
+7. [Building a plugin with AI](./building-a-plugin-with-ai.md)
