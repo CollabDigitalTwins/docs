@@ -1,26 +1,24 @@
 ---
 title: Building a plugin with AI
-description: A prompt template and a reusable skill for generating a CDT plugin.
-sidebar_position: 7
+description: A skill and a short prompt for generating a CDT plugin with an AI coding assistant.
+sidebar_position: 8
 ---
 
 # Building a plugin with AI
 
-A CDT plugin suits an AI coding assistant well: it is small, the interface is narrow, and the build rejects most of the ways it can go wrong.
+A CDT plugin suits an AI coding assistant well: it is small, the interface is narrow, and the build rejects most of the ways it can go wrong. What a model cannot infer from the plugin folder are the platform's constraints, such as the eight capability names and the fixed import list. Without them it invents plausible APIs that do not exist.
 
-## Supply the right pages
+## Install the skill
 
-Without them, a model will invent an API that looks plausible and does not exist. Include these URLs, or the pages themselves, in the prompt:
+The plugin-authoring skill holds those constraints, the steps from scaffold to a rendering plugin, and how to verify it. An assistant that supports skills loads it by itself whenever a task matches, including follow-up work in a fresh session.
 
-- [Create your first plugin](./create-your-first-plugin.md)
-- [Capabilities](./all-capabilities.md)
-- [Run your plugin](./mounting-a-plugin.md)
-- [Mounted plugins in practice](./mounted-plugins-in-practice.md), if the plugin is loaded at runtime rather than compiled into core
-- [Charts](./charts.md), if the plugin draws charts
+<a href="/resources/plugins/cdt-plugin-authoring/SKILL.md" download="SKILL.md" className="button button--primary">⬇ Download the skill (SKILL.md)</a>
 
-## A prompt template
+For Claude Code, save it as `.claude/skills/cdt-plugin-authoring/SKILL.md` in your project, or under `~/.claude/skills/` to have it everywhere, then ask for a plugin in plain words or run `/cdt-plugin-authoring <what you want>`. In the Claude apps, upload it as a custom skill. Other assistants can use the same text as a rules file or a system prompt.
 
-The constraints matter more than the description of the behaviour, because they cannot be inferred from the plugin folder. Fill in the angle brackets and delete the surfaces you do not use from the `--surface` list.
+## Or use a prompt
+
+Without skills, paste this and fill in the angle brackets:
 
 ```text
 Write a CDT platform plugin.
@@ -28,353 +26,17 @@ Write a CDT platform plugin.
 What it should do:
   <describe the behaviour>
 
-Where it should appear (one or more capabilities from the table below):
+Where it should appear:
   <e.g. a BIM toolbar tool, plus a sidebar tab listing the results>
 
-Scaffold it first, do not hand-write the files:
-  npx create-cdt-plugin --name "<Name>" --surface <capability>[,<capability>...]     --body example --description "<one line>" --yes
-
-The only scaffolder flags are --name, --slug, --surface, --body, --author,
---description and --yes. Any other flag is rejected.
-
-Capabilities. These eight are the whole list. Do not invent one: an unknown name
-builds, loads and renders nothing, with no error anywhere.
-  map.tools       Map toolbar button + dropdown panel. Component gets { map }.
-  bim.tools       BIM toolbar button + dropdown panel. Component gets BimToolProps
-                  (components, world, fragments, modelIds, selection, select,
-                  isolate, setItemsVisible, getItemsOfCategory, getProperties...),
-                  plus buildingId, appearance (setAppearance/clearAppearance to
-                  colour elements) and floorplan (storeys, activate, generateLines,
-                  drawShape, editShape, setOverlay with onShapeClick,
-                  getSpaceFootprints for 2D plans).
-  map.layers      Drawn on the map for as long as the map exists. Gets { map },
-                  renders null. Use it for anything that must outlive a panel.
-  map.datasets    Listed in the Datasets menu (Live Data when live: true). Give it
-                  a wms or geojson source and CDT draws it, or omit source and draw
-                  it from map.layers, gated on usePluginDataset(id).visible.
-  viewer.legends  A section of the shared legend card, via a useLegend() hook.
-  viewer.tabs     A viewer sidebar tab. The component receives NO props.
-  data.pages      A full page in the Datasets nav: a table from a useRows() hook +
-                  columns, or a custom page from a component (no props).
-  ui.dialogs      A modal opened by id with usePluginDialogs().open(id, props).
-
-Constraints, all of which are load-bearing:
-- Every capability you register must also be listed in manifest.capabilities.
-- viewer.tabs and viewer.legends must set viewers: ['map'], ['bim'] or both.
-  Omitted means every viewer; any other value renders nowhere.
-- Only map.tools, bim.tools and map.layers receive a viewer. Do viewer work in a
-  toolbar component, publish results with usePluginState, and have other surfaces
-  read from it. A toolbar panel unmounts when its dropdown closes unless the
-  registration sets stayActive: true.
-- Load remote data once per session and share the in-flight promise; never abort
-  a fetch from an effect cleanup whose dependencies include the loading status.
-- Do not import three, @thatopen/components, maplibre-gl or lucide-react as
-  runtime values. Viewer instances arrive as props. Icons are named by string in
-  a registration; inside a component use inline SVG. Type-only imports of
-  maplibre-gl or @thatopen/components are fine.
-- At runtime only react, react-dom, react/jsx-runtime and
-  @collabdt/core/plugins-sdk (with /config, /messages, /store, /data, /state, /ui,
-  /components, /charts, /tour) resolve. usePluginBimAppearance, useBimViewer and
-  useMapViewer are not available to a mounted plugin: colour BIM elements with
-  the appearance prop of a bim.tools component.
-- For charts, import Recharts components and the Chart* wrappers from
-  @collabdt/core/plugins-sdk/charts. Never install or bundle recharts.
-- For a step-by-step guide, use GuidedTour and useTour from
-  @collabdt/core/plugins-sdk/tour and tag targets with data-tour="<id>".
-- manifest.slug must equal the folder name, and must not be hello-map or hello-bim.
-- hostApi must be 1.
-- Each registration id must be unique within the plugin.
-- The build output is a single file, dist/index.js. No code splitting.
-- Put every user-visible string in manifest.json under messages, and read it with
-  usePluginTranslations(), passing an inline English fallback at each call.
-  Write titleKey, labelKey and emptyKey as English prose: they never resolve
-  for a mounted plugin.
-- Render panel content only. The platform supplies the toolbar button and dropdown.
-
-Then run npm install and npm run build as separate commands, and fix anything
-the import guard reports. Never edit the tsup config to get past it.
+Follow the rules in https://docs.collabdt.org/resources/plugins/cdt-plugin-authoring/SKILL.md
+before writing any code. Scaffold with npx create-cdt-plugin using explicit flags, then run
+npm install and npm run build, and fix anything the import guard reports without editing the
+tsup config.
 ```
 
-The [Capabilities](./all-capabilities.md) page has the full fields and props for each one, and [Mounted plugins in practice](./mounted-plugins-in-practice.md) explains the constraints that only bite once a plugin is loaded at runtime.
+If the assistant cannot fetch URLs, paste the skill's text instead, along with [Capabilities](./all-capabilities.md) and [SDK modules](./sdk-modules.md).
 
-## A reusable skill instead of a prompt
+## Review before mounting
 
-Pasting the template above works, but it has to be re-pasted and re-edited every time. If your
-assistant supports **skills**, a file it loads by itself when a task matches its description,
-install the plugin-authoring skill once and it applies to every plugin you write afterwards,
-including follow-up work weeks later in a fresh session.
-
-<a href="/resources/plugins/cdt-plugin-authoring/SKILL.md" download="SKILL.md" className="button button--primary">⬇ Download the Claude skill (SKILL.md)</a>
-
-For Claude Code, save it as `.claude/skills/cdt-plugin-authoring/SKILL.md` in your project, or
-as `~/.claude/skills/cdt-plugin-authoring/SKILL.md` to have it everywhere. Then ask for a plugin
-in plain words, or invoke it directly with `/cdt-plugin-authoring <what you want>`. In the
-Claude apps, upload it as a custom skill. Other assistants can use the same text as a rules file
-or a system prompt: the content is what matters, not the location.
-
-Two things it does that a pasted prompt does not: it survives a long task where earlier context
-gets summarised away, and its `description` is what makes the assistant reach for it unprompted
-when you come back three days later and say "add a floor filter to the BIM viewer".
-
-The full skill, the same file as the download:
-
-`````markdown
----
-name: cdt-plugin-authoring
-description: Author a CDT (Collab Digital Twins) platform plugin, from scaffold to a plugin rendering in the map or BIM viewer. Use when asked to build, scaffold, extend, or debug a CDT plugin, add a toolbar tool, sidebar tab, legend, map layer, dataset, data page, dialog, chart or floorplan overlay to CDT, or when a plugin builds but never shows up.
----
-
-# Author a CDT platform plugin
-
-$ARGUMENTS may name the plugin, the surfaces it targets, or the behaviour wanted.
-
-Reference pages, fetch them when a detail below is not enough:
-https://docs.collabdt.org/docs/plugins/all-capabilities ·
-https://docs.collabdt.org/docs/plugins/mounted-plugins-in-practice ·
-https://docs.collabdt.org/docs/plugins/mounting-a-plugin ·
-https://docs.collabdt.org/docs/plugins/charts
-
-## Constraints that are invisible from inside a plugin folder
-
-Read these before writing any code. Each one is a failure that looks like success.
-
-- **The capability must be one of exactly eight.** Nothing else exists. Inventing a plausible
-  name such as `data.columns`, `commands` or `widgets` produces a plugin that builds, loads,
-  registers and shows nothing, with nothing in any log pointing at the cause. **If a plugin
-  appears on the Plugins page but never renders, check the capability name first.**
-
-  | Capability | Where it appears | Component receives |
-  |---|---|---|
-  | `map.tools` | Map toolbar, as a button with a dropdown panel | `{ map }` |
-  | `bim.tools` | BIM toolbar, as a button with a dropdown panel | `BimToolProps` |
-  | `map.layers` | Drawn on the map for as long as the map exists | `{ map }`, renders `null` |
-  | `map.datasets` | Datasets menu, under Organizational, or Live Data with `live: true` | no component |
-  | `viewer.legends` | The shared legend card, map and BIM | a `useLegend` hook |
-  | `viewer.tabs` | Viewer sidebar, as a tab | **no props at all** |
-  | `data.pages` | Datasets nav, as a full page | `useRows` hook + `columns`, or a `component` with no props |
-  | `ui.dialogs` | A modal, opened by id from any surface of the plugin | what `open()` passed + `close` |
-
-- **A `viewer.tabs` or `viewer.legends` registration with no `viewers` appears in every
-  viewer.** That is what omitting the field means, so it fails as a location nobody chose
-  rather than as an error. Only `'map'` and `'bim'` host these; any other value, a typo like
-  `'BIM'` included, renders nowhere and the platform logs a warning.
-- **Never import `three`, `@thatopen/components`, `maplibre-gl` or `lucide-react` as runtime
-  values.** Viewer instances arrive as props and icons are named by string. A second copy of
-  React breaks hooks outright; a second copy of three.js crashes the BIM viewer. Type-only
-  imports of `maplibre-gl` (map) and `@thatopen/components` (BIM) are correct and expected.
-  An icon *inside* a component body therefore has to be inline SVG.
-- **Only a fixed list of modules resolves at runtime:** `react`, `react-dom`,
-  `react/jsx-runtime`, and `@collabdt/core/plugins-sdk` with its subpaths `/config`,
-  `/messages`, `/store`, `/data`, `/state`, `/ui`, `/components` and `/charts`. Anything else
-  must be bundled into `dist/index.js`, and the build's import guard names any specifier it
-  cannot resolve. `usePluginBimAppearance`, `useBimViewer` and `useMapViewer` are not on the
-  list; a `bim.tools` component gets the BIM viewer, its floorplans and element colours as props.
-- **Charts come from `@collabdt/core/plugins-sdk/charts`,** never from an installed `recharts`.
-  It exports the `Chart*` wrappers and the Recharts primitives the platform uses, and the host
-  loads Recharts only when a plugin imports it. A bundled copy loses the platform's styling.
-- **`manifest.slug` must equal the folder name.** The scanner skips the folder with only a log
-  line otherwise, so a mismatch is a plugin that never appears. Renaming the folder, or editing
-  the manifest's `name` and assuming the slug followed, is the usual cause.
-- **`manifest.slug` must not collide with a plugin that ships with the platform**
-  (`hello-map`, `hello-bim`). A mounted folder cannot shadow one: it loads and is then ignored
-  forever.
-- **Every capability registered must be declared in `manifest.capabilities`.** Registering an
-  undeclared one throws, and the platform then rolls back every contribution that plugin made
-  and marks it errored. This is easiest to introduce when a second surface is added later.
-- **`hostApi` must be `1`.** Omitting it is permitted and only warned about, which defers a
-  future incompatibility to a render-time failure.
-- **The output is a single file, `dist/index.js`.** The platform serves exactly that path, so a
-  code-split chunk would not resolve. Mounting unbuilt source is the likeliest mistake of all.
-
-A plugin is *not* limited to one component. Source may span as many files as it likes, and
-`activate()` may register several contributions across several surfaces. Each entry needs its
-own `id`: contributions are de-duplicated by plugin and id, so reusing one silently drops the
-second. What is ruled out is lazy-loading part of the plugin itself.
-
-## Choose the surfaces before writing a component
-
-Only the two toolbars and `map.layers` are handed a viewer. Everything else reaches it through
-them, so the shape of the plugin follows from which surface holds the handles.
-
-- **Do viewer work in the toolbar component and publish the result** with `usePluginState`.
-  A tab, page, legend or dialog reads it from there, and leaves *requests* (an action plus a
-  `nonce`) for the toolbar component to carry out in an effect.
-- **A toolbar panel unmounts when its dropdown closes**, taking its effects with it, unless the
-  registration sets `stayActive: true`, which keeps it mounted while hidden. Without that, have
-  the tool claim a flag in plugin state while mounted and let other surfaces explain why an
-  action is unavailable instead of doing nothing.
-- **Anything drawn on the map that must outlive a panel belongs in `map.layers`.** Re-add the
-  source and layer on `styledata` (a basemap switch drops them), guard both removals in cleanup,
-  and update features with `setData` rather than re-adding the layer.
-- **A dataset users should apply and hide like any other is `map.datasets`.** Give it a
-  `source` of `{ type: 'wms', ... }` or `{ type: 'geojson', getFeatures }` and CDT draws it;
-  omit `source` and draw it yourself from `map.layers`, gated on
-  `usePluginDataset(id).visible`. A `viewer.legends` entry with `dataset: '<id>'` nests under
-  that dataset's row. Fetch nothing until the dataset is applied.
-- **A modal is `ui.dialogs`,** opened with `usePluginDialogs().open(id, props)`. It outlives
-  whatever opened it, and a plugin can only open its own.
-- **A full page is `data.pages`.** Give it `useRows` + `columns` for a searchable table, or
-  `component` instead for a dashboard, a calendar or charts below the platform's frame and
-  title. Never both forms.
-- **Drawing on a BIM floorplan is `floorplan` on `BimToolProps`,** so it lives in the
-  `bim.tools` component. Check `floorplan.available` first: it is false in a viewer without
-  floorplans. After `activate(id)`, call `generateLines()` so the plan shows its walls and
-  drawing snaps to them. `drawShape('rectangle' | 'polygon')` and `editShape(points)` resolve
-  with `{ x, z }` points in world metres, or `null` on Escape; `frame(points)` fits the plan to
-  an outline. `setOverlay(shapes, { onShapeClick })` draws the plugin's own labelled polygons on
-  whichever plan is open, so filter them by `floorplan.active`; `clearOverlay()` removes them.
-- **`buildingId` on `BimToolProps` is the open building**, `null` until one is chosen, and the
-  only place a plugin learns it. Stamp it on records and publish it with `usePluginState` for
-  the surfaces that are not handed it.
-
-Pick the state hook by whether the value belongs in a database: `usePluginState` for a
-selection or filter (in memory), `usePluginStore` for records the plugin owns, `usePluginConfig`
-for settings. Platform records (buildings, sites, files, sensors, comments) come from the hooks
-in `@collabdt/core/plugins-sdk/data`, which carry the user's session and organization scoping.
-
-## Loading remote data
-
-**Load remote data once per session, and never abort it from an effect cleanup.** A hook that
-sets `loading` inside an effect whose dependencies include that status re-runs the effect on its
-own write; if the cleanup aborts the request, the abort sets the status back to `idle` and the
-effect starts again. That loop never yields to the network, so it freezes the tab within
-seconds while hammering the remote server. Several surfaces of one plugin mount together, so
-share one in-flight promise per key as well:
-
-```ts
-const pending = new Map<string, Promise<unknown>>()
-
-export function useRemote<T>(key: string, load: () => Promise<T>, enabled = true) {
-  const [state, setState] = usePluginState<Remote<T>>(`remote:${key}`, { status: 'idle' })
-  React.useEffect(() => {
-    if (!enabled || state.status !== 'idle') return
-    setState({ status: 'loading' })
-    let request = pending.get(key) as Promise<T> | undefined
-    if (!request) {
-      request = load().finally(() => pending.delete(key))
-      pending.set(key, request)
-    }
-    request
-      .then(value => setState({ status: 'ready', value }))
-      .catch((error: unknown) => setState({ status: 'error', message: String(error) }))
-  }, [key, enabled, state.status, setState])
-  return state
-}
-```
-
-An error is terminal: offer a retry button that sets `idle`, never retry from the effect.
-
-## Reading and colouring a BIM model
-
-`getItemsOfCategory(...)` then `getProperties(items, [...])` reaches **attributes only**. The
-durable IFC `GlobalId`, quantities (floor area) and spatial containment come off the raw
-`fragments` handle on the same props:
-
-```ts
-const model = fragments.list.get(modelId)
-const guids = await model.getGuidsByLocalIds(localIds)
-const data = await model.getItemsData(localIds, {
-  attributesDefault: true,
-  relations: { IsDefinedBy: { attributes: true, relations: true },
-               Decomposes: { attributes: true, relations: false } },
-})
-```
-
-Walk the relations defensively with a depth cap (IFC2X3 and IFC4 nest quantities differently)
-and treat a missing value as a normal model. `IFCSPACE` is hidden by default, so call
-`setItemsVisible(items, true)` before acting on spaces. Key stored records by `GlobalId`, never
-by `modelId` and `localId`, which only mean something while that model is open.
-
-For a space's floor outline, area and height, `floorplan.getSpaceFootprints(items)` reads them
-from each element's lowest flat face, ready to pass to `setOverlay`. Pass the spaces you redraw
-as `setOverlay(shapes, { replacesSpaces })` so the plan hides its own room graphic under them.
-
-Colour elements with `appearance` on `BimToolProps`: `setAppearance(groups)`, each group
-`{ items, appearance: { color: 0xRRGGBB, opacity? } }`, and `clearAppearance()`. Pass every
-group in **one** call, since each call replaces the plugin's previous paint, and call it from
-an effect so that changed colours repaint. Paint is scoped to the plugin and outlives the panel
-that applied it, so give the user a way to clear it. Never paint through
-`model.highlight` on the raw `fragments` handle: it bypasses the platform's appearance layer.
-
-## Steps
-
-1. **Scaffold with explicit flags** rather than prompts, so the run is reproducible. Run it
-   from the folder you keep plugins in; if that folder has a `plugins/` directory, the plugin
-   lands inside it:
-
-   ```bash
-   npx create-cdt-plugin --name "Room Inventory" --surface bim.tools,viewer.tabs \
-     --body example --description "Counts rooms per floor." --yes
-   ```
-
-   The only flags are `--name`, `--slug`, `--surface`, `--body`, `--author`,
-   `--description` and `--yes`; any other flag is rejected. `--surface` is repeatable and
-   takes a comma-separated list, so name every surface now rather than adding one later. Use
-   `--body example` when the plugin reads the viewer, `--body empty` when it does not. Never
-   hand-write `manifest.json`: the scaffolder fills in `hostApi`, the slug, the capability
-   list, the `viewers` lists and the three locale blocks, and binds one context slot per viewer.
-
-2. **Implement the behaviour** in the generated component files. Render panel content only. The
-   platform supplies the toolbar button and dropdown from the registration's `label` and `icon`,
-   so a plugin that draws its own floating card ends up with it inside the toolbar strip. Guard
-   every viewer handle: each is `null` until the viewer has initialised.
-
-3. **Keep every user-visible string** in `manifest.json`'s `messages` and read it with
-   `usePluginTranslations()`, passing an inline English fallback at each call. Translate the
-   `fr` and `es` blocks, which start as copies of the English ones. A mounted plugin's
-   `titleKey`, `labelKey` and `emptyKey` never resolve, so write those three as English prose.
-
-4. **Type `data.pages` rows loosely.** The registration pins a row to
-   `Record<string, unknown>` under `strict: true`, so build rows with your own type and narrow
-   inside each column's `render` and in `onRowClick`.
-
-5. **Build:**
-
-   ```bash
-   cd <slug>
-   npm install
-   npm run build
-   ```
-
-   Run them as separate commands: Windows PowerShell 5.1 rejects `&&`. The build runs an import
-   guard and fails if the plugin imports anything the platform publishes no shim for, naming
-   the specifier. **A guard failure is a real problem in the plugin, never something to work
-   around by editing the tsup config.** The preset refuses overrides of `entry`, `outDir`,
-   `format`, `external` and `onSuccess` for exactly this reason.
-
-6. **Mount it.** The deployment's `.env` needs `PLUGINS_ENABLED=true` and an absolute
-   `PLUGINS_DIR` pointing at the folder that holds your plugin; the default `/app/plugins` is a
-   container path. Add `PLUGINS_DEV=true` while developing so nothing is cached. There is no hot
-   reloading: save, rebuild, refresh. Under Docker the folder is mounted read-only, so run the
-   build on the host rather than inside the container.
-
-7. **Enable it.** On the Plugins page an administrator adds it to the organization, then each
-   person chooses whether it runs for them. To ship it to other deployments, publish it to the
-   registry: https://docs.collabdt.org/docs/plugins/plugin-registry
-
-## Verification
-
-Nothing short of the last step proves it works.
-
-1. `npm run build` exits 0, passing the import guard. This shows the plugin imports only what
-   the platform can resolve, and that it emits one file.
-2. The plugin appears on the Plugins page under **Found on this server**, which shows the folder
-   was discovered. If it does not: check `PLUGINS_ENABLED`, check `PLUGINS_DIR`, check
-   `dist/index.js` exists, and check the server log for the folder name and the skip reason.
-3. It renders once enabled, in every place its surfaces name. A red card mentioning the host API
-   means it was built against a different platform version.
-4. With the browser's network panel open, use every surface: each remote URL is requested once.
-   The same URL repeating, or a stream of cancelled requests, is a loading loop.
-
-A plugin that reaches step 2 and fails step 3 is almost always registering under a capability
-nothing renders, or under a `viewers` value that is not `'map'` or `'bim'`.
-
-## A warning to pass on
-
-A plugin runs with the same access as CDT itself. There is no sandbox. Tell the user to review
-generated code before mounting it anywhere holding real data.
-`````
-
-## A note on trust
-
-A plugin runs with the same access as CDT itself, with no sandbox, as [Security](./overview.md#security) explains. This matters more for generated code than for hand-written code, because the usual basis for trusting a plugin is having read it. Review what the model produced before mounting it anywhere holding real data.
+A plugin runs with the same access as CDT itself, with no sandbox, as [Security](./overview.md#security) explains. The usual reason to trust a plugin is having read it, so review generated code before mounting it anywhere that holds real data.

@@ -190,49 +190,8 @@ function MMDetailPanel({ level, onClose }) {
   );
 }
 
-function MMUseCases({ items, onSelect }) {
-  return (
-    <div className="mm-usecases">
-      <span className="mm-usecases-label">Use cases</span>
-      <div className="mm-usecases-list">
-        {items.length === 0 ? (
-          <span className="mm-usecase is-tbd">TBD</span>
-        ) : (
-          items.map((item) => {
-            if (item.href) {
-              return (
-                <a key={item.id} className="mm-usecase" href={item.href}>
-                  {item.label}
-                </a>
-              );
-            }
-            if (!onSelect) {
-              return <span key={item.id} className="mm-usecase">{item.label}</span>;
-            }
-            return (
-              <button key={item.id} type="button" className="mm-usecase" onClick={() => onSelect(item.id)}>
-                {item.label}
-              </button>
-            );
-          })
-        )}
-      </div>
-    </div>
-  );
-}
-
-function useCasesForLevel(useCases, num) {
-  return useCases.filter((u) => Number(u.level) === Number(num));
-}
-
-/**
- * Pass `useCases` ({ id, label, level, href? }[]) to show the plugins variant:
- * use-case pills per level, TBD where a level has none. Defaults render the plain model.
- */
 export default function MaturityModel({
   defaultLevel = null,
-  useCases = null,
-  onUseCaseSelect,
   yAxisLabel = 'Value →',
   kicker = 'Collab Digital Twins · Framework',
   title = null,
@@ -242,7 +201,6 @@ export default function MaturityModel({
   const [hovered, setHovered] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const rootRef = useRef(null);
-  const hasUseCases = Array.isArray(useCases);
 
   useEffect(() => {
     const el = rootRef.current;
@@ -291,7 +249,7 @@ export default function MaturityModel({
 
   return (
     <div
-      className={'cdt-mm' + (hasUseCases ? ' has-usecases' : '') + (isDimming && !isMobile ? ' is-dimming' : '')}
+      className={'cdt-mm' + (isDimming && !isMobile ? ' is-dimming' : '')}
       ref={rootRef}
     >
       <header className="mm-head">
@@ -326,11 +284,6 @@ export default function MaturityModel({
                   </span>
                   <span className="mm-m-chev" aria-hidden="true">⌄</span>
                 </button>
-                {hasUseCases && (
-                  <div className="mm-m-usecases">
-                    <MMUseCases items={useCasesForLevel(useCases, level.num)} onSelect={onUseCaseSelect} />
-                  </div>
-                )}
                 <div className="mm-m-body">
                   <div className="mm-m-body-inner">
                     <div className="mm-m-body-pad">
@@ -363,43 +316,18 @@ export default function MaturityModel({
               {MM_LEVELS.map((level) => {
                 const active = selected === level.num;
                 const label = `Level ${level.num}, ${level.name}. ${level.tagline}`;
-                if (!hasUseCases) {
-                  return (
-                    <button
-                      key={level.num}
-                      className={columnClass(level)}
-                      onClick={() => toggle(level.num)}
-                      {...columnProps(level)}
-                      aria-expanded={active}
-                      aria-label={label}
-                    >
-                      {renderTag(level)}
-                      {renderCells(level)}
-                    </button>
-                  );
-                }
                 return (
-                  <div key={level.num} className={columnClass(level)} role="group" {...columnProps(level)}>
-                    <button
-                      type="button"
-                      className="mm-col-toggle"
-                      onClick={() => toggle(level.num)}
-                      aria-expanded={active}
-                      aria-label={label}
-                    >
-                      {renderTag(level)}
-                    </button>
-                    <MMUseCases items={useCasesForLevel(useCases, level.num)} onSelect={onUseCaseSelect} />
-                    <button
-                      type="button"
-                      className="mm-col-toggle mm-col-cells"
-                      onClick={() => toggle(level.num)}
-                      tabIndex={-1}
-                      aria-hidden="true"
-                    >
-                      {renderCells(level)}
-                    </button>
-                  </div>
+                  <button
+                    key={level.num}
+                    className={columnClass(level)}
+                    onClick={() => toggle(level.num)}
+                    {...columnProps(level)}
+                    aria-expanded={active}
+                    aria-label={label}
+                  >
+                    {renderTag(level)}
+                    {renderCells(level)}
+                  </button>
                 );
               })}
             </div>

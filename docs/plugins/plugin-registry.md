@@ -1,7 +1,7 @@
 ---
 title: Share and promote plugins
 description: Publish a plugin to a deployment's registry, share it with organizations, and promote it from a dev instance to production with a package file.
-sidebar_position: 8
+sidebar_position: 7
 ---
 
 # Share and promote plugins

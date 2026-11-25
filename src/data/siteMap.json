@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T20:14:04.516Z",
+  "generatedAt": "2026-11-25T19:42:52.969Z",
   "audiences": [
     {
       "key": "userSidebar",
@@ -532,21 +532,9 @@
               "primary": null
             },
             {
-              "id": "plugins/proxied-feeds",
-              "title": "Call an API without CORS",
-              "slug": "/docs/plugins/proxied-feeds",
-              "primary": null
-            },
-            {
               "id": "plugins/all-capabilities",
               "title": "Capabilities",
               "slug": "/docs/plugins/all-capabilities",
-              "primary": null
-            },
-            {
-              "id": "plugins/charts",
-              "title": "Charts",
-              "slug": "/docs/plugins/charts",
               "primary": null
             },
             {
@@ -556,33 +544,27 @@
               "primary": null
             },
             {
-              "id": "plugins/hello-map-example",
-              "title": "Example: one plugin, several surfaces",
-              "slug": "/docs/plugins/hello-map-example",
-              "primary": null
-            },
-            {
-              "id": "plugins/tour",
-              "title": "Guided tours",
-              "slug": "/docs/plugins/tour",
-              "primary": null
-            },
-            {
-              "id": "plugins/mounted-plugins-in-practice",
-              "title": "Mounted plugins in practice",
-              "slug": "/docs/plugins/mounted-plugins-in-practice",
-              "primary": null
-            },
-            {
               "id": "plugins/overview",
               "title": "Overview",
               "slug": "/docs/plugins/overview",
               "primary": null
             },
             {
+              "id": "plugins/patterns",
+              "title": "Patterns",
+              "slug": "/docs/plugins/patterns",
+              "primary": null
+            },
+            {
               "id": "plugins/mounting-a-plugin",
               "title": "Run your plugin",
               "slug": "/docs/plugins/mounting-a-plugin",
+              "primary": null
+            },
+            {
+              "id": "plugins/sdk-modules",
+              "title": "SDK modules",
+              "slug": "/docs/plugins/sdk-modules",
               "primary": null
             },
             {
